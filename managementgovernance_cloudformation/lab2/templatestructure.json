@@ -1,0 +1,33 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+
+  "Description": "If it is used, it must follow AWS format version.",
+
+  "Metadata": {
+
+  },
+
+  "Parameters": {
+
+  },
+
+  "Mappings": {
+
+  },
+
+  "Conditions": {
+
+  },
+
+  "Transform": {
+
+  },
+
+  "Resources": {
+
+  },
+
+  "Outputs": {
+
+  }
+}
