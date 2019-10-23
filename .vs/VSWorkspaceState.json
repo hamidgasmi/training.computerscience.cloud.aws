@@ -1,9 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\managementgovernance_cloudformation",
-    "\\managementgovernance_cloudformation\\lab2"
+    ""
   ],
-  "SelectedNode": "\\managementgovernance_cloudformation\\lab2\\createstack.json",
+  "SelectedNode": "\\README.md",
   "PreviewInSolutionExplorer": false
 }
