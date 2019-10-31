@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\compute_ec2"
   ],
-  "SelectedNode": "\\README.md",
+  "SelectedNode": "\\compute_ec2\\compte_ec2_roles",
   "PreviewInSolutionExplorer": false
 }
