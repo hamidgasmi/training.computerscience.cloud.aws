@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\compute_ec2"
+    "\\compute_lamda",
+    "\\compute_lamda\\LinuxAcademyLab1"
   ],
-  "SelectedNode": "\\compute_ec2\\compte_ec2_roles",
+  "SelectedNode": "\\compute_lamda\\LinuxAcademyLab1\\executionRole.json",
   "PreviewInSolutionExplorer": false
 }
