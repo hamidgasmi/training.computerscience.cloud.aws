@@ -1,6 +1,7 @@
 {
   "Version": "2012-10-17",
-  "Statement": [{
+  "Statement": [
+    {
       "Effect": "Allow",
       "Action": [
         "logs:CreateLogGroup",
@@ -14,14 +15,14 @@
       "Action": [
         "s3:GetObject"
       ],
-      "Resource": "arn:aws:s3:::__YOUR_SOURCE_BUCKET_NAME_HERE__/*"
+      "Resource": "arn:aws:s3:::hg-animalprics-uploads/*"
     },
     {
       "Effect": "Allow",
       "Action": [
         "s3:PutObject"
       ],
-      "Resource": "arn:aws:s3:::__YOUR_DESTINATION_BUCKET_NAME_HERE__/*"
+      "Resource": "arn:aws:s3:::hg-animalprics-thumbs/*"
     }
   ]
 }
