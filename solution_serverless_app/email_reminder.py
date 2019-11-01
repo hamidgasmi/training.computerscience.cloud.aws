@@ -1,3 +1,4 @@
+#function arn: 
 import boto3
 
 VERIFIED_EMAIL = 'hg.public@outlook.com'
