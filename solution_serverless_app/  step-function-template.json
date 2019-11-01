@@ -31,13 +31,13 @@
 
     "EmailReminder": {
       "Type": "Task",
-      "Resource": "EMAIL_REMINDER_ARN",
+      "Resource": "arn:aws:lambda:us-east-1:403601765923:function:email",
       "Next": "NextState"
     },
 
     "TextReminder": {
       "Type": "Task",
-      "Resource": "TEXT_REMINDER_ARN",
+      "Resource": "arn:aws:lambda:us-east-1:403601765923:function:sms",
       "Next": "NextState"
     },
 
@@ -49,7 +49,7 @@
           "States": {
             "EmailReminderPar": {
               "Type": "Task",
-              "Resource": "EMAIL_REMINDER_ARN",
+              "Resource": "arn:aws:lambda:us-east-1:403601765923:function:email",
               "End": true
             }
           }
@@ -59,7 +59,7 @@
           "States": {
             "TextReminderPar": {
               "Type": "Task",
-              "Resource": "TEXT_REMINDER_ARN",
+              "Resource": "arn:aws:lambda:us-east-1:403601765923:function:sms",
               "End": true
             }
           }
