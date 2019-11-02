@@ -1,9 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\compute_lamda",
-    "\\compute_lamda\\LinuxAcademyLab1"
+    ""
   ],
-  "SelectedNode": "\\compute_lamda\\LinuxAcademyLab1\\executionRole.json",
+  "SelectedNode": "\\solution_serverless_app",
   "PreviewInSolutionExplorer": false
 }
