@@ -1,6 +1,7 @@
 {
   "ExpandedNodes": [
     "",
+    "\\service_database_rds",
     "\\service_networkingcontentdelivery_vpc"
   ],
   "SelectedNode": "\\service_networkingcontentdelivery_vpc\\VPC_Architecture.zargo",
