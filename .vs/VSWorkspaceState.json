@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\service_networkingcontentdelivery_vpc"
   ],
-  "SelectedNode": "\\service_compute_ec2",
+  "SelectedNode": "\\service_networkingcontentdelivery_vpc\\VPC_Architecture.zargo",
   "PreviewInSolutionExplorer": false
 }
