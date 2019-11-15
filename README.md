@@ -1,10 +1,9 @@
 # training.computerscience.cloud.aws
 ## Network
   #### VPC:
-  <details>
-    <summary>Architecture</summary>
-![VPC Architecture with UML notations](https://awscertifiedsolutionsarchitectassociatedocs.s3.amazonaws.com/VPCArchitectureUML.PNG)  
-  </details>
+  Architecture
+![VPC Architecture with UML notations](https://awscertifiedsolutionsarchitectassociatedocs.s3.amazonaws.com/VPCArchitectureUML.PNG)
+  
   <details>
     <summary>Description</summary>
 - It stands for Virtual Private Cloud.
