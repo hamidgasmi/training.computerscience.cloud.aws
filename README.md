@@ -44,5 +44,29 @@
 	 	- [ ] So if we delete, we could run into problems where certain services wouldn't launch,
 	 	- [ ] We needed to create a ticket to get it recreated on our behalf.
 	- It is used as a default for most.
-- Custom VPC (or "Bespoke" VPC): it can be designed and configured in any valid way.
+	- Initial state of Default VPC:
+	 	- [ ] CIDR: default 172.31.0.0/16 (65,000 IP addresses)
+	 	- [ ] Subnet: 1 /20 public subnet by AZ
+	 	- [ ] DHCP: Default AWS Account DHCP option set is attached
+	 	- [ ] DNS Names: Enabled
+	 	- [ ] DNS Resolution: Enabled
+	 	- [ ] Internet Gateway: Included
+	 	- [ ] Route table: Main route table routes traffic to local and Internet Gateway (see below)
+	 	- [ ] NACL: Default NACL allows all inbound and outbound traffic (see below)
+	 	- [ ] Security Group: Default SG allows all inbound traffic from itself; allows all outbound traffic (see below)
+	 	- [ ] ENI: Same ENI is used by all subnets and all security group
+
+- Custom VPC (or "Bespoke"): 
+	- it can be designed and configured in any valid way
+	- Initial state of Default VPC:
+	 	- [ ] CIDR: initial configuration
+	 	- [ ] Subnet: none
+	 	- [ ] DHCP: Default AWS Account DHCP option set is attached
+	 	- [ ] DNS Names: Disabled
+	 	- [ ] DNS Resolution: Enabled
+	 	- [ ] Internet Gateway: none
+	 	- [ ] Route table: Main route table routes traffic to local (see below)
+	 	- [ ] NACL: Default NACL allows all inbound and outbound traffic (see below)
+	 	- [ ] Security Group: Default SG allows all inbound traffic from itself; allows all outbound traffic (see below)
+	 	- [ ] ENI: none
 </details>
