@@ -1,12 +1,11 @@
 # training.computerscience.cloud.aws
-## Network
-  #### VPC:
+## Network - VPC (Virtual Private Cloud):
 ![VPC Architecture with UML notations](https://awscertifiedsolutionsarchitectassociatedocs.s3.amazonaws.com/VPCArchitectureUML.PNG)
  
 <details>
 <summary>Description</summary>
-- [ ] It stands for Virtual Private Cloud.
-- [ ] It is a virtual network within AWS: it is our private data center inside AWS platform.
+    
+- [ ] It is a virtual network within AWS: it is our private data center inside AWS platform
 - [ ] It can be configured to be public/private or a mixture.
 - [ ] It is isolated from other VPCs by default.
 	- [ ] It can't talk to anything outside itself unless we configure it otherwise.
