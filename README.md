@@ -131,10 +131,10 @@
 <details>
 <summary>Router & Route table</summary>
 
--It is a virtual routing device that is in each VPC (fully managed by AWS)
--It has an interface in every subnet known as the "Subnet+1" address (is it the ENI?)
--It is highly available, scalable, and controls data entering and leaving the VPC and its subnets
--Route table:
+- It is a virtual routing device that is in each VPC (fully managed by AWS)
+- It has an interface in every subnet known as the "Subnet+1" address (is it the ENI?)
+- It is highly available, scalable, and controls data entering and leaving the VPC and its subnets
+- Route table:
 	- It controls what the VPC router does with subnet Outbound traffic
 	- A subnet must be associated with 1 and only 1 route table (main or custom)
 	- Local route:
