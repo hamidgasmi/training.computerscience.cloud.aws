@@ -43,8 +43,8 @@
 	 	- [ ] It was initially not something we could create, but we could delete it.
 	 	- [ ] So if we delete, we could run into problems where certain services wouldn't launch,
 	 	- [ ] We needed to create a ticket to get it recreated on our behalf.
-	- It is used as a default for most.
-	- Initial state of Default VPC:
+	 	- [ ] It is used as a default for most.
+	- Its initial state is as follow:
 	 	- [ ] CIDR: default 172.31.0.0/16 (65,000 IP addresses)
 	 	- [ ] Subnet: 1 /20 public subnet by AZ
 	 	- [ ] DHCP: Default AWS Account DHCP option set is attached
@@ -58,7 +58,7 @@
 
 - Custom VPC (or "Bespoke"): 
 	- it can be designed and configured in any valid way
-	- Initial state of Default VPC:
+	- Its initial state is as follow:
 	 	- [ ] CIDR: initial configuration
 	 	- [ ] Subnet: none
 	 	- [ ] DHCP: Default AWS Account DHCP option set is attached
