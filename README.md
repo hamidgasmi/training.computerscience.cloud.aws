@@ -1,7 +1,13 @@
 # training.computerscience.cloud.aws
 ## Network - VPC (Virtual Private Cloud):
+
+<details>
+<summary>Architecture (UML notations)</summary>
+
 ![VPC Architecture with UML notations](https://awscertifiedsolutionsarchitectassociatedocs.s3.amazonaws.com/VPCArchitectureUML.PNG)
- 
+
+</details>
+
 <details>
 <summary>Description</summary>
     
