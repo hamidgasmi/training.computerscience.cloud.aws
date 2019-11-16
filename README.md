@@ -138,27 +138,29 @@
 	- It controls what the VPC router does with subnet Outbound traffic
 	- A subnet must be associated with 1 and only 1 route table (main or custom)
 	- Local route:
-		- [ ] All route tables include a local route that we can't delete
-		- [ ] A local route matches the CIDR of the VPC and lets traffic be routed between subnets
-		- [ ] Local route don't forward traffic to any target because the VPC router can handle it
-		- [ ] Local routes allow all subnets in a VPC to be able to talk to one another even if they're in different AZ
-			
-	- Main Route table:
-		- [ ] It is created by default at the same time as a VPC is created
-		- [ ] It is allocated by default to all subnets in the VPC
-		- [ ] In a default VPC: it routes outbound traffic to local and to outside (Internet Gateway)
-		- [ ] In a custom VPC: It routes outbound traffic to local
-		- [ ] It is created at the same time as the VPC it is attached to is created
-		- [ ] By default, all VPC's Subnets are associated "implicitly" to the main route
-		- [ ] Therefore, if a route to an Internet Gateway is added to the main route, all existing and future subnets will be public by default (if Public IP is enabled)	
-	- "Custom" route tables: Additional custom route table could be created and associated with subnets
+		- [ ] It's included in all route tables
+		- [ ] It can't be deleted from its route table
+		- [ ] It matches the CIDR of the VPC and lets traffic be routed between subnets
+		- [ ] It doesn't forward traffic to any target because the VPC router can handle it
+		- [ ] It allows all subnets in a VPC to be able to talk to one another even if they're in different AZs
 	- It contains a collection of Static Routes: 
 		- [ ] They're used when traffic from a subnet arrives at the VPC router
 		- [ ] They contain a destination and a target: traffic is forwarded to the target if its destination matches the route destination
 		- [ ] Default Routes (0.0.0.0/0 v4 and ::/0 v6) could be added that match any traffic not already matched
 		- [ ] If multiple routes apply, the most specific is chosen
 		- [ ] Example: A /32 (a single IP address) will be chosen before a /24, before a /16, before the default route (0.0.0.0/0) and, before VPC CIDR even the IP address is local
-		- [ ] Targets can be IPs or an AWS networking gateway/object (Egress Only Internet Gateway, Instance, Internet Gateway, NAT Gateway, Network Interface, Peering Connection, Transit Gateway, Virtual Private Gateway)
+		- [ ] Targets can be IPs or an AWS networking gateway/object (Egress Only Internet Gateway, Instance, Internet Gateway, NAT Gateway, Network Interface, Peering Connection, Transit Gateway, Virtual Private Gateway)			
+	- Main Route table:
+		- [ ] It's created by default at the same time as a VPC is created
+		- [ ] It's allocated by default to all subnets in the VPC
+		- [ ] In a default VPC: it routes outbound traffic to local and to outside (Internet Gateway)
+		- [ ] In a custom VPC: It routes outbound traffic to local
+		- [ ] It's created at the same time as the VPC it is attached to
+		- [ ] It's associated "implicitly" to all VPC's Subnets until they're explicitly associated to a custom one
+		- [ ] Therefore, if it includes a route to an Internet Gateway, all existing and future subnets will be public by default (if Public IP is enabled)	
+	- "Custom" route table: 
+		- [ ] It could be created and customized to subnets' requirements.
+		- [ ] It is explicitly associated with subnets.
 	- Best Practice: 
 		- [ ] It is recommended not to update the main route table
 		- [ ] It is particularly recommended not to add the route to the Internet Gateway in the main route: 
