@@ -175,3 +175,58 @@
 		- [ ] We don't need then to do it manually by a static route table
 
 </details>
+
+<details>
+<summary>Internet Gateway</summary>
+
+</details>
+
+<details>
+<summary>DHCP Options Sets</summary>
+
+</details>
+
+<details>
+<summary>DNS hostnames & DNS Resolution</summary>
+
+</details>
+
+<details>
+<summary>NACL - Network Access Control Lists</summary>
+
+</details>
+
+<details>
+<summary>SG - Security Group</summary>
+
+</details>
+
+<details>
+<summary>Bastion Host - JumpBox</summary>
+
+</details>
+
+<details>
+<summary>NAT Instances & NAT Gateway</summary>
+
+</details>
+
+<details>
+<summary>VPC Peering</summary>
+
+</details>
+
+<details>
+<summary>VPC EndPoint</summary>
+
+</details>
+
+<details>
+<summary>Flow Logs</summary>
+
+</details>
+
+<details>
+<summary>Load Balancers</summary>
+
+</details>
