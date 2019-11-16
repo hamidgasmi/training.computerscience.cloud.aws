@@ -121,3 +121,52 @@
 		- [ ] For AZ1: (Tier 1, 10.0.11.0); (Tier 2: 10.0.21.0); (Tier 3: 10.0.31.0)
 		- [ ] For AZ2: (Tier 1, 10.0.12.0); (Tier 2: 10.0.22.0); (Tier 3: 10.0.32.0)
 </details>
+
+<details>
+<summary>VPC Router</summary>
+
+-It is a virtual routing device that is in each VPC (fully managed by AWS)
+-It has an interface in every subnet known as the "Subnet+1" address
+-It is highly available, scalable, and controls data entering and leaving the VPC and its subnets
+-Route table:
+	- It controls what the VPC router does with subnet Outbound traffic
+	- A subnet must be associated with 1 and only 1 route table (main or custom)
+	- Local route:
+		- [ ] All route tables include a local route that we can't delete
+		- [ ] A local route matches the CIDR of the VPC and lets traffic be routed between subnets
+		- [ ] Local route don't forward traffic to any target because the VPC router can handle it
+		- [ ] Local routes allow all subnets in a VPC to be able to talk to one another even if they're in different AZ
+			
+	- Main Route table:
+		- [ ] It is created by default at the same time as a VPC is created
+		- [ ] It is allocated by default to all subnets in the VPC
+		- [ ] It contains only one route which is the local route
+		- [ ] It is created at the same time as the VPC it is attached to is created
+		- [ ] By default, all VPC's Subnets are associated "implicitly" to the main route
+		- [ ] Therefore, if a route to an Internet Gateway is added to the main route, all existing and future subnets will be public by default (if Public IP is enabled)
+			
+	- "Custom" route tables: Additional custom route table could be created and associated with subnets
+	- It has a collection of Routes: 
+		- [ ] They're used when traffic from a subnet arrives at the VPC router
+		- [ ] They contain a destination and a target: traffic is forwarded to the target if its destination matches the route destination
+		- [ ] Default Routes (0.0.0.0/0 v4 and ::/0 v6) could be added that match any traffic not already matched
+		- [ ] If multiple routes apply, the most specific is chosen
+		- [ ] Example: A /32 (a single IP address) will be chosen before a /24, before a /16, before the default route (0.0.0.0/0) and, even before VPC CIDR (it won't be local route, then)
+		- [ ] Targets can be IPs or an AWS networking gateway/object (Egress Only Internet Gateway, Instance, Internet Gateway, NAT Gateway, Network Interface, Peering Connection, Transit Gateway, Virtual Private Gateway)
+	- Could two routes overlap? A route table can have only one route for a destination?
+	- It contains Static Routes
+	- Best Practice: 
+		- [ ] It is recommended not to update main route tables
+		- [ ] It is particularly recommended not to add the route to the Internet Gate in the main route: 
+		- [ ] Because, by default, all VPC's Subnets are associated "implicitly" to the main route
+		- [ ] Therefore, if a route to an Internet Gateway is added to the main route, all existing and future subnets will be public by default (if Public IP is enabled)
+			
+-Route Propagation:
+	- It uses a Virtual Private Gateway that should be associated to the VPC the route table is attached to
+	- We could then elect to propagate any routes that it learned onto this particular route table 
+	- It's a way that we can dynamically populate new routes that are learned by the virtual private gateway, which is used for VPNs on automatically populate our our table
+	- Certain types of AWS networking products (VPN, Direct Connect) can dynamically learn routes using BGP (Border Gateway Protocol)
+	- If we have got a VPN or direct connect that support BGP and we integrate those with our VPC, then we can enable this route propagation to automatically add those routes to our route tables
+We don't need then to do it manually by a static route table
+
+</details>
