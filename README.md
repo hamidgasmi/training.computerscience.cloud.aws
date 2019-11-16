@@ -5,8 +5,8 @@
 <details>
 <summary>Description</summary>
     
-- [ ] It is a virtual network within AWS: it is our private data center inside AWS platform
-- [ ] It can be configured to be public/private or a mixture.
+- It is a virtual network within AWS: it is our private data center inside AWS platform
+- It can be configured to be public/private or a mixture.
 - [ ] It is isolated from other VPCs by default.
 	- [ ] It can't talk to anything outside itself unless we configure it otherwise.
 	- [ ] It's isolated from network blast radius.
