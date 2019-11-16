@@ -15,6 +15,22 @@
 - It can be connected to our data center and corporate networks: Hardware Virtual Private Network (VPN).
 - It supports different Tenancy types: it could be:
 	- Dedicated tenant: it can't be changed (Locked). It is expensive.
-	- multi-tenant (default): it still could be switched to a dedicated tenant. 
+	- multi-tenant (default): it still could be switched to a dedicated tenant.
+- IPv4 CIDR:
+	- From /28 (16 IPs) to /16 (65,536 IPs) 
+	- We need to plan in advance CIDR to support whatever service we will deploy in the VPC:
+	 	- We need to make sure our CIDR will support enough subnets.
+	 	- We need to make sure our CIDR will let our subnets have enough IP addresses.
+	 	- To keep in mind: Some AWS services require a minimum number of IP addresses before they can deploy.
+	- We need to plan a CIDR that allows HA architecture:
+	 	- We need to break our CIDR down based on the number of AZs we will be using and then 
+	 	- We need to break our CIDR down based on the number of tiers our VPC will have (number of subnets): a public tier, an app tier and, a database tier.
+	- Best Practice: ensure that VPCs we work with don't overlap CIDR blocks, whatever this is possible:
+	 	- Lots of networking features don't like the same CIDR block.
+	 	- This will just make things a lot easier further down.
+	 	- Our corporate network VPCs, any other VPC we work with, 
+	 	- VPCs of any partners and vendors that we interact with.
+	- Best Practice: It is recommended to plan for our VPC in advance
+	 	- Now, we could add a CIDR to a VPC, though.
 
 </details>
