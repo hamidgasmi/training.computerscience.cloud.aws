@@ -32,5 +32,17 @@
 	 	- [ ] Our corporate network VPCs, any other VPC we work with, 
 	 	- [ ] VPCs of any partners and vendors that we interact with.
 	- Best Practice: It is recommended to plan for our VPC in advance even though, we can now update VPC CIDR..
-
+- IPv6: 
+	- It supports IPv6.
+	- It isn't yet supported by all AWS services, though.
+	- AWS provides IPv6 blocks.
+- Default VPC:
+	- It is created by default in every region for each new AWS account (to make easy the onboarding process).
+	- It is required for some services:
+	 	- [ ] Historically some services failed if the default VPC didn't exist.
+	 	- [ ] It was initially not something we could create, but we could delete it.
+	 	- [ ] So if we delete, we could run into problems where certain services wouldn't launch,
+	 	- [ ] We needed to create a ticket to get it recreated on our behalf.
+	- It is used as a default for most.
+- Custom VPC (or "Bespoke" VPC): it can be designed and configured in any valid way.
 </details>
