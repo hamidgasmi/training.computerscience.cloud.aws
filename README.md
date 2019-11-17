@@ -1,4 +1,8 @@
 # AWS
+## Compute - EC2 (Elastic Cloud Computing):
+
+---
+
 ## Networking - VPC (Virtual Private Cloud):
 
 <details>
@@ -233,3 +237,5 @@
 ---
 
 ## Storage - S3 (Simple Storage Service):
+
+---
