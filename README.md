@@ -192,10 +192,10 @@
 <details>
 <summary>Internet Gateway</summary>
 
-- It is created and attached to a VPC.
 - It can route traffic for public IPs to and from the internet. 
-- It doesn't applies public IPv4 addresses to a resource's ENI.
+- It is created and attached to a VPC.
 - A VPC could be attached to 1 and only 1 Internet Gateway.
+- It doesn't applies public IPv4 addresses to a resource's ENI.
 - Static NAT (Network Address Translation):
 	- It is the process of 1:1 translation where an internet gateway converts a private address to a public IP address.
 	- It make the instance a true public machine.
