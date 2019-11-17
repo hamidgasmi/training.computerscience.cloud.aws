@@ -196,7 +196,7 @@
 - It is created and attached to a VPC
 - A VPC could be attached to 1 and only 1 Internet Gateway
 - It doesn't applies public IPv4 addresses to a resource's ENI
-- Static NAT (Network Address Translation):
+- It provides Static NAT (Network Address Translation):
 	- It is the process of 1:1 translation where an internet gateway converts a private address to a public IP address
 	- It make the instance a true public machine
 	- When an Internet Gateway receives any traffic from an EC2 instance, if the EC2 has an allocated public IP: 
@@ -325,11 +325,67 @@
 	- SSH forwarding: https://aws.amazon.com/blogs/security/securely-connect-to-linux-instances-running-in-a-private-amazon-vpc/
 	- A new way to securely connect to instances without having to use a bastion or open SSH ports, see: https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html
 
-
 </details>
 
 <details>
 <summary>NAT Instances & NAT Gateway</summary>
+
+- It provides Dynamic NAT (Network Address Translation):
+	- It is a variation of Static NAT (see Internet Gateway, above)
+	- It allows many private IP addresses to get outgoing internet access using a smaller number of public IPs (generally one)
+	- 1 public IP <-> many private IPs.
+- Its purpose is to let EC2 instances in private subnets to go out and download software.
+- Its benefits:
+	- Security reasons: the concept of least privilege (if a resource doesn't need internet access, than we shouldn't give them access)
+	- We're running out IP addresses: so we can't allocate a specific IP address for each instance
+- How it works: let's have an example: 
+	- A private EC2 instance which private IP is: 10.0.0.10
+	- The EC2 instance requires to update its software for a public IP: 1.3.3.7
+	- A NAT Gateway/Instance which Elastic IP is: 172.162.0.10
+	- An Internet Gateway with a Public IP is: 53.12.23.11
+	- Outgoing Traffic:
+		- [ ] The EC2 L3 layer will create a packet (Src IP, Dest IP) = (10.0.0.10, 1.3.3.7)
+		- [ ] The EC2 instance will send the packet to the NAT Gateway
+		- [ ] The NAT Gateway will update the packet Src IP by its EIP: (Src IP, Dest IP) = (172.162.0.10, 1.3.3.7)
+		- [ ] The NAT Gateway will then send the packet to the Internet Gateway
+		- [ ] The Internet Gateway will also update the packet Src IP by its Public IP: (Src IP, Dest IP) = (53.12.23.11, 1.3.3.7)
+		- [ ] The Internet Gateway will then send the packet to the Internet
+	- Ingoing Traffic:
+		- [ ] it is similar to the outgoing process above
+		- [ ] In this case, the packet Destination IP is updated
+		- [ ] It is updated 1st by the Internet Gateway with the NAT Gateway EIP
+		- [ ] Then, it is updated by the NAT Gateway with the EC2 Private IP
+- NAT Gateway: 
+	- 1 NAT Gateway inside an AZ
+	- It requires a Public Subnet and a Public Elastic IP
+	- It understands and allow session traffic (layer 5)
+	- It's scalable but isn't highly available by design (Redundant): if an AZ fails, all underlying NAT Gateway will fail
+	- Best Practice: 
+		- [ ] We need 1 NAT Gateway by AZ
+		- [ ] We need a Single Route table for each AZ (each NAT Gateway)
+		- [ ] Each NAT Gateway should be then associates with all private subnets of the related AZ
+	- Performance: 
+		- [ ] Initially 5GB of bandwidth 
+		- [ ] It can scale to 45GB
+		- [ ] For more bandwidth, we can distribute the workload by splitting our resources into multiple subnets inside an AZ
+		- [ ] Then specify for each subnet to go to a separate gateway
+- NAT Instance:
+	- It is a single EC2 instance
+	- It could be created from a specific AMI
+	- it requires to Disable EC2 Source/Destination Checks:
+		- [ ] Each EC2 instance performs source/destination checks by default
+		- [ ] This means that the instance must be the source or destination of any traffic it sends or receives
+		- [ ] However, a NAT instance must be able to send and receive traffic when the source or destination is not itself
+		- [ ] Therefore, it is required tp disable source/destination checks on the NAT instance
+	- Disadvantage: 
+		- [ ] It is a single point of failure
+		- [ ] If the instance is terminated, the route status: blackhole
+	- Use case: there is only one use case
+		- [ ] When cost saving is absolutely required and, a NAT and bastion hosts are needed
+		- [ ] We could then combine bastion host and NAT in the same machine
+	- For more details:  
+		- [ ] NAT Instance: https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html
+		- [ ] NAT Gateway vs. NAT Instance: https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-comparison.html
 
 </details>
 
