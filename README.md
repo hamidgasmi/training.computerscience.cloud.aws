@@ -200,11 +200,11 @@
 	- It is the process of 1:1 translation where an internet gateway converts a private address to a public IP address
 	- It make the instance a true public machine
 	- When an Internet Gateway receives any traffic from an EC2 instance, if the EC2 has an allocated public IP: 
-		- [ ] Then the Internet Gateway adjusts those traffic's packets
+		- [ ] Then the Internet Gateway adjusts those traffic's packets (Layer 3 in OSI model)
 		- [ ] It replaces the EC2 private IP in the packet source IP with the EC2 associated Public IP address
 		- [ ] It sends then the packets through to the public Internet
 	- When an Internet Gateway receives any traffic from the public internet,
-		- [ ] It adjusts those packets,
+		- [ ] It adjusts those packets as well,
 		- [ ] It replaces the Public IP @ in the packet source IP with the associate EC2 private IP address
 		- [ ] It sends then the packets to the EC2 instance through the VPC Router
 
