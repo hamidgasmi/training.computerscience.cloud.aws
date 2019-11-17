@@ -191,11 +191,6 @@
 </details>
 
 <details>
-<summary>DNS hostnames & DNS Resolution</summary>
-
-</details>
-
-<details>
 <summary>NACL - Network Access Control Lists</summary>
 
 </details>
