@@ -297,6 +297,35 @@
 <details>
 <summary>Bastion Host - JumpBox</summary>
 
+- It is a host (EC2 instance) that sits at the perimeter of a VPC
+- It is in a public Subnet 
+- it usually involves access from untrusted networks or computers
+- It functions as an entry point to the VPC for trusted admins
+- It allows for updates or configuration tweaks remotely while allowing the VPC to stay private and protected (private subnets)
+- It is generally connected to via SSH (Linux) or RDP (Windows)
+- Its goal is to reduce the surface area in which we need to harden:
+	- Instead to harden all private instances (we could have many of them),
+	- We just need to harden 1 Bastion Host
+	- Multifactor authentication, ID federation, and/or IP blocks
+- How it works:
+	- Traffic is going through the Internet gateway > route tables > NACL > Security Groups > Bastion host
+	- Then the bastion host basically just forwards the connection through SSH/ADP to private instances
+	- All what we need to do is harden our bastion host as strongly as possible because it is exposed to the public
+	- Then, we don't have to worry about hardening our private instances in our private subnet
+- Best Practice: 
+	- Bastion hosts must be kept updated, and security hardened and, audited regularly
+	- Multifactor authentication, ID federation, and/or IP blocks
+	- It is recommended to add tags to be able to differentiate from other regular EC2 instances
+	- Create a specific SG for bastion hosts:
+		- [ ] Since bastion hosts require specific rules, we could make them in a unique SG
+		- [ ] The SG could then be shared with bastion hosts only
+		- [ ] It will allow to reduce bastion hosts creation overhead
+	- SSH forwarding: it allows to connect to the private instance through the bastion host without leaving SSH keys within the bastion host
+- For more details:
+	- SSH forwarding: https://aws.amazon.com/blogs/security/securely-connect-to-linux-instances-running-in-a-private-amazon-vpc/
+	- A new way to securely connect to instances without having to use a bastion or open SSH ports, see: https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html
+
+
 </details>
 
 <details>
