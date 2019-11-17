@@ -1,5 +1,5 @@
-# training.computerscience.cloud.aws
-## Network - VPC (Virtual Private Cloud):
+# AWS
+## Networking - VPC (Virtual Private Cloud):
 
 <details>
 <summary>Architecture (UML notations)</summary>
@@ -229,3 +229,5 @@
 <summary>Load Balancers</summary>
 
 </details>
+
+## Storage - S3 (Simple Storage Service):
