@@ -216,42 +216,38 @@
 - It is a security feature that operates at Layer 4 of the OSI model (Transport Layer: TCP/UDP and below)
 - It could be associated with multiples subnets
 - A subnet has to be associated with 1 NACL:
-- NACL impacts traffic crossing the boundary of a subnet
-- Traffic local to a subnet isn't impacted by NACL:
-	- Communication between 2 instances inside a subnet
-	- It won't be impacted by the NACL
+- It impacts traffic crossing the boundary of a subnet
+- It doesn't impact traffic local to a subnet: Communications between 2 instances inside a subnet aren't impacted
 - It acts FIRST before Security Groups: if an IP is denied, it won't even reach security group
-- There're 2 sets of rules: Inbound and Outbound rules
-	It is stateless
-- It is a collection of rules:
+- It is stateless
+- There're 2 sets of rules: Inbound and Outbound rules:
 	- They're explicitly allow or deny traffic based on:
 		- [ ] Traffic Type (protocol), 
 		- [ ] Ports or port range, 
-		- [ ] Source (/destination): IP / CIDR: since NACL is involved at Layer 4, the source/destination can't be an AWS object
+		- [ ] Source (or Destination): IP / CIDR: since NACL is involved at Layer 4, the source/destination can't be an AWS object
 	- They're processed in number of order, "Rule #": Lowest first
 	- When a match is found, that action is taken and processing stops
 	- The "*" rule is an implicit deny: It is processed last
 - Default NACL:
 	- It is created by default at the same as the VPC
-	- It is associated "implicitly" to all new subnets: 
-	- In other words, if a Subnet isn't associated explicitly with a custom NACL, it is then implicitly associated with the default NACL
+	- It is associated "implicitly" to all subnets as long as they're not associated explicitly to a custom NACL 
 	- It Allows ALL traffic: Rule 100: Allow everything
 - Custom NACL:
 	- It is created by users
 	- It should be associated "explicitly" to a subnet
-	- It does block ALL traffic, by default: it includes "*" rule only
+	- It does block ALL traffic, by default: it only includes "*" rule only
 - Ephemeral Ports:
 	- When a client initiates communications with a server, it uses a well-known port # on that server: e.g., TCP/443
-	- The response is from that well known port to an ephemeral port on the client
-	- The client decides the port (e.g., TCP/22000): they could be thousands
-- To keep in mind: Because NACL are stateless and ephemeral ports, the overhead to manage NACL rules is very high 
-	- We should think to "allow" traffic for known ports and every "ephemeral" ports on Client Inbound and Outbound rules and, 
-	- If the communication is within AWS network, we should think to "allow" traffic for known port and every "ephemeral" on destination Inbound and Outbound rules as well
-	- This means that for a single communication, we might have to worry about 4 individual sets of rules ( see print screen below)
+	- The response is from that well-known port to an ephemeral port on the client
+	- The client decides the ephemeral port (e.g., TCP/22000): they're be thousands!
+- To keep in mind: Because NACL are stateless and ephemeral ports are thousands, to manage the overhead of NACL rules is very high. In fact:
+	- We should think to "allow" traffic for every "ephemeral" ports on Client Inbound and Outbound rules and, 
+	- We should think to "allow" traffic for every "ephemeral" ports on Destination Inbound and Outbound rules as well
+	- This means that for a single communication, we might have to worry about 4 individual sets of rules
 	- This is why NACLs tend not to be used all that much generally in production usage (Security Groups are preferred)
 - Use Case:
 	- When we have an explicit deny that we would like to add
-	- If for example, we get attacked from an IP @, we may need to deny it
+	- E.g., we got attacked from an IP @, we may need to deny it
 - Best Practice: 
 	- Inbound and Outbound Rules # should use an increment of 100: 
 		- [ ] 100 for the 1st IPv4 rule, 101 for the 1st IPv6 rule
