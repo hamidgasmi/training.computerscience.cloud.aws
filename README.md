@@ -74,7 +74,16 @@
 	 	- [ ] NACL: Default NACL allows all inbound and outbound traffic (see below)
 	 	- [ ] Security Group: Default SG allows all inbound traffic from itself; allows all outbound traffic (see below)
 	 	- [ ] ENI: none
-
+- DHCP Options Sets:
+	- It's a configuration that sets various things that have provided to resources inside a VPC when they use DHCP
+	- It's a protocol that allows resources inside a network to auto configure their network card such as IP address
+	- It allows any instance in a VPC to point to the specified domain and DNS servers to resolve their domain names
+	- More details: https://docs.aws.amazon.com/vpc/latest/userguide/VPC_DHCP_Options.html
+- VPC DNS hostnames & DNS Resolution:
+	- Even when an Internet Gateway is created and attached to a VPC and, 
+	- A public IP is associated to an EC2 instance, a DNS name isn't associated to it
+	- To do it, we should enable it in VPC > Edit DNS hostnames and Edit DNS resolution
+	- Best Practice: Always enable VPC DNS hostnames and, VPC DNS resolution.
 </details>
 
 <details>
@@ -178,11 +187,6 @@
 
 <details>
 <summary>Internet Gateway</summary>
-
-</details>
-
-<details>
-<summary>DHCP Options Sets</summary>
 
 </details>
 
