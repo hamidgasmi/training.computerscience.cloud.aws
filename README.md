@@ -422,25 +422,29 @@
 <summary>VPC EndPoint</summary>
 
 - It is a virtual gateway object created in a VPC
-- It provides access to public AWS services by using a private link: 
+- It provides a method of connecting to public AWS services: 
 	- Its related traffic doesn't leave AWS network
 	- It doesn't require a public IP address, 
 	- It doesn't require an Internet gateway, 
 	- It doesn't require any other resource: a NAT device, a VPN connection nor, an AWS Direct Connect connection instances
 - It is horizontally scaled (bandwidth)
-- There're 2 types of VPC endpoints 
+- There're 2 types of VPC endpoints:
+	- Gateway endpoint: 
+		- [ ] It is used for S3 buckets and DynamoDB
+		- [ ] It is similar to Internet Gateway
+		- [ ] Its related traffic goes through RT: (Destination, Target) = (AWS Service Prefix Lists, Gateway Endpoint ID)
+		- [ ] Prefix Lists are more specific than general public internet (0.0.0.0/0)
+		- [ ] Therefore, Prefix Lists will override the use of the IG when they're in the same RT
+		- [ ] It can be restricted via policies: full access is selected by default
+		- [ ] It is HA across AZs in a region: 1 Gateway endpoint by VPC
 	- Interface endpoint:
+		- [ ] It's used for most other AWS services: SNS, SQS		
 		- [ ] It is an ENI with a private IP address that serves as an entry point for traffic destined to a supported service
 		- [ ] It is attached to a subnet
 		- [ ] Its related traffic goes through SGs and NACLs
 		- [ ] It doesn't require a RT: it adds or replaces the DNS for the service
 		- [ ] It isn't HA (Highly available) by design: adding an interface endpoint per AZ is required for HA
-		- [ ] For example: Flow log is using an ENI
-	- Gateway endpoint: 
-		- [ ] It is used for S3 buckets and DynamoDB
-		- [ ] Its related traffic goes through RT: (Destination, Target) = (AWS Service Prefix, Gateway Endpoint ID)
-		- [ ] It can be restricted via policies
-		- [ ] It is HA across AZs in a region
+
 - Limits:
 	- Gateway endpoints are used via route
 - Use case:
