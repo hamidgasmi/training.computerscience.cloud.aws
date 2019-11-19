@@ -386,7 +386,7 @@
 <summary>VPC Peering</summary>
 
 - It allows communication between 2 VPCs via a direct network route using private IP addresses
-- It can span AWS accounts and even regions (see limitation below)
+- It can span AWS accounts and even regions (see limits below)
 - It's involved at layer 3 of OSI model (network)
 - It uses peering connection object: 
 	- it's a network gateway
@@ -397,26 +397,24 @@
 		- [ ] SG reference is cross-account but it's not cross-region (see limits below)
 	- DNS resolution to private IPs can be enabled, 
 		- [ ] It is needed in both sides
-		- [ ] Public DNSes will therefore be resolved to their private IP
+		- [ ] Public DNSes will therefore be resolved to their private IP and,
 		- [ ] It won't be traveling over the public Internet
 - Data transit:
 	- It is encrypted
 	- It uses AWS global-backbone for VPC peering cross-region: low latency and higher performance than public internet
-- Limits and considerations:
+- Limits:
 	- VPC CIDR blocks can't overlap
 	- Transitive Peering is NOT Possible: 
 		- [ ] A VPC can't talk to another VPC through a 3rd VPC
 		- [ ] A Direct peering is required between 2 VPCs so that they can talk to each other
 	- Cross-Region:
-		- [ ] An SGs can't be referenced from another region
+		- [ ] An SG can't be referenced from another region
 		- [ ] IPv6 support isn't available cross-region
 - Use case:
 	- To make a service that is running in a single VPC accessible to other VPCs
-	- To connect our VPC to a vendor VPC or a partner VPC to access an theirs application
+	- To connect our VPC to a vendor VPC or a partner VPC to access an application
 	- To give access to our VPCs for security audit
 	- We have a requirement to split an application up into multiple isolated network to limit the blast raduis in the event of network based attacks
-- Process to create a VPC peering:
-	- In a first VPC
 
 </details>
 
