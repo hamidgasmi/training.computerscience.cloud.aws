@@ -392,6 +392,21 @@
 <details>
 <summary>VPC Peering</summary>
 
+- It allows communication between 2 VPCs via a direct network route using private IP addresses
+- It can span AWS accounts and even regions
+- It's involved at layer 3 of OSI model.
+- Data is encrypted and transits via the AWS global backbone.
+- Limits and considerations:
+	- VPC CIDR blocks can't overlap
+	- Transitive Peering is NOT Possible: 
+		- [ ] A VPC can't talk to another VPC through a 3rd VPC.
+		- [ ] A Direct peering is required between 2 VPCs so that they can talk to each other.
+	- Routes are required at both sides (remote CIDR -> peer connection)
+	- NACLs and SGs can be used to control access
+	- SGs can be reference but not cross-region
+	- IPv6 support isn't available cross-region
+	- DNS resolution to private IPs can be enabled, but it's a setting needed at both sides.
+
 </details>
 
 <details>
