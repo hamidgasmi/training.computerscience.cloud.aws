@@ -436,14 +436,17 @@
 		- [ ] Prefix Lists are more specific than general public internet (0.0.0.0/0)
 		- [ ] Therefore, Prefix Lists will override the use of the IG when they're in the same RT
 		- [ ] It can be restricted via policies: full access is selected by default
-		- [ ] It is HA across AZs in a region: 1 Gateway endpoint by VPC
+		- [ ] It is HA (Highly available) across AZs in a region: 1 Gateway endpoint by VPC
 	- Interface endpoint:
-		- [ ] It's used for most other AWS services: SNS, SQS		
-		- [ ] It is an ENI with a private IP address that serves as an entry point for traffic destined to a supported service
+		- [ ] It is used for most other AWS services such as SNS, SQS
+		- [ ] It is an ENI with a private IP address
+		- [ ] It provides another unique endpoint for the selected service (different from the service public endpoint)
 		- [ ] It is attached to a subnet
+		- [ ] For HA, it should be associated with multiple AZs
 		- [ ] Its related traffic goes through SGs and NACLs
 		- [ ] It doesn't require a RT: it adds or replaces the DNS for the service
-		- [ ] It isn't HA (Highly available) by design: adding an interface endpoint per AZ is required for HA
+		- [ ] It replaces the default service public DNS when "Private DNS Names" feature is enabled
+		- [ ] [For more details about AWS Services endpoint] (https://docs.aws.amazon.com/general/latest/gr/rande.html)
 
 - Limits:
 	- Gateway endpoints are used via route
@@ -451,6 +454,7 @@
 	- An entire VPC is private without an Internet Gateway
 	- A specific private instance needs to access public services
 	- To access resources restricted to specific VPCs or endpoints (private S3 buckets)
+- [For more details about Interface endpoints] (https://docs.aws.amazon.com/vpc/latest/userguide/vpc-endpoints.html)
 
 </details>
 
