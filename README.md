@@ -439,10 +439,10 @@
 - Subnet Name: sn-[public/private]-[AZ]: sn-public-a; sn-private-a
 - Subnet range: 
 	- In some cases, humans do need to understand the networking structure that we use inside a VPC
-	- So, we could match subnet's CIDR to its AZ and its application tear:
-	- E.g., for a VPC 10.0.0.0/16 with Subnets: /24 + 2 AZs + 3 tiers (:
-	- For AZ1: (Tier 1, 10.0.11.0); (Tier 2: 10.0.21.0); (Tier 3: 10.0.31.0)
-	- For AZ2: (Tier 1, 10.0.12.0); (Tier 2: 10.0.22.0); (Tier 3: 10.0.32.0)
+	- So, we could match a subnet's CIDR to its AZ and its application tear:
+	- E.g., for a VPC 10.0.0.0/16 with Subnets: /24 + 2 AZs + 3 tiers:
+		- [ ] For AZ1: (Tier 1, 10.0.11.0); (Tier 2: 10.0.21.0); (Tier 3: 10.0.31.0)
+		- [ ] For AZ2: (Tier 1, 10.0.12.0); (Tier 2: 10.0.22.0); (Tier 3: 10.0.32.0)
 - Peering Connection name: pc-[Requester VPC name]-[Accepter VPC name]. E.g., pc-VPC1-VPC2
 
 </details>
