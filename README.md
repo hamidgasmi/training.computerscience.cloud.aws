@@ -421,6 +421,21 @@
 <details>
 <summary>VPC EndPoint</summary>
 
+- It enables us to privately connect our VPC to supported AWS services.
+- It is using a private link without requiring an Internet gateway, and Nat device, a VPN connection or an AWS Direct Connect connection instances.
+- It doesn't even require a public IP addresses to communicate with AWS resources
+- So traffic between our VPC and other services does not leave the Amazon Network.
+- It is a virtual device horizontally scaled, redundant and highly available VPC component. 
+- It lets VPC's instances communicate to AWS services without imposing availability risk or bandwidth constraints on our network traffic.
+- There're 2 types of VPC endpoints 
+	- Interface endpoints:
+		- [ ] It is an Elastic Network Interface (ENI) with a private IP address that serves as an entry point for traffic destined to a supported service.
+		- [ ] For example: Flow log is using an ENI.
+	- Gateway endpoints:
+		- [ ] They're similar to Interface endpoints.
+		- [ ] And they look like NAT Gateway.
+- They're supported by S3 buckets and DynamoDB.
+
 </details>
 
 <details>
