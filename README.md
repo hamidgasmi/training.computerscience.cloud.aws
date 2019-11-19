@@ -421,20 +421,32 @@
 <details>
 <summary>VPC EndPoint</summary>
 
-- It enables us to privately connect our VPC to supported AWS services.
-- It is using a private link without requiring an Internet gateway, and Nat device, a VPN connection or an AWS Direct Connect connection instances.
-- It doesn't even require a public IP addresses to communicate with AWS resources
-- So traffic between our VPC and other services does not leave the Amazon Network.
-- It is a virtual device horizontally scaled, redundant and highly available VPC component. 
-- It lets VPC's instances communicate to AWS services without imposing availability risk or bandwidth constraints on our network traffic.
+- It is a virtual gateway object created in a VPC
+- It provides access to public AWS services by using a private link: 
+	- Its related traffic doesn't leave AWS network
+	- It doesn't require a public IP address, 
+	- It doesn't require an Internet gateway, 
+	- It doesn't require any other resource: a NAT device, a VPN connection nor, an AWS Direct Connect connection instances
+- It is horizontally scaled (bandwidth)
 - There're 2 types of VPC endpoints 
-	- Interface endpoints:
-		- [ ] It is an Elastic Network Interface (ENI) with a private IP address that serves as an entry point for traffic destined to a supported service.
-		- [ ] For example: Flow log is using an ENI.
-	- Gateway endpoints:
-		- [ ] They're similar to Interface endpoints.
-		- [ ] And they look like NAT Gateway.
-- They're supported by S3 buckets and DynamoDB.
+	- Interface endpoint:
+		- [ ] It is an ENI with a private IP address that serves as an entry point for traffic destined to a supported service
+		- [ ] It is attached to a subnet
+		- [ ] Its related traffic goes through SGs and NACLs
+		- [ ] It doesn't require a RT: it adds or replaces the DNS for the service
+		- [ ] It isn't HA (Highly available) by design: adding an interface endpoint per AZ is required for HA
+		- [ ] For example: Flow log is using an ENI
+	- Gateway endpoint: 
+		- [ ] It is used for S3 buckets and DynamoDB
+		- [ ] Its related traffic goes through RT: (Destination, Target) = (AWS Service Prefix, Gateway Endpoint ID)
+		- [ ] It can be restricted via policies
+		- [ ] It is HA across AZs in a region
+- Limits:
+	- Gateway endpoints are used via route
+- Use case:
+	- An entire VPC is private without an Internet Gateway
+	- A specific private instance needs to access public services
+	- To access resources restricted to specific VPCs or endpoints (private S3 buckets)
 
 </details>
 
