@@ -131,14 +131,7 @@
 	- It is a subnet that is created automatically by AWS at the same time as a default VPC
 	- It is public
 	- There is as many default subnets as AZs of the region where the default VPC is created in	
-- Convention:
-	- Subnet Name: sn-[public/private]-[AZ]: sn-public-a; sn-private-a
-	- Subnet range: 
-	 	- [ ] In some cases, humans do need to understand the networking structure that we use inside a VPC
-	 	- [ ] So, we could match subnet's CIDR to its AZ and its application tear:
-	 	- [ ] E.g., for a VPC 10.0.0.0/16 with Subnets: /24 + 2 AZs + 3 tiers (:
-		- [ ] For AZ1: (Tier 1, 10.0.11.0); (Tier 2: 10.0.21.0); (Tier 3: 10.0.31.0)
-		- [ ] For AZ2: (Tier 1, 10.0.12.0); (Tier 2: 10.0.22.0); (Tier 3: 10.0.32.0)
+
 </details>
 
 <details>
@@ -393,19 +386,37 @@
 <summary>VPC Peering</summary>
 
 - It allows communication between 2 VPCs via a direct network route using private IP addresses
-- It can span AWS accounts and even regions
-- It's involved at layer 3 of OSI model.
-- Data is encrypted and transits via the AWS global backbone.
+- It can span AWS accounts and even regions (see limitation below)
+- It's involved at layer 3 of OSI model (network)
+- It uses peering connection object: 
+	- it's a network gateway
+	- It's similar to Internet Gateway but used to link VPCs
+	- Traffic goes through RTs, NACLs and, SGs. Therefore: 	
+		- [ ] Routes are required at both sides
+		- [ ] NACLs and SGs can be used to control access
+		- [ ] SG reference is cross-account but it's not cross-region (see limits below)
+	- DNS resolution to private IPs can be enabled, 
+		- [ ] It is needed in both sides
+		- [ ] Public DNSes will therefore be resolved to their private IP
+		- [ ] It won't be traveling over the public Internet
+- Data transit:
+	- It is encrypted
+	- It uses AWS global-backbone for VPC peering cross-region: low latency and higher performance than public internet
 - Limits and considerations:
 	- VPC CIDR blocks can't overlap
 	- Transitive Peering is NOT Possible: 
-		- [ ] A VPC can't talk to another VPC through a 3rd VPC.
-		- [ ] A Direct peering is required between 2 VPCs so that they can talk to each other.
-	- Routes are required at both sides (remote CIDR -> peer connection)
-	- NACLs and SGs can be used to control access
-	- SGs can be reference but not cross-region
-	- IPv6 support isn't available cross-region
-	- DNS resolution to private IPs can be enabled, but it's a setting needed at both sides.
+		- [ ] A VPC can't talk to another VPC through a 3rd VPC
+		- [ ] A Direct peering is required between 2 VPCs so that they can talk to each other
+	- Cross-Region:
+		- [ ] An SGs can't be referenced from another region
+		- [ ] IPv6 support isn't available cross-region
+- Use case:
+	- To make a service that is running in a single VPC accessible to other VPCs
+	- To connect our VPC to a vendor VPC or a partner VPC to access an theirs application
+	- To give access to our VPCs for security audit
+	- We have a requirement to split an application up into multiple isolated network to limit the blast raduis in the event of network based attacks
+- Process to create a VPC peering:
+	- In a first VPC
 
 </details>
 
@@ -421,6 +432,20 @@
 
 <details>
 <summary>Load Balancers</summary>
+
+</details>
+
+<details>
+<summary>Conventions</summary>
+
+- Subnet Name: sn-[public/private]-[AZ]: sn-public-a; sn-private-a
+- Subnet range: 
+	- In some cases, humans do need to understand the networking structure that we use inside a VPC
+	- So, we could match subnet's CIDR to its AZ and its application tear:
+	- E.g., for a VPC 10.0.0.0/16 with Subnets: /24 + 2 AZs + 3 tiers (:
+	- For AZ1: (Tier 1, 10.0.11.0); (Tier 2: 10.0.21.0); (Tier 3: 10.0.31.0)
+	- For AZ2: (Tier 1, 10.0.12.0); (Tier 2: 10.0.22.0); (Tier 3: 10.0.32.0)
+- Peering Connection name: pc-[Requester VPC name]-[Accepter VPC name]. E.g., pc-VPC1-VPC2
 
 </details>
 
