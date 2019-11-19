@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\service_compute_ec2",
+    "\\service_compute_ec2\\compte_ec2_roles"
   ],
-  "SelectedNode": "\\README.md",
+  "SelectedNode": "\\service_compute_ec2\\compte_ec2_roles\\EC2Authentication2_AWSConfigure.sh",
   "PreviewInSolutionExplorer": false
 }
