@@ -491,10 +491,9 @@
 	- It is enabled from subnet -> Edit CIDR feature
 - It is publicly routable: 
 	- There is no concept of Private IPv6 address
-	- Elastic IPs aren't relevent with IPv6
+	- There is no concept of Elastic IPs with IPv6
 	- IG doesn't do static NATs for IPv6
 	- IG is routing from VPC to the public Internet
-	- NAT Gateway and Instance don't do dynamic NATs for IPv6 (see Egress-Only Gateway)
 	- RT can contain IPv6 routes
 	- IPv6 default route is: "::/0"
 - It should also be configured in NACL and SG
@@ -525,6 +524,8 @@
 - Analogy: 
 	- it is similar to NAT Gateway but
 	- it doesn't provide Dynamic NAT since it isn't relevent with IPv6
+	- NAT Gateway doesn't support IPv6
+
 </details>
 
 <details>
