@@ -262,7 +262,7 @@
 - It is Stateful:
 	- The response to an allowed inbound (or outbound) request, will be allowed to flow out (or in), regardless of outbound (or inbound) rules
 	- If we send a request from our instance and it is allowed by the corresponding SG rule, its response is then allowed to flow in regardless of inbound rules
-	- [More details (see Tracking](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#security-group-connection-tracking])
+	- [More details (see Tracking)](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#security-group-connection-tracking])
 	- [Comparison between Security Group and ACL (stateless)](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Security.html#VPC_Security_Comparison])
 - SG Rules include: Inbound and Outbound rule sets:
 	- Type: TCP
