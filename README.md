@@ -8,7 +8,7 @@
 <details>
 <summary>Architecture (UML notations)</summary>
 
-![VPC Architecture with UML notations](https://awscertifiedsolutionsarchitectassociatedocs.s3.amazonaws.com/VPC_Architecture.PNG)
+![VPC Architecture with UML notations](https://awscertifiedsolutionsarchitectassociatedocs.s3.amazonaws.com/VPC_ArchitectureUML.PNG)
 
 </details>
 
@@ -82,7 +82,7 @@
 	- It's a configuration that sets various things that have provided to resources inside a VPC when they use DHCP
 	- It's a protocol that allows resources inside a network to auto configure their network card such as IP address
 	- It allows any instance in a VPC to point to the specified domain and DNS servers to resolve their domain names
-	- More details: https://docs.aws.amazon.com/vpc/latest/userguide/VPC_DHCP_Options.html
+	- [More details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_DHCP_Options.html)
 - VPC DNS hostnames & DNS Resolution:
 	- Even when an Internet Gateway is created and attached to a VPC and, 
 	- A public IP is associated to an EC2 instance, a DNS name isn't associated to it
@@ -110,10 +110,10 @@
 	- Subnet's Router IP address ("+1"): Example: 10.0.0.1.
 	- Subnet's DNS IP address ("+2"): E.g., 10.0.0.2
 	 	- [ ] For VPCs with multiple CIDR blocks, the IP address of the DNS server is located in the primary CIDR
-	 	- [ ] For more details: https://docs.aws.amazon.com/vpc/latest/userguide/VPC_DHCP_Options.html#AmazonDNS
+	 	- [ ] [For more details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_DHCP_Options.html#AmazonDNS)
 	- Subnet's Future IP address ("+3"): e.g., 10.0.0.3
 	- Subnet's Network Broadcast IP address ("Last"): E.g., 10.0.0.255
-	- For more details: https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html
+	- [For more details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html)
 - Share a subnet: Organization or AWS account
 	- Resources deployed to the subnet are owned by the account that deployed them: so we can't update them
 	- The account we shared the subnet with can't update our subnet (what if there is a role that allow them so?)
@@ -262,8 +262,8 @@
 - It is Stateful:
 	- The response to an allowed inbound (or outbound) request, will be allowed to flow out (or in), regardless of outbound (or inbound) rules
 	- If we send a request from our instance and it is allowed by the corresponding SG rule, its response is then allowed to flow in regardless of inbound rules
-	- More details (see Tracking): https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#security-group-connection-tracking
-	- Comparison between Security Group and ACL (stateless): https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Security.html#VPC_Security_Comparison
+	- [More details (see Tracking)](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#security-group-connection-tracking])
+	- [Comparison between Security Group and ACL (stateless)](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Security.html#VPC_Security_Comparison])
 - SG Rules include: Inbound and Outbound rule sets:
 	- Type: TCP
 	- Protocol: e.g., HTTP, SSH
@@ -315,8 +315,8 @@
 		- [ ] It will allow to reduce bastion hosts creation overhead
 	- SSH forwarding: it allows to connect to the private instance through the bastion host without leaving SSH keys within the bastion host
 - For more details:
-	- SSH forwarding: https://aws.amazon.com/blogs/security/securely-connect-to-linux-instances-running-in-a-private-amazon-vpc/
-	- A new way to securely connect to instances without having to use a bastion or open SSH ports, see: https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html
+	- [SSH forwarding](https://aws.amazon.com/blogs/security/securely-connect-to-linux-instances-running-in-a-private-amazon-vpc/)
+	- [A new way to securely connect to instances without having to use a bastion or open SSH ports](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html)
 
 </details>
 
@@ -377,8 +377,8 @@
 		- [ ] When cost saving is absolutely required and, a NAT and bastion hosts are needed
 		- [ ] We could then combine bastion host and NAT in the same machine
 	- For more details:  
-		- [ ] NAT Instance: https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html
-		- [ ] NAT Gateway vs. NAT Instance: https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-comparison.html
+		- [ ] [NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html)
+		- [ ] [NAT Gateway vs. NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-comparison.html)
 
 </details>
 
@@ -420,6 +420,42 @@
 
 <details>
 <summary>VPC EndPoint</summary>
+
+- It is a virtual gateway object created in a VPC
+- It provides a method of connecting to public AWS services: 
+	- Its related traffic doesn't leave AWS network
+	- It doesn't require a public IP address, 
+	- It doesn't require an Internet gateway, 
+	- It doesn't require any other resource: a NAT device, a VPN connection nor, an AWS Direct Connect connection instances
+- It is horizontally scaled (bandwidth)
+- There're 2 types of VPC endpoints:
+	- Gateway endpoint: 
+		- [ ] It is used for S3 buckets and DynamoDB
+		- [ ] It is similar to Internet Gateway
+		- [ ] Its related traffic goes through RT: (Destination, Target) = (AWS Service Prefix Lists, Gateway Endpoint ID)
+		- [ ] Prefix Lists are more specific than general public internet (0.0.0.0/0)
+		- [ ] Therefore, Prefix Lists will override the use of the IG when they're in the same RT
+		- [ ] It can be restricted via policies: full access is selected by default
+		- [ ] It is HA (Highly available) across AZs in a region: 1 Gateway endpoint by VPC
+	- Interface endpoint:
+		- [ ] It is used for most other AWS services such as SNS, SQS
+		- [ ] It is an ENI with a private IP address
+		- [ ] It provides another unique endpoint for the selected service (different from the service public endpoint)
+		- [ ] It is attached to a subnet
+		- [ ] For HA, it should be associated with multiple AZs
+		- [ ] Its related traffic goes through SGs and NACLs
+		- [ ] It doesn't require a RT: it adds or replaces the DNS for the service
+		- [ ] It provides multiple DNS names: 1 per selected subnet + 1 general DNS name (not specific for an AZ)
+		- [ ] It replaces the default service public DNS when "Private DNS Names" feature is enabled
+		- [ ] [For more details about AWS Services endpoint](https://docs.aws.amazon.com/general/latest/gr/rande.html)
+
+- Limits:
+	- Gateway endpoints are used via route
+- Use case:
+	- An entire VPC is private without an Internet Gateway
+	- A specific private instance needs to access public services
+	- To access resources restricted to specific VPCs or endpoints (private S3 buckets)
+- [For more details about Interface endpoints](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-endpoints.html)
 
 </details>
 
