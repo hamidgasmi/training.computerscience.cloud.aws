@@ -110,10 +110,10 @@
 	- Subnet's Router IP address ("+1"): Example: 10.0.0.1.
 	- Subnet's DNS IP address ("+2"): E.g., 10.0.0.2
 	 	- [ ] For VPCs with multiple CIDR blocks, the IP address of the DNS server is located in the primary CIDR
-	 	- [ ] For more details: https://docs.aws.amazon.com/vpc/latest/userguide/VPC_DHCP_Options.html#AmazonDNS
+	 	- [ ] [For more details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_DHCP_Options.html#AmazonDNS)
 	- Subnet's Future IP address ("+3"): e.g., 10.0.0.3
 	- Subnet's Network Broadcast IP address ("Last"): E.g., 10.0.0.255
-	- For more details: https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html
+	- [For more details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html)
 - Share a subnet: Organization or AWS account
 	- Resources deployed to the subnet are owned by the account that deployed them: so we can't update them
 	- The account we shared the subnet with can't update our subnet (what if there is a role that allow them so?)
