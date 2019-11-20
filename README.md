@@ -29,7 +29,7 @@
 </details>
 
 <details>
-<summary>VPC IPv4 CIDR</summary>
+<summary>IPv4 CIDR</summary>
 
 - It is from /28 (16 IPs) to /16 (65,536 IPs) 
 - We need to plan in advance CIDR to support whatever service we will deploy in the VPC:
@@ -50,7 +50,7 @@
 </details>
 
 <details>
-<summary>VPC Types</summary>
+<summary>Types</summary>
 
 - Default VPC:
 	- It is created by default in every region for each new AWS account (to make easy the onboarding process)
@@ -482,20 +482,31 @@
 
 - VPC IPv6:
 	- It is currently opt-in (disabled by default)
+	- It is enabled from VPC -> Edit CIDR feature
 	- It's a /56 CIDR allocated from AWS pool
 	- It can't be adjusted
 - Subnet IPv6:
 	- It is a /64 CIDR
 	- It can be chosen from the VPC /56 range
-- It's Public: 
+	- It is enabled from subnet -> Edit CIDR feature
+- It is publicly routable: 
 	- There is no concept of Private IPv6 address
-	- It is publicly routable
-	- Internet Gateway doesn't do static NATs for IPv6
-	- NAT Gateway and Instance don't do dynamic NATs for IPv6
-	- Route Tables can contain IPv6 routes
+	- Elastic IPs aren't relevent with IPv6
+	- IG doesn't do static NATs for IPv6
+	- IG is routing from VPC to the public Internet
+	- NAT Gateway and Instance don't do dynamic NATs for IPv6 (see Egress-Only Gateway)
+	- RT can contain IPv6 routes
 	- IPv6 default route is: "::/0"
+- It should also be configured in NACL and SG
+- To use it:
+	- Enable it for VPC
+	- Enable it for a subnet
+	- Add IPv6 routes in subnet's RT (particularly ::/0)
+	- Make sure corresponding NACL allows traffic with IPv6
+	- Make sure corresponding SGs allow traffic with IPv6
 - DHCP6:
 	- It let resources of subnets with IPv6 range configure a public IPv6 address
+	- The OS is configured with the public IPv6
 - DNS Name:
 	- It isn't allocated to IPv6 addresses
 - Limits:
