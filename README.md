@@ -445,8 +445,9 @@
 		- [ ] For HA, it should be associated with multiple AZs
 		- [ ] Its related traffic goes through SGs and NACLs
 		- [ ] It doesn't require a RT: it adds or replaces the DNS for the service
+		- [ ] It provides multiple DNS names: 1 per selected subnet + 1 general DNS name (not specific for an AZ)
 		- [ ] It replaces the default service public DNS when "Private DNS Names" feature is enabled
-		- [ ] [For more details about AWS Services endpoint] (https://docs.aws.amazon.com/general/latest/gr/rande.html)
+		- [ ] [For more details about AWS Services endpoint](https://docs.aws.amazon.com/general/latest/gr/rande.html)
 
 - Limits:
 	- Gateway endpoints are used via route
@@ -454,7 +455,7 @@
 	- An entire VPC is private without an Internet Gateway
 	- A specific private instance needs to access public services
 	- To access resources restricted to specific VPCs or endpoints (private S3 buckets)
-- [For more details about Interface endpoints] (https://docs.aws.amazon.com/vpc/latest/userguide/vpc-endpoints.html)
+- [For more details about Interface endpoints](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-endpoints.html)
 
 </details>
 
