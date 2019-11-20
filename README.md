@@ -499,9 +499,9 @@
 - DNS Name:
 	- It isn't allocated to IPv6 addresses
 - Limits:
-	- IPv6 isn't currently supported across every AWS product 
-	- IPv6 isn't currently supported with every feature
-	- It isn't supported by VPNs, customer gateways, and VPC endpoints
+	- It isn't currently supported across every AWS product 
+	- It isn't currently supported with every feature
+	- It isn't currently supported by VPNs, customer gateways, and VPC endpoints
 	- [For more details]()
 
 </details>
