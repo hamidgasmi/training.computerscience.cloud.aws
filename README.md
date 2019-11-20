@@ -521,6 +521,7 @@
 
 - It provides instances with outgoing access to the public internet using IPv6 and,
 - It prevents them from being accessed from the internet (or outside VPC?)
+- It allows outbound and inbound response traffic.
 - Analogy: 
 	- it is similar to NAT Gateway but
 	- it doesn't provide Dynamic NAT since it isn't relevent with IPv6
