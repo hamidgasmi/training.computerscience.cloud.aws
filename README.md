@@ -8,7 +8,7 @@
 <details>
 <summary>Architecture (UML notations)</summary>
 
-![VPC Architecture with UML notations](https://awscertifiedsolutionsarchitectassociatedocs.s3.amazonaws.com/VPC_Architecture.PNG)
+![VPC Architecture with UML notations](https://awscertifiedsolutionsarchitectassociatedocs.s3.amazonaws.com/VPC_ArchitectureUML.PNG)
 
 </details>
 
@@ -82,7 +82,7 @@
 	- It's a configuration that sets various things that have provided to resources inside a VPC when they use DHCP
 	- It's a protocol that allows resources inside a network to auto configure their network card such as IP address
 	- It allows any instance in a VPC to point to the specified domain and DNS servers to resolve their domain names
-	- More details: https://docs.aws.amazon.com/vpc/latest/userguide/VPC_DHCP_Options.html
+	- [More details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_DHCP_Options.html)
 - VPC DNS hostnames & DNS Resolution:
 	- Even when an Internet Gateway is created and attached to a VPC and, 
 	- A public IP is associated to an EC2 instance, a DNS name isn't associated to it
@@ -262,8 +262,8 @@
 - It is Stateful:
 	- The response to an allowed inbound (or outbound) request, will be allowed to flow out (or in), regardless of outbound (or inbound) rules
 	- If we send a request from our instance and it is allowed by the corresponding SG rule, its response is then allowed to flow in regardless of inbound rules
-	- More details (see Tracking): https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#security-group-connection-tracking
-	- Comparison between Security Group and ACL (stateless): https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Security.html#VPC_Security_Comparison
+	- [More details (see Tracking](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#security-group-connection-tracking]
+	- [Comparison between Security Group and ACL (stateless)](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Security.html#VPC_Security_Comparison]
 - SG Rules include: Inbound and Outbound rule sets:
 	- Type: TCP
 	- Protocol: e.g., HTTP, SSH
@@ -315,8 +315,8 @@
 		- [ ] It will allow to reduce bastion hosts creation overhead
 	- SSH forwarding: it allows to connect to the private instance through the bastion host without leaving SSH keys within the bastion host
 - For more details:
-	- SSH forwarding: https://aws.amazon.com/blogs/security/securely-connect-to-linux-instances-running-in-a-private-amazon-vpc/
-	- A new way to securely connect to instances without having to use a bastion or open SSH ports, see: https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html
+	- [SSH forwarding](https://aws.amazon.com/blogs/security/securely-connect-to-linux-instances-running-in-a-private-amazon-vpc/)
+	- [A new way to securely connect to instances without having to use a bastion or open SSH ports](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html)
 
 </details>
 
@@ -377,8 +377,8 @@
 		- [ ] When cost saving is absolutely required and, a NAT and bastion hosts are needed
 		- [ ] We could then combine bastion host and NAT in the same machine
 	- For more details:  
-		- [ ] NAT Instance: https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html
-		- [ ] NAT Gateway vs. NAT Instance: https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-comparison.html
+		- [ ] [NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html)
+		- [ ] [NAT Gateway vs. NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-comparison.html)
 
 </details>
 
