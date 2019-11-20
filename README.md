@@ -480,25 +480,24 @@
 <details>
 <summary>IPv6</summary>
 
-- It is currently opt-in (disabled by default):
 - VPC IPv6:
+	- It is currently opt-in (disabled by default)
 	- It's a /56 CIDR allocated from AWS pool
 	- It can't be adjusted
 - Subnet IPv6:
 	- It is a /64 CIDR
-	- It can be chosen from the VPC /56
-- DHCP6:
-	- It let resources of subnets with IPv6 range configure a IPv6 address
-- DNS Name:
-	- It isn't allocated to IPv6 addresses
+	- It can be chosen from the VPC /56 range
 - It's Public: 
 	- There is no concept of Private IPv6 address
 	- It is publicly routable
 	- Internet Gateway doesn't do static NATs for IPv6
 	- NAT Gateway and Instance don't do dynamic NATs for IPv6
-	- Route Tables can contain IPv6 route
+	- Route Tables can contain IPv6 routes
 	- IPv6 default route is: "::/0"
-	- 
+- DHCP6:
+	- It let resources of subnets with IPv6 range configure a public IPv6 address
+- DNS Name:
+	- It isn't allocated to IPv6 addresses
 - Limits:
 	- IPv6 isn't currently supported across every AWS product 
 	- IPv6 isn't currently supported with every feature
