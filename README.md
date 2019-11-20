@@ -26,26 +26,32 @@
 - It supports different Tenancy types: it could be:
 	- Dedicated tenant: it can't be changed (Locked). It is expensive
 	- multi-tenant (default): it still could be switched to a dedicated tenant
-- IPv4 CIDR:
-	- From /28 (16 IPs) to /16 (65,536 IPs) 
-	- We need to plan in advance CIDR to support whatever service we will deploy in the VPC:
-	 	- [ ] We need to make sure our CIDR will support enough subnets
-	 	- [ ] We need to make sure our CIDR will let our subnets have enough IP addresses
-	 	- [ ] Some AWS services require a minimum number of IP addresses before they can deploy
-	- We need to plan a CIDR that allows HA architecture:
-	 	- [ ] We need to break our CIDR down based on the number of AZs we will be using and then 
-	 	- [ ] We need to break down our CIDR based on the number of tiers (subnets) our VPC will have. E.g., public/private/db tiers
-	- We need to plan for future evolutions: additional AZs, additional tiers (subnets)
-	- Best Practice: ensure that VPCs we work with don't overlap CIDR blocks, whatever this is possible:
-	 	- [ ] Lots of networking features don't like the same CIDR block
-	 	- [ ] This will just make things a lot easier further down
-	 	- [ ] Our corporate network VPCs, any other VPC we work with, 
-	 	- [ ] VPCs of any partners and vendors that we interact with
-	- Best Practice: It is recommended to plan for our VPC in advance even though, we can now update VPC CIDR
-- IPv6: 
-	- It supports IPv6
-	- It isn't yet supported by all AWS services, though
-	- AWS provides IPv6 blocks
+</details>
+
+<details>
+<summary>VPC IPv4 CIDR</summary>
+
+- It is from /28 (16 IPs) to /16 (65,536 IPs) 
+- We need to plan in advance CIDR to support whatever service we will deploy in the VPC:
+	- We need to make sure our CIDR will support enough subnets
+	- We need to make sure our CIDR will let our subnets have enough IP addresses
+	- Some AWS services require a minimum number of IP addresses before they can deploy
+- We need to plan a CIDR that allows HA architecture:
+	- We need to break our CIDR down based on the number of AZs we will be using and then 
+	- We need to break down our CIDR based on the number of tiers (subnets) our VPC will have. E.g., public/private/db tiers
+- We need to plan for future evolutions: additional AZs, additional tiers (subnets)
+- Best Practice: ensure that VPCs we work with don't overlap CIDR blocks, whatever this is possible:
+	- Lots of networking features don't like the same CIDR block
+	- This will just make things a lot easier further down
+	- Our corporate network VPCs, any other VPC we work with, 
+	- VPCs of any partners and vendors that we interact with
+- Best Practice: It is recommended to plan for our VPC in advance even though, we can now update VPC CIDR
+
+</details>
+
+<details>
+<summary>VPC Types</summary>
+
 - Default VPC:
 	- It is created by default in every region for each new AWS account (to make easy the onboarding process)
 	- It is required for some services:
@@ -78,16 +84,28 @@
 	 	- [ ] NACL: Default NACL allows all inbound and outbound traffic (see below)
 	 	- [ ] Security Group: Default SG allows all inbound traffic from itself; allows all outbound traffic (see below)
 	 	- [ ] ENI: none
-- DHCP Options Sets:
-	- It's a configuration that sets various things that have provided to resources inside a VPC when they use DHCP
-	- It's a protocol that allows resources inside a network to auto configure their network card such as IP address
-	- It allows any instance in a VPC to point to the specified domain and DNS servers to resolve their domain names
-	- [More details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_DHCP_Options.html)
-- VPC DNS hostnames & DNS Resolution:
-	- Even when an Internet Gateway is created and attached to a VPC and, 
-	- A public IP is associated to an EC2 instance, a DNS name isn't associated to it
-	- To do it, we should enable it in VPC > Edit DNS hostnames and Edit DNS resolution
-	- Best Practice: Always enable VPC DNS hostnames and, VPC DNS resolution.
+
+</details>
+
+<details>
+<summary>DHCP Options Sets</summary>
+
+- It's a configuration that sets various things that have provided to resources inside a VPC when they use DHCP
+- It's a protocol that allows resources inside a network to auto configure their network card such as IP address
+- It allows any instance in a VPC to point to the specified domain and DNS servers to resolve their domain names
+- [More details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_DHCP_Options.html)
+
+</details>
+
+<details>
+<summary>DNS</summary>
+
+- There're 2 features related to DNS: VPC DNS hostnames and DNS Resolution
+- Even when an Internet Gateway is created and attached to a VPC and, 
+- A public IP is associated to an EC2 instance, a DNS name isn't associated to it
+- To do it, we should enable it in VPC > Edit DNS hostnames and Edit DNS resolution
+- Best Practice: Always enable VPC DNS hostnames and, VPC DNS resolution.
+
 </details>
 
 <details>
@@ -460,6 +478,41 @@
 </details>
 
 <details>
+<summary>IPv6</summary>
+
+- It is currently opt-in (disabled by default):
+- VPC IPv6:
+	- It's a /56 CIDR allocated from AWS pool
+	- It can't be adjusted
+- Subnet IPv6:
+	- It is a /64 CIDR
+	- It can be chosen from the VPC /56
+- DHCP6:
+	- It let resources of subnets with IPv6 range configure a IPv6 address
+- DNS Name:
+	- It isn't allocated to IPv6 addresses
+- It's Public: 
+	- There is no concept of Private IPv6 address
+	- It is publicly routable
+	- Internet Gateway doesn't do static NATs for IPv6
+	- NAT Gateway and Instance don't do dynamic NATs for IPv6
+	- Route Tables can contain IPv6 route
+	- IPv6 default route is: "::/0"
+	- 
+- Limits:
+	- IPv6 isn't currently supported across every AWS product 
+	- IPv6 isn't currently supported with every feature
+	- It isn't supported by VPNs, customer gateways, and VPC endpoints
+	- [For more details]()
+
+</details>
+
+<details>
+<summary>Egress-Only Gateway</summary>
+
+</details>
+
+<details>
 <summary>Flow Logs</summary>
 
 </details>
@@ -482,6 +535,9 @@
 - Peering Connection name: pc-[Requester VPC name]-[Accepter VPC name]. E.g., pc-VPC1-VPC2
 
 </details>
+
+---
+## Networking - Route 53:
 
 ---
 
