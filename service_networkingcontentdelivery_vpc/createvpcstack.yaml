@@ -24,13 +24,28 @@ Resources:
         - Key: Name
           Value: DHCP1
 
-  VPC1DHCP1Association:
+  DHCP1ToVPC1Association:
     Type: AWS::EC2::VPCDHCPOptionsAssociation
     Properties:
       VpcId:
         Ref: VPC1
       DhcpOptionsId:
         Ref: DHCP1
+
+  IG1:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: IG1
+
+  IG1ToVPC1Attachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        Ref: VPC1
+      InternetGatewayId:
+        Ref: IG1
 
 Outputs:
   VPC:
