@@ -24,6 +24,14 @@ Resources:
         - Key: Name
           Value: DHCP1
 
+  VPC1DHCP1Association:
+    Type: AWS::EC2::VPCDHCPOptionsAssociation
+    Properties:
+      VpcId:
+        Ref: VPC1
+      DhcpOptionsId:
+        Ref: DHCP1
+
 Outputs:
   VPC:
     Description: A reference to the created VPC
