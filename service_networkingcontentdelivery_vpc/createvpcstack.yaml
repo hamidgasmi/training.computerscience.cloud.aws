@@ -10,8 +10,9 @@ Resources:
       CidrBlock: 10.1.0.0/16
       EnableDnsSupport: true
       EnableDnsHostnames: true
-      Tags:
-        - VPC1
+      Tags: 
+        - Key: Name
+          Value: VPC1
 
   DHCP1:
     Type: AWS::EC2::DHCPOptions
@@ -19,8 +20,9 @@ Resources:
       DomainName: ec2.internal
       DomainNameServers:
         - AmazonProvidedDNS
-      Tags:
-        - DHCP1
+      Tags: 
+        - Key: Name
+          Value: DHCP1
 
 Outputs:
   VPC:
