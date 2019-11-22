@@ -129,7 +129,22 @@ Resources:
       RouteTableId: !Ref PublicRT
       SubnetId: !Ref PublicSubnetB0
 
+  BastionHostSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: "bestion-host-sg"
+      GroupDescription: "Security group for bastion host"
+      VpcId: !Ref VPC1
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: bastion-host-sg
+
 Outputs:
   VPC:
     Description: A reference to the created VPC
-    Value: VPC1
+    Value: !Ref VPC1
