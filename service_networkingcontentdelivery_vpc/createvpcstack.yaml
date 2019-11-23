@@ -145,6 +145,38 @@ Resources:
         - Key: Name
           Value: bastion-host-sg
 
+  Eth0:
+    Type: AWS::EC2::NetworkInterface
+    Properties:
+      Description: eth0
+      GroupSet: [!Ref 'BastionHostSG']
+      SourceDestCheck: 'true'
+      SubnetId: !Ref 'PublicSubnetA0'
+      Tags:
+      - Key: Name
+        Value: Interface 0
+      - Key: Interface
+        Value: eth0
+        
+  BastionHost:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: 'ami-00068cd7555f543d5'
+      InstanceType: 't2.micro'
+      DisableApiTermination: 'true'
+      Tenancy: default
+      NetworkInterfaces:
+        - NetworkInterfaceId: !Ref 'Eth0'
+          DeviceIndex: '0'
+      KeyName: "MyUbuntoKeyPair"
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo yum update -y
+      Tags:
+        - Key: Name
+          Value: bastion-host
+
 Outputs:
   VPC:
     Description: A reference to the created VPC
