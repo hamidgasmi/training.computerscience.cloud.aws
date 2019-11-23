@@ -1,0 +1,183 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: This is creating a custom VPC with all vpc components
+
+Resources:
+  VPC1:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.1.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags: 
+        - Key: Name
+          Value: VPC1
+
+  DHCP1:
+    Type: AWS::EC2::DHCPOptions
+    Properties:
+      DomainName: ec2.internal
+      DomainNameServers:
+        - AmazonProvidedDNS
+      Tags: 
+        - Key: Name
+          Value: DHCP1
+
+  DHCP1ToVPC1Association:
+    Type: AWS::EC2::VPCDHCPOptionsAssociation
+    Properties:
+      VpcId:
+        Ref: VPC1
+      DhcpOptionsId:
+        Ref: DHCP1
+
+  IG1:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: IG1
+
+  IG1ToVPC1Attachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC1
+      InternetGatewayId: !Ref IG1
+
+  PublicSubnetA0:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC1
+      CidrBlock: 10.1.0.0/24
+      AvailabilityZone: 
+        Fn::Select: 
+          - 0
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: sn-a-public
+
+  PrivateSubnetA1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC1
+      CidrBlock: 10.1.10.0/24
+      AvailabilityZone: 
+        Fn::Select: 
+          - 0
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: sn-a-private
+
+  PublicSubnetB0:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC1
+      CidrBlock: 10.1.1.0/24
+      AvailabilityZone: 
+        Fn::Select: 
+          - 1
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: sn-b-public
+
+  PrivateSubnetB1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC1
+      CidrBlock: 10.1.11.0/24
+      AvailabilityZone: 
+        Fn::Select: 
+          - 1
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: sn-b-private
+
+  PublicRT:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC1
+      Tags:
+        - Key: Name
+          Value: PublicRT
+
+  DefaultPublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: IG1ToVPC1Attachment
+    Properties:
+      RouteTableId: !Ref PublicRT
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref IG1
+
+  PublicRTtoPublicSubnetA0Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRT
+      SubnetId: !Ref PublicSubnetA0
+
+  PublicRTtoPublicSubnetB0Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRT
+      SubnetId: !Ref PublicSubnetB0
+
+  BastionHostSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: "bestion-host-sg"
+      GroupDescription: "Security group for bastion host"
+      VpcId: !Ref VPC1
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 0.0.0.0/0
+      #SecurityGroupEgress: the default will be added
+      Tags:
+        - Key: Name
+          Value: bastion-host-sg
+
+  Eth0:
+    Type: AWS::EC2::NetworkInterface
+    Properties:
+      Description: eth0
+      GroupSet: [!Ref 'BastionHostSG']
+      SourceDestCheck: 'true'
+      SubnetId: !Ref 'PublicSubnetA0'
+      Tags:
+      - Key: Name
+        Value: Interface 0
+      - Key: Interface
+        Value: eth0
+        
+  BastionHost:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: 'ami-00068cd7555f543d5'
+      InstanceType: 't2.micro'
+      DisableApiTermination: 'true'
+      Tenancy: default
+      NetworkInterfaces:
+        - NetworkInterfaceId: !Ref 'Eth0'
+          DeviceIndex: '0'
+      KeyName: "MyUbuntoKeyPair"
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo yum update -y
+      Tags:
+        - Key: Name
+          Value: bastion-host
+
+Outputs:
+  VPC:
+    Description: A reference to the created VPC
+    Value: !Ref VPC1
