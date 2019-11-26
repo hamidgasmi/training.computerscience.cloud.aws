@@ -69,7 +69,7 @@
 	 	- [ ] Internet Gateway: Included
 	 	- [ ] Route table: Main route table routes traffic to local and Internet Gateway (see below)
 	 	- [ ] NACL: Default NACL allows all inbound and outbound traffic (see below)
-	 	- [ ] Security Group: Default SG allows all inbound traffic from itself; allows all outbound traffic (see below)
+	 	- [ ] Security Group: Default SG allows all inbound traffic (see below)
 	 	- [ ] ENI: Same ENI is used by all subnets and all security group
 - Custom VPC (or "Bespoke"): 
 	- it can be designed and configured in any valid way
@@ -296,8 +296,10 @@
 	- We can't create rules that deny access
 - Default SG: 
 	- It is created at the same time as a VPC (Default VPC or Custom VPC)
-	- It allows all traffic from all resources within the same SG: by default, inbound traffic from itself is allowed
-	- It allows all outbound traffic
+	- Default VPC allows all inbound and outbound traffic (open to the word)
+	- Custom VPC:
+		- [ ] Inbound traffic: It allows all inbound traffic from resource with the same SG
+		- [ ] Outbound traffic: it allows all outbound traffic
 - Custom SG:
 	- It is created by users
 	- It implicitly denies all inbound traffic: there isn't any inbound rule
