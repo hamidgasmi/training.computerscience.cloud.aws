@@ -107,8 +107,8 @@
 - It allows to associate a public DNS name to a VPC public instance
 - The default EC2 instance public DNS name is: ec2-X-X-X-X.compute-1.amazonaws.com (Xs correspond to EC2 instance public IP digits)
 - Public DNS name resolution:
-	- From outside EC2 instance VPC: it's resolved to the EC2 instance Public IP
-	- From inside EC2 instance PVC: it's resolved to the EC2 instance Private IP
+	- From outside EC2 instance VPC, it's resolved to the EC2 instance Public IP
+	- From inside EC2 instance VPC, it's resolved to the EC2 instance Private IP
 - Best Practice: Always enable VPC DNS hostnames and, VPC DNS resolution
 
 </details>
