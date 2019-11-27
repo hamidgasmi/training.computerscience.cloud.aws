@@ -90,9 +90,11 @@
 <details>
 <summary>DHCP Options Sets</summary>
 
+- It stands for: Dynamic Host Configuration Protocol
 - It's a configuration that sets various things that have provided to resources inside a VPC when they use DHCP
 - It's a protocol that allows resources inside a network to auto configure their network card such as IP address
 - It allows any instance in a VPC to point to the specified domain and DNS servers to resolve their domain names
+- The default EC2 instance private DNS name is: ip-X-X-X-X.ec2.internal (Xs correspond to EC2 instance private IP digits)
 - [More details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_DHCP_Options.html)
 
 </details>
@@ -100,11 +102,14 @@
 <details>
 <summary>DNS</summary>
 
+- It stands for: Domain Name System
 - There're 2 features related to DNS: VPC DNS hostnames and DNS Resolution
-- Even when an Internet Gateway is created and attached to a VPC and, 
-- A public IP is associated to an EC2 instance, a DNS name isn't associated to it
-- To do it, we should enable it in VPC > Edit DNS hostnames and Edit DNS resolution
-- Best Practice: Always enable VPC DNS hostnames and, VPC DNS resolution.
+- It allows to associate a public DNS name to a VPC public instance
+- The default EC2 instance public DNS name is: ec2-X-X-X-X.compute-1.amazonaws.com (Xs correspond to EC2 instance public IP digits)
+- Public DNS name resolution:
+	- From outside EC2 instance VPC: it's resolved to the EC2 instance Public IP
+	- From inside EC2 instance PVC: it's resolved to the EC2 instance Private IP
+- Best Practice: Always enable VPC DNS hostnames and, VPC DNS resolution
 
 </details>
 
