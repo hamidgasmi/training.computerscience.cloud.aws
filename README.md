@@ -170,7 +170,7 @@
 </details>
 
 <details>
-<summary>Route table (RT)</summary>
+<summary>Router</summary>
 
 - It's a virtual routing device that is in each VPC
 - It controls traffic entering the VPC (Internet Gateway, Peer Connection, Virtual Private Gateway, ...)
@@ -196,9 +196,9 @@
 	 	- [ ] A matched /32 destination route (a single IP address) will be always chosen first...
 		- [ ] A matched /24 destination route will be chosen before a matched /16 destination route... 
 		- [ ] The default route matches with all traffic destination but will be chosen last
-	- A route Target can be 
+	- A route Target can be: 
 	 	- [ ] An IP @ or 
-	 	- [ ] An AWS networking gateway/object: Egress-Only Internet Gateway, Internet Gateway, NAT Gateway, Network Interface, Peering Connection, Transit Gateway, Virtual Private Gateway
+	 	- [ ] An AWS networking gateway/object: Egress-Only G., IGW, NAT G., Network Interface, Peering Connection, Transit G., Virtual Private G.,...
 
 - Location: -
 
