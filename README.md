@@ -117,18 +117,14 @@
 <summary>Subnet</summary>
 
 - Analogy: it is like a floor (or a component of it) in our data center
-- A VPC can have 1 or more subnets: The number of subnets depends on how VPC CIDR is split:
-	- If all subnets have the same CIDR prefix, the formula would be: 2^(Subnet CIDR Prefix - VPC CIDR Prefix)
-	- For a VPC of /16, we could create:
-	- 1 single subnet of /16; 2 subnets of /17; 4 subnets of /18; 8 subnets of /19; 16 subnets of /20;
-	- 32 subnets of /21; 64 subnets of /22; 128 subnets of /23; 256 subnets of /24
-- It is inside an AZ: subnets can't span AZs
-- Subnet max/min IP: same as VPC limit
-- Its CIDR blocks:
+- Description: -
+- Location: It is inside an AZ: subnets can't span AZs
+
+- CIDR blocks:
 	- It can't be bigger than CIDR blocks of the VPC it is attached to
 	- It can't overlap with any CIDR blocks inside the VPC it is attached to
 	- It can't be created outside of the CIDR of the VPC it is attached to
-- Certain IPs are reserved in subnets:
+- 5 Reserved IPs:
 	- Subnet's Network IP address: e.g., 10.0.0.0
 	- Subnet's Router IP address ("+1"): Example: 10.0.0.1.
 	- Subnet's DNS IP address ("+2"): E.g., 10.0.0.2
@@ -137,23 +133,39 @@
 	- Subnet's Future IP address ("+3"): e.g., 10.0.0.3
 	- Subnet's Network Broadcast IP address ("Last"): E.g., 10.0.0.255
 	- [For more details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html)
-- Share a subnet: Organization or AWS account
-	- Resources deployed to the subnet are owned by the account that deployed them: so we can't update them
-	- The account we shared the subnet with can't update our subnet (what if there is a role that allow them so?)
-- Subnet & Route Table:
-	- A subnet must be associated with 1 and only 1 route table (main or custom)
-	- When a subnet is created, it is associated by default to the VPC main route table
-- Subnet & NACL:
-	- A subnet must be associated with 1 and only 1 NACL (default or custom)
-	- When a subnet is created, it is associated by default to the VPC default NACL
-- A subnet is Public if:
-	- If it is configured to allocate public IP
-	- If the VPC has an associated Internet Gateway
-	- If it is attached to a route table with a default route to the Internet Gateway
-- Default Subnet:
-	- It is a subnet that is created automatically by AWS at the same time as a default VPC
-	- It is public
-	- There is as many default subnets as AZs of the region where the default VPC is created in	
+
+- Security and Sharing:
+	- Share a subnet with Organizations or AWS accounts
+	 	- [ ] Resources deployed to the subnet are owned by the account that deployed them: so we can't update them
+	 	- [ ] The account we shared the subnet with can't update our subnet (what if there is a role that allow them so?)
+	- A subnet is private by default
+	- A subnet is Public if:
+	 	- [ ] If it is configured to allocate public IP
+	 	- [ ] If the VPC has an associated Internet Gateway
+	 	- [ ] If it is attached to a route table with a default route to the Internet Gateway
+
+- Type:
+	- Default Subnet:
+	 	- [ ] It is a subnet that is created automatically by AWS at the same time as a default VPC
+	 	- [ ] It is public
+	 	- [ ] There is as many default subnets as AZs of the region where the default VPC is created in
+	- Custom Subnet: it is a subnet created by a customer in a costum VPC
+
+- Limits:
+	- Subnet max/min netmask: /16 ... /28 (same as VPC netmask limit)
+	
+- Associations:	
+	- Subnet & VPC:
+	 	- [ ] A subnet is attached to 1 VPC
+	 	- [ ] A VPC can have 1 or more subnets: The number of subnets depends on VPC CIDR range and Subnets CIDR ranges 
+	 	- [ ] If all subnets have the same CIDR prefix, the formula would be: 2^(Subnet CIDR Prefix - VPC CIDR Prefix)
+	 	- [ ] For a VPC of /16, we could create: 1 single subnet of a /16 netmask; 2 subnets of /17; 4 subnets of /18; ... 256 subnets of /24
+	- Subnet & Route Table:
+	 	- [ ] A subnet must be associated with 1 and only 1 route table (main or custom)
+	 	- [ ] When a subnet is created, it is associated by default to the VPC main route table
+	- Subnet & NACL:
+	 	- [ ] A subnet must be associated with 1 and only 1 NACL (default or custom)
+	 	- [ ] When a subnet is created, it is associated by default to the VPC default NACL
 
 </details>
 
