@@ -207,10 +207,10 @@
 		- [ ] It's added manually to a route table
 	- Propagated Route:
 		- [ ] It's added dynamically to a route table by attaching a Virtual Private Gateway (VPG) to the VPC
-		- [ ] We could then elect to propagate any routes that it learned onto a particular route table 
+		- [ ] We could then elect to propagate any route that it learned onto a particular route table 
 		- [ ] It's a way that we can dynamically populate new routes that are learned by the VPG
 		- [ ] Certain types of AWS networking products (VPN, Direct Connect) can dynamically learn routes using BGP (Border Gateway Protocol)
-		- [ ] If we have a VPN or direct connect that support BGP and we integrate those with our VPC, then we can enable this route propagation to automatically add those routes to our route tables
+		- [ ] External networking products (a VPN or direct connect) that support BGP could be integrated with AWS VPC, they can dynamically generate Routes and insert them to a route table
 		- [ ] We don't need then to do it manually by a static route table
 
 	- Main Route table:
