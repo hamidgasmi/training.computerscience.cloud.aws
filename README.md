@@ -204,9 +204,10 @@
 
 - Types:
 	- Local Route:
+		- [ ] Its (Destination, Target) = (VPC CIDR, Local)
 		- [ ] It's included in all route tables
 		- [ ] It can't be deleted from its route table
-		- [ ] It matches the CIDR of the VPC and lets traffic be routed between subnets
+		- [ ] It lets traffic be routed between subnets
 		- [ ] It doesn't forward traffic to any target because the VPC router can handle it
 		- [ ] It allows all subnets in a VPC to be able to talk to one another even if they're in different AZs
 
