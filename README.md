@@ -173,10 +173,7 @@
 <summary>Route table (RT)</summary>
 
 - Description:
-	- It is related to a Router:
-	 	- [ ] It is a virtual routing device that is in each VPC (fully managed by AWS)
-	 	- [ ] It is highly available, scalable, and controls data entering and leaving the VPC and its subnets	
-	- It controls what the VPC router does with subnet Outbound traffic
+	- It controls what the VPC router does with subnet Outbound traffic	
 	- It is a collection of Routes:
 	 	- [ ] They're used when traffic from a subnet arrives at the VPC router
 	 	- [ ] They contain a destination and a target: traffic is forwarded to the target if its destination matches the route destination
@@ -184,6 +181,9 @@
 	- A route Target can be 
 	 	- [ ] An IP @ or 
 	 	- [ ] An AWS networking gateway/object: Egress-Only Internet Gateway, Internet Gateway, NAT Gateway, Network Interface, Peering Connection, Transit Gateway, Virtual Private Gateway
+	- VPC Router:
+	 	- [ ] It is a virtual routing device that is in each VPC (fully managed by AWS)
+	 	- [ ] It is highly available, scalable, and controls data entering and leaving the VPC and its subnets
 
 - Location:
 	- The Router has an interface in every subnet known as the "Subnet+1" address (is it the ENI?)
