@@ -176,8 +176,14 @@
 	- It controls what the VPC router does with subnet Outbound traffic	
 	- It is a collection of Routes:
 	 	- [ ] They're used when traffic from a subnet arrives at the VPC router
-	 	- [ ] They contain a destination and a target: traffic is forwarded to the target if its destination matches the route destination
-	 	- [ ] Default Routes (0.0.0.0/0 v4 and ::/0 v6) could be added that match any traffic not already matched
+	 	- [ ] They contain a destination and a target 
+		- [ ] Traffic is forwarded to the target if its destination matches the route's destination
+	 	- [ ] Default Routes (0.0.0.0/0 IPv4 and ::/0 IPv6) could be added
+	- Most Specific Route is always chosen:
+	 	- [ ] It's when multiple routes' destination maches with traffic destination
+	 	- [ ] A matched /32 destination route (a single IP address) will be always chosen first...
+		- [ ] A matched /24 destination route will be chosen before a matched /16 destination route... 
+		- [ ] The default route matches with all traffic destination but will be chosen last
 	- A route Target can be 
 	 	- [ ] An IP @ or 
 	 	- [ ] An AWS networking gateway/object: Egress-Only Internet Gateway, Internet Gateway, NAT Gateway, Network Interface, Peering Connection, Transit Gateway, Virtual Private Gateway
@@ -189,10 +195,6 @@
 	- The Router has an interface in every subnet known as the "Subnet+1" address (is it the ENI?)
 	- The Route table isn't neither located in a specific AZ		
 
-- Route choice: when multiple routes mach with traffic destination, the most Specific is chosen:
-	- A /32 route (a single IP address) will be chosen before... 
-	- A /24 route before a /16, before the default route (0.0.0.0/0) and, before VPC CIDR
-
 - Types:
 	- Local Route:
 		- [ ] It's included in all route tables
@@ -200,6 +202,7 @@
 		- [ ] It matches the CIDR of the VPC and lets traffic be routed between subnets
 		- [ ] It doesn't forward traffic to any target because the VPC router can handle it
 		- [ ] It allows all subnets in a VPC to be able to talk to one another even if they're in different AZs
+
 	- Static Route: 
 		- [ ] It's added manually to a route table
 	- Propagated Route:
@@ -208,7 +211,8 @@
 		- [ ] It's a way that we can dynamically populate new routes that are learned by the VPG
 		- [ ] Certain types of AWS networking products (VPN, Direct Connect) can dynamically learn routes using BGP (Border Gateway Protocol)
 		- [ ] If we have a VPN or direct connect that support BGP and we integrate those with our VPC, then we can enable this route propagation to automatically add those routes to our route tables
-		- [ ] We don't need then to do it manually by a static route table		
+		- [ ] We don't need then to do it manually by a static route table
+
 	- Main Route table:
 		- [ ] It's created by default at the same time as a VPC it is attached to
 		- [ ] It's associated "implicitly" by default to all subnets in the VPC until they're explicitly associated to a custom one
