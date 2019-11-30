@@ -198,21 +198,20 @@
 		- [ ] The default route matches with all traffic destination but will be chosen last
 	- A route Target can be: 
 	 	- [ ] An IP @ or 
-	 	- [ ] An AWS networking gateway/object: Egress-Only G., IGW, NAT G., Network Interface, Peering Connection, Transit G., Virtual Private G.,...
+	 	- [ ] An AWS networking object: Egress-Only G., IGW, NAT G., Network Interface, Peering Connection, Transit G., Virtual Private G.,...
 
 - Location: -
 
 - Types:
 	- Local Route:
 		- [ ] Its (Destination, Target) = (VPC CIDR, Local)
-		- [ ] It's included in all route tables
-		- [ ] It can't be deleted from its route table
 		- [ ] It lets traffic be routed between subnets
 		- [ ] It doesn't forward traffic to any target because the VPC router can handle it
 		- [ ] It allows all subnets in a VPC to be able to talk to one another even if they're in different AZs
+		- [ ] It's included in all route tables
+		- [ ] It can't be deleted from its route table
 
-	- Static Route: 
-		- [ ] It's added manually to a route table
+	- Static Route: It's added manually to a route table
 	- Propagated Route:
 		- [ ] It's added dynamically to a route table by attaching a Virtual Private Gateway (VPG) to the VPC
 		- [ ] We could then elect to propagate any route that it learned onto a particular route table 
@@ -268,46 +267,56 @@
 <details>
 <summary>NACL - Network Access Control Lists</summary>
 
-- It is a security feature that operates at Layer 4 of the OSI model (Transport Layer: TCP/UDP and below)
-- It could be associated with multiples subnets
-- A subnet has to be associated with 1 NACL:
-- It impacts traffic crossing the boundary of a subnet
-- It doesn't impact traffic local to a subnet: Communications between 2 instances inside a subnet aren't impacted
-- It acts FIRST before Security Groups: if an IP is denied, it won't even reach security group
-- It is stateless
-- There're 2 sets of rules: Inbound and Outbound rules:
-	- They're explicitly allow or deny traffic based on:
-		- [ ] Traffic Type (protocol), 
-		- [ ] Ports or port range, 
-		- [ ] Source (or Destination): IP / CIDR: since NACL is involved at Layer 4, the source/destination can't be an AWS object
-	- They're processed in number of order, "Rule #": Lowest first
-	- When a match is found, that action is taken and processing stops
-	- The "*" rule is an implicit deny: It is processed last
-- Default NACL:
-	- It is created by default at the same as the VPC
-	- It is associated "implicitly" to all subnets as long as they're not associated explicitly to a custom NACL 
-	- It Allows ALL traffic: Rule 100: Allow everything
-- Custom NACL:
-	- It is created by users
-	- It should be associated "explicitly" to a subnet
-	- It does block ALL traffic, by default: it only includes "*" rule only
-- Ephemeral Ports:
-	- When a client initiates communications with a server, it uses a well-known port # on that server: e.g., TCP/443
-	- The response is from that well-known port to an ephemeral port on the client
-	- The client decides the ephemeral port (e.g., TCP/22000): they're be thousands!
-- To keep in mind: Because NACL are stateless and ephemeral ports are thousands, to manage the overhead of NACL rules is very high. In fact:
-	- We should think to "allow" traffic for every "ephemeral" ports on Client Inbound and Outbound rules and, 
-	- We should think to "allow" traffic for every "ephemeral" ports on Destination Inbound and Outbound rules as well
-	- This means that for a single communication, we might have to worry about 4 individual sets of rules
-	- This is why NACLs tend not to be used all that much generally in production usage (Security Groups are preferred)
-- Use Case:
-	- When we have an explicit deny that we would like to add
-	- E.g., we got attacked from an IP @, we may need to deny it
+- Description
+	- It is a security feature that operates at Layer 4 of the OSI model (Transport Layer: TCP/UDP and below)
+	- It impacts traffic crossing the boundary of a subnet
+	- It doesn't impact traffic local to a subnet: Communications between 2 instances inside a subnet aren't impacted
+	- It acts FIRST before Security Groups: if an IP is denied, it won't reach security group
+	- It is stateless
+	- It includes Rules:
+		- [ ] There're 2 sets of rules: Inbound and Outbound rules
+		- [ ] They're explicitly allow or deny traffic based on: traffic Type (protocol), Ports (or range), Source (or Destination)
+		- [ ] Their Source (or Destination) could only be IP/CIDR
+		- [ ] Their Source (or Destination) can't be an AWS objects (NACL is Layer 4 feature)
+		- [ ] Each rule has a Rule #
+		- [ ] They're processed in number of order, "Rule #": Lowest first
+		- [ ] When a match is found, that action is taken and processing stops
+		- [ ] The "*" rule is an implicit deny: It is processed last
+	- Its rules include Ephemeral Ports:
+		- [ ] When a client initiates communications with a server, it uses a well-known port # on that server: e.g., TCP/443
+		- [ ] The response is from that well-known port to an ephemeral port on the client
+		- [ ] The client decides the ephemeral port (e.g., TCP/22000): they're be thousands!
+		- [ ] Because NACL are stateless and ephemeral ports are thousands, to manage the overhead of NACL rules is very high 
+		- [ ] A single Communication involves 4 individual sets of rules:
+		- [ ] We should think to "allow" traffic for every "ephemeral" ports on Client Inbound and Outbound rules and, 
+		- [ ] We should think to "allow" traffic for every "ephemeral" ports on Destination Inbound and Outbound rules as well
+	 
+- Location: It isn't specific to any AZ
+
+- Type:
+	- Default NACL:
+		- [ ] It is created by default at the same as the VPC it is attached to
+		- [ ] It is associated "implicitly" to all subnets as long as they're not associated explicitly to a custom NACL 
+		- [ ] It Allows ALL traffic: Rule 100: Allow everything
+	- Custom NACL:
+		- [ ] It is created by users
+		- [ ] It should be associated "explicitly" to a subnet
+		- [ ] It blocks ALL traffic, by default: it only includes "*" rule only
+
 - Best Practice: 
 	- Inbound and Outbound Rules # should use an increment of 100: 
 		- [ ] 100 for the 1st IPv4 rule, 101 for the 1st IPv6 rule
 		- [ ] 200 for the 2nd IPv4 rule, 201 for the 2nd IPv6 rule
 	-  Ensure that you place the DENY rules earlier in the table than the ALLOW rules that open the wide range of ephemeral ports
+
+- Use Case:
+	- Because of NACL management overhead (4 sets of rules for each communication), 
+	- They tend not to be used all that much generally in production usage (Security Groups are preferred)
+	- They're used when we have an explicit deny that we would like to add (E.g., an IP @ we were attacked from)
+	
+- Associations:	
+	- It could be associated with multiples subnets
+	- A subnet has to be associated with 1 NACL
 
 </details>
 
