@@ -609,9 +609,36 @@
 </details>
 
 ---
+
 ## Networking - Route 53:
 
+<details>
+<summary>Description</summary>
+    
+- It is AWS DNS service
+- It supports public and private hosted zones:
+- Public Zone:
+	- It influences the domain that is visible from the internet and VPCs. 
+	- It is created when we register a domain with Route 53, 
+	- It is created when we transfer a domain into Route 53 
+	- It is created when we create a domain manually (how could it be done?) 
+	- It has the same name as the domain it relates to example.com will have a hosted zone called example.com 
+	- It is accessible either from internet-based DNS clients or from within any AWS VPC 
+	- It will have "name servers" (ns servers): these're the IP addresses we can give to a domain operator, so Route 53 becomes "Authoritative" for a domain 
+- Private Zone:
+	- It is created manually and associated with one or more VPCs 
+	- It is accessible from VPCs it is associated with 
+	- It needs "enableDnsHostname" and "enbaleDnsSupport" enabled on a VPC 
+	- Not all Route 53 features supported (limits on health checks)
+- Split-view DNS is supported: 
+	- It is by using the same zone name (for public and private zones) 
+	- It is proving VPC resources with different records: e.g., testing internal versions of a website 
+	- Private Zone is preferred (if no match public is used)
+	 
+</details>
+
 ---
+
 
 ## Storage - S3 (Simple Storage Service):
 
