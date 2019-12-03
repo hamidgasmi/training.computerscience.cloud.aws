@@ -641,17 +641,21 @@
 		- It allow to renew the domain automatically 
 	- It allows to host a domain: It gives the rights to specify name servers (NS) to be authoritative for our domains
 	- It allows to register and host a domain, register only or host only a domain
-	- It allows to add records (www, ftp, mail…) into the name servers (NS) zone files  
+	- It allows to add records (www, ftp, mail…) into the name servers (NS) zone files
+
 - DNS Service:
-	- It supports public and private hosted zones:
+	- Hosted Zone:
+		- It corresponds to a domain name
+		- It is a collection of records (see below)
+		- It supports public and private hosted zones:
 	- Public Zone:
-		- It influences the domain that is visible from the internet and VPCs. 
-		- It is created when we register a domain with Route 53, 
-		- It is created when we transfer a domain into Route 53 
+		- It is created by default when a domain is registered/transfered with Route 53
 		- It is created when we create a domain manually (how could it be done?) 
-		- It has the same name as the domain it relates to example.com will have a hosted zone called example.com 
+		- It has the same name as the domain it relates to
+		- Its name is a FQDN (Fully Qualified Domain Name)
+		- It is accessible globally since the TLD zone delegates to its name servers
 		- It is accessible either from internet-based DNS clients or from within any AWS VPC 
-		- It will have "name servers" (ns servers): these're the IP addresses we can give to a domain operator, so Route 53 becomes "Authoritative" for a domain 
+		- It has an NS record that is given to the corresponding domain operator (Route 53 becomes then "Authoritative") 
 	- Private Zone:
 		- It is created manually and associated with one or more VPCs 
 		- It is accessible from VPCs it is associated with 
@@ -661,6 +665,8 @@
 		- It is by using the same zone name (for public and private zones) 
 		- It is proving VPC resources with different records: e.g., testing internal versions of a website 
 		- Private Zone is preferred (if no match public is used)
+	- NS Record has the name servers that are authoritative for a domain
+	- SOA Record (Start of Authority Records) stores the information below 
 	- VPC DNS Resolver ?
 </details>
 
