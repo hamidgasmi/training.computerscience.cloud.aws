@@ -632,51 +632,60 @@
 <summary>Description</summary>
  
 - It is AWS Domain Registrar and DNS service
-- Domain Registrar:
-	- It checks a domain is available: it is done against the database of the TLD or the subdomain operator
-	- It allows to register a domain: 
-		- It contacts then the TLD to add a record into the corresponding zone (the registration is "Pending")
-		- It publishes All or Some Registrant Contact details in the public WHOIS database
-		- It stores Registrant Contact, Administrative Contact and, Technical Contact details in the domain record
-		- It allow to renew the domain automatically 
-	- It allows to host a domain: It gives the rights to specify name servers (NS) to be authoritative for our domains
-	- It allows to register and host a domain, register only or host only a domain
-	- It allows to add records (www, ftp, mail…) into the name servers (NS) zone files
 
-- DNS Service:
-	- Hosted Zone:
-		- It corresponds to a domain name
-		- It is a collection of records (see below)
-		- It supports public and private hosted zones:
-	- Public Zone:
-		- It is created by default when a domain is registered/transfered with Route 53
-		- It is also created when we create a domain manually (how could it be done?) 
-		- It has the same name as the domain it relates to: It is FQDN (Fully Qualified Domain Name)
-		- It is accessible globally since the TLD zone delegates to its name servers
-		- It is accessible either from internet-based DNS clients or from within any AWS VPC 
-		- It has an NS record that is given to the corresponding domain operator (Route 53 becomes then "Authoritative") 
-	- Private Zone:
-		- It is created manually and associated with one or more VPCs
-		- It is accessible from VPCs it is associated with 
-		- It needs "enableDnsHostname" and "enbaleDnsSupport" enabled on a VPC 
-		- Not all Route 53 features supported (limits on health checks)
-	- Split-view: 
-		- It allows to have 2 different websites with the same domain name:
-			- One website is available on the public Internet and 
-			- a different website available on a private network
-		- How it works:
-			- Create a public zone for a domain name 
-			- Create a private zone with the same zone name and with specific VPCs
-			- The private zone will then override the public zone within the specificied VPCs
-			- It the private zone doesn't have any record, the private zone doesn't then override the public zone
-		- Use cases:
-			- We have 2 versions of an application. The internal version may contain additional information or features for administration
-			- We have a new version of an applicaiton. We would like to test it without distrupting the public version
+</details>
+
+<details>
+<summary>Domain Registrar</summary>
+
+- It checks a domain is available: it is done against the database of the TLD or the subdomain operator
+- It allows to register a domain: 
+	- It contacts then the TLD to add a record into the corresponding zone (the registration is "Pending")
+	- It publishes All or Some Registrant Contact details in the public WHOIS database
+	- It stores Registrant Contact, Administrative Contact and, Technical Contact details in the domain record
+	- It allow to renew the domain automatically 
+- It allows to host a domain: It gives the rights to specify name servers (NS) to be authoritative for our domains
+- It allows to register and host a domain, register only or host only a domain
+- It allows to add records (www, ftp, mail…) into the name servers (NS) zone files
+
+</details>
+
+<details>
+<summary>DDNS Service</summary>
+- Hosted Zone:
+	- It corresponds to a domain name
+	- It is a collection of records (see below)
+	- It supports public and private hosted zones:
+- Public Zone:
+	- It is created by default when a domain is registered/transfered with Route 53
+	- It is also created when we create a domain manually (how could it be done?) 
+	- It has the same name as the domain it relates to: It is FQDN (Fully Qualified Domain Name)
+	- It is accessible globally since the TLD zone delegates to its name servers
+	- It is accessible either from internet-based DNS clients or from within any AWS VPC 
+	- It has an NS record that is given to the corresponding domain operator (Route 53 becomes then "Authoritative") 
+- Private Zone:
+	- It is created manually and associated with one or more VPCs
+	- It is accessible from VPCs it is associated with 
+	- It needs "enableDnsHostname" and "enbaleDnsSupport" enabled on a VPC 
+	- Not all Route 53 features supported (limits on health checks)
+- Split-view: 
+	- It allows to have 2 different websites with the same domain name:
+		- One website is available on the public Internet and 
+		- a different website available on a private network
+	- How it works:
+		- Create a public zone for a domain name 
+		- Create a private zone with the same zone name and with specific VPCs
+		- The private zone will then override the public zone within the specificied VPCs
+		- It the private zone doesn't have any record, the private zone doesn't then override the public zone
+	- Use cases:
+		- We have 2 versions of an application. The internal version may contain additional information or features for administration
+		- We have a new version of an applicaiton. We would like to test it without distrupting the public version
+- Zone's Record:
 	- NS Record has the server names that are authoritative for a subdomain
 	- SOA Record (Start of Authority Records)
 	- A Record provodes an IPv4 address for a given host (www)
 	- AAAA record provodes an IPv6 address for a given host (www)
-    - CNAME record (Canonical Name):
+	- CNAME record (Canonical Name):
 		- It allows to resolve one domain name to another
 		- It cannot be used at the APEX (top) of a domain
 		- E.g. 1, add Cnames for mobile.example.com that is pointing m.example.com server
@@ -694,12 +703,12 @@
 		- It allows to specify a hostname in our DNS records which then resolve to the correct A/AAAA records at the time of a request
 		- AWS doesn't charge for alias records against AWS resources
 		- It is recommended by AWS
-    - MX record:
+	- MX record:
 		- It is quired whenever a server is attempting to send an email to a given domain
 		- It provides the email servers for a given domain
 		- Eeach server within MX record has a priority value
 		- The lower priority value is preferred
-    - TXT record:
+	- TXT record:
 		- It's used to store plain text inside a domain
 		- It's often used to verify domain ownership:
 		- If we are adding a domain to Gmail or Office 365, 
