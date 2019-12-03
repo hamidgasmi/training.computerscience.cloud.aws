@@ -1,4 +1,4 @@
-# AWS
+# AWS:
 ## Compute - EC2 (Elastic Cloud Computing):
 
 ---
@@ -14,7 +14,7 @@
 
 <details>
 <summary>Description</summary>
-    
+ 
 - It is a virtual network within AWS: it is our private data center inside AWS platform
 - It can be configured to be public/private or a mixture
 - It is isolated from other VPCs by default
@@ -307,7 +307,7 @@
 	- Inbound and Outbound Rules # should use an increment of 100: 
 		- 100 for the 1st IPv4 rule, 101 for the 1st IPv6 rule
 		- 200 for the 2nd IPv4 rule, 201 for the 2nd IPv6 rule
-	-  Ensure that you place the DENY rules earlier in the table than the ALLOW rules that open the wide range of ephemeral ports
+	- Ensure that you place the DENY rules earlier in the table than the ALLOW rules that open the wide range of ephemeral ports
 
 - Use Case:
 	- Because of NACL management overhead (4 sets of rules for each communication), 
@@ -349,7 +349,7 @@
 		- If a rule matches, the request is allowed
 		- If there is no match, the request is implicitly denied
 
-- Types:		
+- Types:
 	- Default SG in a default VPC: 
 		- It is created at the same time as a VPC
 		- It allows all inbound and outbound traffic (open to the word)
@@ -465,7 +465,7 @@
 	- Use case: there is only one use case
 		- When cost saving is absolutely required and, a NAT and bastion hosts are needed
 		- We could then combine bastion host and NAT in the same machine
-	- For more details:  
+	- For more details: 
 		- [NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html)
 		- [NAT Gateway vs. NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-comparison.html)
 
@@ -630,31 +630,41 @@
 
 <details>
 <summary>Description</summary>
-    
-- It is AWS DNS service
-- It supports public and private hosted zones:
-- Public Zone:
-	- It influences the domain that is visible from the internet and VPCs. 
-	- It is created when we register a domain with Route 53, 
-	- It is created when we transfer a domain into Route 53 
-	- It is created when we create a domain manually (how could it be done?) 
-	- It has the same name as the domain it relates to example.com will have a hosted zone called example.com 
-	- It is accessible either from internet-based DNS clients or from within any AWS VPC 
-	- It will have "name servers" (ns servers): these're the IP addresses we can give to a domain operator, so Route 53 becomes "Authoritative" for a domain 
-- Private Zone:
-	- It is created manually and associated with one or more VPCs 
-	- It is accessible from VPCs it is associated with 
-	- It needs "enableDnsHostname" and "enbaleDnsSupport" enabled on a VPC 
-	- Not all Route 53 features supported (limits on health checks)
-- Split-view DNS is supported: 
-	- It is by using the same zone name (for public and private zones) 
-	- It is proving VPC resources with different records: e.g., testing internal versions of a website 
-	- Private Zone is preferred (if no match public is used)
-	 
+ 
+- It is AWS Domain Registrar and DNS service
+- Domain Registrar:
+	- It checks a domain is available: it is done against the database of the TLD or the subdomain operator
+	- It allows to register a domain: 
+		- It contacts then the TLD to add a record into the corresponding zone (the registration is "Pending")
+		- It publishes All or Some Registrant Contact details in the public WHOIS database
+		- It stores Registrant Contact, Administrative Contact and, Technical Contact details in the domain record
+		- It allow to renew the domain automatically 
+	- It allows to host a domain: It gives the rights to specify name servers (NS) to be authoritative for our domains
+	- It allows to register and host a domain, register only or host only a domain
+	- It allows to add records (www, ftp, mail…) into the name servers (NS) zone files  
+- DNS Service:
+	- It supports public and private hosted zones:
+	- Public Zone:
+		- It influences the domain that is visible from the internet and VPCs. 
+		- It is created when we register a domain with Route 53, 
+		- It is created when we transfer a domain into Route 53 
+		- It is created when we create a domain manually (how could it be done?) 
+		- It has the same name as the domain it relates to example.com will have a hosted zone called example.com 
+		- It is accessible either from internet-based DNS clients or from within any AWS VPC 
+		- It will have "name servers" (ns servers): these're the IP addresses we can give to a domain operator, so Route 53 becomes "Authoritative" for a domain 
+	- Private Zone:
+		- It is created manually and associated with one or more VPCs 
+		- It is accessible from VPCs it is associated with 
+		- It needs "enableDnsHostname" and "enbaleDnsSupport" enabled on a VPC 
+		- Not all Route 53 features supported (limits on health checks)
+	- Split-view DNS is supported: 
+		- It is by using the same zone name (for public and private zones) 
+		- It is proving VPC resources with different records: e.g., testing internal versions of a website 
+		- Private Zone is preferred (if no match public is used)
+	- VPC DNS Resolver ?
 </details>
 
 ---
-
 
 ## Storage - S3 (Simple Storage Service):
 
