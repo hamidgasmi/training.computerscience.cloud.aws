@@ -650,24 +650,38 @@
 		- It supports public and private hosted zones:
 	- Public Zone:
 		- It is created by default when a domain is registered/transfered with Route 53
-		- It is created when we create a domain manually (how could it be done?) 
-		- It has the same name as the domain it relates to
-		- Its name is a FQDN (Fully Qualified Domain Name)
+		- It is also created when we create a domain manually (how could it be done?) 
+		- It has the same name as the domain it relates to: It is FQDN (Fully Qualified Domain Name)
 		- It is accessible globally since the TLD zone delegates to its name servers
 		- It is accessible either from internet-based DNS clients or from within any AWS VPC 
 		- It has an NS record that is given to the corresponding domain operator (Route 53 becomes then "Authoritative") 
 	- Private Zone:
-		- It is created manually and associated with one or more VPCs 
+		- It is created manually and associated with one or more VPCs
 		- It is accessible from VPCs it is associated with 
 		- It needs "enableDnsHostname" and "enbaleDnsSupport" enabled on a VPC 
 		- Not all Route 53 features supported (limits on health checks)
-	- Split-view DNS is supported: 
-		- It is by using the same zone name (for public and private zones) 
-		- It is proving VPC resources with different records: e.g., testing internal versions of a website 
-		- Private Zone is preferred (if no match public is used)
+	- Split-view: 
+		- It allows to have 2 different websites with the same domain name:
+			- One website is available on the public Internet and 
+			- a different website available on a private network
+		- How it works:
+			- Create a public zone for a domain name 
+			- Create a private zone with the same zone name and with specific VPCs
+			- The private zone will then override the public zone within the specificied VPCs
+			- It the private zone doesn't have any record, the private zone doesn't then override the public zone
+		- Use cases:
+			- We have 2 versions of an application. The internal version may contain additional information or features for administration
+			- We have a new version of an applicaiton. We would like to test it without distrupting the public version
 	- NS Record has the name servers that are authoritative for a domain
-	- SOA Record (Start of Authority Records) stores the information below 
+	- SOA Record (Start of Authority Records) stores the information below
+	- A Record:
+	- AAAA record:
+    - CNAME record:
+    - MX records:
+    - TXT records:
+    - Alias record type:
 	- VPC DNS Resolver ?
+
 </details>
 
 ---
@@ -675,3 +689,4 @@
 ## Storage - S3 (Simple Storage Service):
 
 ---
+
