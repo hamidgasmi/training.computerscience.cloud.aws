@@ -651,7 +651,7 @@
 </details>
 
 <details>
-<summary>DDNS Service</summary>
+<summary>DNS Service</summary>
 - Hosted Zone:
 	- It corresponds to a domain name
 	- It is a collection of records (see below)
@@ -717,6 +717,53 @@
 		- If it matches, it guarantees that we own that domain.
 		- It can be used in spam filtering
 	- VPC DNS Resolver ?
+
+</details>
+
+<details>
+<summary>Health Checks</summary>
+
+</details>
+
+<details>
+<summary>Routing Policies</summary>
+
+- Simple Routing: 
+	- We can only have 1 record with multiple IP addresses
+	- Route 53 returns all values to the user in a random order. 
+	- Health check isn't possible. 
+- Multivalue Answer Routing: 
+	- It is almost as "Simple Routing": Route 53 responds to DNS queries with up to 8 healthy records and gives different answers to different DNS resolvers. 
+	- With the differences below: 
+		- We can have multiple records with 1 IP address. 
+		- It lets us check the health of each resource: so Route53 returns only values for healthy resources. 
+- Weighted Routing: 
+	- It allows to split traffic based on different weights assigned. 
+	- E.g., we can set 10% of our traffic to go to US-EAST-1 and 90% to go to EU-WEST-1. 
+	- The weight is a value. It isn't a %.  
+	- So, if we add to address with the following weights: 20 and 30 => the corresponding % will be: 40% and 60%.  
+	- We can attach a health check to a record so that Route 53 can omit the record as long as the associated EC2 instance isn't healthy.  
+- Latency-based Routing: 
+	- It allow to route our traffic based on the lowest network latency for our end user. 
+	- To use it, we create it for the Amazon EC2 or ELB resource in each region that hosts our website. 
+	- We can attach a health check to a record. 
+- Failover Routing: 
+	- It is used when we want to create an active/passive set up. 
+	- For example, we may want our primary site be in EU-WEST-2 and our secondary Disaster Recovery site in AP-SOTHEAST-2. 
+	- Route53 will monitor the health of our primary site using a health check. 
+	- A health check monitors the health of our endpoints. 
+	- Best Practice: in this case, AWS recommends a TTL <= 60 to let client respond quickly to changes in health status.. 
+- Geolocation Routing: 
+	- It lets to choose where our traffic will be sent based on the geographic location of our users. 
+	- In other words, the location from which DNS queries originate. 
+	- E.g., we might want all queries from Europe to be routed to a fleet of EC2 instances that are specifically configured for our European customers. 
+	- These servers may have the local language of our European customers and all prices are displayed in Euros. 
+- Geoproximity Routing (Traffic Flow Only): 
+	- To use Geoproximity routing, it is required to use Route 53 traffic flow. 
+	- Traffic flow is: 
+	- Geoproximity Routing lets Route 53 routes traffic to our resources based on the geographic location of our users and our resources. 
+	- We can also optionally choose to route more or less traffic to a given resource by specifying a value, known as a bias. 
+	- A bias expands or shrinks the size of the geographic region from which traffic is routed to a resource. 
 
 </details>
 
