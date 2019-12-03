@@ -323,40 +323,53 @@
 <details>
 <summary>SG - Security Group</summary>
 
-- It's a Software firewall that surrounds AWS products
-- It a Layer 5 firewall (session firewall) in OSI model
-- It is attached to an ENI
-- It's associated with a single VPC: it doesn't span VPC's
-- Multiple SGs could be assigned to an EC2 instance
-- It acts at the instance level, not the subnet level
-- It could be attached/detached from an EC2 instance at anytime
-- It is Stateful:
-	- The response to an allowed inbound (or outbound) request, will be allowed to flow out (or in), regardless of outbound (or inbound) rules
-	- If we send a request from our instance and it is allowed by the corresponding SG rule, its response is then allowed to flow in regardless of inbound rules
-	- [More details (see Tracking)](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#security-group-connection-tracking])
+- Description
+	- It's a Software firewall that surrounds AWS products
+	- It a Layer 5 firewall (session layer) in OSI model
+	- It acts at the instance level, not the subnet level
+	- It could be attached/detached from an EC2 instance at anytime
+	- It is Stateful:
+		- The response to an allowed inbound (or outbound) request, will be allowed to flow out (or in), regardless of outbound (or inbound) rules
+		- If we send a request from our instance and it is allowed by the corresponding SG rule, its response is then allowed to flow in regardless of inbound rules
+		- [More details (see Tracking)](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#security-group-connection-tracking])
 	- [Comparison between Security Group and ACL (stateless)](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Security.html#VPC_Security_Comparison])
-- SG Rules include: Inbound and Outbound rule sets:
-	- Type: TCP
-	- Protocol: e.g., HTTP, SSH
-	- Port Ranges: e.g., Port 22 (SSH), Port 53 (UDP), Port 3060 (MySQL), Port 80 (http), Port 443 (https)... 
-	- Source/Destination: Since it is a Layer 5 Firewall, it supports
+	- SG Rules include: Inbound and Outbound rule sets:
+		- [ ] Type: TCP
+		- [ ] Protocol: e.g., HTTP, SSH
+		- [ ] Port Ranges: e.g., Port 22 (SSH), Port 53 (UDP), Port 3060 (MySQL), Port 80 (http), Port 443 (https)... 
+		- [ ] Source/Destination: Since it is a Layer 5 Firewall, it supports:
 		- [ ] IP addresses, CIDRs (Layer 4 info)
 		- [ ] a Security Group (Layer 5 info)
-	- It can auto-reference itself in an Inbound rules' Source 
+		- [ ] It can auto-reference itself in an Inbound rules' Source: 
 		- [ ] It allows traffic from itself
 		- [ ] All resources in the same SG are allowed to communicate to each other
-- Implicit Deny: Explicit Allow > Implicit Deny
-	- We can't create rules that deny access
-- Default SG: 
-	- It is created at the same time as a VPC (Default VPC or Custom VPC)
-	- Default VPC allows all inbound and outbound traffic (open to the word)
-	- Custom VPC:
-		- [ ] Inbound traffic: It allows all inbound traffic from resource with the same SG
-		- [ ] Outbound traffic: it allows all outbound traffic
-- Custom SG:
-	- It is created by users
-	- It implicitly denies all inbound traffic: there isn't any inbound rule
-	- It allows all outbound traffic
+	- Implicit Deny: Explicit Allow > Implicit Deny
+		- [ ] There is no explicit denies
+		- [ ] All rules are analyzed
+		- [ ] If a rule matches, the request is allowed
+		- [ ] If there is no match, the request is implicitly denied
+
+- Types:		
+	- Default SG: 
+		- [ ] It is created at the same time as a VPC (Default VPC or Custom VPC)
+		- [ ] Default VPC allows all inbound and outbound traffic (open to the word)
+		- [ ] Custom VPC: It allows all inbound traffic from the same SG; It allows all outbound traffic
+	- Custom SG:
+		- [ ] It is created by users
+		- [ ] It implicitly denies all inbound traffic: there isn't any inbound rule
+		- [ ] It allows all outbound traffic
+
+- Associations:
+	- SG : VPC - * : 1 
+		- [ ] It's associated with a single VPC: it doesn't span VPC's
+		- [ ] A VPC could contain multiple SGs
+	- SG : ENI - * : 1		
+		- [ ] It is attached to 1 ENI
+		- [ ] An ENI could be attached to multiple SGs		 
+	- SG : EC2 Instance : * : *	
+		- [ ] It could be assigned to multiple instances
+		- [ ] It could be assigned to multiple instances in another AWS account within the same region (Peering Connection?) 
+		- [ ] An EC2 instance could be attached to Multiple SGs
 
 </details>
 
