@@ -55,35 +55,35 @@
 - Default VPC:
 	- It is created by default in every region for each new AWS account (to make easy the onboarding process)
 	- It is required for some services:
-	 	- [ ] Historically some services failed if the default VPC didn't exist
-	 	- [ ] It was initially not something we could create, but we could delete it
-	 	- [ ] So if we delete, we could run into problems where certain services wouldn't launch,
-	 	- [ ] We needed to create a ticket to get it recreated on our behalf
-	 	- [ ] It is used as a default for most
+	 	- Historically some services failed if the default VPC didn't exist
+	 	- It was initially not something we could create, but we could delete it
+	 	- So if we delete, we could run into problems where certain services wouldn't launch,
+	 	- We needed to create a ticket to get it recreated on our behalf
+	 	- It is used as a default for most
 	- Its initial state is as follow:
-	 	- [ ] CIDR: default 172.31.0.0/16 (65,000 IP addresses)
-	 	- [ ] Subnet: 1 "/20" public subnet by AZ
-	 	- [ ] DHCP: Default AWS Account DHCP option set is attached
-	 	- [ ] DNS Names: Enabled
-	 	- [ ] DNS Resolution: Enabled
-	 	- [ ] Internet Gateway: Included
-	 	- [ ] Route table: Main route table routes traffic to local and Internet Gateway (see below)
-	 	- [ ] NACL: Default NACL allows all inbound and outbound traffic (see below)
-	 	- [ ] Security Group: Default SG allows all inbound traffic (see below)
-	 	- [ ] ENI: Same ENI is used by all subnets and all security group
+	 	- CIDR: default 172.31.0.0/16 (65,000 IP addresses)
+	 	- Subnet: 1 "/20" public subnet by AZ
+	 	- DHCP: Default AWS Account DHCP option set is attached
+	 	- DNS Names: Enabled
+	 	- DNS Resolution: Enabled
+	 	- Internet Gateway: Included
+	 	- Route table: Main route table routes traffic to local and Internet Gateway (see below)
+	 	- NACL: Default NACL allows all inbound and outbound traffic (see below)
+	 	- Security Group: Default SG allows all inbound traffic (see below)
+	 	- ENI: Same ENI is used by all subnets and all security group
 - Custom VPC (or "Bespoke"): 
 	- it can be designed and configured in any valid way
 	- Its initial state is as follow:
-	 	- [ ] CIDR: initial configuration
-	 	- [ ] Subnet: none
-	 	- [ ] DHCP: Default AWS Account DHCP option set is attached
-	 	- [ ] DNS Names: Disabled
-	 	- [ ] DNS Resolution: Enabled
-	 	- [ ] Internet Gateway: none
-	 	- [ ] Route table: Main route table routes traffic to local (see below)
-	 	- [ ] NACL: Default NACL allows all inbound and outbound traffic (see below)
-	 	- [ ] Security Group: Default SG allows all inbound traffic from itself; allows all outbound traffic (see below)
-	 	- [ ] ENI: none
+	 	- CIDR: initial configuration
+	 	- Subnet: none
+	 	- DHCP: Default AWS Account DHCP option set is attached
+	 	- DNS Names: Disabled
+	 	- DNS Resolution: Enabled
+	 	- Internet Gateway: none
+	 	- Route table: Main route table routes traffic to local (see below)
+	 	- NACL: Default NACL allows all inbound and outbound traffic (see below)
+	 	- Security Group: Default SG allows all inbound traffic from itself; allows all outbound traffic (see below)
+	 	- ENI: none
 
 </details>
 
@@ -128,27 +128,27 @@
 	- Subnet's Network IP address: e.g., 10.0.0.0
 	- Subnet's Router IP address ("+1"): Example: 10.0.0.1.
 	- Subnet's DNS IP address ("+2"): E.g., 10.0.0.2
-	 	- [ ] For VPCs with multiple CIDR blocks, the IP address of the DNS server is located in the primary CIDR
-	 	- [ ] [For more details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_DHCP_Options.html#AmazonDNS)
+	 	- For VPCs with multiple CIDR blocks, the IP address of the DNS server is located in the primary CIDR
+	 	- [For more details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_DHCP_Options.html#AmazonDNS)
 	- Subnet's Future IP address ("+3"): e.g., 10.0.0.3
 	- Subnet's Network Broadcast IP address ("Last"): E.g., 10.0.0.255
 	- [For more details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html)
 
 - Security and Sharing:
 	- Share a subnet with Organizations or AWS accounts
-	 	- [ ] Resources deployed to the subnet are owned by the account that deployed them: so we can't update them
-	 	- [ ] The account we shared the subnet with can't update our subnet (what if there is a role that allow them so?)
+	 	- Resources deployed to the subnet are owned by the account that deployed them: so we can't update them
+	 	- The account we shared the subnet with can't update our subnet (what if there is a role that allow them so?)
 	- A subnet is private by default
 	- A subnet is Public if:
-	 	- [ ] If it is configured to allocate public IP
-	 	- [ ] If the VPC has an associated Internet Gateway
-	 	- [ ] If it is attached to a route table with a default route to the Internet Gateway
+	 	- If it is configured to allocate public IP
+	 	- If the VPC has an associated Internet Gateway
+	 	- If it is attached to a route table with a default route to the Internet Gateway
 
 - Type:
 	- Default Subnet:
-	 	- [ ] It is a subnet that is created automatically by AWS at the same time as a default VPC
-	 	- [ ] It is public
-	 	- [ ] There is as many default subnets as AZs of the region where the default VPC is created in
+	 	- It is a subnet that is created automatically by AWS at the same time as a default VPC
+	 	- It is public
+	 	- There is as many default subnets as AZs of the region where the default VPC is created in
 	- Custom Subnet: it is a subnet created by a customer in a costum VPC
 
 - Limits:
@@ -156,16 +156,16 @@
 
 - Associations:	
 	- Subnet & VPC:
-	 	- [ ] A subnet is attached to 1 VPC
-	 	- [ ] A VPC can have 1 or more subnets: The number of subnets depends on VPC CIDR range and Subnets CIDR ranges 
-	 	- [ ] If all subnets have the same CIDR prefix, the formula would be: 2^(Subnet CIDR Prefix - VPC CIDR Prefix)
-	 	- [ ] For a VPC of /16, we could create: 1 single subnet of a /16 netmask; 2 subnets of /17; 4 subnets of /18; ... 256 subnets of /24
+	 	- A subnet is attached to 1 VPC
+	 	- A VPC can have 1 or more subnets: The number of subnets depends on VPC CIDR range and Subnets CIDR ranges 
+	 	- If all subnets have the same CIDR prefix, the formula would be: 2^(Subnet CIDR Prefix - VPC CIDR Prefix)
+	 	- For a VPC of /16, we could create: 1 single subnet of a /16 netmask; 2 subnets of /17; 4 subnets of /18; ... 256 subnets of /24
 	- Subnet & Route Table:
-	 	- [ ] A subnet must be associated with 1 and only 1 route table (main or custom)
-	 	- [ ] When a subnet is created, it is associated by default to the VPC main route table
+	 	- A subnet must be associated with 1 and only 1 route table (main or custom)
+	 	- When a subnet is created, it is associated by default to the VPC main route table
 	- Subnet & NACL:
-	 	- [ ] A subnet must be associated with 1 and only 1 NACL (default or custom)
-	 	- [ ] When a subnet is created, it is associated by default to the VPC default NACL
+	 	- A subnet must be associated with 1 and only 1 NACL (default or custom)
+	 	- When a subnet is created, it is associated by default to the VPC default NACL
 
 </details>
 
@@ -187,47 +187,47 @@
 - Description:
 	- It controls what the VPC router does with subnet Outbound traffic	
 	- It is a collection of Routes:
-	 	- [ ] They're used when traffic from a subnet arrives at the VPC router
-	 	- [ ] They contain a destination and a target 
-		- [ ] Traffic is forwarded to the target if its destination matches the route's destination
-	 	- [ ] Default Routes (0.0.0.0/0 IPv4 and ::/0 IPv6) could be added
+	 	- They're used when traffic from a subnet arrives at the VPC router
+	 	- They contain a destination and a target 
+		- Traffic is forwarded to the target if its destination matches the route's destination
+	 	- Default Routes (0.0.0.0/0 IPv4 and ::/0 IPv6) could be added
 	- Most Specific Route is always chosen:
-	 	- [ ] It's when multiple routes' destination maches with traffic destination
-	 	- [ ] A matched /32 destination route (a single IP address) will be always chosen first...
-		- [ ] A matched /24 destination route will be chosen before a matched /16 destination route... 
-		- [ ] The default route matches with all traffic destination but will be chosen last
+	 	- It's when multiple routes' destination maches with traffic destination
+	 	- A matched /32 destination route (a single IP address) will be always chosen first...
+		- A matched /24 destination route will be chosen before a matched /16 destination route... 
+		- The default route matches with all traffic destination but will be chosen last
 	- A route Target can be: 
-	 	- [ ] An IP @ or 
-	 	- [ ] An AWS networking object: Egress-Only G., IGW, NAT G., Network Interface, Peering Connection, Transit G., Virtual Private G.,...
+	 	- An IP @ or 
+	 	- An AWS networking object: Egress-Only G., IGW, NAT G., Network Interface, Peering Connection, Transit G., Virtual Private G.,...
 
 - Location: -
 
 - Types:
 	- Local Route:
-		- [ ] Its (Destination, Target) = (VPC CIDR, Local)
-		- [ ] It lets traffic be routed between subnets
-		- [ ] It doesn't forward traffic to any target because the VPC router can handle it
-		- [ ] It allows all subnets in a VPC to be able to talk to one another even if they're in different AZs
-		- [ ] It's included in all route tables
-		- [ ] It can't be deleted from its route table
+		- Its (Destination, Target) = (VPC CIDR, Local)
+		- It lets traffic be routed between subnets
+		- It doesn't forward traffic to any target because the VPC router can handle it
+		- It allows all subnets in a VPC to be able to talk to one another even if they're in different AZs
+		- It's included in all route tables
+		- It can't be deleted from its route table
 
 	- Static Route: It's added manually to a route table
 	- Propagated Route:
-		- [ ] It's added dynamically to a route table by attaching a Virtual Private Gateway (VPG) to the VPC
-		- [ ] We could then elect to propagate any route that it learned onto a particular route table 
-		- [ ] It's a way that we can dynamically populate new routes that are learned by the VPG
-		- [ ] Certain types of AWS networking products (VPN, Direct Connect) can dynamically learn routes using BGP (Border Gateway Protocol)
-		- [ ] External networking products (a VPN or direct connect) that support BGP could be integrated with AWS VPC, they can dynamically generate Routes and insert them to a route table
-		- [ ] We don't need then to do it manually by a static route table
+		- It's added dynamically to a route table by attaching a Virtual Private Gateway (VPG) to the VPC
+		- We could then elect to propagate any route that it learned onto a particular route table 
+		- It's a way that we can dynamically populate new routes that are learned by the VPG
+		- Certain types of AWS networking products (VPN, Direct Connect) can dynamically learn routes using BGP (Border Gateway Protocol)
+		- External networking products (a VPN or direct connect) that support BGP could be integrated with AWS VPC, they can dynamically generate Routes and insert them to a route table
+		- We don't need then to do it manually by a static route table
 
 	- Main Route table:
-		- [ ] It's created by default at the same time as a VPC it is attached to
-		- [ ] It's associated "implicitly" by default to all subnets in the VPC until they're explicitly associated to a custom one
-		- [ ] In a default VPC: it routes outbound traffic to local and to outside (Internet Gateway)
-		- [ ] In a custom VPC: It routes outbound traffic to local	
+		- It's created by default at the same time as a VPC it is attached to
+		- It's associated "implicitly" by default to all subnets in the VPC until they're explicitly associated to a custom one
+		- In a default VPC: it routes outbound traffic to local and to outside (Internet Gateway)
+		- In a custom VPC: It routes outbound traffic to local	
 	- "Custom" route table: 
-		- [ ] It could be created and customized to subnets' requirements
-		- [ ] It is explicitly associated with subnets
+		- It could be created and customized to subnets' requirements
+		- It is explicitly associated with subnets
 
 - Limits: -
 
@@ -254,13 +254,13 @@
 	- It is the process of 1:1 translation where an internet gateway converts a private address to a public IP address
 	- It make the instance a true public machine
 	- When an Internet Gateway receives any traffic from an EC2 instance, if the EC2 has an allocated public IP: 
-		- [ ] Then the Internet Gateway adjusts those traffic's packets (Layer 3 in OSI model)
-		- [ ] It replaces the EC2 private IP in the packet source IP with the EC2 associated Public IP address
-		- [ ] It sends then the packets through to the public Internet
+		- Then the Internet Gateway adjusts those traffic's packets (Layer 3 in OSI model)
+		- It replaces the EC2 private IP in the packet source IP with the EC2 associated Public IP address
+		- It sends then the packets through to the public Internet
 	- When an Internet Gateway receives any traffic from the public internet,
-		- [ ] It adjusts those packets as well,
-		- [ ] It replaces the Public IP @ in the packet source IP with the associate EC2 private IP address
-		- [ ] It sends then the packets to the EC2 instance through the VPC Router
+		- It adjusts those packets as well,
+		- It replaces the Public IP @ in the packet source IP with the associate EC2 private IP address
+		- It sends then the packets to the EC2 instance through the VPC Router
 
 </details>
 
@@ -274,39 +274,39 @@
 	- It acts FIRST before Security Groups: if an IP is denied, it won't reach security group
 	- It is stateless
 	- It includes Rules:
-		- [ ] There're 2 sets of rules: Inbound and Outbound rules
-		- [ ] They're explicitly allow or deny traffic based on: traffic Type (protocol), Ports (or range), Source (or Destination)
-		- [ ] Their Source (or Destination) could only be IP/CIDR
-		- [ ] Their Source (or Destination) can't be an AWS objects (NACL is Layer 4 feature)
-		- [ ] Each rule has a Rule #
-		- [ ] They're processed in number of order, "Rule #": Lowest first
-		- [ ] When a match is found, that action is taken and processing stops
-		- [ ] The "*" rule is an implicit deny: It is processed last
+		- There're 2 sets of rules: Inbound and Outbound rules
+		- They're explicitly allow or deny traffic based on: traffic Type (protocol), Ports (or range), Source (or Destination)
+		- Their Source (or Destination) could only be IP/CIDR
+		- Their Source (or Destination) can't be an AWS objects (NACL is Layer 4 feature)
+		- Each rule has a Rule #
+		- They're processed in number of order, "Rule #": Lowest first
+		- When a match is found, that action is taken and processing stops
+		- The "*" rule is an implicit deny: It is processed last
 	- Its rules include Ephemeral Ports:
-		- [ ] When a client initiates communications with a server, it uses a well-known port # on that server: e.g., TCP/443
-		- [ ] The response is from that well-known port to an ephemeral port on the client
-		- [ ] The client decides the ephemeral port (e.g., TCP/22000): they're be thousands!
-		- [ ] Because NACL are stateless and ephemeral ports are thousands, to manage the overhead of NACL rules is very high 
-		- [ ] A single Communication involves 4 individual sets of rules:
-		- [ ] We should think to "allow" traffic for every "ephemeral" ports on Client Inbound and Outbound rules and, 
-		- [ ] We should think to "allow" traffic for every "ephemeral" ports on Destination Inbound and Outbound rules as well
+		- When a client initiates communications with a server, it uses a well-known port # on that server: e.g., TCP/443
+		- The response is from that well-known port to an ephemeral port on the client
+		- The client decides the ephemeral port (e.g., TCP/22000): they're be thousands!
+		- Because NACL are stateless and ephemeral ports are thousands, to manage the overhead of NACL rules is very high 
+		- A single Communication involves 4 individual sets of rules:
+		- We should think to "allow" traffic for every "ephemeral" ports on Client Inbound and Outbound rules and, 
+		- We should think to "allow" traffic for every "ephemeral" ports on Destination Inbound and Outbound rules as well
 	 
 - Location: It isn't specific to any AZ
 
 - Type:
 	- Default NACL:
-		- [ ] It is created by default at the same as the VPC it is attached to
-		- [ ] It is associated "implicitly" to all subnets as long as they're not associated explicitly to a custom NACL 
-		- [ ] It Allows ALL traffic: Rule 100: Allow everything
+		- It is created by default at the same as the VPC it is attached to
+		- It is associated "implicitly" to all subnets as long as they're not associated explicitly to a custom NACL 
+		- It Allows ALL traffic: Rule 100: Allow everything
 	- Custom NACL:
-		- [ ] It is created by users
-		- [ ] It should be associated "explicitly" to a subnet
-		- [ ] It blocks ALL traffic, by default: it only includes "*" rule only
+		- It is created by users
+		- It should be associated "explicitly" to a subnet
+		- It blocks ALL traffic, by default: it only includes "*" rule only
 
 - Best Practice: 
 	- Inbound and Outbound Rules # should use an increment of 100: 
-		- [ ] 100 for the 1st IPv4 rule, 101 for the 1st IPv6 rule
-		- [ ] 200 for the 2nd IPv4 rule, 201 for the 2nd IPv6 rule
+		- 100 for the 1st IPv4 rule, 101 for the 1st IPv6 rule
+		- 200 for the 2nd IPv4 rule, 201 for the 2nd IPv6 rule
 	-  Ensure that you place the DENY rules earlier in the table than the ALLOW rules that open the wide range of ephemeral ports
 
 - Use Case:
@@ -334,42 +334,42 @@
 		- [More details (see Tracking)](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#security-group-connection-tracking])
 	- [Comparison between Security Group and ACL (stateless)](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Security.html#VPC_Security_Comparison])
 	- SG Rules include: Inbound and Outbound rule sets:
-		- [ ] Type: TCP
-		- [ ] Protocol: e.g., HTTP, SSH
-		- [ ] Port Ranges: e.g., Port 22 (SSH), Port 53 (UDP), Port 3060 (MySQL), Port 80 (http), Port 443 (https)... 
-		- [ ] Source/Destination: Since it is a Layer 5 Firewall, it supports:
-		- [ ] IP addresses, CIDRs (Layer 4 info)
-		- [ ] a Security Group (Layer 5 info)
-		- [ ] It can auto-reference itself in an Inbound rules' Source: 
-		- [ ] It allows traffic from itself
-		- [ ] All resources in the same SG are allowed to communicate to each other
+		- Type: TCP
+		- Protocol: e.g., HTTP, SSH
+		- Port Ranges: e.g., Port 22 (SSH), Port 53 (UDP), Port 3060 (MySQL), Port 80 (http), Port 443 (https)... 
+		- Source/Destination: Since it is a Layer 5 Firewall, it supports:
+		- IP addresses, CIDRs (Layer 4 info)
+		- a Security Group (Layer 5 info)
+		- It can auto-reference itself in an Inbound rules' Source: 
+		- It allows traffic from itself
+		- All resources in the same SG are allowed to communicate to each other
 	- Implicit Deny: Explicit Allow > Implicit Deny
-		- [ ] There is no explicit denies
-		- [ ] All rules are analyzed
-		- [ ] If a rule matches, the request is allowed
-		- [ ] If there is no match, the request is implicitly denied
+		- There is no explicit denies
+		- All rules are analyzed
+		- If a rule matches, the request is allowed
+		- If there is no match, the request is implicitly denied
 
 - Types:		
 	- Default SG: 
-		- [ ] It is created at the same time as a VPC (Default VPC or Custom VPC)
-		- [ ] Default VPC allows all inbound and outbound traffic (open to the word)
-		- [ ] Custom VPC: It allows all inbound traffic from the same SG; It allows all outbound traffic
+		- It is created at the same time as a VPC (Default VPC or Custom VPC)
+		- Default VPC allows all inbound and outbound traffic (open to the word)
+		- Custom VPC: It allows all inbound traffic from the same SG; It allows all outbound traffic
 	- Custom SG:
-		- [ ] It is created by users
-		- [ ] It implicitly denies all inbound traffic: there isn't any inbound rule
-		- [ ] It allows all outbound traffic
+		- It is created by users
+		- It implicitly denies all inbound traffic: there isn't any inbound rule
+		- It allows all outbound traffic
 
 - Associations:
 	- SG : VPC - * : 1 
-		- [ ] It's associated with a single VPC: it doesn't span VPC's
-		- [ ] A VPC could contain multiple SGs
+		- It's associated with a single VPC: it doesn't span VPC's
+		- A VPC could contain multiple SGs
 	- SG : ENI - * : 1		
-		- [ ] It is attached to 1 ENI
-		- [ ] An ENI could be attached to multiple SGs		 
+		- It is attached to 1 ENI
+		- An ENI could be attached to multiple SGs		 
 	- SG : EC2 Instance : * : *	
-		- [ ] It could be assigned to multiple instances
-		- [ ] It could be assigned to multiple instances in another AWS account within the same region (Peering Connection?) 
-		- [ ] An EC2 instance could be attached to Multiple SGs
+		- It could be assigned to multiple instances
+		- It could be assigned to multiple instances in another AWS account within the same region (Peering Connection?) 
+		- An EC2 instance could be attached to Multiple SGs
 
 </details>
 
@@ -396,9 +396,9 @@
 	- Multifactor authentication, ID federation, and/or IP blocks
 	- It is recommended to add tags to be able to differentiate from other regular EC2 instances
 	- Create a specific SG for bastion hosts:
-		- [ ] Since bastion hosts require specific rules, we could make them in a unique SG
-		- [ ] The SG could then be shared with bastion hosts only
-		- [ ] It will allow to reduce bastion hosts creation overhead
+		- Since bastion hosts require specific rules, we could make them in a unique SG
+		- The SG could then be shared with bastion hosts only
+		- It will allow to reduce bastion hosts creation overhead
 	- SSH forwarding: it allows to connect to the private instance through the bastion host without leaving SSH keys within the bastion host
 - For more details:
 	- [SSH forwarding](https://aws.amazon.com/blogs/security/securely-connect-to-linux-instances-running-in-a-private-amazon-vpc/)
@@ -423,48 +423,48 @@
 	- A NAT Gateway/Instance which Elastic IP is: 172.162.0.10
 	- An Internet Gateway with a Public IP is: 53.12.23.11
 	- Outgoing Traffic:
-		- [ ] The EC2 L3 layer will create a packet (Src IP, Dest IP) = (10.0.0.10, 1.3.3.7)
-		- [ ] The EC2 instance will send the packet to the NAT Gateway
-		- [ ] The NAT Gateway will update the packet Src IP by its EIP: (Src IP, Dest IP) = (172.162.0.10, 1.3.3.7)
-		- [ ] The NAT Gateway will then send the packet to the Internet Gateway
-		- [ ] The Internet Gateway will also update the packet Src IP by its Public IP: (Src IP, Dest IP) = (53.12.23.11, 1.3.3.7)
-		- [ ] The Internet Gateway will then send the packet to the Internet
+		- The EC2 L3 layer will create a packet (Src IP, Dest IP) = (10.0.0.10, 1.3.3.7)
+		- The EC2 instance will send the packet to the NAT Gateway
+		- The NAT Gateway will update the packet Src IP by its EIP: (Src IP, Dest IP) = (172.162.0.10, 1.3.3.7)
+		- The NAT Gateway will then send the packet to the Internet Gateway
+		- The Internet Gateway will also update the packet Src IP by its Public IP: (Src IP, Dest IP) = (53.12.23.11, 1.3.3.7)
+		- The Internet Gateway will then send the packet to the Internet
 	- Ingoing Traffic:
-		- [ ] it is similar to the outgoing process above
-		- [ ] In this case, the packet Destination IP is updated
-		- [ ] It is updated 1st by the Internet Gateway with the NAT Gateway EIP
-		- [ ] Then, it is updated by the NAT Gateway with the EC2 Private IP
+		- it is similar to the outgoing process above
+		- In this case, the packet Destination IP is updated
+		- It is updated 1st by the Internet Gateway with the NAT Gateway EIP
+		- Then, it is updated by the NAT Gateway with the EC2 Private IP
 - NAT Gateway: 
 	- 1 NAT Gateway inside an AZ
 	- It requires a Public Subnet and a Public Elastic IP
 	- It understands and allow session traffic (layer 5)
 	- It's scalable but isn't highly available by design (Redundant): if an AZ fails, all underlying NAT Gateway will fail
 	- Best Practice: 
-		- [ ] We need 1 NAT Gateway by AZ
-		- [ ] We need a Single Route table for each AZ (each NAT Gateway)
-		- [ ] Each NAT Gateway should be then associates with all private subnets of the related AZ
+		- We need 1 NAT Gateway by AZ
+		- We need a Single Route table for each AZ (each NAT Gateway)
+		- Each NAT Gateway should be then associates with all private subnets of the related AZ
 	- Performance: 
-		- [ ] Initially 5GB of bandwidth 
-		- [ ] It can scale to 45GB
-		- [ ] For more bandwidth, we can distribute the workload by splitting our resources into multiple subnets inside an AZ
-		- [ ] Then specify for each subnet to go to a separate gateway
+		- Initially 5GB of bandwidth 
+		- It can scale to 45GB
+		- For more bandwidth, we can distribute the workload by splitting our resources into multiple subnets inside an AZ
+		- Then specify for each subnet to go to a separate gateway
 - NAT Instance:
 	- It is a single EC2 instance
 	- It could be created from a specific AMI
 	- it requires to Disable EC2 Source/Destination Checks:
-		- [ ] Each EC2 instance performs source/destination checks by default
-		- [ ] This means that the instance must be the source or destination of any traffic it sends or receives
-		- [ ] However, a NAT instance must be able to send and receive traffic when the source or destination is not itself
-		- [ ] Therefore, it is required tp disable source/destination checks on the NAT instance
+		- Each EC2 instance performs source/destination checks by default
+		- This means that the instance must be the source or destination of any traffic it sends or receives
+		- However, a NAT instance must be able to send and receive traffic when the source or destination is not itself
+		- Therefore, it is required tp disable source/destination checks on the NAT instance
 	- Disadvantage: 
-		- [ ] It is a single point of failure
-		- [ ] If the instance is terminated, the route status: blackhole
+		- It is a single point of failure
+		- If the instance is terminated, the route status: blackhole
 	- Use case: there is only one use case
-		- [ ] When cost saving is absolutely required and, a NAT and bastion hosts are needed
-		- [ ] We could then combine bastion host and NAT in the same machine
+		- When cost saving is absolutely required and, a NAT and bastion hosts are needed
+		- We could then combine bastion host and NAT in the same machine
 	- For more details:  
-		- [ ] [NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html)
-		- [ ] [NAT Gateway vs. NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-comparison.html)
+		- [NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html)
+		- [NAT Gateway vs. NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-comparison.html)
 
 </details>
 
@@ -478,24 +478,24 @@
 	- it's a network gateway
 	- It's similar to Internet Gateway but used to link VPCs
 	- Traffic goes through RTs, NACLs and, SGs. Therefore: 	
-		- [ ] Routes are required at both sides
-		- [ ] NACLs and SGs can be used to control access
-		- [ ] SG reference is cross-account but it's not cross-region (see limits below)
+		- Routes are required at both sides
+		- NACLs and SGs can be used to control access
+		- SG reference is cross-account but it's not cross-region (see limits below)
 	- DNS resolution to private IPs can be enabled, 
-		- [ ] It is needed in both sides
-		- [ ] Public DNSes will therefore be resolved to their private IP and,
-		- [ ] It won't be traveling over the public Internet
+		- It is needed in both sides
+		- Public DNSes will therefore be resolved to their private IP and,
+		- It won't be traveling over the public Internet
 - Data transit:
 	- It is encrypted
 	- It uses AWS global-backbone for VPC peering cross-region: low latency and higher performance than public internet
 - Limits:
 	- VPC CIDR blocks can't overlap
 	- Transitive Peering is NOT Possible: 
-		- [ ] A VPC can't talk to another VPC through a 3rd VPC
-		- [ ] A Direct peering is required between 2 VPCs so that they can talk to each other
+		- A VPC can't talk to another VPC through a 3rd VPC
+		- A Direct peering is required between 2 VPCs so that they can talk to each other
 	- Cross-Region:
-		- [ ] An SG can't be referenced from another region
-		- [ ] IPv6 support isn't available cross-region
+		- An SG can't be referenced from another region
+		- IPv6 support isn't available cross-region
 - Use case:
 	- To make a service that is running in a single VPC accessible to other VPCs
 	- To connect our VPC to a vendor VPC or a partner VPC to access an application
@@ -516,24 +516,24 @@
 - It is horizontally scaled (bandwidth)
 - There're 2 types of VPC endpoints:
 	- Gateway endpoint: 
-		- [ ] It is used for S3 buckets and DynamoDB
-		- [ ] It is similar to Internet Gateway
-		- [ ] Its related traffic goes through RT: (Destination, Target) = (AWS Service Prefix Lists, Gateway Endpoint ID)
-		- [ ] Prefix Lists are more specific than general public internet (0.0.0.0/0)
-		- [ ] Therefore, Prefix Lists will override the use of the IG when they're in the same RT
-		- [ ] It can be restricted via policies: full access is selected by default
-		- [ ] It is HA (Highly available) across AZs in a region: 1 Gateway endpoint by VPC
+		- It is used for S3 buckets and DynamoDB
+		- It is similar to Internet Gateway
+		- Its related traffic goes through RT: (Destination, Target) = (AWS Service Prefix Lists, Gateway Endpoint ID)
+		- Prefix Lists are more specific than general public internet (0.0.0.0/0)
+		- Therefore, Prefix Lists will override the use of the IG when they're in the same RT
+		- It can be restricted via policies: full access is selected by default
+		- It is HA (Highly available) across AZs in a region: 1 Gateway endpoint by VPC
 	- Interface endpoint:
-		- [ ] It is used for most other AWS services such as SNS, SQS
-		- [ ] It is an ENI with a private IP address
-		- [ ] It provides another unique endpoint for the selected service (different from the service public endpoint)
-		- [ ] It is attached to a subnet
-		- [ ] For HA, it should be associated with multiple AZs
-		- [ ] Its related traffic goes through SGs and NACLs
-		- [ ] It doesn't require a RT: it adds or replaces the DNS for the service
-		- [ ] It provides multiple DNS names: 1 per selected subnet + 1 general DNS name (not specific for an AZ)
-		- [ ] It replaces the default service public DNS when "Private DNS Names" feature is enabled
-		- [ ] [For more details about AWS Services endpoint](https://docs.aws.amazon.com/general/latest/gr/rande.html)
+		- It is used for most other AWS services such as SNS, SQS
+		- It is an ENI with a private IP address
+		- It provides another unique endpoint for the selected service (different from the service public endpoint)
+		- It is attached to a subnet
+		- For HA, it should be associated with multiple AZs
+		- Its related traffic goes through SGs and NACLs
+		- It doesn't require a RT: it adds or replaces the DNS for the service
+		- It provides multiple DNS names: 1 per selected subnet + 1 general DNS name (not specific for an AZ)
+		- It replaces the default service public DNS when "Private DNS Names" feature is enabled
+		- [For more details about AWS Services endpoint](https://docs.aws.amazon.com/general/latest/gr/rande.html)
 
 - Limits:
 	- Gateway endpoints are used via route
@@ -615,8 +615,8 @@
 	- In some cases, humans do need to understand the networking structure that we use inside a VPC
 	- So, we could match a subnet's CIDR to its AZ and its application tear:
 	- E.g., for a VPC 10.0.0.0/16 with Subnets: /24 + 2 AZs + 3 tiers:
-		- [ ] For AZ1: (Tier 1, 10.0.11.0); (Tier 2: 10.0.21.0); (Tier 3: 10.0.31.0)
-		- [ ] For AZ2: (Tier 1, 10.0.12.0); (Tier 2: 10.0.22.0); (Tier 3: 10.0.32.0)
+		- For AZ1: (Tier 1, 10.0.11.0); (Tier 2: 10.0.21.0); (Tier 3: 10.0.31.0)
+		- For AZ2: (Tier 1, 10.0.12.0); (Tier 2: 10.0.22.0); (Tier 3: 10.0.32.0)
 - Peering Connection name: pc-[Requester VPC name]-[Accepter VPC name]. E.g., pc-VPC1-VPC2
 
 </details>
