@@ -350,12 +350,15 @@
 		- If there is no match, the request is implicitly denied
 
 - Types:		
-	- Default SG: 
-		- It is created at the same time as a VPC (Default VPC or Custom VPC)
-		- Default VPC allows all inbound and outbound traffic (open to the word)
-		- Custom VPC: It allows all inbound traffic from the same SG; It allows all outbound traffic
+	- Default SG in a default VPC: 
+		- It is created at the same time as a VPC
+		- It allows all inbound and outbound traffic (open to the word)
+	- Default SG in a custom VPC:	
+		- It is created at the same time as a VPC 
+		- It allows all inbound traffic from the same SG 
+		- It allows all outbound traffic
 	- Custom SG:
-		- It is created by users
+		- It is created by users in a default or custom VPC
 		- It implicitly denies all inbound traffic: there isn't any inbound rule
 		- It allows all outbound traffic
 
