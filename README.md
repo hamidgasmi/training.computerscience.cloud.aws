@@ -672,14 +672,41 @@
 		- Use cases:
 			- We have 2 versions of an application. The internal version may contain additional information or features for administration
 			- We have a new version of an applicaiton. We would like to test it without distrupting the public version
-	- NS Record has the name servers that are authoritative for a domain
-	- SOA Record (Start of Authority Records) stores the information below
-	- A Record:
-	- AAAA record:
-    - CNAME record:
-    - MX records:
-    - TXT records:
-    - Alias record type:
+	- NS Record has the server names that are authoritative for a subdomain
+	- SOA Record (Start of Authority Records)
+	- A Record provodes an IPv4 address for a given host (www)
+	- AAAA record provodes an IPv6 address for a given host (www)
+    - CNAME record (Canonical Name):
+		- It allows to resolve one domain name to another
+		- It cannot be used at the APEX (top) of a domain
+		- E.g. 1, add Cnames for mobile.example.com that is pointing m.example.com server
+		- It could reference an original record (A or AAAA) instead of an explicit IP address 
+		- E.g. 2, add a CNames (www, ftp, vpn) for example.com:
+		- www.example.com; ftp.example.com; vpn.example.com
+		- All CNames could reference the original A record (example.com)
+		- If the original record IP address changes, there's no impact on CName records
+		- We can reference names that are outside our domain with FQDN (the last . is required "anotherexample.com.")
+	- Alias record type:
+		- It is a Route 53 specific feature
+		- It is an extension of CNames
+		- It can be used at the APEX of a domain (for naked domain names)
+		- It can refer to AWS logical services (LBs, S3 buckets)
+		- It allows to specify a hostname in our DNS records which then resolve to the correct A/AAAA records at the time of a request
+		- AWS doesn't charge for alias records against AWS resources
+		- It is recommended by AWS
+    - MX record:
+		- It is quired whenever a server is attempting to send an email to a given domain
+		- It provides the email servers for a given domain
+		- Eeach server within MX record has a priority value
+		- The lower priority value is preferred
+    - TXT record:
+		- It's used to store plain text inside a domain
+		- It's often used to verify domain ownership:
+		- If we are adding a domain to Gmail or Office 365, 
+		- They'll probably ask to add a text record to the domain with some random text that they're aware of
+		- They can then perform a resolution on that text record against the text of that "TXT record"
+		- If it matches, it guarantees that we own that domain.
+		- It can be used in spam filtering
 	- VPC DNS Resolver ?
 
 </details>
