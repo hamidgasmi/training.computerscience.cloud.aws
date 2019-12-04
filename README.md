@@ -796,24 +796,27 @@
 		- E.g., an S3 static website that presents a maintenance page 
 		- with usefull information: Failure status, contact details
 	- It can be conbined with other routing policies to allow multiple primary and secondary reconrds
+- Weighted Routing: 
+	- It's multiple records with the same name
+	- Its records have a weight and a unique Set ID
+	- It allows to split traffic based on different weights assigned
+	- It can be used to control the amount of traffic that reaches specific resources:
+		- To test new software/products/ AB Testing?
+		- When resources are being added or removed from a configuration that doesn't use a LB
+		- No performance or loading control (It isn't a LB architecture)
+	- We can attach a health check to a record so that Route 53 can omit the record as long as the associated EC2 instance isn't healthy 
+	- E.g., we can set 10% of our traffic to go to US-EAST-1 and 90% to go to EU-WEST-1 
+	- The weight is a value. It isn't a % 
+	- So, if we add to address with the following weights: 20 and 30 => the corresponding % will be: 40% and 60% 
+- Latency-based Routing: 
+	- It allow to route our traffic based on the lowest network latency for our end user 
+	- To use it, we create it for the Amazon EC2 or ELB resource in each region that hosts our website 
+	- We can attach a health check to a record
 - Multivalue Answer Routing: 
 	- It is almost as "Simple Routing": Route 53 responds to DNS queries with up to 8 healthy records and gives different answers to different DNS resolvers 
 	- With the differences below: 
 		- We can have multiple records with 1 IP address 
 		- It lets us check the health of each resource: so Route53 returns only values for healthy resources 
-
-
-
-- Weighted Routing: 
-	- It allows to split traffic based on different weights assigned 
-	- E.g., we can set 10% of our traffic to go to US-EAST-1 and 90% to go to EU-WEST-1 
-	- The weight is a value. It isn't a % 
-	- So, if we add to address with the following weights: 20 and 30 => the corresponding % will be: 40% and 60% 
-	- We can attach a health check to a record so that Route 53 can omit the record as long as the associated EC2 instance isn't healthy 
-- Latency-based Routing: 
-	- It allow to route our traffic based on the lowest network latency for our end user 
-	- To use it, we create it for the Amazon EC2 or ELB resource in each region that hosts our website 
-	- We can attach a health check to a record 
 
 - Geolocation Routing: 
 	- It lets to choose where our traffic will be sent based on the geographic location of our users 
