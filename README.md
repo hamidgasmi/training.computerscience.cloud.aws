@@ -732,17 +732,26 @@
 - Endpoint Check:
 	- It checks the physical health of an endpoint
 	- It species an endpoint by IP address or a domain name (usefull when we have a domain name which IP address changes often)
-	- It could occurs every 30 seconds (default) or every 10s
-	- It's done by Health Checkers: a global health check system
-	- Health Checkers evaluation is based on: 
-		- The failure threshold: a number of successful response to a number of consecutive health checks requests
-		- The Response time which depends on the type of health check:
-		- For HTTP/S health checks: 4s to establish a TCP connection with the endpoint response with an HTTP status code of 2xx or 3xx within 2 seconds after connecting
-		- For a TCP health checks: Route 10s to establish a TCP connection with the endpoint
-		- For HTTP/S with string match: All the checks as with HTTP/S but the body is checked for a string match
-	- Route 53 aggregates the data from the health checkers and determines whether the endpoint is healthy:
+	- It occurs every 30 seconds (default) or every 10s
+	- It has a failure threshold: if x checks are unhealthy, then the healthcheck is unhealthy
+	- E.g., If the check occurs every 30s and the failure threshold is 3, then Route 53 will be able react for a fealure only after 90s (long time) 
+	- Each endpoint check corresponds actually to multiple healthchecks that are done by Health Checkers (a global health check system)
+	- Endpoint Check aggregates the data from the health checkers and determines whether the endpoint is healthy:
 		- If more than 18% of health checkers report that an endpoint is healthy, Route 53 considers it healthy
 		- If 18% of health checkers or fewer report that an endpoint is healthy, Route 53 considers it unhealthy.
+	- Health Checkers evaluation is based on the Response time which depends on the type of health check:
+		- For HTTP/S healthchecks: 4s to establish a TCP connection with the endpoint + an HTTP status code of 2xx or 3xx within 2 seconds after connecting
+		- For a TCP healthchecks: 10s to establish a TCP connection with the endpoint
+		- For HTTP/S with string matching: All the checks as with HTTP/S but the body is checked for a string match
+	- Endpoint Check other Options are:
+		- TCP options includes
+		- IP @ (for TCP and HTTP/S)
+		- Hostname (for HTTP/S): it's useful if we have multiple websites under the same IP (the same server); we could create then 1 healthcheck/website
+		- Port (for TCP and HTTP/S):
+		- Path (for HTTP/S)
+		- Latency graphs: ?
+		- Invert health check status: 
+		- Health checker regions:
 	- [More details](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-determining-health-of-endpoints.html#dns-failover-determining-health-of-endpoints-monitor-endpoint) 
 - Calculated healthcheck:
 	- It monitors the health of multiple healthchecks
