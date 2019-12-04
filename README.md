@@ -816,11 +816,26 @@
 	- The latency calculation is NOT made between customer's resolver server location and our resource location!
 	- It isn't related to geography but to network condition instead 
 	- We can attach a health check to a record
-- Geolocation Routing: 
-	- It lets to choose where our traffic will be sent based on the geographic location of our users 
-	- In other words, the location from which DNS queries originate 
-	- E.g., we might want all queries from Europe to be routed to a fleet of EC2 instances that are specifically configured for our European customers 
-	- These servers may have the local language of our European customers and all prices are displayed in Euros 
+- Geolocation Routing policy:
+	- It's multiple records with the same name
+	- It lets to choose the resources that server traffic based on the geographic region from which queries originate 
+	- Its records are configured for:
+		- a Country: the lowest abstration level 
+		- a Continent:
+		- Default: the highest abstration level (while planete)
+	- Its IP matching process is:
+		- A record set is used for queries originated from its region
+		- When multiple regions match a query region, the record set with the lowest abstraction level is returned
+	  	- If this process fails, the default record set is returned (if it exists) 
+		- If no record set is configured for the originating query region, the default record set is returned (if it exists)
+		- If matching record set health check fails, it is then excluded in this process
+		- If there is no record matching and there is no default record, then "No answer" is returned 
+	- E.g. 1, a website like Netflix: its content is based on their customer' country
+	- E.g. 2, we might want all queries from Europe (/US) to be routed to a fleet of EC2 instances:
+		- They're specifically configured for our European (US) customers 
+		- They may have the local language (English, Spanish, Chinese) of our European (US) customers
+		- They may display all prices in Euros ($)
+		- We could set US record set as a default, canadien customers will be then redirected to the US EC2 fleet
 - Multivalue Answer Routing: 
 	- It is almost as "Simple Routing": Route 53 responds to DNS queries with up to 8 healthy records and gives different answers to different DNS resolvers 
 	- With the differences below: 
