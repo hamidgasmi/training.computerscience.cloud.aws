@@ -808,21 +808,25 @@
 	- E.g., we can set 10% of our traffic to go to US-EAST-1 and 90% to go to EU-WEST-1 
 	- The weight is a value. It isn't a % 
 	- So, if we add to address with the following weights: 20 and 30 => the corresponding % will be: 40% and 60% 
-- Latency-based Routing: 
-	- It allow to route our traffic based on the lowest network latency for our end user 
-	- To use it, we create it for the Amazon EC2 or ELB resource in each region that hosts our website 
+- Latency-based Routing policy: 
+	- It's multiple records with the same name: they're considered part of the same latency-based set
+	- Its records are allocated to a unique region and have a unique Set ID
+	- It consults a latency database (DNS Resolver location - Policy Region - Latency) when a request occurs from a resolver server
+	- It returns the record set with the lowest network latency to the resolver server (end-user)
+	- The latency calculation is NOT made between customer's resolver server location and our resource location!
+	- It isn't related to geography but to network condition instead 
 	- We can attach a health check to a record
+- Geolocation Routing: 
+	- It lets to choose where our traffic will be sent based on the geographic location of our users 
+	- In other words, the location from which DNS queries originate 
+	- E.g., we might want all queries from Europe to be routed to a fleet of EC2 instances that are specifically configured for our European customers 
+	- These servers may have the local language of our European customers and all prices are displayed in Euros 
 - Multivalue Answer Routing: 
 	- It is almost as "Simple Routing": Route 53 responds to DNS queries with up to 8 healthy records and gives different answers to different DNS resolvers 
 	- With the differences below: 
 		- We can have multiple records with 1 IP address 
 		- It lets us check the health of each resource: so Route53 returns only values for healthy resources 
 
-- Geolocation Routing: 
-	- It lets to choose where our traffic will be sent based on the geographic location of our users 
-	- In other words, the location from which DNS queries originate 
-	- E.g., we might want all queries from Europe to be routed to a fleet of EC2 instances that are specifically configured for our European customers 
-	- These servers may have the local language of our European customers and all prices are displayed in Euros 
 - Geoproximity Routing (Traffic Flow Only): 
 	- To use Geoproximity routing, it is required to use Route 53 traffic flow 
 	- Traffic flow is: 
