@@ -652,6 +652,7 @@
 
 <details>
 <summary>DNS Service</summary>
+
 - Hosted Zone:
 	- It corresponds to a domain name
 	- It is a collection of records (see below)
@@ -680,7 +681,7 @@
 	- Use cases:
 		- We have 2 versions of an application. The internal version may contain additional information or features for administration
 		- We have a new version of an applicaiton. We would like to test it without distrupting the public version
-- Zone's Record:
+- Zone's Records:
 	- NS Record has the server names that are authoritative for a subdomain
 	- SOA Record (Start of Authority Records)
 	- A Record provodes an IPv4 address for a given host (www)
@@ -721,7 +722,40 @@
 </details>
 
 <details>
-<summary>Health Checks</summary>
+<summary>Health Check</summary>
+
+- It can be created within Route 53
+- It's used to influence Route 53 routing decisions:
+	- Records can be linked to health checks
+	- If the check is unhealthy, the record isn't used
+	- It can be used to do failover and other routing architecture (see Routing policies, below)
+- Endpoint Check:
+	- It checks the physical health of an endpoint
+	- It species an endpoint by IP address or a domain name (usefull when we have a domain name which IP address changes often)
+	- It could occurs every 30 seconds (default) or every 10s
+	- It's done by Health Checkers: a global health check system
+	- Health Checkers evaluation is based on: 
+		- The failure threshold: a number of successful response to a number of consecutive health checks requests
+		- The Response time which depends on the type of health check:
+		- For HTTP/S health checks: 4s to establish a TCP connection with the endpoint response with an HTTP status code of 2xx or 3xx within 2 seconds after connecting
+		- For a TCP health checks: Route 10s to establish a TCP connection with the endpoint
+		- For HTTP/S with string match: All the checks as with HTTP/S but the body is checked for a string match
+	- Route 53 aggregates the data from the health checkers and determines whether the endpoint is healthy:
+		- If more than 18% of health checkers report that an endpoint is healthy, Route 53 considers it healthy
+		- If 18% of health checkers or fewer report that an endpoint is healthy, Route 53 considers it unhealthy.
+	- [More details](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-determining-health-of-endpoints.html#dns-failover-determining-health-of-endpoints-monitor-endpoint) 
+- Calculated healthcheck:
+	- It monitors the health of multiple healthchecks
+	- We could select how many sub-healthcheck should be healthy to make the calculated health check healthy
+	- Usefull particularly when we have got lots of different services/components of our system 
+	- We created an individual healthcheck for each of them
+	- It summarizes the health of all these individual components 
+	- E.g., We have a front-end tier, a logic tier and, a database tier, 
+	- Each tier has a healthcheck
+	- Whe can then create a calculated healthcheck that will check the status of these individual checks to report the whole system healthy. 
+- CloudWatch alrams health checks:
+	- They monitor CloudWatch alarms
+	- e.g., we may want to consider something unhealthy if a DynamoDB table is experiencing performance issues
 
 </details>
 
@@ -730,40 +764,40 @@
 
 - Simple Routing: 
 	- We can only have 1 record with multiple IP addresses
-	- Route 53 returns all values to the user in a random order. 
-	- Health check isn't possible. 
+	- Route 53 returns all values to the user in a random order 
+	- Health check isn't possible  
 - Multivalue Answer Routing: 
-	- It is almost as "Simple Routing": Route 53 responds to DNS queries with up to 8 healthy records and gives different answers to different DNS resolvers. 
+	- It is almost as "Simple Routing": Route 53 responds to DNS queries with up to 8 healthy records and gives different answers to different DNS resolvers  
 	- With the differences below: 
-		- We can have multiple records with 1 IP address. 
-		- It lets us check the health of each resource: so Route53 returns only values for healthy resources. 
+		- We can have multiple records with 1 IP address  
+		- It lets us check the health of each resource: so Route53 returns only values for healthy resources  
 - Weighted Routing: 
-	- It allows to split traffic based on different weights assigned. 
-	- E.g., we can set 10% of our traffic to go to US-EAST-1 and 90% to go to EU-WEST-1. 
-	- The weight is a value. It isn't a %.  
-	- So, if we add to address with the following weights: 20 and 30 => the corresponding % will be: 40% and 60%.  
-	- We can attach a health check to a record so that Route 53 can omit the record as long as the associated EC2 instance isn't healthy.  
+	- It allows to split traffic based on different weights assigned  
+	- E.g., we can set 10% of our traffic to go to US-EAST-1 and 90% to go to EU-WEST-1  
+	- The weight is a value. It isn't a %   
+	- So, if we add to address with the following weights: 20 and 30 => the corresponding % will be: 40% and 60%   
+	- We can attach a health check to a record so that Route 53 can omit the record as long as the associated EC2 instance isn't healthy   
 - Latency-based Routing: 
-	- It allow to route our traffic based on the lowest network latency for our end user. 
-	- To use it, we create it for the Amazon EC2 or ELB resource in each region that hosts our website. 
-	- We can attach a health check to a record. 
+	- It allow to route our traffic based on the lowest network latency for our end user  
+	- To use it, we create it for the Amazon EC2 or ELB resource in each region that hosts our website  
+	- We can attach a health check to a record  
 - Failover Routing: 
-	- It is used when we want to create an active/passive set up. 
-	- For example, we may want our primary site be in EU-WEST-2 and our secondary Disaster Recovery site in AP-SOTHEAST-2. 
-	- Route53 will monitor the health of our primary site using a health check. 
-	- A health check monitors the health of our endpoints. 
-	- Best Practice: in this case, AWS recommends a TTL <= 60 to let client respond quickly to changes in health status.. 
+	- It is used when we want to create an active/passive set up  
+	- For example, we may want our primary site be in EU-WEST-2 and our secondary Disaster Recovery site in AP-SOTHEAST-2  
+	- Route53 will monitor the health of our primary site using a health check  
+	- A health check monitors the health of our endpoints  
+	- Best Practice: in this case, AWS recommends a TTL <= 60 to let client respond quickly to changes in health status   
 - Geolocation Routing: 
-	- It lets to choose where our traffic will be sent based on the geographic location of our users. 
-	- In other words, the location from which DNS queries originate. 
-	- E.g., we might want all queries from Europe to be routed to a fleet of EC2 instances that are specifically configured for our European customers. 
-	- These servers may have the local language of our European customers and all prices are displayed in Euros. 
+	- It lets to choose where our traffic will be sent based on the geographic location of our users  
+	- In other words, the location from which DNS queries originate  
+	- E.g., we might want all queries from Europe to be routed to a fleet of EC2 instances that are specifically configured for our European customers  
+	- These servers may have the local language of our European customers and all prices are displayed in Euros  
 - Geoproximity Routing (Traffic Flow Only): 
-	- To use Geoproximity routing, it is required to use Route 53 traffic flow. 
+	- To use Geoproximity routing, it is required to use Route 53 traffic flow  
 	- Traffic flow is: 
-	- Geoproximity Routing lets Route 53 routes traffic to our resources based on the geographic location of our users and our resources. 
-	- We can also optionally choose to route more or less traffic to a given resource by specifying a value, known as a bias. 
-	- A bias expands or shrinks the size of the geographic region from which traffic is routed to a resource. 
+	- Geoproximity Routing lets Route 53 routes traffic to our resources based on the geographic location of our users and our resources  
+	- We can also optionally choose to route more or less traffic to a given resource by specifying a value, known as a bias  
+	- A bias expands or shrinks the size of the geographic region from which traffic is routed to a resource  
 
 </details>
 
