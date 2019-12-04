@@ -814,7 +814,7 @@
 	- The weight is a value. It isn't a % 
 	- So, if we add to address with the following weights: 20 and 30 => the corresponding % will be: 40% and 60% 
 - Latency-based Routing policy: 
-	- It's multiple records with the same name: they're considered part of the same latency-based set
+	- It's multiple records with the same name: they're considered part of the same latency-based set (if the name is different, they're not)
 	- Its records are allocated to a unique region and have a unique Set ID
 	- It consults a latency database (DNS Resolver location - Policy Region - Latency) when a request occurs from a resolver server
 	- It returns the record set with the lowest network latency to the resolver server (end-user)
@@ -841,10 +841,9 @@
 		- They may have the local language (English, Spanish, Chinese) of our European (US) customers
 		- They may display all prices in Euros ($)
 		- We could set US record set as a default, canadien customers will be then redirected to the US EC2 fleet
-
 - Geoproximity Routing (Traffic Flow Only): 
 	- To use Geoproximity routing, it is required to use Route 53 traffic flow 
-	- Traffic flow is: 
+	- Traffic flow is: ?
 	- Geoproximity Routing lets Route 53 routes traffic to our resources based on the geographic location of our users and our resources 
 	- We can also optionally choose to route more or less traffic to a given resource by specifying a value, known as a bias 
 	- A bias expands or shrinks the size of the geographic region from which traffic is routed to a resource 
