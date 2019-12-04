@@ -857,9 +857,19 @@
 - Failover Routing recommendation: TTL <= 60 to let client respond quickly to changes in health status
 
 </details>
+
 ---
 
 ## Storage - S3 (Simple Storage Service):
 
+<details>
+<summary>Permission</summary>
+
+</details>
+
+<details>
+<summary></summary>
+
+</details>
 ---
 
