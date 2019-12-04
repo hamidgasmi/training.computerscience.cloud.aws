@@ -771,10 +771,9 @@
 </details>
 
 <details>
-<summary>Routing Policies</summary>
-
+<summary>Routing Policies</summary> 
 - Simple Routing policy:
-	- It's a single record with a hosted zone (Error for a new 2nd record with the same type and domain name)
+	- It's a single record with multiple values a hosted zone (Error for a new 2nd record with the same type and domain name)
 	- It can contain multiple values (IP addresses) or
 	- It can also contain a single AWS resource as an alias type record (1 LB, 1 S3 Bucket Endpoint, 1 VPC Endpoint...)
 	- It returns to a DNS query all the values in a random order (the client can select the appropriate one)
@@ -787,8 +786,8 @@
 		- No healthcheck: if a resource behind an IP @ fail, it will continue sending requests to it
 - Failover Routing policy: 
 	- It enhances "Simple Routing" policy
-	- It's a single Primary + a single Secondary records with the same name
-	- They (primary and second records) can contain multiple values (IP addresses) or a single AWS resource as an alias type record
+	- It's a single Primary record + a single Secondary record with the same name
+	- It (primary and second records) can contain multiple values (IP addresses) or a single AWS resource as an alias type record
 	- They support healthcheck (calculated healthchecks if primary record contains multiple values?)
 	- Queries will resolve to the primary unless it is unhealthy:
 	- Queries will resolve to the secondary if the primary is unhealthy
@@ -796,6 +795,12 @@
 		- E.g., an S3 static website that presents a maintenance page 
 		- with usefull information: Failure status, contact details
 	- It can be conbined with other routing policies to allow multiple primary and secondary reconrds
+
+- Multivalue Answer Routing policy: 
+	- It's multiple records with the same name
+	- Its records can contain 1 value only (IP address or AWS product)
+	- it supports healthcheck
+	- It responds to DNS queries with up to 8 random healthy records
 - Weighted Routing: 
 	- It's multiple records with the same name
 	- Its records have a weight and a unique Set ID
@@ -836,11 +841,6 @@
 		- They may have the local language (English, Spanish, Chinese) of our European (US) customers
 		- They may display all prices in Euros ($)
 		- We could set US record set as a default, canadien customers will be then redirected to the US EC2 fleet
-- Multivalue Answer Routing: 
-	- It is almost as "Simple Routing": Route 53 responds to DNS queries with up to 8 healthy records and gives different answers to different DNS resolvers 
-	- With the differences below: 
-		- We can have multiple records with 1 IP address 
-		- It lets us check the health of each resource: so Route53 returns only values for healthy resources 
 
 - Geoproximity Routing (Traffic Flow Only): 
 	- To use Geoproximity routing, it is required to use Route 53 traffic flow 
