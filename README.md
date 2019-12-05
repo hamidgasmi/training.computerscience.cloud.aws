@@ -863,13 +863,56 @@
 ## Storage - S3 (Simple Storage Service):
 
 <details>
-<summary>Permission</summary>
+<summary>Description</summary>
+- It's a secure, durable, highly scalable objects storage
+- It's objects-based storage (files, images, videos, , instance access): 
+	- Object key: object name 
+	- Value: object data 
+	- Version ID: it is possible to do version control. 
+	- Object Metadata: expires, content-type, cache 
+	- Subresources:  
+		- Access control Lists (ACL): Permission to the object, we can lock at object or folder level 
+		- Torrents: 
+- Folder: 
+
+        They could be created in a bucket 
+
+        But they're not objects: permission can't be set up 
+
+        They're added as prefixes to buckets objects' key 
+
+        Buckets' folders aren't objects 
+
+- Location: It's a global service
+
 
 </details>
-
+ 
 <details>
-<summary></summary>
+<summary>Permission</summary>
+- The only entity that initially has access to a booket is the account that creates it (the root account)
+- The bucket by default isn't public (it doesn't trust any other aws account; it doesn allow public access)
+- Bucket authorization is controlled using:
+	- IAM Identity policies for known principals (for identities inside the bucket aws account)
+	- Bucket policies (resource policies) for all principals (known and unknown)
+	- Bucket or Object Access Control Lists (ACLs): 
+		- It's for also all principals
+		- It's not recommended anymore
+	- "Block Public Access" Bucket Setting:
+		-
+- If more than 1 policy apply for a principal:
+	- All policies are combined
+	- Priority order: 
+		- 1- Explicit Deny:
+		- 2- Explicit Allow: 
+		- 3- Implicit Deny:
+- For more details:
+	- [How Do I Edit Public Access Settings for S3 Buckets?](https://docs.aws.amazon.com/AmazonS3/latest/user-guide/block-public-access-bucket.html)
+	- [Controlling Access to S3 Resources](https://aws.amazon.com/blogs/security/iam-policies-and-bucket-policies-and-acls-oh-my-controlling-access-to-s3-resources/)
 
 </details>
+
+- [S3 FAQ](https://aws.amazon.com/s3/faqs/)  
+	 
 ---
 
