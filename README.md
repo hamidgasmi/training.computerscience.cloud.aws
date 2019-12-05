@@ -864,6 +864,7 @@
 
 <details>
 <summary>Description</summary>
+
 - It's a secure, durable, highly scalable objects storage
 - It's objects-based storage (files, images, videos, , instance access): 
 	- Object key: object name 
@@ -899,7 +900,7 @@
 	- Bucket or Object Access Control Lists (ACLs): 
 		- It's for also all principals
 		- It's not recommended anymore
-	- "Block Public Access" Bucket Setting:
+	- Block Public Access Bucket Setting:
 		-
 - If more than 1 policy apply for a principal:
 	- All policies are combined
