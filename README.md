@@ -887,25 +887,297 @@
 - The only entity that initially has access to a booket is the account that creates it (the root account)
 - The bucket by default isn't public (it doesn't trust any other aws account; it doesn allow public access)
 - Bucket authorization is controlled using:
-	- IAM Identity policies for known principals (for identities inside the bucket aws account)
-	- Bucket policies (resource policies) for all principals (known and unknown)
+	- IAM Identity policies for known principals
+		- It's added to IAM Identities (Users, Groups, Roles)
+		- It can include S3 elements
+		- It only works for identities in the same account as the bucket
+	- Bucket policies (resource policies)
+		- It's added a bucket level but 
+		- It's applied to all bucket objects
+		- It can apply to anonymous accesses (public access) 
 	- Bucket or Object Access Control Lists (ACLs): 
 		- It's for also all principals
 		- It's not recommended anymore
 	- Block Public Access Bucket Setting:
+		- It's a setting applied on top of any existing settings as a protection
+		- It OVERRULES any other public grant
+		- It can disallow ALL public access granted to a bucket and its objects
+		- It can also block new public access grants to a bucket and its objects
+		- It uses ACLs, bucket policies, access point policies, or all
+		- It's turned on by default
 - If more than 1 policy apply for a principal:
 	- All policies are combined
-	- Priority order: 
-		- 1- Explicit Deny:
-		- 2- Explicit Allow: 
-		- 3- Implicit Deny:
-- For more details:
-	- [How Do I Edit Public Access Settings for S3 Buckets?](https://docs.aws.amazon.com/AmazonS3/latest/user-guide/block-public-access-bucket.html)
-	- [Controlling Access to S3 Resources](https://aws.amazon.com/blogs/security/iam-policies-and-bucket-policies-and-acls-oh-my-controlling-access-to-s3-resources/)
+	- least-privilege principle is applied: 
+		- 1- Explicit Denies are top priority
+		- 2- Explicit Allows are second priority
+		- 3- Implicit Denies are the default
+- For more details: [Controlling Access to S3 Resources](https://aws.amazon.com/blogs/security/iam-policies-and-bucket-policies-and-acls-oh-my-controlling-access-to-s3-resources/)
 
 </details>
 
-- [S3 FAQ](https://aws.amazon.com/s3/faqs/)  
+- [S3 FAQ](https://aws.amazon.com/s3/faqs/)
+
+    It is not for databases, applications. 
+
+    File limit: 0 to 5TB. 
+
+    There is unlimited storage and unlimited object #. 
+
+    By default, we can create up to 100 buckets in each of our AWS accounts. 
+
+    Hard limit on S3 puts of 3500 PUTs per second. 5GB by PUT. 
+
+    Objects are stored in Buckets: It is a folder where a file is stored. 
+
+    Objected are replicated across all its region AZs. 
+
+    S3 is a universal namespace:  
+
+        S3 names must be unique globally. 
+
+        S3 URL format: https://region.amazonaws.com/bucketname 
+
+        Example: https://selfservedweb.s3.amazonaws.com/Web_Scalability_for_StartupEngineers.pdf 
+
+    When a file is loaded successfully, we'll receive an HTTP 200 code. 
+
+    S3 guarantees: 
+
+        Built for availability of 4 nines (99.99%) for S3 platform. 
+
+         
+
+ 
+
+How does data consistency work on the cloud: 
+
+    Read after write consistency for PUTS of new objects: a new object is ready to read as soon as it is uploaded. 
+
+    Eventual consistency for overwrite PUTS and DELETE:  
+
+        The update or delete may need some time to propagate. 
+
+        It means for example, the for a short time (less than a second?) we could get the previous version. 
+
+        After this short time, we'll always get the current version regardless of our location. 
+
+ 
+
+S3 Features: 
+
+    Tiered Storage Available: See below.  
+
+        See different tiers below. 
+
+        It could be at bucket level or storage level. 
+
+     
+
+    Lifecycle Management:  
+
+        Automate moving files/versions in S3 tiers. 
+
+        It is done by creating Life Cycle rules.  
+
+        We could add tags to make the rule applied to specific objects. 
+
+        Storage class transition could be enabled for current versions or/and previous versions 
+
+        Configure object expirations. 
+
+        Clean up expired object delete markers (You cannot enable clean up expired object delete markers if you enable Expiration) 
+
+         Clean up incomplete multipart uploads. 
+
+     
+
+    Cross Region Replication (CRR): 
+
+        Use cases:  
+
+            Compliancy of data and making sure data is kept in a dedicated region (for example for GDPR compliance)  
+
+            To minimize latency for your applications using the S3 bucket. 
+
+        It includes: 
+
+            Files data. 
+
+            Files permission (replicated files will have same permission as source files). 
+
+        Versioning is required. 
+
+        The replication isn't done on existing files (only new files uploaded after the rule is created). 
+
+        It supports replication of an entire bucket or based on prefixes, one or more object tags or a combination of the two.  
+
+        We can set overlapping rules with priorities. 
+
+        It does not support delete marker replication: it would prevent any delete actions from replicating. 
+
+        Replicate object encrypted with AWS KMS? 
+
+        Buckets configured for cross-region replication can be owned by the same AWS account or by different accounts. 
+
+     
+
+    Versioning:  
+
+        once it is enabled, we can't disable it. 
+
+        Be careful, the bucked size could get very big. Since the previous versions aren't deleted. 
+
+        If versions are hided and a file is deleted, a new version will be created and marked as deleted. 
+
+        If we delete the version marked as deleted, be go back to the latest version before the deletion. 
+
+        To delete physically the files, all versions should be selected and deleted. 
+
+     
+
+    Encryption  
+
+        Encryption In Transit is achieved by SSL/TLS. 
+
+        Encryption At Rest (server side) could be achieved by Amazon S3-Managed Keys (SSE-S3): AES-256 (Amazon S3 master-key). 
+
+        Encryption At Rest (server side) could also be achieved by AWS KMS-Managed Keys service (SSE-KMS), AWS-KMS. 
+
+        Encryption At Rest (server side) could also be achieved by Customer-Provided Key  (SSE-C): client will need to manage keys and encryption is provided by Amazon. 
+
+        Client-side Encryption: Encrypt an object before it is loaded in S3 (Client will ne to manage keys + encryption). 
+
+     
+
+    MFA Delete:  
+
+        Versioning is required. 
+
+ 
+
+    Secure our data using Access Control Lists and Bucket Policies. 
+
+        Permission could be setup on buckets and theirs objects (files). 
+
+ 
+
+S3 Class (Tiers): 
+
+    S3 Standards: 
+
+        Amazon guarantees an available of 3 nines (99.9%). 
+
+        Amazon guarantees a durability of 11 nines (99.999999999%) for S3 information. 
+
+        Redundancy across multiples devices in multiple facilities 
+
+        It is designed to sustain the loss of 2 facilities concurrently. 
+
+        First byte latency: milliseconds. 
+
+     
+
+    S3 IA (Infrequently Accessed): 
+
+        It is for data that is accessed less frequently, 
+
+        But it requires a rapid access when needed. 
+
+        Lower fee than S3 for storage 
+
+        But we're charged a retrieval fee. 
+
+        Amazon guarantees a durability of 11 nines (99.999999999%) for S3 information. 
+
+        Availability SLA: available of 3 nines (99.9%).. 
+
+        First byte latency: milliseconds. 
+
+ 
+
+    S3 One Zone - IA 
+
+        It doesn't required the multiple availability zone. 
+
+        Lower-cost option accessed data. 
+
+        Amazon guarantees a durability of 11 nines (99.999999999%) for S3 information. 
+
+        Availability SLA: 2 nines of availability (99.5%). 
+
+        First byte latency: milliseconds. 
+
+     
+
+    S3 - Intelligent Tiering: 
+
+        Designed to optimize cost 
+
+        It relies to a machine learning to automatically move data the most-effective access tier 
+
+        Without performance impact or operational overhead. 
+
+        Availability SLA: 2 nines of availability (99%). 
+
+        First byte latency: milliseconds. 
+
+     
+
+    S3 - Glacier: 
+
+        It is a secure, durable and low cost storage class for data archiving. 
+
+        Retrieval time is configurable: from minutes to hours. 
+
+        Availability SLA: 2 nines of availability (99%). 
+
+        First byte latency: select minutes or hours. 
+
+ 
+
+    S3 - Glacier Deep Archive: 
+
+        It is S3 lowest-cost storage class 
+
+        Availability SLA: 2 nines of availability (99%). 
+
+        First byte latency: select hours (Retrieval time >= 12 hours). 
+
+     
+
+    S3 RRS - Reduced Redundancy Storage 
+
+        It is obsolete. 
+
+        Durability of 4 nines (99.99%). 
+
+        Availability SLA: ?. 
+
+        First byte latency: milliseconds. 
+
+ 
+
+ 
+
+S3 Pricing: 
+
+    Storage: Gigabyte used 
+
+    Requests: nbr of requests to this objects (read, write?) 
+
+    Storage Management Pricing: S3 Tier used. 
+
+    Data Transfer Pricing: 
+
+    Transfer Acceleration: uses Amazon CDN (AWS CloudFront). 
+
+    Cross Region Replication Pricing: replication for availability. 
+
+S3 Log requests: 
+
+    All requests to S3 bucket could be logged. 
+
+    We could store logs in another S3 bucket in the same AWS account or even in a completely different AWS account. 
 
 ---
 
