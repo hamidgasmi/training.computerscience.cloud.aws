@@ -866,26 +866,18 @@
 <summary>Description</summary>
 
 - It's a secure, durable, highly scalable objects storage
-- It's objects-based storage (files, images, videos, , instance access): 
+- Objects are organized into Buckets
+- An object is: 
 	- Object key: object name 
 	- Value: object data 
 	- Version ID: it is possible to do version control. 
 	- Object Metadata: expires, content-type, cache 
 	- Subresources:  
-		- Access control Lists (ACL): Permission to the object, we can lock at object or folder level 
-		- Torrents: 
-- Folder: 
-
-        They could be created in a bucket 
-
-        But they're not objects: permission can't be set up 
-
-        They're added as prefixes to buckets objects' key 
-
-        Buckets' folders aren't objects 
-
-- Location: It's a global service
-
+		- Access control Lists (ACL): Permission to the object (see permission below) 
+		- Torrents:
+- A folder could be created within a bucket:
+	- It's not a actual object
+	- It's added as a prefix into the underlying objects' key
 
 </details>
  
@@ -901,7 +893,6 @@
 		- It's for also all principals
 		- It's not recommended anymore
 	- Block Public Access Bucket Setting:
-		-
 - If more than 1 policy apply for a principal:
 	- All policies are combined
 	- Priority order: 
