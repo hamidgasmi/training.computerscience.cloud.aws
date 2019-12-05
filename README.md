@@ -890,6 +890,7 @@
  
 <details>
 <summary>Permission</summary>
+
 - The only entity that initially has access to a booket is the account that creates it (the root account)
 - The bucket by default isn't public (it doesn't trust any other aws account; it doesn allow public access)
 - Bucket authorization is controlled using:
@@ -913,6 +914,6 @@
 </details>
 
 - [S3 FAQ](https://aws.amazon.com/s3/faqs/)  
-	 
+
 ---
 
