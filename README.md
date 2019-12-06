@@ -611,6 +611,12 @@
 </details>
 
 <details>
+<summary>Limits</summary>
+
+
+</details>
+
+<details>
 <summary>Conventions</summary>
 
 - Subnet Name: sn-[public/private]-[AZ]: sn-public-a; sn-private-a
@@ -851,6 +857,10 @@
 </details>
 
 <details>
+<summary>Limits</summary>
+</details>
+
+<details>
 <summary>Conventions</summary>
 
 - Healthcheck name: same as the corresponding domain name
@@ -1007,6 +1017,39 @@
 </details>
 
 <details>
+<summary>Static Websites</summary>
+
+- A bucket can be configured to host a website:
+	- Content should be uploaded to the bucket:
+	- "Static web hosting" feature should be enabled
+- It can host many types of content: HTML, CSS, JavaScript, Media (audio, movies and, images)
+- It can host front-end code for serverless application or 
+- It can be an offload location for static content: 
+	- Instead storing media on a web server, 
+	- We could store it on S3 and 
+	- Direct the Web server to point S3
+- It can host custom domains:
+	- Create a bucket with an acual DNS name
+	- Create a record in Route 53 that points at the bucket (Alias)
+- It can redirect requests:
+	- We can specify a full set of redirection rules 
+	- It can redirect requests for an object to another object in the same bucket or to an external URL
+- CloudFront can also be added as a CDN for global users
+- SSL can be added for custom domains
+- CORS:
+	- Cross-Origin Resource Sharing
+	- It's a way a web server can relax the [same-origin policy](https://en.wikipedia.org/wiki/Same-origin_policy)
+	- It allows a web server running in one domain to reference resources in another
+	- This particularly helpful: each S3 bucket (and even AWS product) has its own domain name
+	- [For more details](https://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html)
+
+</details>
+
+<details>
+<summary></summary>
+</details>
+
+<details>
 <summary>Limits</summary>
 
 - Unlimited storage
@@ -1016,7 +1059,6 @@
 - Hard limit of 3500 PUTs / second 
 
 </details>
-
 
 - [S3 FAQ](https://aws.amazon.com/s3/faqs/)
 
