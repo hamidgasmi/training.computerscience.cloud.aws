@@ -1046,6 +1046,38 @@
 </details>
 
 <details>
+<summary>Versioning</summary>
+
+- It allows multiple versions of an object to exist in an S3 bucket
+- It's desabled by default
+- It requires to be enabled at a bucket level
+- Once it's enabled, 
+	- It can never switched off (only suspended)
+	- It add a new feature on the console to Hide or Show the older versions
+	- Any modification operation on an object,
+		- It generates a new version of the object with a new Version-ID
+		- It hides the older version  
+	- A delete operation on an object doesn't delete it:
+		- It generates a new version of the object marked as deleted ("Delete" marker)
+		- It can be undone: if the "Delete" marked version is deleted
+	- Older versions of an object are still accessible by using the object name and a version ID
+	- To delete physically an object, all versions must be selected and deleted
+- AWS accounts are billed for all versions:
+	- Be careful, the bucked size could get very big 
+	- Previous versions aren't deleted!
+- MFA Delete: 
+	- It's a feature designed to prevent accidental deletion of objects
+	- Once enabled, a one-time password is required:
+		- To delete an object version or 
+		- To change the versioning state of a bucket
+	- Versioning is required
+- For more details:
+	- [Deleting Object Versions](https://docs.aws.amazon.com/AmazonS3/latest/dev/DeletingObjectVersions.html)
+    - [Using MFA Delete](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMFADelete.html)
+
+</details>
+
+<details>
 <summary></summary>
 </details>
 
@@ -1102,20 +1134,6 @@ S3 Features:
         Replicate object encrypted with AWS KMS?
         Buckets configured for cross-region replication can be owned by the same AWS account or by different accounts
 
-    Versioning:  
-        once it is enabled, we can't disable it
-        Be careful, the bucked size could get very big. Since the previous versions aren't deleted
-        If versions are hided and a file is deleted, a new version will be created and marked as deleted
-
-        If we delete the version marked as deleted, be go back to the latest version before the deletion
-        To delete physically the files, all versions should be selected and deleted
-
-    MFA Delete:  
-        Versioning is required
-
-    Secure our data using Access Control Lists and Bucket Policies. 
-        Permission could be setup on buckets and theirs objects (files). 
-
 S3 Class (Tiers): 
     S3 Standards:
         Amazon guarantees an available of 3 nines (99.9%)
@@ -1137,44 +1155,44 @@ S3 Class (Tiers):
         It doesn't required the multiple availability zone
         Lower-cost option accessed data
         Amazon guarantees a durability of 11 nines (99.999999999%) for S3 information
-        Availability SLA: 2 nines of availability (99.5%). 
+        Availability SLA: 2 nines of availability (99.5%) 
         First byte latency: milliseconds
 
     S3 - Intelligent Tiering: 
         Designed to optimize cost 
         It relies to a machine learning to automatically move data the most-effective access tier 
-        Without performance impact or operational overhead. 
+        Without performance impact or operational overhead 
         Availability SLA: 2 nines of availability (99%)
         First byte latency: milliseconds
 
     S3 - Glacier: 
-        It is a secure, durable and low cost storage class for data archiving. 
-        Retrieval time is configurable: from minutes to hours. 
-        Availability SLA: 2 nines of availability (99%). 
-        First byte latency: select minutes or hours. 
+        It is a secure, durable and low cost storage class for data archiving 
+        Retrieval time is configurable: from minutes to hours 
+        Availability SLA: 2 nines of availability (99%) 
+        First byte latency: select minutes or hours 
 
     S3 - Glacier Deep Archive: 
         It is S3 lowest-cost storage class 
-        Availability SLA: 2 nines of availability (99%). 
-        First byte latency: select hours (Retrieval time >= 12 hours). 
+        Availability SLA: 2 nines of availability (99%) 
+        First byte latency: select hours (Retrieval time >= 12 hours) 
 
     S3 RRS - Reduced Redundancy Storage 
-        It is obsolete. 
-        Durability of 4 nines (99.99%). 
-        Availability SLA: ?. 
-        First byte latency: milliseconds. 
+        It is obsolete 
+        Durability of 4 nines (99.99%) 
+        Availability SLA: ? 
+        First byte latency: milliseconds 
  
 S3 Pricing: 
     Storage: Gigabyte used 
     Requests: nbr of requests to this objects (read, write?) 
-    Storage Management Pricing: S3 Tier used. 
+    Storage Management Pricing: S3 Tier used 
     Data Transfer Pricing: 
-    Transfer Acceleration: uses Amazon CDN (AWS CloudFront). 
-    Cross Region Replication Pricing: replication for availability. 
+    Transfer Acceleration: uses Amazon CDN (AWS CloudFront) 
+    Cross Region Replication Pricing: replication for availability 
 
 S3 Log requests:
-    All requests to S3 bucket could be logged. 
-    We could store logs in another S3 bucket in the same AWS account or even in a completely different AWS account. 
+    All requests to S3 bucket could be logged 
+    We could store logs in another S3 bucket in the same AWS account or even in a completely different AWS account 
 
 ---
 
