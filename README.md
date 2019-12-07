@@ -592,7 +592,7 @@
 
 - It provides instances with outgoing access to the public internet using IPv6 and,
 - It prevents them from being accessed from the internet (or outside VPC?)
-- It allows outbound and inbound response traffic.
+- It allows outbound and inbound response traffic
 - Analogy: 
 	- it is similar to NAT Gateway but
 	- it doesn't provide Dynamic NAT since it isn't relevent with IPv6
@@ -607,6 +607,12 @@
 
 <details>
 <summary>Load Balancers</summary>
+
+</details>
+
+<details>
+<summary>Limits</summary>
+
 
 </details>
 
@@ -851,6 +857,10 @@
 </details>
 
 <details>
+<summary>Limits</summary>
+</details>
+
+<details>
 <summary>Conventions</summary>
 
 - Healthcheck name: same as the corresponding domain name
@@ -870,14 +880,19 @@
 - An object is: 
 	- Object key: object name 
 	- Value: object data 
-	- Version ID: it is possible to do version control. 
-	- Object Metadata: expires, content-type, cache 
-	- Subresources:  
-		- Access control Lists (ACL): Permission to the object (see permission below) 
+	- Version ID: it is possible to do version control
+	- Object Metadata: expires, content-type, cache
+	- Subresources:
+		- ACLs: see permission below 
 		- Torrents:
 - A folder could be created within a bucket:
-	- It's not a actual object
+	- It's not an actual object
 	- It's added as a prefix into the underlying objects' key
+- Objects are replicated across all its region AZs
+- It's a universal namespace:  
+	- A bucket name must be unique globally
+	- Its URL format is: https://region.amazonaws.com/bucketname
+	- E.g., https://selfservedweb.s3.amazonaws.com/Web_Scalability_for_StartupEngineers.pdf
 
 </details>
  
@@ -887,25 +902,326 @@
 - The only entity that initially has access to a booket is the account that creates it (the root account)
 - The bucket by default isn't public (it doesn't trust any other aws account; it doesn allow public access)
 - Bucket authorization is controlled using:
-	- IAM Identity policies for known principals (for identities inside the bucket aws account)
-	- Bucket policies (resource policies) for all principals (known and unknown)
+	- IAM Identity policies for known principals
+		- It's added to IAM Identities (Users, Groups, Roles)
+		- It can include S3 elements
+		- It only works for identities in the same account as the bucket
+	- Bucket policies (resource policies)
+		- It's added a bucket level but 
+		- It's applied to all bucket objects
+		- It can apply to anonymous accesses (public access) 
 	- Bucket or Object Access Control Lists (ACLs): 
 		- It's for also all principals
 		- It's not recommended anymore
 	- Block Public Access Bucket Setting:
+		- It's a setting applied on top of any existing settings as a protection
+		- It OVERRULES any other public grant
+		- It can disallow ALL public access granted to a bucket and its objects
+		- It can also block new public access grants to a bucket and its objects
+		- It uses ACLs, bucket policies, access point policies, or all
+		- It's turned on by default
 - If more than 1 policy apply for a principal:
 	- All policies are combined
-	- Priority order: 
-		- 1- Explicit Deny:
-		- 2- Explicit Allow: 
-		- 3- Implicit Deny:
-- For more details:
-	- [How Do I Edit Public Access Settings for S3 Buckets?](https://docs.aws.amazon.com/AmazonS3/latest/user-guide/block-public-access-bucket.html)
-	- [Controlling Access to S3 Resources](https://aws.amazon.com/blogs/security/iam-policies-and-bucket-policies-and-acls-oh-my-controlling-access-to-s3-resources/)
+	- least-privilege principle is applied: 
+		- 1- Explicit Denies are the top priority
+		- 2- Explicit Allows are the second priority
+		- 3- Implicit Denies are the default
+- For more details: [Controlling Access to S3 Resources](https://aws.amazon.com/blogs/security/iam-policies-and-bucket-policies-and-acls-oh-my-controlling-access-to-s3-resources/)
 
 </details>
 
-- [S3 FAQ](https://aws.amazon.com/s3/faqs/)  
+<details>
+<summary>Encryption</summary>
+
+- Client-side Encryption: 
+	- It's the responsibility of the client/application:
+		- Encryption/decryption process (CPU intensive process)
+		- Encryption keys
+	- Objects are encrypted before they're uploaded in S3
+	- It's used when strict security compliance is required
+	- It has a significant admin and processing overhead:
+		- To Keep track of keys
+		- To manage which ones are used for which files
+		- To store them securely
+		- To back them up
+		- To manage rotation
+	- It requires a powerful machine
+- Encryption In Transit:
+	- It's achieved by SSL/TLS
+- Encryption At Rest:
+	- Objects aren't encrypted by default
+	- It can be configured on a per-object basis
+	- Sever-Side Encryption with Customer-Managed Keys (SSE-C):
+		- S3 handles the encryption/decryption process (a CPU intensive process)
+		- The customer is responsible for keys management
+		- Keys must be supplied with each PUT/GET request
+		- It also has a significant admin and processing overhead (see Client-Side Encryption)
+	- Sever-Side Encryption with S3-Managed Keys (SSE-S3 or Amazon S3 master-key):
+		- Keys are generated by S3 using AWS KMS 
+		- KMS provides 2 versions of the key: 1 encrypted version and 1 decrypted version
+		- S3 encrypts object by using AES-256 and the key decrypted version
+		- S3 takes the key encrypted version and stores it with object
+		- We always know which key is used to encrypt which object
+		- Pros:
+			- No admin and processing overhead
+			- No CPU machine is necessary
+		- Cons:
+			- Less security: Role separation isn't possible
+			- If an IAM Entity has permission to manage an S3 bucket (read/write), they could then also encrypt/decrypt data
+	- Sever-Side Encryption with AWS KMS-Managed Keys (SSE-KMS):
+		- Objects are encrypted using individual keys generated by KMS
+		- Encrypted keys are stored with the encrypted objects
+		- Decryption of an object needs both S3 and KMS key permission
+			- E.g., We could have an S3 administrator with full control on S3 objects but without the ability to read S3 data
+		- Pros:
+			- No admin and processing overhead
+			- No CPU machine is necessary
+			- [Role separation](https://en.wikipedia.org/wiki/Separation_of_duties): allow an identity to be given S3 administrator rights, but not allow them to interact with objects
+- Bucket Default Encryption Propriety:
+	- Objects are encrypted in S3 (not buckets)
+	- Each PUT operation needs to specify encryption (and type) or not
+	- A bucket captures any PUT operations where no encryption method/directive is specified
+	- It doesn't enforce what type can and can't be used
+	- Bucket policies can enfore what type can be used
+- [For more details](https://aws.amazon.com/blogs/security/how-to-prevent-uploads-of-unencrypted-objects-to-amazon-s3/)
+
+</details>
+
+<details>
+<summary>Uploads</summary>
+
+- It's done using the S3 console, the CLI, or APIs
+- It uses a single operation (Single PUT upload) or multipart upload
+- A successfull upload will return an HTTP 200 code
+- Single PUT Upload:
+	- An object is uploaded in a single stream of data
+	- Limit of 5 GB/PUT 
+	- It can cause performance issues 
+	- If the upload falls the whole upload falls 
+
+- Multipart Upload:
+	- An object is broken up into parts (up to 10,000)
+	- All parts are upluded in parallel
+	- All parts are merged once they're all uploaded
+	- Each part is 5MB to 5GB, except the last part which can be less
+	- It's faster
+	- If an individual part upload falls, 
+		- It won't impact the whole upload 
+		- It will be retried individually
+	- It's recommended for anything over 100 MB
+	- It's required for anything beyond 5 GB
+	- It's not possible via the console:
+		- CLI: aws s3 cp myFile S3://MyBucket/
+		- API?
+
+</details>
+
+<details>
+<summary>Static Websites</summary>
+
+- A bucket can be configured to host a website:
+	- Content should be uploaded to the bucket:
+	- "Static web hosting" feature should be enabled
+- It can host many types of content: HTML, CSS, JavaScript, Media (audio, movies and, images)
+- It can host front-end code for serverless application or 
+- It can be an offload location for static content: 
+	- Instead storing media on a web server, 
+	- We could store it on S3 and 
+	- Direct the Web server to point S3
+- It can host custom domains:
+	- Create a bucket with an acual DNS name
+	- Create a record in Route 53 that points at the bucket (Alias)
+- It can redirect requests:
+	- We can specify a full set of redirection rules 
+	- It can redirect requests for an object to another object in the same bucket or to an external URL
+- CloudFront can also be added as a CDN for global users
+- SSL can be added for custom domains
+- CORS:
+	- Cross-Origin Resource Sharing
+	- It's a way a web server can relax the [same-origin policy](https://en.wikipedia.org/wiki/Same-origin_policy)
+	- It allows a web server running in one domain to reference resources in another
+	- This particularly helpful: each S3 bucket (and even AWS product) has its own domain name
+	- [For more details](https://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html)
+
+</details>
+
+<details>
+<summary>Versioning</summary>
+
+- It allows multiple versions of an object to exist in an S3 bucket
+- It's desabled by default
+- It requires to be enabled at a bucket level
+- Once it's enabled, 
+	- It can never switched off (only suspended)
+	- It add a new feature on the console to Hide or Show the older versions
+	- Any modification operation on an object,
+		- It generates a new version of the object with a new Version-ID
+		- It hides the older version  
+	- A delete operation on an object doesn't delete it:
+		- It generates a new version of the object marked as deleted ("Delete" marker)
+		- It can be undone: if the "Delete" marked version is deleted
+	- Older versions of an object are still accessible by using the object name and a version ID
+	- To delete physically an object, all versions must be selected and deleted
+- AWS accounts are billed for all versions:
+	- Be careful, the bucked size could get very big 
+	- Previous versions aren't deleted!
+- MFA Delete: 
+	- It's a feature designed to prevent accidental deletion of objects
+	- Once enabled, a one-time password is required:
+		- To delete an object version or 
+		- To change the versioning state of a bucket
+	- Versioning is required
+- For more details:
+	- [Deleting Object Versions](https://docs.aws.amazon.com/AmazonS3/latest/dev/DeletingObjectVersions.html)
+    - [Using MFA Delete](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMFADelete.html)
+
+</details>
+
+<details>
+<summary>Presigned URL</summary>
+
+- It's created by an identity to let someone else (a bearer) access to a private object on a temporary basis
+- Its creator is an IAM Identity: User, Group, Role
+- The bearer of the URL gets the same level of authorization as the creator
+- It's encoded with authentication built in
+- It has an expiry time: 7 days maximum
+- When It's used, 
+	- AWS verifies the creator's access to the object
+	- AWS doesn't verifies the bearer access to the object
+- It can be created even on objects the creator doesn't have access to
+- The bearer lose access when:
+	- The presigned URL has expired (7 days max)
+	- The creator permissions have changed
+	- The URL was created using a role and its temporary credentials have expired (36-hour max)
+- Use cases:
+	- Stock images website:
+		- Media stored privately on S3
+		- Presigned URL generated when an image is purchased
+	- Client access to upload an image for process to an S3 bucket
+- Best Practices:
+	- Create presigned URLs with an identity with long term credentials 
+	- Avoid creating presigned URLs with roles
+
+
+</details>
+
+<details>
+<summary></summary>
+</details>
+
+<details>
+<summary>Limits</summary>
+
+- Unlimited storage
+- Unlimited object #
+- Default limit of 100 buckets / AWS account
+- Hard limit of 5 GB / PUT
+- Hard limit of 3500 PUTs / second
+- Hard limit of 7 days for presigned URL (expiration)
+
+</details>
+
+- [S3 FAQ](https://aws.amazon.com/s3/faqs/)
+
+    S3 guarantees:
+		Built for availability of 4 nines (99.99%) for S3 platform
+
+How does data consistency work on the cloud:
+    Read after write consistency for PUTS of new objects: a new object is ready to read as soon as it is uploaded
+
+    Eventual consistency for overwrite PUTS and DELETE:
+        The update or delete may need some time to propagate
+        It means for example, the for a short time (less than a second?) we could get the previous version
+        After this short time, we'll always get the current version regardless of our location
+
+S3 Features:
+    Tiered Storage Available: See below
+        See different tiers below
+        It could be at bucket level or storage level
+
+    Lifecycle Management:
+        Automate moving files/versions in S3 tiers
+        It is done by creating Life Cycle rules
+        We could add tags to make the rule applied to specific objects
+        Storage class transition could be enabled for current versions or/and previous versions
+        Configure object expirations
+        Clean up expired object delete markers (You cannot enable clean up expired object delete markers if you enable Expiration)
+         Clean up incomplete multipart uploads
+
+    Cross Region Replication (CRR):
+        Use cases:
+            Compliancy of data and making sure data is kept in a dedicated region (for example for GDPR compliance)
+            To minimize latency for your applications using the S3 bucket
+        It includes: 
+            Files data
+            Files permission (replicated files will have same permission as source files)
+        Versioning is required
+        The replication isn't done on existing files (only new files uploaded after the rule is created)
+        It supports replication of an entire bucket or based on prefixes, one or more object tags or a combination of the two
+        We can set overlapping rules with priorities
+        It does not support delete marker replication: it would prevent any delete actions from replicating
+        Replicate object encrypted with AWS KMS?
+        Buckets configured for cross-region replication can be owned by the same AWS account or by different accounts
+
+S3 Class (Tiers): 
+    S3 Standards:
+        Amazon guarantees an available of 3 nines (99.9%)
+        Amazon guarantees a durability of 11 nines (99.999999999%) for S3 information
+        Redundancy across multiples devices in multiple facilities
+        It is designed to sustain the loss of 2 facilities concurrently
+        First byte latency: milliseconds
+
+    S3 IA (Infrequently Accessed): 
+        It is for data that is accessed less frequently,
+        But it requires a rapid access when needed
+        Lower fee than S3 for storage
+        But we're charged a retrieval fee
+        Amazon guarantees a durability of 11 nines (99.999999999%) for S3 information
+        Availability SLA: available of 3 nines (99.9%)
+        First byte latency: milliseconds
+
+    S3 One Zone - IA 
+        It doesn't required the multiple availability zone
+        Lower-cost option accessed data
+        Amazon guarantees a durability of 11 nines (99.999999999%) for S3 information
+        Availability SLA: 2 nines of availability (99.5%) 
+        First byte latency: milliseconds
+
+    S3 - Intelligent Tiering: 
+        Designed to optimize cost 
+        It relies to a machine learning to automatically move data the most-effective access tier 
+        Without performance impact or operational overhead 
+        Availability SLA: 2 nines of availability (99%)
+        First byte latency: milliseconds
+
+    S3 - Glacier: 
+        It is a secure, durable and low cost storage class for data archiving 
+        Retrieval time is configurable: from minutes to hours 
+        Availability SLA: 2 nines of availability (99%) 
+        First byte latency: select minutes or hours 
+
+    S3 - Glacier Deep Archive: 
+        It is S3 lowest-cost storage class 
+        Availability SLA: 2 nines of availability (99%) 
+        First byte latency: select hours (Retrieval time >= 12 hours) 
+
+    S3 RRS - Reduced Redundancy Storage 
+        It is obsolete 
+        Durability of 4 nines (99.99%) 
+        Availability SLA: ? 
+        First byte latency: milliseconds 
+ 
+S3 Pricing: 
+    Storage: Gigabyte used 
+    Requests: nbr of requests to this objects (read, write?) 
+    Storage Management Pricing: S3 Tier used 
+    Data Transfer Pricing: 
+    Transfer Acceleration: uses Amazon CDN (AWS CloudFront) 
+    Cross Region Replication Pricing: replication for availability 
+
+S3 Log requests:
+    All requests to S3 bucket could be logged 
+    We could store logs in another S3 bucket in the same AWS account or even in a completely different AWS account 
 
 ---
 
