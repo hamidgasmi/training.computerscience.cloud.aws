@@ -1212,9 +1212,11 @@
 		- 
 - For more details: 
 	- [Data Availability vs. Durability](https://blog.westerndigital.com/data-availability-vs-durability/)
-	- [Classes](https://medium.com/@davidoh0905/aws-s3-solutions-architect-exam-s3-availability-and-durability-96700c1c6d8c)
+	- [Classes]
+		- [Blog post](https://medium.com/@davidoh0905/aws-s3-solutions-architect-exam-s3-availability-and-durability-96700c1c6d8c)
+		- [AWS documentation](https://aws.amazon.com/s3/storage-classes/)
 	- In AWS Certification exams: 
-		- It seems like unless the question specifies otherwise, the answer should be based on ‘designed for’ durability and availability
+		- It seems like answers should be based on ‘designed for’ durability/availability (unless the question specifies otherwise)
 
 </details>
 
