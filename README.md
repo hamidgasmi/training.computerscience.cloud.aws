@@ -888,7 +888,6 @@
 - A folder could be created within a bucket:
 	- It's not an actual object
 	- It's added as a prefix into the underlying objects' key
-- Objects are replicated across all its region AZs
 - It's a universal namespace:  
 	- A bucket name must be unique globally
 	- Its URL format is: https://region.amazonaws.com/bucketname
@@ -1102,6 +1101,152 @@
 	- Create presigned URLs with an identity with long term credentials 
 	- Avoid creating presigned URLs with roles
 
+</details>
+
+<details>
+<summary>Storage Tier/Class</summary>
+
+- It influences for objects in S3:
+	- The durability (Fault Tolerance?):
+		- It refers to long-term objects protection 
+		- How it can operate through a failure with no user impact
+		- How well objects are protected from loss or any compromises
+		- It's concerned with object redundancy
+	- The availability: 
+		- It refers to system uptime
+		- How quick a system can recover in the event of a failure
+		- The storage system is operational and can deliver data upon request
+	- The "1st byte latency":
+	- The cost:
+- It is setup at object level
+	- Initially: during the upload process or
+	- Once the object is loaded, it can be Changed manually or by Lifecycle policies
+
+- ![S3 Tiers/Classes](https://awscertifiedsolutionsarchitectassociatedocs.s3.amazonaws.com/S3_StorageClasses.png)
+
+- S3 Standard:
+	- It is the default class
+	- Durability Design: 11 nines (99.999999999%)
+	- Durability SLA: ?
+	- Availability Design: 4 nines (99.99%)
+	- Availability SLA: 3 nines (99.9%)
+	- AZ: >= 3
+	- Concurrent facility fault tolerance: 2
+    - "1st byte latency" SLA: milliseconds
+	- Use cases:
+		- All purpose storage
+		- We don't have any specific requirements or 
+		- We don't know the usage of the object
+
+- S3 IA (Infrequently Access): 
+	- It is for data that is accessed less frequently,
+    - But it requires a rapid access when needed
+    - Lower fee than S3 for storage
+    - But we're charged a retrieval fee
+	- Durability Design: 11 nines (99.999999999%)
+	- Durability SLA: ?
+	- Availability Design: 3 nines (99.9%)
+	- Availability SLA: 2 nines (99%)
+	- AZ: >= 3
+	- Concurrent facility fault tolerance: 2
+    - "1st byte latency" SLA: milliseconds
+	- Use cases:
+		- 
+- S3 One Zone - IA 
+    - It doesn't required the multiple availability zone
+    - Lower-cost option accessed data
+	- Durability Design: 11 nines (99.999999999%)
+	- Durability SLA: ?
+	- Availability Design: 99.5%
+	- Availability SLA: 2 nines (99%)
+	- AZ: 1
+	- Concurrent facility fault tolerance: 0
+    - "1st byte latency" SLA: milliseconds
+	- Use cases:
+		- 
+- S3 RRS - Reduced Redundancy Storage 
+	- It is obsolete
+	- Durability Design: 4 nines (99.99%)
+	- Durability SLA: ?
+	- Availability Design: 4 nines (99.99%)
+	- Availability SLA: N/A
+	- AZ: ?
+	- Concurrent facility fault tolerance: ?
+    - "1st byte latency" SLA: milliseconds
+
+- S3 - Glacier: 
+	- It is a secure, durable and low cost storage class for data archiving
+	- Durability Design: ?
+	- Durability SLA: ?
+	- Availability Design: ?
+	- Availability SLA: 2 nines (99%)
+	- AZ: ?
+	- Concurrent facility fault tolerance: 2
+    - "1st byte latency" SLA: minutes to hours
+	- Use cases:
+		- 
+- S3 - Glacier Deep Archive: 
+    - It is S3 lowest-cost storage class
+	- Durability Design: ?
+	- Durability SLA: ?
+	- Availability Design: 4 nines (99.99%)
+	- Availability SLA: 2 nines (99%)
+	- AZ: ?
+	- Concurrent facility fault tolerance: ?
+    - "1st byte latency" SLA: hours (>= 12h)
+	- Use cases:
+		-  
+- S3 - Intelligent Tiering: 
+    - Designed to optimize cost 
+    - It relies to a machine learning to automatically move data the most-effective access tier 
+    - Without performance impact or operational overhead
+    - First byte latency: milliseconds
+	- Durability Design: ?
+	- Durability SLA: ?
+	- Availability Design: ?
+	- Availability SLA: ?
+	- AZ: ?
+	- Concurrent facility fault tolerance: ?
+    - "1st byte latency" SLA: ?
+	- Use cases:
+		- 
+- For more details: 
+	- [Data Availability vs. Durability](https://blog.westerndigital.com/data-availability-vs-durability/)
+	- [Classes](https://medium.com/@davidoh0905/aws-s3-solutions-architect-exam-s3-availability-and-durability-96700c1c6d8c)
+	- In AWS Certification exams: 
+		- It seems like unless the question specifies otherwise, the answer should be based on ‘designed for’ durability and availability
+
+</details>
+
+<details>
+<summary>Lifecycle Management</summary>
+
+- Automate moving files/versions in S3 tiers
+- It is done by creating Life Cycle rules
+- We could add tags to make the rule applied to specific objects
+- Storage class transition could be enabled for current versions or/and previous versions
+- Configure object expirations
+- Clean up expired object delete markers (You cannot enable clean up expired object delete markers if you enable Expiration)
+- Clean up incomplete multipart uploads
+
+</details>
+
+<details>
+<summary>Cross-Region Replication</summary>
+
+    Use cases:
+            Compliancy of data and making sure data is kept in a dedicated region (for example for GDPR compliance)
+            To minimize latency for your applications using the S3 bucket
+        It includes: 
+            Files data
+            Files permission (replicated files will have same permission as source files)
+        Versioning is required
+        The replication isn't done on existing files (only new files uploaded after the rule is created)
+        It supports replication of an entire bucket or based on prefixes, one or more object tags or a combination of the two
+        We can set overlapping rules with priorities
+        It does not support delete marker replication: it would prevent any delete actions from replicating
+        Replicate object encrypted with AWS KMS?
+        Buckets configured for cross-region replication can be owned by the same AWS account or by different accounts
 
 </details>
 
@@ -1134,83 +1279,6 @@ How does data consistency work on the cloud:
         It means for example, the for a short time (less than a second?) we could get the previous version
         After this short time, we'll always get the current version regardless of our location
 
-S3 Features:
-    Tiered Storage Available: See below
-        See different tiers below
-        It could be at bucket level or storage level
-
-    Lifecycle Management:
-        Automate moving files/versions in S3 tiers
-        It is done by creating Life Cycle rules
-        We could add tags to make the rule applied to specific objects
-        Storage class transition could be enabled for current versions or/and previous versions
-        Configure object expirations
-        Clean up expired object delete markers (You cannot enable clean up expired object delete markers if you enable Expiration)
-         Clean up incomplete multipart uploads
-
-    Cross Region Replication (CRR):
-        Use cases:
-            Compliancy of data and making sure data is kept in a dedicated region (for example for GDPR compliance)
-            To minimize latency for your applications using the S3 bucket
-        It includes: 
-            Files data
-            Files permission (replicated files will have same permission as source files)
-        Versioning is required
-        The replication isn't done on existing files (only new files uploaded after the rule is created)
-        It supports replication of an entire bucket or based on prefixes, one or more object tags or a combination of the two
-        We can set overlapping rules with priorities
-        It does not support delete marker replication: it would prevent any delete actions from replicating
-        Replicate object encrypted with AWS KMS?
-        Buckets configured for cross-region replication can be owned by the same AWS account or by different accounts
-
-S3 Class (Tiers): 
-    S3 Standards:
-        Amazon guarantees an available of 3 nines (99.9%)
-        Amazon guarantees a durability of 11 nines (99.999999999%) for S3 information
-        Redundancy across multiples devices in multiple facilities
-        It is designed to sustain the loss of 2 facilities concurrently
-        First byte latency: milliseconds
-
-    S3 IA (Infrequently Accessed): 
-        It is for data that is accessed less frequently,
-        But it requires a rapid access when needed
-        Lower fee than S3 for storage
-        But we're charged a retrieval fee
-        Amazon guarantees a durability of 11 nines (99.999999999%) for S3 information
-        Availability SLA: available of 3 nines (99.9%)
-        First byte latency: milliseconds
-
-    S3 One Zone - IA 
-        It doesn't required the multiple availability zone
-        Lower-cost option accessed data
-        Amazon guarantees a durability of 11 nines (99.999999999%) for S3 information
-        Availability SLA: 2 nines of availability (99.5%) 
-        First byte latency: milliseconds
-
-    S3 - Intelligent Tiering: 
-        Designed to optimize cost 
-        It relies to a machine learning to automatically move data the most-effective access tier 
-        Without performance impact or operational overhead 
-        Availability SLA: 2 nines of availability (99%)
-        First byte latency: milliseconds
-
-    S3 - Glacier: 
-        It is a secure, durable and low cost storage class for data archiving 
-        Retrieval time is configurable: from minutes to hours 
-        Availability SLA: 2 nines of availability (99%) 
-        First byte latency: select minutes or hours 
-
-    S3 - Glacier Deep Archive: 
-        It is S3 lowest-cost storage class 
-        Availability SLA: 2 nines of availability (99%) 
-        First byte latency: select hours (Retrieval time >= 12 hours) 
-
-    S3 RRS - Reduced Redundancy Storage 
-        It is obsolete 
-        Durability of 4 nines (99.99%) 
-        Availability SLA: ? 
-        First byte latency: milliseconds 
- 
 S3 Pricing: 
     Storage: Gigabyte used 
     Requests: nbr of requests to this objects (read, write?) 
