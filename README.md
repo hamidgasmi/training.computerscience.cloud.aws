@@ -1227,6 +1227,20 @@
 	- Previous versions could be permanently deleted (physically)
 	- Clean up expired object delete markers (You cannot enable clean up expired object delete markers if you enable Expiration)
 	- Clean up incomplete multipart uploads
+- Possible transitions:
+	- From Standard Tier to:
+		- Standard IA
+		- Intelligent Tiering
+		- One-Zone IA
+		- Glacier
+	- From Standard IA Tier to:
+		- Intelligent Tiering
+		- One-Zone IA
+		- Glacier
+	- From Intelligent Tiering to
+		- One-Zone IA
+		- Glacier
+	- From One-Zone IA Tier to Glacier 
 - Cost:
 	- Data transfer fee when data is moved from a tier to another one
 	- Automation and Monitoring fee?
