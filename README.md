@@ -1150,8 +1150,6 @@
 		- A retrieval fee
 		- Minimum capacity charge per object: billet at least for 128K / object
 		- Minimum duration charge per object: billed at least for 30 days / object
-	- Use cases:
-		- 
 - S3 One-Zone - IA (Infrequently Access):
     - Lower-cost option accessed data
 	- Use cases:
@@ -1164,6 +1162,7 @@
 			- This's particularly true, when the process is quick
 			- What if the process to get the output data is long?
 		- Non important data (non mission critical data) 
+	- Use cases: ?
 - S3 RRS - Reduced Redundancy Storage 
 	- It is obsolete (not recommended)
 	- Durability Design: 4 nines (99.99%)
@@ -1173,8 +1172,7 @@
 	- AZ: >= 3
 	- Concurrent facility fault tolerance: 1
     - "1st byte latency" SLA: milliseconds
-	- Use cases:
-		- 
+	- Use cases: ?
 - S3 - Glacier: 
 	- It's a storage class for data archiving
 	- It's an archival storage on a file system or disk back ups in a traditional backup system
@@ -1182,15 +1180,16 @@
 		- A retrieval fee
 		- Bigger Minimum capacity charge per object
 		- longer Minimum duration charge per object
+	- Use cases: file system or disk back ups
 - S3 - Glacier Deep Archive: 
-    - It's for long-term archival (Cold backups)
+    - It's for long-term archival
 	- It is like tape storage
 	- It's S3 lowest-cost storage class
-	- We're charged:
+	- We're charged: 
 		- A retrieval fee
 		- Biggest Minimum capacity charge per object
 		- longest Minimum duration charge per object
-
+	- Use cases: Cold backups
 - S3 - Intelligent Tiering: 
 	- It moves objects automatically between 2 tiers:
 		- An Object that isn't accessed for 30 days is moved to IA tier
