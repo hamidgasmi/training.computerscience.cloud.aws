@@ -1116,8 +1116,19 @@
 		- It refers to system uptime
 		- How quick a system can recover in the event of a failure
 		- The storage system is operational and can deliver data upon request
-	- The "1st byte latency":
+	- The "1st byte latency" 
+		- It's the amount of time that passes between: 
+		- The time a request to get an object is made and 
+		- The time its 1st byte is received
 	- The cost:
+		- Storage Size fee: per GB used with a Minimum Capacity charge
+		- Storage Duration fee: with a Minumum Storage duration charge
+		- Data Transfer fee (Retrieval Fee) per GB
+		- Requests type: PUT, COPY, POST, or LIST Requests / GET, SELECT
+		- Requests type #: nbr of requests by type
+		- Minimu capacity doesn't mean that we can't upload a file less than the minimum size
+		- Minimum duration doesn't mean neither that we can't delete an object before the minimum duration 
+		- They only mean that we'll be billed for a minimum size and a minimum period of time
 - It is setup at object level
 	- Initially: during the upload process or
 	- Once the object is loaded, it can be Changed manually or by Lifecycle policies
@@ -1125,56 +1136,71 @@
 - ![S3 Tiers/Classes](https://awscertifiedsolutionsarchitectassociatedocs.s3.amazonaws.com/S3_StorageClasses.png)
 
 - S3 Standard:
-	- It is the default class
+	- It's the default class
 	- Use cases:
 		- All purpose storage
 		- We don't have any specific requirements or 
 		- We don't know the usage of the object
 
 - S3 IA (Infrequently Access): 
-	- It is for data that is accessed less frequently,
-    - But it requires a rapid access when needed
-    - Lower fee than S3 for storage
-    - But we're charged a retrieval fee
+	- Same as S3 Standard (Designed for durability, Designed for availability, +3 AZ Replication and, 1st byte latency - rapid access)
+	- but it's for data that is accessed infrequently
+    - Storage Size fee: Lower than S3 standard
+    - But we're charged:
+		- A retrieval fee
+		- Minimum capacity charge per object: billet at least for 128K / object
+		- Minimum duration charge per object: billed at least for 30 days / object
 	- Use cases:
 		- 
-- S3 One Zone - IA 
-    - It doesn't required the multiple availability zone
+- S3 One-Zone - IA (Infrequently Access):
     - Lower-cost option accessed data
 	- Use cases:
-		- 
+		- For Cross Region Replications: 
+			- The data is stored somewhere else 
+			- A replication isn't the main location, 
+			- So the "standard" durability isn't needed here
+		- Output of data processes:
+			- If the data is lost, the process can be run again and the output can be reproduced
+			- This's particularly true, when the process is quick
+			- What if the process to get the output data is long?
+		- Non important data (non mission critical data) 
 - S3 RRS - Reduced Redundancy Storage 
-	- It is obsolete
+	- It is obsolete (not recommended)
 	- Durability Design: 4 nines (99.99%)
 	- Durability SLA: ?
 	- Availability Design: 4 nines (99.99%)
 	- Availability SLA: N/A
-	- AZ: ?
-	- Concurrent facility fault tolerance: ?
+	- AZ: >= 3
+	- Concurrent facility fault tolerance: 1
     - "1st byte latency" SLA: milliseconds
-
+	- Use cases:
+		- 
 - S3 - Glacier: 
-	- It is a secure, durable and low cost storage class for data archiving
-	- Use cases:
-		- 
+	- It's a storage class for data archiving
+	- It's an archival storage on a file system or disk back ups in a traditional backup system
+	- We're charged:
+		- A retrieval fee
+		- Bigger Minimum capacity charge per object
+		- longer Minimum duration charge per object
 - S3 - Glacier Deep Archive: 
-    - It is S3 lowest-cost storage class
-	- Use cases:
-		-  
+    - It's for long-term archival (Cold backups)
+	- It is like tape storage
+	- It's S3 lowest-cost storage class
+	- We're charged:
+		- A retrieval fee
+		- Biggest Minimum capacity charge per object
+		- longest Minimum duration charge per object
+
 - S3 - Intelligent Tiering: 
-    - Designed to optimize cost 
-    - It relies to a machine learning to automatically move data the most-effective access tier 
-    - Without performance impact or operational overhead
-    - First byte latency: milliseconds
-	- Durability Design: ?
-	- Durability SLA: ?
-	- Availability Design: ?
-	- Availability SLA: ?
-	- AZ: ?
-	- Concurrent facility fault tolerance: ?
-    - "1st byte latency" SLA: ?
+	- It moves objects automatically between 2 tiers:
+		- An Object that isn't accessed for 30 days is moved to IA tier
+		- If it's accessed, it's then moved back to frequent access tier
+	- Cost:
+		- No cost when data is moved from a tier to another one
+		- Automation and Monitoring fee: monthly
 	- Use cases:
-		- 
+		- We don't known access patterns or it's unpredictable
+		- We don't want admin overhead
 - For more details: 
 	- [Data Availability vs. Durability](https://blog.westerndigital.com/data-availability-vs-durability/)
 	- [Classes]
@@ -1188,32 +1214,43 @@
 <details>
 <summary>Lifecycle Management</summary>
 
-- Automate moving files/versions in S3 tiers
-- It is done by creating Life Cycle rules
-- We could add tags to make the rule applied to specific objects
-- Storage class transition could be enabled for current versions or/and previous versions
-- Configure object expirations
-- Clean up expired object delete markers (You cannot enable clean up expired object delete markers if you enable Expiration)
-- Clean up incomplete multipart uploads
+- It's done at Bucket level
+- It's done by creating Life Cycle rules
+- Rules could be applied on objects with specific tags
+- Transition rules:
+	- They're to automate moving objects from one tier to another
+	- They could be applied on current version and/or older ones
+- Expiration rules: 
+	- They're to automate expiring of objects that are no longer required
+	- They could be applied on current version and/or older ones
+	- Current versions could be expired
+	- Previous versions could be permanently deleted (physically)
+	- Clean up expired object delete markers (You cannot enable clean up expired object delete markers if you enable Expiration)
+	- Clean up incomplete multipart uploads
+- Cost:
+	- Data transfer fee when data is moved from a tier to another one
+	- Automation and Monitoring fee?
+- Use case: Reduce admin overhead
 
 </details>
 
 <details>
 <summary>Cross-Region Replication</summary>
 
-    Use cases:
-            Compliancy of data and making sure data is kept in a dedicated region (for example for GDPR compliance)
-            To minimize latency for your applications using the S3 bucket
-        It includes: 
-            Files data
-            Files permission (replicated files will have same permission as source files)
-        Versioning is required
-        The replication isn't done on existing files (only new files uploaded after the rule is created)
-        It supports replication of an entire bucket or based on prefixes, one or more object tags or a combination of the two
-        We can set overlapping rules with priorities
-        It does not support delete marker replication: it would prevent any delete actions from replicating
-        Replicate object encrypted with AWS KMS?
-        Buckets configured for cross-region replication can be owned by the same AWS account or by different accounts
+- Use cases:
+    -Compliancy of data and making sure data is kept in a dedicated region (for example for GDPR compliance)
+    - To minimize latency for your applications using the S3 bucket
+-It includes: 
+    - Files data
+    - Files permission (replicated files will have same permission as source files)
+- Versioning is required
+- The replication isn't done on existing files (only new files uploaded after the rule is created)
+- It supports replication of an entire bucket or based on prefixes, one or more object tags or a combination of the two
+- We can set overlapping rules with priorities
+- It does not support delete marker replication: it would prevent any delete actions from replicating
+- Replicate object encrypted with AWS KMS?
+- Buckets configured for cross-region replication can be owned by the same AWS account or by different accounts
+- CRR Pricing: replication for availability 
 
 </details>
 
@@ -1246,17 +1283,9 @@ How does data consistency work on the cloud:
         It means for example, the for a short time (less than a second?) we could get the previous version
         After this short time, we'll always get the current version regardless of our location
 
-S3 Pricing: 
-    Storage: Gigabyte used 
-    Requests: nbr of requests to this objects (read, write?) 
-    Storage Management Pricing: S3 Tier used 
-    Data Transfer Pricing: 
-    Transfer Acceleration: uses Amazon CDN (AWS CloudFront) 
-    Cross Region Replication Pricing: replication for availability 
-
-S3 Log requests:
-    All requests to S3 bucket could be logged 
-    We could store logs in another S3 bucket in the same AWS account or even in a completely different AWS account 
+- S3 Log requests:
+	- All requests to S3 bucket could be logged 
+    - We could store logs in another S3 bucket in the same AWS account or even - in a completely different AWS account 
 
 ---
 
