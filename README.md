@@ -26,6 +26,7 @@
 - It supports different Tenancy types: it could be:
 	- Dedicated tenant: it can't be changed (Locked). It is expensive
 	- multi-tenant (default): it still could be switched to a dedicated tenant
+
 </details>
 
 <details>
@@ -1132,16 +1133,13 @@
 - It is setup at object level
 	- Initially: during the upload process or
 	- Once the object is loaded, it can be Changed manually or by Lifecycle policies
-
 - ![S3 Tiers/Classes](https://awscertifiedsolutionsarchitectassociatedocs.s3.amazonaws.com/S3_StorageClasses.png)
-
 - S3 Standard:
 	- It's the default class
 	- Use cases:
 		- All purpose storage
 		- We don't have any specific requirements or 
 		- We don't know the usage of the object
-
 - S3 IA (Infrequently Access): 
 	- Same as S3 Standard (Designed for durability, Designed for availability, +3 AZ Replication and, 1st byte latency - rapid access)
 	- but it's for data that is accessed infrequently
@@ -1248,22 +1246,41 @@
 </details>
 
 <details>
-<summary>Cross-Region Replication</summary>
+<summary>Cross-Region Replication (CRR)</summary>
 
+- It's an S3 feature that can be enabled on S3 buckets
+- It allows a one-way replication of data from a source bucket to a destination bucket in another region
+- It is a set of rules:
+	- They could be applied on the entire source bucket objects
+	- They could also be applied on a part of source bucket objects (based on prefixes and/or tags)
+	- They could be overlapping
+	- They've a priority value to resolve conflicts that occur when an object is eligible for replication under multiple rules 
+	- A higher value indicates a higher priority
+- It requires:
+	- Versionning feature to be enabled on both buckets (src. and dest.)
+	- to allocate an IAM role with permissions to let S3 replicates objects
+- By default, replicated objects keep their:
+	- Storage class
+	- Object name (key)
+	- Owner
+	- Object permission
+- Override is possible for:
+	- Storage class,
+	- Storage ownership (select a different aws account)
+	- Object permission at the destination bucket
+- Exclusion, the following are excluded from Replication:
+	- System actions (lifecycle events aren't replicated)
+	- SSE-C encrypted objects - only SSE-S3 an KMS (if enabled) encrypted objects are supported
+	- Any existing objects from before replication is enabled (replication isn't retroactive)
+	- "Mark Delete" objects: it doesn't replicat deletions
+- The replication is using SSL protocol?
 - Use cases:
-    -Compliancy of data and making sure data is kept in a dedicated region (for example for GDPR compliance)
-    - To minimize latency for your applications using the S3 bucket
--It includes: 
-    - Files data
-    - Files permission (replicated files will have same permission as source files)
-- Versioning is required
-- The replication isn't done on existing files (only new files uploaded after the rule is created)
-- It supports replication of an entire bucket or based on prefixes, one or more object tags or a combination of the two
-- We can set overlapping rules with priorities
-- It does not support delete marker replication: it would prevent any delete actions from replicating
-- Replicate object encrypted with AWS KMS?
-- Buckets configured for cross-region replication can be owned by the same AWS account or by different accounts
-- CRR Pricing: replication for availability 
+	- Performance Replicas: minimize latency for global applications
+	- Resilience Replicas: 
+	- Desaster Recovery purpose: 
+		- For a low [RPO (Recovery Point Objective)](https://en.wikipedia.org/wiki/Disaster_recovery)
+		- It could be combined with S3 RTC (Replication Time Control): 99.99% of replications happens <= 15 minutes
+    - Compliancy of data and making sure data is kept in a dedicated region (for example for GDPR compliance)
 
 </details>
 
