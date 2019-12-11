@@ -1,5 +1,48 @@
 # AWS:
+## Infrastructure:
+
+<details>
+<summary>Region</summary>
+
+- It's a collection of data centers spread across the world
+- It has 2 or more data centers (AZs)
+- Regions AZs are independ from each other (to decrease failure likeliness)
+- They're close enough to each other so that latency is low between them
+
+</details>
+
+<details>
+<summary>Availability Zone (AZ)</summary>
+
+- It's a logical data center within a region
+- It has a Name: between 2 AWS accounts, the same AZ could have 2 different names
+
+</details>
+
+<details>
+<summary>Edge Location</summary>
+
+- It's also called ?
+- It hosts caches
+- There are many more Edge Locations than regions
+
+</details>
+ 
+---
+
+## Security: Identity and Access Control (IAM)
+
+<details>
+<summary></summary>
+</details>
+
+---
+
 ## Compute - EC2 (Elastic Cloud Computing):
+
+<details>
+<summary></summary>
+</details>
 
 ---
 
@@ -1314,7 +1357,77 @@
 
 ---
 
-## Storage - CloudFront:
+## Networking - CloudFront:
+
+<details>
+<summary>Description</summary>
+
+- It's a Content Delivery Network (CDN)
+- It's a global service (Network and Content Delivery)
+- It's a global cache for data on edge caches:
+	- It allows lower latency, higher transfer speeds
+	- It reduces load on the content server
+	- Objects are cached for TTL (Time To Live)
+- It's for static, dynamic files, streaming (RTMP) and, interactive content 
+- It distributes Media using HTTP or HTTPS
+- It's not included in free tier subscription
+
+</details>
+
+<details>
+<summary>Origin</summary>
+
+- The server/service that hosts our content
+- It can an S3 Bucket, 
+- It can be an EC2 web server (an ELB, or a Route 53):
+- It can be an Amazon MediaStore: 
+
+</details>
+
+<details>
+<summary>Distribution</summary>
+
+- It's the "configuration" entity within CloudFront
+- It's where we configure all aspects of a specific "implementation" of CloudFront from
+Distribution: the collection of CDN?  
+Delivery Method: 
+            Web Distribution: 
+            RTMP Distribution (Real-Time Messaging Protocol): streaming 
+
+</details>
+
+<details>
+<summary>Edge Location</summary>
+
+- The local infrastructure that hosts caches
+- see infrastructure
+Edge locations aren't just read only. 
+
+</details>
+
+<details>
+<summary>Regional Edge Caches</summary>
+</details>
+
+<details>
+<summary>Caching Process</summary>
+</details>
+             
+        Use cases: 
+            Web Distribution: 
+            RTMP (media streaming): 
+        
+        
+        
+        
+        Restrict Viewer Access: 
+            Use Signed URLs: 
+            Use Signed Cookies:  
+        WAF ACL (Web Application Firewall Access Control List):  
+            allow or block requests based on criteria that you specify, choose the web ACL to associate with this distribution 
+        ARN:  
+            Format: arn:partition:service:region:account:distribution/distributionName 
+            Example: arn:aws:cloudfront::091943097519:distribution/EWA2YC90MZY8E 
 
 <details>
 <summary></summary>
