@@ -7,7 +7,6 @@
 <summary>Region</summary>
 
 - It's a collection of data centers (AZs)
-- spread across the world
 - It has 2 or more data centers (AZs)
 - Regions AZs are independ from each other (to decrease failure likeliness)
 - Regions AZs are close enough to each other so that latency is low between them
