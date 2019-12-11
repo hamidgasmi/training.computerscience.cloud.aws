@@ -1,13 +1,23 @@
 # AWS:
 ## Infrastructure:
 
+- [AWS Global Infrastructure](https://infrastructure.aws/)
+
 <details>
 <summary>Region</summary>
 
-- It's a collection of data centers spread across the world
+- It's a collection of data centers (AZs)
+- spread across the world
 - It has 2 or more data centers (AZs)
 - Regions AZs are independ from each other (to decrease failure likeliness)
-- They're close enough to each other so that latency is low between them
+- Regions AZs are close enough to each other so that latency is low between them
+- Some regions are linked by a direct high speed network (see link above)
+	- It isn't a public 
+	- E.g., Paris and Virginia regions are linked by a high speed network 
+- Data created is a specific region wont leave the region 
+	- Unless we decide otherwise (data replication to another region)
+	- Regions allow to operate in a specific country where laws are known
+	- We make sure that data will only operate under the jurisdiction of those laws 
 
 </details>
 
@@ -15,16 +25,17 @@
 <summary>Availability Zone (AZ)</summary>
 
 - It's a logical data center within a region
-- It has a Name: between 2 AWS accounts, the same AZ could have 2 different names
+- There could be more physical data centers within an AZ 
+- Its name could be different from 1 aws account to another 
 
 </details>
 
 <details>
-<summary>Edge Location</summary>
+<summary>Edge Locations</summary>
 
-- It's also called ?
-- It hosts caches
-- There are many more Edge Locations than regions
+- They're also called "Points of Presence" (Pops)
+- They host CDN (Content Delivery Network)
+- There're many more than regions
 
 </details>
  
