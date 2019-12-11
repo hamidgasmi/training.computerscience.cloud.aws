@@ -893,6 +893,12 @@
 	- A bucket name must be unique globally
 	- Its URL format is: https://region.amazonaws.com/bucketname
 	- E.g., https://selfservedweb.s3.amazonaws.com/Web_Scalability_for_StartupEngineers.pdf
+- Data consistency:
+	- Read after write consistency for PUTS of new objects: a new object is ready to read as soon as it is uploaded
+    - Eventual consistency for overwrite PUTS and DELETE:
+		- Update and Deletes may need some time to propagate
+        - It means for example, for a short time (less than a second?) we could get the previous version
+		- After this short time, we'll always get the current version regardless of our location
 
 </details>
  
@@ -1285,10 +1291,6 @@
 </details>
 
 <details>
-<summary></summary>
-</details>
-
-<details>
 <summary>Limits</summary>
 
 - Unlimited storage
@@ -1300,22 +1302,28 @@
 
 </details>
 
+<details>
+<summary>S3 Log requests</summary>
+
+- All requests to S3 bucket could be logged 
+- They could be stored in another S3 bucket in the same AWS account or in a completely different AWS account 
+
+</details>
+
 - [S3 FAQ](https://aws.amazon.com/s3/faqs/)
-
-    S3 guarantees:
-		Built for availability of 4 nines (99.99%) for S3 platform
-
-How does data consistency work on the cloud:
-    Read after write consistency for PUTS of new objects: a new object is ready to read as soon as it is uploaded
-
-    Eventual consistency for overwrite PUTS and DELETE:
-        The update or delete may need some time to propagate
-        It means for example, the for a short time (less than a second?) we could get the previous version
-        After this short time, we'll always get the current version regardless of our location
-
-- S3 Log requests:
-	- All requests to S3 bucket could be logged 
-    - We could store logs in another S3 bucket in the same AWS account or even - in a completely different AWS account 
 
 ---
 
+## Storage - CloudFront:
+
+<details>
+<summary></summary>
+</details>
+
+---
+
+## Storage - Network File System (NFS):
+
+<details>
+<summary></summary>
+</details>
