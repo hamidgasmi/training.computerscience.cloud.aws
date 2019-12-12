@@ -11,7 +11,7 @@
 - Regions AZs are independ from each other (to decrease failure likeliness)
 - Regions AZs are close enough to each other so that latency is low between them
 - Some regions are linked by a direct high speed network (see link above)
-	- It isn't a public 
+	- It isn't a public network 
 	- E.g., Paris and Virginia regions are linked by a high speed network 
 - Data created is a specific region wont leave the region 
 	- Unless we decide otherwise (data replication to another region)
@@ -38,12 +38,22 @@
 
 </details>
  
+<details>
+<summary>Regional Edge Caches</summary>
+
+- It's a Larger version of Pops
+- It has more capacity
+- It can serve larger areas
+- There're less of them
+
+</details>
+
 ---
 
 ## Security: Identity and Access Control (IAM)
 
 <details>
-<summary></summary>
+<summary>Description</summary>
 </details>
 
 ---
@@ -51,7 +61,12 @@
 ## Compute - EC2 (Elastic Cloud Computing):
 
 <details>
-<summary></summary>
+<summary>Description</summary>
+
+- ARN:  
+	- Format: arn:partition:service:region:account: 
+    - E.g., arn:aws:cloudfront::191449997525:?
+
 </details>
 
 ---
@@ -952,6 +967,9 @@
 		- Update and Deletes may need some time to propagate
         - It means for example, for a short time (less than a second?) we could get the previous version
 		- After this short time, we'll always get the current version regardless of our location
+- ARN:  
+	- Format: arn:partition:service:region:account: 
+    - E.g., arn:aws:cloudfront::191449997525:?
 
 </details>
  
@@ -1375,12 +1393,20 @@
 - It's a Content Delivery Network (CDN)
 - It's a global service (Network and Content Delivery)
 - It's a global cache for data on edge caches:
-	- It allows lower latency, higher transfer speeds
-	- It reduces load on the content server
-	- Objects are cached for TTL (Time To Live)
+	- It allows lower latency, higher throughput
+	- It reduces load on the content servers
+	- It caches objects for a TTL (Time To Live)
 - It's for static, dynamic files, streaming (RTMP) and, interactive content 
 - It distributes Media using HTTP or HTTPS
 - It's not included in free tier subscription
+- It comes with a default domain names: 
+	- [randomCodes].cloudfront.net
+	- It work with http and https
+	- E.g. 1, http://d1234.cloudfront.net 
+	- E.g. 2, https://d1234.cloudfront.net
+- ARN:  
+	- Format: arn:partition:service:region:account:distribution/distributionName 
+    - E.g., arn:aws:cloudfront::191449997525:distribution/EWA2YC90MZY8E 
 
 </details>
 
@@ -1388,9 +1414,14 @@
 <summary>Origin</summary>
 
 - The server/service that hosts our content
-- It can an S3 Bucket, 
-- It can be an EC2 web server (an ELB, or a Route 53):
+- It needs to be accessible on the internet
+- It can be an S3 Bucket: 
+	- S3 AWS public endpoints will be used
+- It can be an web server (an ELB, or a Route 53):
+	- An EC2 instance: 
+	- A Corporate Data Center Server: a public IP address will be used
 - It can be an Amazon MediaStore: 
+- It can be a corporate Data
 
 </details>
 
@@ -1399,54 +1430,96 @@
 
 - It's the "configuration" entity within CloudFront
 - It's where we configure all aspects of a specific "implementation" of CloudFront from
-Distribution: the collection of CDN?  
-Delivery Method: 
-            Web Distribution: 
-            RTMP Distribution (Real-Time Messaging Protocol): streaming 
+- It has a DNS address
+- It can include 1 or more origins
+- It has 2 Delivery Methods:
+	- Web Distribution: 
+		- To speed up distribution of static and dynamic content, for example, .html, .css, .php, and graphics files
+    	- Distribute media files using HTTP or HTTPS
+    	- Add, update, or delete objects, and submit data from web forms
+    	- Use live streaming to stream an event in real time
+	- RTMP Distribution (Real-Time Messaging Protocol):
+		- To speed up distribution of streaming media files using Adobe Flash Media Server's RTMP protocol. 
+		- It allows an end user to begin playing a media file before the file has finished downloading from a CloudFront edge location 
+		- It requires to store the media files in an Amazon S3 bucket
+- Origin Settings:
+	- Origin Domain Name: the service/server that hosts the origin
+	- Origin Path to set a specific part of a service/server (E.g., S3 folder)
+	- Restrict Bucket Access:
+- Default Cache Behavior Settings:
+	- Viewer Protocol Policy:
+- Distribution Settings:
+	- Price Class:
+		- Only US, Canada, Europe; 
+		- US, Canada, Europe, Asia, Middle-East, Africa or; 
+		- All Pops (Recommended choice but most expensive)
+	- WAF ACL (Web Application Firewall Access Control List): 
+		- To allow or block requests based on criteria that we specify, 
+		- Choose the web ACL to associate with this distribution.
+	- Default Root Object: 
+		- The object that we want CloudFront to return (E.g. index.html) 
+		- When a viewer request points to our root URL (www.example.com
+		- instead of to a specific object in our distribution (www.example.com/index.html)
+	- TTL (Time To Live):
+		- It's set at objects level: it dictates to CloudFront how long they should be cached for
+		- It could be set at CloudFront level as a distribution default TTL
+	- Alternate Domain Names (CNAMEs):
+		- We could add up to multiple CNAMEs
+		- We must create their record with our DNS service to route queries for www.example.com to d1234.cloudfront.net
+		- SSL certificate is required within ACM (AWS Certificate Manager) to proves our ownership of that domain
+	- Restrict Viewer Access:
+		- By default, CloudFront is a publicly accessible CDN
+		- We can make it private (private CloudFront Distribution):
+			- It will then require users to access our content to use a Signed URL or a Signed cookie 
+			- Trusted Signers: we could choose the current AWS account and/or other ones to create signed URLs or signed cookies
 
 </details>
 
 <details>
-<summary>Edge Location</summary>
+<summary>Edge Location/Regional Edge Caches</summary>
 
-- The local infrastructure that hosts caches
 - see infrastructure
-Edge locations aren't just read only. 
+- It's not just read only?
 
 </details>
-
-<details>
-<summary>Regional Edge Caches</summary>
-</details>
-
+          
 <details>
 <summary>Caching Process</summary>
-</details>
-             
-        Use cases: 
-            Web Distribution: 
-            RTMP (media streaming): 
-        
-        
-        
-        
-        Restrict Viewer Access: 
-            Use Signed URLs: 
-            Use Signed Cookies:  
-        WAF ACL (Web Application Firewall Access Control List):  
-            allow or block requests based on criteria that you specify, choose the web ACL to associate with this distribution 
-        ARN:  
-            Format: arn:partition:service:region:account:distribution/distributionName 
-            Example: arn:aws:cloudfront::091943097519:distribution/EWA2YC90MZY8E 
+
+- Create a distribution and point at one or more origins
+- Distribution DNS address directs clients at the closest available Edge Location
+- If the requested data is cached in the Edge Location, it's delivered locally from it (cache hit)
+- If the requested data isn't cached:
+	- The edge location attempts to download it from a regional cache
+		- An aged (expired) content in edge location may still exist here 
+		- It's bigger (more storage) and 
+		- It servers more people (attached to multiple Pops)
+	- If the data isn't in regional cache, 
+		- The edge location and regionl cache perform an origin fetch
+		- They download the data from the origin
+		- The regional cache will be able then to serve requests from other pops
+	- As the edge location receives the data, 
+		- It immediately begins forwarding to the custmer
+		- It immediately begins
+		- It immediately caches it for the next visitor
+- Content validity:
+	- It could expire (valid for a TTL): It could be discarded and be recached
+	- It could be explicitly invalidated and removed
+
+</details> 
 
 <details>
-<summary></summary>
+<summary>Origin access identities (OAI)</summary>
+ 
+- It allow restriction of an S3 bucket to accept connections only from CloudFront distributions 
+
 </details>
 
+- [For more details](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)
 ---
 
 ## Storage - Network File System (NFS):
 
 <details>
-<summary></summary>
+<summary>Description</summary>
 </details>
