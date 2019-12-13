@@ -1509,9 +1509,26 @@
 </details> 
 
 <details>
-<summary>Origin access identities (OAI)</summary>
+<summary>Origin Access Identity (OAI)</summary>
  
-- It allow restriction of an S3 bucket to accept connections only from CloudFront distributions 
+- It's also called Origin Access Identifier
+- It's a virtual identity that can be associated with a distribution 
+- It allows restriction of an S3 bucket to accept connections only from a specific CloudFront OAI
+- It works only with S3 buckets (it doesn't support any other service such as EC2 server or on premise web server)
+- How it works:
+	- Private S3 bucket (bucket policy denies public access)
+		- Create it private
+		- Edit bucket policy of an existing S3 bucket and remove its public access statement (if it applies)
+	- Create an OAI in CloudFront
+	- Private distribution in CloudFront with the OAI above:
+		- Create a new Private distribution
+		- or Edit an existing public distribution (Distribution Setting > Origin and Origin Settings > Edit the origins)
+		- This will grant the AOI above Read Permission on the S3 bucket above (It'll add an allow statement in the bucket policy)
+- Use case:
+	- For better User experience: to avoid a lower level of performance by going direct to S3
+	- To avoid bypassing an application, 
+		- It generates signed URLs to access restricted content using CloudFront
+		- We don't want our customers having the abily to bypass it and go directly to the underlying S3 bucket 
 
 </details>
 
