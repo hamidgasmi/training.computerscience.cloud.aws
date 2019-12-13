@@ -378,7 +378,7 @@
 		- 200 for the 2nd IPv4 rule, 201 for the 2nd IPv6 rule
 	- Ensure that you place the DENY rules earlier in the table than the ALLOW rules that open the wide range of ephemeral ports
 
-- Use Case:
+- Use cases:
 	- Because of NACL management overhead (4 sets of rules for each communication), 
 	- They tend not to be used all that much generally in production usage (Security Groups are preferred)
 	- They're used when we have an explicit deny that we would like to add (E.g., an IP @ we were attacked from)
@@ -531,7 +531,7 @@
 	- Disadvantage: 
 		- It is a single point of failure
 		- If the instance is terminated, the route status: blackhole
-	- Use case: there is only one use case
+	- Use cases: there is only one use case
 		- When cost saving is absolutely required and, a NAT and bastion hosts are needed
 		- We could then combine bastion host and NAT in the same machine
 	- For more details: 
@@ -568,7 +568,7 @@
 	- Cross-Region:
 		- An SG can't be referenced from another region
 		- IPv6 support isn't available cross-region
-- Use case:
+- Use cases:
 	- To make a service that is running in a single VPC accessible to other VPCs
 	- To connect our VPC to a vendor VPC or a partner VPC to access an application
 	- To give access to our VPCs for security audit
@@ -609,7 +609,7 @@
 
 - Limits:
 	- Gateway endpoints are used via route
-- Use case:
+- Use cases:
 	- An entire VPC is private without an Internet Gateway
 	- A specific private instance needs to access public services
 	- To access resources restricted to specific VPCs or endpoints (private S3 buckets)
@@ -1318,7 +1318,7 @@
 - Cost:
 	- Data transfer fee when data is moved from a tier to another one
 	- Automation and Monitoring fee?
-- Use case: Reduce admin overhead
+- Use cases: Reduce admin overhead
 
 </details>
 
@@ -1524,7 +1524,7 @@
 		- Create a new Private distribution
 		- or Edit an existing public distribution (Distribution Setting > Origin and Origin Settings > Edit the origins)
 		- This will grant the AOI above Read Permission on the S3 bucket above (It'll add an allow statement in the bucket policy)
-- Use case:
+- Use cases:
 	- For better User experience: to avoid a lower level of performance by going direct to S3
 	- To avoid bypassing an application, 
 		- It generates signed URLs to access restricted content using CloudFront
@@ -1535,8 +1535,81 @@
 - [For more details](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)
 ---
 
-## Storage - Network File System (NFS):
+## Storage - Elastic File System (EFS):
 
 <details>
 <summary>Description</summary>
+
+- It's an implementation of the Network File System ([NFSv4](https://en.wikipedia.org/wiki/Network_File_System#NFSv4)) within AWS
+- It's delivered as a service
+- It can be mounted on multiple Linux instances at the same time
+	- It's currently only supported in Linux
+	- It's elastic:
+		- An initial size isn't required
+		- It grows and shrinks automatically, as files are added and removed
+- It has a DNS name:
+	- Format: fs-[randomCode].efs.ap-[regionName].amazonaws.com
+	- E.g., fs-963f75af.efs.ap-useast-1.amazonaws.com
+- It's accessed via "mount targets"
+	- They're placed in subnets inside a VPC (1 mount target/AZ)
+	- They have an IP address
+	- Security Groups are used to control access to them
+		- The related EC2 instances' SGs could be best fit here 
+		- By simply allowing all inbound traffic from source with the same SG
+	- It's accessed:
+		- By local EC2 instances from a local VPC
+		- By other EC2 instances from other VPCs across VPC peering connection
+		- By on-premises locatons via a VPN or Direct Connect
+- It's region resilient: 
+	- Its availability isn't impacted by an AZ failure
+	- It's recommnended though to have 1 mount target by AZ
+- Performance modes:
+	- General Purpose:
+		- It's the default mode
+		- It's suitable for 99% of needs
+	- Max I/O: it's designed for when a large number of instances (hundereds) need to access the file system
+- Throughput modes:
+	- Bursting Throughput mode:
+		- It's the default
+		- The size of the file system is linked to its performance:
+		- 100 MiB/s base burst
+		- 100 MiB/s per 1 TB size
+		- Earning 50 MiB/s per Tib of storage		
+	- Provisioned mode (or the Throughput mode):
+		- It allows control over throughput independently of file system size
+- Storage Classes:
+	- Standard:
+	- Infrequent Access (IA)
+- Lifecycle management is used to move files between classes based on access patterns
+- Encryption at rest:
+	- It's configured when creating a file system 
+	- It's desabled by default
+	- It works with a AWS KMS of the same or another AWS account
+- Encryption in transit:
+	- It's configured when mouting a file system
+- It integrate with multiple AWS services:
+	- AWS backup service to get data backed up
+	- AWS Data Sync that can act as a synchronization product and get data in EFS
+- CLI EFS Utilities:
+	- It's not required since EFS is standard inside Linux OS
+	- It's recommended though since it allows the machine a tighter integration with EFS 
+- Use cases:
+	- Parralel and Elastic workloads:
+		- It's designed for large scale parallel access of data
+		- It supports thousands of NFS clients and access the data concurrently
+	- E.g. 1, Shared data/media for WordPress instances, content management and web serving using a shared set of data
+	- E.g. 2, Shared bespoke logging information:
+		- Scenarios where CloduWatch isn't used
+		- Because of tight security requirements
+	- E.g. 3, Big Data and analytics where concurrent access is needed from multiple locations (why not S3?)
+	- E.g. 4, Certain media processing workflows like video editing, studio production, broadcast processing
+	- E.g. 5, A shared home directory platform for multiple Linux OS instances: rather than having a home directory on each of them
+- Antipatterns:
+	- It's not for is single machine situations, so it's probably overkill to use EFS if you've only got a single EC2
+	- It's not an object storage (it's not supported by Cloudfront)
+	- It's not used for temporary storage (it's not efficient)
+
+- Limitations:
+	- 1 Mount Target / AZ
+      
 </details>

@@ -24,3 +24,11 @@ aws s3 rm s3://mybucket/myfile
 aws S3 presign s3://mybucket/myfile --expires-in 3600
 #...... Invalidate a presigned URL
 #...... It's not possible!
+#6. EFS:
+#6.1 Install Amazon EFS utilities
+sudo yum install -y amzon-efs-utils
+#6.2 Create a file system which type is EFS:
+sudo mkdir /mnt/myefs
+sudo mount -t efs [fs-ID]:/ /mnt/myefs
+cd /mnt/myefs
+#
