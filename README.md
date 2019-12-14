@@ -50,7 +50,7 @@
 
 ---
 
-## Security: Identity and Access Control (IAM)
+## Security: Identity and Access Control (IAM):
 
 <details>
 <summary>Description</summary>
@@ -1543,6 +1543,7 @@
 - It's an implementation of the Network File System ([NFSv4](https://en.wikipedia.org/wiki/Network_File_System#NFSv4)) within AWS
 - It's delivered as a service
 - It can be mounted on multiple Linux instances at the same time
+	- It's accessed via "mount targets"
 	- It's currently only supported in Linux
 	- It's elastic:
 		- An initial size isn't required
@@ -1550,49 +1551,12 @@
 - It has a DNS name:
 	- Format: fs-[randomCode].efs.ap-[regionName].amazonaws.com
 	- E.g., fs-963f75af.efs.ap-useast-1.amazonaws.com
-- It's accessed via "mount targets"
-	- They're placed in subnets inside a VPC (1 mount target/AZ)
-	- They have an IP address
-	- Security Groups are used to control access to them
-		- The related EC2 instances' SGs could be best fit here 
-		- By simply allowing all inbound traffic from source with the same SG
-	- It's accessed:
-		- By local EC2 instances from a local VPC
-		- By other EC2 instances from other VPCs across VPC peering connection
-		- By on-premises locatons via a VPN or Direct Connect
 - It's region resilient: 
 	- Its availability isn't impacted by an AZ failure
 	- It's recommnended though to have 1 mount target by AZ
-- Performance modes:
-	- General Purpose:
-		- It's the default mode
-		- It's suitable for 99% of needs
-	- Max I/O: it's designed for when a large number of instances (hundereds) need to access the file system
-- Throughput modes:
-	- Bursting Throughput mode:
-		- It's the default
-		- The size of the file system is linked to its performance:
-		- 100 MiB/s base burst
-		- 100 MiB/s per 1 TB size
-		- Earning 50 MiB/s per Tib of storage		
-	- Provisioned mode (or the Throughput mode):
-		- It allows control over throughput independently of file system size
-- Storage Classes:
-	- Standard:
-	- Infrequent Access (IA)
-- Lifecycle management is used to move files between classes based on access patterns
-- Encryption at rest:
-	- It's configured when creating a file system 
-	- It's desabled by default
-	- It works with a AWS KMS of the same or another AWS account
-- Encryption in transit:
-	- It's configured when mouting a file system
 - It integrate with multiple AWS services:
 	- AWS backup service to get data backed up
 	- AWS Data Sync that can act as a synchronization product and get data in EFS
-- CLI EFS Utilities:
-	- It's not required since EFS is standard inside Linux OS
-	- It's recommended though since it allows the machine a tighter integration with EFS 
 - Use cases:
 	- Parralel and Elastic workloads:
 		- It's designed for large scale parallel access of data
@@ -1604,12 +1568,95 @@
 	- E.g. 3, Big Data and analytics where concurrent access is needed from multiple locations (why not S3?)
 	- E.g. 4, Certain media processing workflows like video editing, studio production, broadcast processing
 	- E.g. 5, A shared home directory platform for multiple Linux OS instances: rather than having a home directory on each of them
-- Antipatterns:
-	- It's not for is single machine situations, so it's probably overkill to use EFS if you've only got a single EC2
-	- It's not an object storage (it's not supported by Cloudfront)
-	- It's not used for temporary storage (it's not efficient)
-
+	- Antipatterns:
+		- It's not for is single machine situations, so it's probably overkill to use EFS if you've only got a single EC2
+		- It's not an object storage (it's not supported by Cloudfront)
+		- It's not used for temporary storage (it's not efficient)
 - Limitations:
 	- 1 Mount Target / AZ
       
 </details>
+
+<details>
+<summary>Mount Targets</summary>
+
+- They're placed in subnets inside a VPC (1 mount target/AZ)
+- They have an IP address
+- Security Groups are used to control access to them
+	- The related EC2 instances' SGs could be best fit here 
+	- By simply allowing all inbound traffic from source with the same SG
+- It's accessed:
+	- By local EC2 instances from a local VPC
+	- By other EC2 instances from other VPCs across VPC peering connection
+	- By on-premises locatons via a VPN or Direct Connect
+- CLI EFS Utilities:
+	- It's not required since EFS is standard inside Linux OS
+	- It's recommended though since it allows the machine a tighter integration with EFS 
+
+</details>
+
+<details>
+<summary>Encryption</summary>
+
+- Encryption at rest:
+	- It's configured when creating a file system 
+	- It's desabled by default
+	- It works with a AWS KMS of the same or another AWS account
+- Encryption in transit:
+	- It's configured when mouting a file system
+
+</details>
+
+<details>
+<summary>Performance modes</summary>
+
+- General Purpose:
+	- It's the default mode
+	- It's suitable for 99% of needs
+- Max I/O: 
+	- It's designed for when a large number of instances (hundereds) need to access the file system
+
+</details>
+
+<details>
+<summary>Throughput modes</summary>
+
+- Bursting Throughput mode:
+	- It's the default
+	- The size of the file system is linked to its performance:
+	- 100 MiB/s base burst
+	- 100 MiB/s per 1 TB size
+	- Earning 50 MiB/s per Tib of storage		
+- Provisioned mode (or the Throughput mode):
+	- It allows control over throughput independently of file system size
+
+</details>
+
+<details>
+<summary>Storage Classes</summary>
+
+- Standard:
+- Infrequent Access (IA)
+
+</details>
+
+<details>
+<summary>Lifecycle management</summary>
+
+- It's used to move files between classes based on access patterns
+
+</details>
+
+<details>
+<summary>Best practices</summary>
+
+- For High availability:
+	- Create 1 mount target by AZ
+	- Use the mount target of the EC2 instance AZ to mount to EFS
+	- If an AZ fails, all instances in others AZs will still have access to the EFS storage
+- For less admin overhead,
+	- Associate the Mount Targets to the SG of the EC2 instances they're mounted on
+	- Allow all inbound traffic from the same SG
+
+</details>
+
