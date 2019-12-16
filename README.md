@@ -223,19 +223,138 @@
 
 </details>
 <details>
-<summary>Description</summary>
+<summary>Performance</summary>
+
+EBS Optimization
+
+- Performance of restoring a volume from a Snapshot: 
+	- When we restore a volume from a snapshot, it doesn't immediately copy all that data to EBS 
+	- Data is copied as it is requested 
+    - So, we get the max performance of a the EBS volume, only when all that data has been copied across in the background 
+    - Solution: to perform a read of every part of that volume in advance before it is moved into production  
+    - To ensure that our restored volume always functions at peak capacity in production, we can force the immediate initialization of the entire volume using dd or fio 
+    - For more details:
+		- [EBS restoring volume](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-restoring-volume.html) 
+    	- [EBS initialize](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-initialize.html)
+- Enhanced Networking - SR-IOV: 
+	- It stands for Single Root I/O volume 
+    - Opposite to the traditional network virtualization that is using Multi-Root I/O Volume (MR-IOV) where a software-based hypervisor is managing virtual controllers of virtual machines to access one physical network card (slow) 
+    - SR-IOV allows virtual devices (controllers) to be implemented in hardware (virtual functions) 
+	- In other words, it allows a single physical network card to appear as multiple physical devices 
+	- Each instance be given one of these (fake) physical devices 
+    - This results in faster transfer rates, lower CPU usage, and lower consistent latency 
+    - EC2 delivers this via the Elastic Network Adapter (ENA) or Intel 82599 Virtual Function (VF) interface 
+    - [Fore more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/enhanced-networking.html) 
+- Enhanced Networking - Placement Groups: Good to increase Performance or Reliability 
+	- Clustered Placement Group:  
+		- Instances grouped within a single AZ 
+        - It is good to increase performance 
+		- It is recommended for application that need low network latency, high network throughput (or both) 
+		- Only certain instances can be launched in to a clustered group 
+		- Best practices:  
+			- We should always try to launch all of the instances that go inside a placement group at the same time  
+			- AWS recommends homogenous instances within cluster placement groups 
+			- We might get a capacity issue when we ask to launch additional instances in an existing placement group
+	- Spread Placement Group: 
+		- It is good to increase availability
+		- Instances are each individual placed on distinct underlying hardware (separate racks)
+		- It is possible to have spread placement groups inside different AZ within one region
+		- We can launch up to 7 instances into this placement group
+		- So if a rack does go through and fail, it is only going to affect 1 instance
+		- It is recommended for applications that have a small # of critical instances that should be kept separate from each other: email servers, Domain controllers, file servers
+	- Partition Placement Group: 
+        - It is good to increase availability for large infrastructure platforms where we want to have some visibility of where those instances are from a partition perspective 
+        - Similar to spread placement group except there are multiple EC2 instances within a partition 
+        - Each partition within a placement group has its own hardware (own set of racks) 
+        - Each rack has its own network and power source 
+        - A partition PL supports a maximum of 7 partitions per Availability Zone 
+        - It allows to isolate the impact of hardware failure within our application 
+        - We can use this to split those instances across all of those 7 partitions (we get visibility of that)  
+        - If needed, we can even make it automated, if we give that information to our applications itself, it can have visibility over its infrastructure placement 
+        - Multiple EC2 instances HDFS, HBase, and Cassandra 
 
 </details>
 <details>
-<summary>Description</summary>
+<summary>Pricing Models</summary>
+
+- On Demand: 
+	- It allows to pay a fixed rate by second with a minimum of 60 seconds
+    - No commitment and it is the default 
+    - Use cases: 
+        - Application with short term, spiky, or unpredictable workloads that can't be interrupted 
+        - Application being developed or tested on Amazon EC2 for the 1st time 
+- Spot: 
+    - It enables to bid whatever price we want for instance capacity  
+	- It is exactly like the stock market: it goes up and down (The price moves around) 
+	- When Amazon have excess capacity (there're available EC2 servers capacity. Not used) 
+	- Amazon drops then the price of their EC2 instances to try and get people to use that spare capacity 
+	- The maximum price indicate the highest amount the customer is willing to pay for an EC2 instance 
+	- We get the price that we want to bid at, 
+    	- if it hits that price we have our instances  
+    	- If it goes above that price then we're going to lose our instances within 2 minutes window 
+    	- The default behavior is to automatically bid the current spot instance price  
+    	- The price fluctuates, but will never exceed the normal on-demand rates for EC2 instances 
+    	- Real examples: https://aws.amazon.com/ec2/spot/testimonials/ 
+	- Use Cases: 
+    	- Good for stateless parts of application (servers) 
+    	- Good for workloads that can tolerate failures 
+    	- Applications that have flexible start and end times 
+    	- Applications that are only feasible at very low compute prices 
+    	- Users with urgent computing needs for large amounts of additional capacity 
+    	- Spot instances tend to be useful for dev/test workloads, or perhaps for adding extra computing power to large-scale data analytics projects 
+		- Antipattern: spot isn't suitable for long-running workloads and require stability and can't tolerate interruptions 
+    - Spot Fleet: 
+        - It is a container for "capacity needs" 
+    	- We can specify pools of instances of certain types/sizes aiming for a given "capacity" 
+    	- A minimum percentage of on-demand can be set to ensure the fleet is always active 
+- Reserved: 
+	- Contract terms: 1 or 3 Year Terms 
+    - Payment Option: No Upfront, Partial Upfront, All Upfront (max cost saving) 
+    - It could be Zonal: The capacity is then reserved in the specific zone (capacity reservation). So if there capacity constraint on a zone, those with zonal reserved instances are prioritized 
+    - It could be also on regional: The capacity isn't reserved in a particular region's zone? (more flexibility) 
+    - It offers a significant discount on the hourly charge for an instance 
+    - Use cases: 
+    	- Long-running, understood, and consistent workloads 
+        - Applications that require reserved capacity 
+        - Users able to make upfront payments to reduce their total computing 
+    - Standard Reserved Instance: 
+        - Up to 75% off on demand instances 
+        - The more we pay up front and the longer the contract, the greater the discount 
+    - Convertible Reserved Instances: 
+        - Up to 54% off on demand capacity to change the attributes of the RI as long as the exchange results in the creation of reserved instances of equal or greater value 
+        - So it allows you to change between your different instance families 
+        - E.g.: We have an EC2 R5 instance that is very high ram with Ram utilization; we would like to convert it to EC2 C5 instance that has very very good CPE use 
+    - Scheduled Reserved Instances: 
+    	- They're available to launch within the time windows we reserve (predictable: fraction of a day/week/month) 
+        - E.g. 1: We run a school 
+        - E.g. 2: We need to scale when everyone comes in at 9:00 on logs 
+    - Capacity Priority: how AWS resolves capacity constraint: 
+    	- Zonal Reserved instance are guaranteed to get the reserved instances on the zone 
+    	- On Demand instances 
+    	- Spot instances 
 
 </details>
 <details>
-<summary>Description</summary>
+<summary>Dedicated Hosts</summary>
+
+- Physical server dedicated for our use for a given type and size (Type and Size are inputs)  
+- The number of instances that run on the host is fixed - depending on the type and size (see print screen below) 
+- It can help reduce cost by allowing us to use our existing server-bound software licenses 
+- It can be purchased On-Demand (hourly) 
+- Could be purchased as a reservation for up to 70% off On-Demand price 
+- Use Cases: 
+	- Regulatory requirements that may not support multi-tenant virtualization 
+	- Licensing which doesn't support multi-tenancy or cloud deployments 
+	- We can control instance placement 
 
 </details>
 <details>
-<summary>Description</summary>
+<summary>Virtualization</summary>
+
+- Xen-based hypervisor: The Xen Project is a Linux Foundation Collaborative Project 
+- The Nitro Hypervisor that is based on core KVM technology 
+- Bare metal instances: With virtualization (High Memory Instance) 
+- [For more details](http://www.brendangregg.com/blog/2017-11-29/aws-ec2-virtualization-2017.html) 
 
 </details>
 
