@@ -31,4 +31,6 @@ sudo yum install -y amzon-efs-utils
 sudo mkdir /mnt/myefs
 sudo mount -t efs [fs-ID]:/ /mnt/myefs
 cd /mnt/myefs
-#
+#7. RDS:
+
+

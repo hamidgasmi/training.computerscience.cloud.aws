@@ -1415,7 +1415,7 @@ EBS Optimization
 <summary>Versioning</summary>
 
 - It allows multiple versions of an object to exist in an S3 bucket
-- It's desabled by default
+- It's disabled by default
 - It requires to be enabled at a bucket level
 - Once it's enabled, 
 	- It can never switched off (only suspended)
@@ -1890,7 +1890,7 @@ EBS Optimization
 
 - Encryption at rest:
 	- It's configured when creating a file system 
-	- It's desabled by default
+	- It's disabled by default
 	- It works with a AWS KMS of the same or another AWS account
 - Encryption in transit:
 	- It's configured when mouting a file system
@@ -1949,4 +1949,229 @@ EBS Optimization
 	- Allow all inbound traffic from the same SG
 
 </details>
+
+---
+
+## Database - Relational Database Service (RDS):
+
+<details>
+<summary>Description</summary>
+
+- It's a database as a service (DBaaS) product:
+	- It can be used to provision a fully functional database without the admin overhead
+	- We can't log in to its OS
+	- Patching of the RDS OS and DB is Amazon's responsibility
+- It can performa at scale
+- It can be made publicly accessible
+- It can be configured for demanding availability and durability scenarios
+	- It can be deployed in a single AZ or Multi-AZ mode
+- It isn't Serverless
+- It supports different database engines: 
+    - MySQL:
+    - MariaDB:  
+    - PostgreSQL:
+    - Oracle:
+    - Microsoft SQL Server:
+	- Amazon Aurora:
+		- It's AWS own relational database engine
+    	- It could be created from MySQL db (good way to migrate to Aurora)
+		- It could be created from a PostgreSQL db (a good way to migrate to Aurora)
+		- Aurora Serverless is Serveless
+- It's deployed in EC2 instances, it supports: 
+	- EC2 General Purpose Family (DB.M4, DB.M5)
+	- Memory Optimized family:
+		- DB.R4 and DB.R5
+		- DB.X1e and DB.X1 for Oracle
+	- Burstable (DB.T2 and DB.T3)
+- It uses a storage similar to EBS, it supports:
+	- General Purpose SSD (gp2): IOPS per GiB, burst to 3,000 IOPS (pool architecture like EBS)
+	- Provisioned IOPS SSD (io1): 
+		- 1,000 to 80,000 IOPS (engine dependent) 
+		- Size and IOPS can be configured independently
+	- Autoscalling feature (disabled by default)
+- It has an endpoint, a CNAME:
+	- It points to the current primary instance
+	- We can connect into it with the CNAME + Port #
+
+- Troubleshooting: 
+	- We want our application to check whether a request generated an error before we spend any time processing results.  
+	- The easiest way to find out if an error occurred is to look for an Error node in the response from the Amazon RDS API.  
+
+ </details>
+
+ <details>
+<summary>Pricing</summary>
+
+- It's based on:
+	- Reserved/On Demand instance
+	- Instance size
+	- Provisioned storage (allocated): it isn't Elastic
+	- IOPS if using io1
+	- Data transferred out
+	- Any backups/snapshots beyond the 100% that is free with each DB instance
+		- For an 100GB allocated RDS DB, 100GB of snapshot/backups are included
+- Reserved DB instance: 
+	- It let you optimize your Amazon RDS costs based on your expected usage. 
+    - We can reserve a DB instance for a 1- or 3-year term.  
+    - Reserved DB instances provide with a significant discount compared to on-demand DB instance pricing  
+    - Reserved DB instances are not physical instances, but rather a billing discount applied to the use of certain on-demand DB instances in our account  
+	- Discounts for reserved DB instances are tied to instance type and AWS Region  
+	- It is available in three varieties: No Upfront, Partial Upfront,  All Upfront
+	- See EC2 Description
+- [For more details](https://aws.amazon.com/rds/mysql/pricing/)
+
+ </details>
+
+<details>
+<summary>Read Replica</summary>
+
+    They allow to have a read-only copy of our production database. 
+
+    It is achieved by using Asynchronous replication from the primary RDS instance to the read replica. 
+
+    Automatic backups must be turned on. 
+
+    Up to 5 read-replica copies of any database. 
+
+    It is possible to have read-replicas of read replicas (latency). 
+
+    Each read-replica will have its own DNS end point. 
+
+    It is possible for read-replicas to have Multi-AZ. 
+
+    It is possible to create read-replicas of Multi-AZ source databases. 
+
+    It is possible to have a read-replica in a different region. 
+
+    They can be promoted to be their own databases (this breaks the replication). 
+
+    It is used for scaling. 
+
+    We use replicas primarily for very read-heavy database workloads. 
+
+    It is available for  
+
+        MySQL, PostgreSQL, MariaDB, Oracle, Aurora 
+
+        all database types except Microsoft SQL-Server. 
+
+    There is no extra charge in read-replica creation. 
+
+ </details>
+
+<details>
+<summary>Backups</summary>
+ 
+- Automatic Backups:
+	- It allows to recover our database to any point in time within a "retention period" 
+	- It's enabled by default
+	- The retention period can be between 1 to 35 
+	- The backup data is stored in S3
+	- We get a free S3 storage space equal to the size of our database
+	- It is automatically deleted when we delete the original RDS instance 
+	- It will take a full daily snapshot
+	- It will also store transaction logs throughout the day
+	- When we do a recovery, AWS will 1st choose the most recent daily backup, and then apply transaction logs relevant to that day 
+	- This allows us to do a point in time recovery down to a second, within the retention period 
+	- It is taken within a defined window
+	- During the backup window, storage I/O may be suspended while our data is being backed up 
+	- We may experience elevated latency
+- Snapshot: 
+    - It is done manually (it is user initiated)
+    - It is stored even after we delete the original RDS instance
+- Restoring Backups/snapshots: 
+	- After a restore of either a Backup or a snapshot, it results a new RDS instance with a new DNS endpoint  
+
+ </details>
+
+<details>
+<summary>Single/Multi-AZ mode</summary>
+
+- Subnet Group: RDS requires a minimum of 2 subnets
+- Multi-AZ mode:
+	- RDS created 2 databases:
+		- The primary database (production)
+		- The Standby database is created in a different AZ 
+	- It is for resilience Only
+		- Disaster Recovery: Database failure, AZ failure
+		- DB maintenance 
+		- It isn't for performance (see read replicas) 
+	- The Standby database the exact copy of the primary database
+	- The synchronization between them is automatic
+	- When a planned database maintenance happens or in case of a failure (DB instance or AZ), 
+		- RDS will automatically failover to the standby database
+		- RDS CNAME @ will point to the standby database 
+		- Its operations can resume quickly without administrative intervention 
+	- It allows force AZ changing: actions > reboot  
+		- We can actually reboot with failover  
+		- This is a way of forcing our AZ to change
+		- So we can change from one AZ to another by just rebooting with failover 
+		- It's possible for MySQL, MariaDB, PostgreSQL, Oracle, SQL Server	
+- Single AZ Mode:
+	- The RDS instance is in a single AZ
+	- There Standby instance isn't created
+
+ </details>
+
+ <details>
+<summary>Logs/Events</summary>
+ </details>
+
+<details>
+<summary>Security</summary>
+
+- Network Security:
+	- It could be Public: a Public IP will be provided
+	- It could be Private: No IP @
+	- Its network access is controlled by Security Groups (SG)
+	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithOptionGroups.html)
+- IAM DB authentication:
+	- It allows to manage database users credentials through IAM
+	- It's disabled by default
+	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAM.html)
+
+</details>
+
+<details>
+<summary>Encryption</summary>
+
+- Encryption At Rest:
+	- It is supported for all database types
+	- It can be configured when creating a DB instance
+	- It can be added by taking a snapshot, making an encrypted snapshot, and creating a new encrypted instance from that encrypted snapshot
+	- It can't be removed
+	- It is done using the AWS Key Management Service (KMS)
+	- Once an RDS instance is encrypted, the data stored at rest in the underlying storage is encrypted too (its automated backups, read replicas, and snapshots)
+	- Read Replicas need to be the same state as the primary instance (encypted or not)
+	- Encrypted snapshots can be copied between regions
+		- It requires a new destination region KMS CMK
+		- KMS is region specific
+	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html)
+        
+ </details>
+
+ <details>
+<summary>Limits</summary>
+
+- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Limits.html)
+
+</details>
+
+ <details>
+<summary>Description</summary>
+ </details>
+
+ <details>
+<summary>Description</summary>
+ </details>
+
+Option Group: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithOptionGroups.html
+Param Group: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithParamGroups.html
+
+
+ 
+
+
+
+ 
 
