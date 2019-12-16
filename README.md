@@ -63,9 +63,179 @@
 <details>
 <summary>Description</summary>
 
+- It provides sizable compute capacity in the cloud 
+- It's a IaaS (Infrastructure as a Service) AWS Service 
+- It takes 2mn to obtain and boot new server instances 
+- It allows to quickly scale capacity both up and down as your computing requirement changes
 - ARN:  
-	- Format: arn:partition:service:region:account: 
-    - E.g., arn:aws:cloudfront::191449997525:?
+	- Format: arn:${Partition}:ec2:${Region}:${Account}:instance/${InstanceId}
+    - E.g., arn:aws:ec2::191449997525:instance/1234j8r3kdj
+- Use cases:
+	- Monolothic application that require a traditional OS to work
+
+</details>
+
+<details>
+<summary>Families, Types and, Sizes</summary>
+
+- EC2 instances are grouped into families
+- Each family is designed for a specific broad type workload
+- A type determines a certain set of features
+- A Size decides the level of workload a machine can cope with
+- Families:
+	- General Purpose:
+		- A1: Arm-based machine
+		- T2, T3: Low-cost instance types; occasional traffic bursts (Credits)
+		- M4: 
+		- M5, M5a, M5n: general workloads; 100% of resources at all times (24/7)
+	- Compute Optimized:
+		- C5, C5n, C4: Provides more capable CPU
+	- Memory Optimized:
+		- R5, R5a, R5n, R4: Optimize large amounts of fast memory 
+		- X1e, X1: Optimize large amounts of fast memory 
+		- High Memory, z1d
+	- Storage Optimized: 
+		- I3, I3en: Deliver fast I/O
+		- D2, H1
+	- Accelerated Computing:  
+		- P3, P2: Deliver GPU
+		- G4, G3: Deliver GPU
+		- F1: delivers FPGA
+- Instance name: Type + Generation # + [a] + [d] + [n] + ".Size"
+	- Type letter + Generation #: see item above (families)
+    - "a" if uses  AMD CPUs 
+    - "d" if it is NVMe storage + 
+    - "n" if it is Higher speed networking +
+    - ".Size": "nano", "micro", "small", "medium", "large", "xlarge", "nxlarge" (n > 2) and, "large"
+    - E.g.,: t2.micro, t2.2xlarge, t3a.nano, m5ad.4xlarhe 
+- [For more details](https://aws.amazon.com/ec2/instance-types/) 
+
+</details>
+<details>
+<summary>Instance Metadata</summary>
+
+- It's available at: http://169.254.169.254/latest/meta-data/metadataName from within the EC2 instance itself 
+- To get the list of all available metadata: #curl http://169.254.169.254/latest/meta-data/ 
+- E.g., ami-id, instance-id, instance-type, local-ipv4, mac, public-ipv4, security-groups 
+- [For more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html) 
+
+ 
+
+    
+</details>
+<details>
+<summary>User Data</summary>
+
+- It's available at: http://169.254.169.254/latest/user-data/ from within the EC2 instance 
+- To get the list of all available metadata: #curl http://169.254.169.254/latest/user-data/ 
+- [For more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html) 
+
+
+</details>
+<details>
+<summary>Bootstrap</summary>
+
+- It is the process of providing "build" directives to an EC2 instance
+- It uses user data and can take in 
+	- Shell script-style commands: Power Shell for Windows or Bash for Linux  
+	- [Cloud-init directives](https://cloudinit.readthedocs.io/en/latest/) 
+- These commands or directives are executed during the instance launch process 
+- User data can be used to run these commands or directives
+- Actions could be involved: 
+	- Configuring an existing application on an EC2 
+	- Performing software installation on an EC2 
+	- Configuring an EC2 instance 
+	- Action that can't be involved: 
+	- Configuring resource policies 
+	- Creating an IAM User
+
+</details>
+<details>
+<summary>Security: Instance Role</summary>
+
+- It is a type of IAM Role that could be assumed by EC2 instance or application
+- An application that is running within EC2, 
+	- It isn't a valid AWS identity 
+	- It can't therefore assume AWS Role directly
+- They need to use an intermediary called  instance profile:  
+	- It is a container for the role that is associated with an EC2 instance
+	- It allows applications running on EC2 to assume a role and  
+    - It allows application to access to temporary security credentials available in the instance metadata 
+    - It is attached to an EC2 instance at launch process or after 
+    - Its name is similar to the IAM role's one it is associated to 
+    - It is created automatically when using the AWS console UI
+    - Or it is created manually when using the CLI or Cloud Formation
+- EC2 AWS CLI Credential Order:
+	- (1) Command Line Options:
+		- aws [command] —profile [profile name] 
+		- This approach uses longer term credentials stored locally on the instance
+		- It's NOT RECOMMENDED for production environments 
+	- (2) Environment Variables: 
+		- You can store values in the environment variables: AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY, AWS_SESSION_TOKEN
+		- It's recommended for temporary use in non-production environments 
+	- (3) AWS CLI credentials file:
+		- aws configure 
+		- This command creates a credentials file 
+		- Linux, macOS, Unix: it's stored at ~/.aws/credentials
+		- Windows, it's store at: C:\Users\USERNAME\.aws\credentials
+		- It can contain the credentials for the default profile and any named profiles 
+		- This approach uses longer term credentials stored locally on the instance
+		- It's NOT RECOMMENDED for producuon environments. 
+	- (4) Container Credentials: 
+		- IAM Roles associated with AWS Elastic Container Service (ECS) Task Definitions 
+		- Temporary credentials are available to the Task's containers 
+		- This is recommended for ECS environments 
+	- (5) Instance Profile Credentials 
+		- IAM Roles associated with Amazon Elastic Compute Cloud (EC2) instances via Instance Profiles 
+		- Temporary credentials are available to the Instance
+		- This is recommended for EC2 environments
+- For more details:  
+    - [User Guide](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html)
+    - [...](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html)
+	- [CLI Order of things](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
+
+</details>
+<details>
+<summary>Encryption</summary>
+
+- Volume encryption uses EC2 host hardware to encrypt data at rest and in transit between EBS and EC2 instance
+- Encryption generates a Data Encryption Key (DEK) from a Customer Master Key (CMK) in each region
+- When a volume is encrypted (or an instance is created), each volume is encrypted by a unique DEK 
+- Snapshot, AMI and volumes created from these AMI or snapshots will use the same DEK
+- AWS KMS encryption is supported by most instance types (any of the current modern instance generation, especially those that use the nitro platform)
+- There are some older generation instances which don't support it, though!
+- EC2 instance and OS see plaintext data as normal (no any encryption): 
+    - Therefore, there is no performance impact
+    - Encrypted DEKs stored with EBS volume are decrypted by KMS using a CMK
+    - These decrypted DEKs (plaintext DEKs):
+        - They're given to EC2 Host which stores them in its memory 
+        - It uses them to decrypt data into EC2 instance or encrypt data from EC2 instance to EBS 
+    	- When the instance is stopped/rebooted, the Host erases these plaintext DEKs
+    - So, AWS KMS isn't encrypting neither it is decrypting data 
+- When an encrypted EBS snapshot is copied into another region: 
+    - A new CMK should be created in the destination region
+    - The new snapshot will be encrypted
+- Encryption from an OS perspective:
+	- AWS KMS isn't enough for that
+    - We need to use an OS level encryption available on most OS (Microsoft Windows, Linux) 
+    - Only OS encryption will ensure that from an operating system perspective, the file's encrypted 
+    - We're able to use both, though
+
+</details>
+<details>
+<summary>Description</summary>
+
+</details>
+<details>
+<summary>Description</summary>
+
+</details>
+<details>
+<summary>Description</summary>
+
+</details>
+<details>
+<summary>Description</summary>
 
 </details>
 
@@ -1533,6 +1703,7 @@
 </details>
 
 - [For more details](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)
+
 ---
 
 ## Storage - Elastic File System (EFS):
