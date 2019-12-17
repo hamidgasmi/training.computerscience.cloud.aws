@@ -1961,7 +1961,7 @@ EBS Optimization
 	- It can be used to provision a fully functional database without the admin overhead
 	- We can't log in to its OS
 	- Patching of the RDS OS and DB is Amazon's responsibility
-- It can performa at scale
+- It can perform at scale
 - It can be made publicly accessible
 - It can be configured for demanding availability and durability scenarios
 	- It can be deployed in a single AZ or Multi-AZ mode
@@ -1984,7 +1984,9 @@ EBS Optimization
 		- DB.X1e and DB.X1 for Oracle
 	- Burstable (DB.T2 and DB.T3)
 - It uses a storage similar to EBS, it supports:
-	- General Purpose SSD (gp2): IOPS per GiB, burst to 3,000 IOPS (pool architecture like EBS)
+	- General Purpose SSD (gp2): 
+		- IOPS per GiB, 
+		- burst to 3,000 IOPS (pool architecture like EBS)
 	- Provisioned IOPS SSD (io1): 
 		- 1,000 to 80,000 IOPS (engine dependent) 
 		- Size and IOPS can be configured independently
@@ -1992,7 +1994,9 @@ EBS Optimization
 - It has an endpoint, a CNAME:
 	- It points to the current primary instance
 	- We can connect into it with the CNAME + Port #
-
+- Every modification of the instance could be:
+	- run immediately
+	- or run at maintenance time that is created when the instance is created
 - Troubleshooting: 
 	- We want our application to check whether a request generated an error before we spend any time processing results.  
 	- The easiest way to find out if an error occurred is to look for an Error node in the response from the Amazon RDS API.  
@@ -2003,22 +2007,64 @@ EBS Optimization
 <summary>Pricing</summary>
 
 - It's based on:
-	- Reserved/On Demand instance
+	- Instance pricing model (Reserved, On Demand)
 	- Instance size
 	- Provisioned storage (allocated): it isn't Elastic
 	- IOPS if using io1
 	- Data transferred out
-	- Any backups/snapshots beyond the 100% that is free with each DB instance
+	- Extra storage (backups/snapshots) beyond the 100% of provisioned db:
+		- We get a free storage space equal to the db size
 		- For an 100GB allocated RDS DB, 100GB of snapshot/backups are included
 - Reserved DB instance: 
-	- It let you optimize your Amazon RDS costs based on your expected usage. 
-    - We can reserve a DB instance for a 1- or 3-year term.  
-    - Reserved DB instances provide with a significant discount compared to on-demand DB instance pricing  
-    - Reserved DB instances are not physical instances, but rather a billing discount applied to the use of certain on-demand DB instances in our account  
+	- It let optimize Amazon RDS costs based on expected usage 
+    - We can reserve a DB instance for a 1- or 3-year term  
+    - Reserved DB instances provide with a significant discount compared to on-demand DB instance pricing
 	- Discounts for reserved DB instances are tied to instance type and AWS Region  
-	- It is available in three varieties: No Upfront, Partial Upfront,  All Upfront
+	- It is available in 3 varieties: No Upfront, Partial Upfront,  All Upfront
 	- See EC2 Description
 - [For more details](https://aws.amazon.com/rds/mysql/pricing/)
+
+ </details>
+
+<details>
+<summary>Snapshot/Backups</summary>
+
+- Snapshot:
+	- It's a manual backup: 
+		- It's user initiated
+		- E.g., Console, CLI, Lambda function
+	- It's created automatically when a new RDS instance is created/restored
+	- It's stored in S3
+    - It's kept even after the original RDS instance is deleted
+	- It can be copied to the same region or to a different one
+- Backups:
+	- It's an automated backup: 
+		- It occurs once a day during a backup window: it takes a full daily snapshot
+		- Log backups occur every 5 minutes (Point in time)
+	- It's taken from the Standby instance 
+	- It's stored in S3
+	- It's an incremental backup:
+		- The 1st backup stores the entire used space
+		- After, changed data only stored
+	- It's automatically deleted when the original RDS instance is deleted
+	- It allows to recover our db to any point in time within a retention period
+		- Retention period is from 1 to 35 days
+		- Retention period is 0 means it's disabled
+		- Down to a second within this retention period
+	- It's enabled by default
+		- Default retention period is 7 days
+- Snapshot/Backups operation impacts:
+	- During the Snapshot/backup window, storage I/O may be suspended while data is being backed up 
+	- We may experience elevated latency
+- Restoring Backups/snapshots:
+	- AWS chooses the most recent daily backup, then
+	- It applies transaction logs relevant to that day 
+	- It results a new RDS instance: 
+		- With a new DNS endpoint
+		- With a new SG
+	- It requires to perform some level of reconfiguration:
+		- At an application level, to change the DNS Name the application is pointing to
+		- At AWS level, to associate the new instance to the previous SG 
 
  </details>
 
@@ -2056,31 +2102,6 @@ EBS Optimization
         all database types except Microsoft SQL-Server. 
 
     There is no extra charge in read-replica creation. 
-
- </details>
-
-<details>
-<summary>Backups</summary>
- 
-- Automatic Backups:
-	- It allows to recover our database to any point in time within a "retention period" 
-	- It's enabled by default
-	- The retention period can be between 1 to 35 
-	- The backup data is stored in S3
-	- We get a free S3 storage space equal to the size of our database
-	- It is automatically deleted when we delete the original RDS instance 
-	- It will take a full daily snapshot
-	- It will also store transaction logs throughout the day
-	- When we do a recovery, AWS will 1st choose the most recent daily backup, and then apply transaction logs relevant to that day 
-	- This allows us to do a point in time recovery down to a second, within the retention period 
-	- It is taken within a defined window
-	- During the backup window, storage I/O may be suspended while our data is being backed up 
-	- We may experience elevated latency
-- Snapshot: 
-    - It is done manually (it is user initiated)
-    - It is stored even after we delete the original RDS instance
-- Restoring Backups/snapshots: 
-	- After a restore of either a Backup or a snapshot, it results a new RDS instance with a new DNS endpoint  
 
  </details>
 
@@ -2140,12 +2161,11 @@ EBS Optimization
 	- It can be configured when creating a DB instance
 	- It can be added by taking a snapshot, making an encrypted snapshot, and creating a new encrypted instance from that encrypted snapshot
 	- It can't be removed
-	- It is done using the AWS Key Management Service (KMS)
-	- Once an RDS instance is encrypted, the data stored at rest in the underlying storage is encrypted too (its automated backups, read replicas, and snapshots)
+	- It is done using the AWS KMS
+	- Once an RDS instance is encrypted, the data stored at rest in the underlying storage is encrypted too (
+		- Its automated backups, read replicas, and snapshots are encrypted
 	- Read Replicas need to be the same state as the primary instance (encypted or not)
-	- Encrypted snapshots can be copied between regions
-		- It requires a new destination region KMS CMK
-		- KMS is region specific
+	- An Encrypted snapshot requires a new destination region KMS CMK to be copied to a new region
 	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html)
         
  </details>

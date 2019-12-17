@@ -14,6 +14,8 @@ aws s3
 aws s3 rb s3://my-bucket
 #..... Delete a non empty bucket (non versioned objects)
 aws s3 rb s3://my-bucket --force
+#5.3 List object of a bucket
+aws s3 ls --recursive s3://my-bucket
 #5.2 Manage objects in a bucket:
 #..... Multipart uploading (Create a 10GB file + Multipart uploading)
 dd if=/dev/zero of=10GBfile.data bs=1M count=10240
