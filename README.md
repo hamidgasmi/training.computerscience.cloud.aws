@@ -2198,6 +2198,12 @@ EBS Optimization
 <details>
 <summary>Option Group</summary>
 
+- It allows to configure (enable, disable, ...) some of the RDS database engines specific features
+	- E.g. 1, MySQL Memcached support (MEMCACHED)
+	- E.g. 2, Oracle Native Network Encrytion (NATIVE_NETWORK_ENCRYPTION)
+- It's currently available for MariaDB, MySQL, Oracle and, Microsoft SQL Server 
+- It's not currently available for PostgreSQL and Aurora
+
 - [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithOptionGroups.html)
 
 </details>
@@ -2205,16 +2211,21 @@ EBS Optimization
 <details>
 <summary>DB Parameter Group</summary>
 
-- It acts as a container for engine configuration values that are applied to one or more DB instances
+- It acts as a container for engine configuration parameters that are applied to one or more DB instances
 	- E.g. 1, autocommit DB parameter for MySQL 5.6 RDS instance
 	- E.g. 2, auto_increment_increment DB parameter for MySQL 5.6 RDS instance
 - A default one is created 
 	- When a db instance is created without specifying a custom DB parameter group
 	- It contains db engine defaults and Amazon RDS system defaults based on the engine, compute class and, allocated storage of the instance
 	- It's not possible to modify it
-- To modify the DB Parameter Group of an existing RDS instance:
-	- Create a new DB Parameter Group
-	- Modify the RDS Instance by associating the new DB Parameter Group
+	- To modify the DB Parameter Group of an RDS instance associated with a default Parameter Group:
+		- Create a new DB Parameter Group
+		- Modify the RDS Instance to use the new parameter group
+- If a non-default DB parameter group is updated, 
+	- The changes is applied to all DB instances that are associated with it
+	- When the change is applied depends on the "Apply Type" of the changed parameter:
+		- If it's a dynamic parameter, the change is applied immediately regardless of the Apply Immediately setting 
+		- If it's a static parameter, the parameter change takes effect after the DB instance is manually reboot
 - [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithParamGroups.html)
 
 </details>
