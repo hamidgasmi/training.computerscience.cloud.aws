@@ -2193,6 +2193,7 @@ EBS Optimization
 	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html)
 - Encryption in Transit:
 	- Data in transit is encrypted for asynchronous replication of read-replicas in different regions
+
 </details>
 
 <details>
@@ -2246,20 +2247,36 @@ EBS Optimization
 
 - It's a custom-designed relational database engine that forms part of RDS
 - It has 2 editions:
-	- Amazon Aurora with MySQL compatibility
-	- Amazon Aurora with Postgre compatibility
+	- 1st one with MySQL compatibility
+	- 2nd one with Postgre compatibility
 - It operates with a radically different architecture as opposed to the other RDS db engines
-	- It uses a base configuration of a "cluser"
-	- A cluster contains a single primary instance and zero or more replicas
-	- Nodes: Primary node and 
-- It has 6 replicas across 3 AZs:
-	- 2 copies in each AZ with minimum of 3 AZs
-	- All this storage is replicating between all of these replicas
-- It's capable of self healing any data problems that exists in a shared storage
+- It uses a base configuration of a "DB cluster" that consists of:
+	- A single primary instance: 
+		- It's also called the primary node
+		- It supports read-write workloads
+		- It performs all of the data modifications to the cluster volume 
+	- A cluster volume:  
+		- It's an all-SSD virtual database storage volume 
+		- It's shared by the primary instance and all replica instances
+		- It replicates data 6 times across 3 AZs (2 cluster data copies in each AZ)
+		- It's constantly backed up to S3
+		- It scales automatically
+	- 0 to 15 Replica instances:
+		- They're also called replica nodes
+		- They support only read operations
+		- They can be promoted to be primary instance quickly
+		- They have less than 100 ms of replication lag (Latency)
+		- They improve availability (Better resilience)
+		- They allow for efficient read scaling (read havy workloads)
 - It's available in regions that have at least 3 AZs (not all regions)
-- Writes and Reads:
-	- Writes are performed by the primary nodes to all shared replicas
-	- Reads are performed by all nodes from shared replicas
+- It can tolerate
+	- The loss of up to 2 data copies or an AZ failure without losing write availability
+	- The loss of up to 3 data copies without losing read availability
+- It's capable of self healing any data problems that exists in a shared storage
+	- It scans continuously data blocks and disks for errors
+	- It replaces them automatically 
+	- It monitors disks and nodes for failures
+	- It automatically replaces/repairs the disks/nodes without the need to interrupt read/write processing from the db node
 - Its location could be 
 	- Regional
 	- Gloabl
@@ -2275,6 +2292,37 @@ EBS Optimization
 </details>
 
 <details>
+<summary>Endpoints</summary>
+
+- There are several different endpoints available
+- Cluster Endpoint: 
+	- It connects our app. to the current primary DB instance of the app's cluster
+	- It's updated automatically so that it always points to the primary instance
+	- It's for both reads and writes
+- Reader Endpoint 
+	- It load balances read operations across all available Read Replicas
+	- It's for read only
+	- It offloads read queries and reduces load on the primary DB instance
+- Instance Endpoints 
+	- It connects to a specific instance in the cluster 
+	- It allows to have fine-grained control over query allocation, rather than having Aurora handle connection distribution
+- Use cases:
+	- Eventual consistency is acceptable: 
+		- To use the cluster endpoint for writes
+		- To use the reader endpoint for all reads
+		- To avoid using specific instance endpoints
+	- Immediate consistency use case:
+		- To use the cluster endpoint for writes
+		- To use the cluster endpoint for reads of data recently updated (less than 100 ms)
+		- To use the reader endpoint for all other reads
+	- [More use cases](https://developer.rackspace.com/blog/Understanding-Amazon-Aurora-Endpoints/)
+
+</details>
+
+- , 
+
+
+<details>
 <summary>Pricing</summary>
 
 - It's based on high watermark system:
@@ -2287,33 +2335,13 @@ EBS Optimization
 
 </details>
 
-
 <details>
-<summary>Cluster volume</summary>
+<summary>Backtrack</summary>
 
-- It's a shared storage where all instances (primary and replicas) use
-- It's totally SSD based
-- It can scale to 64 TiB in size
-- It replicates data 6 times, across 3 AZs
-- Aurora can tolerate 
-	- 2 failures without writes being impacted
-	- 3 failures without reads being impacted 
-- Cluster Scalling and Availability:
-	- It scales automatically
-	- It's constantly backed up to S3
-	- Aurora replicas improve availability, 
-	- Aurora replicas can be promoted to be primary instance quickly
-	- Aurora replicas allow for efficient read scaling
-- Read and writes use the cluster endpoint
-- Read can use the read endpoint: it balances connections over all replica instances
-
-- To improve resilience, use additional replicas
-- To scale write workloads, scale up the instance size (Vertical scalling)
-- To scale reads, scale out (horizental scalling)
+- It lets quickly recover from a user error, without having to create another DB cluster
+- E.g., if we accidentally deleted an important record at 10am, we could use Backtrack to move the Aurora database back to its state at 9:59am
 
 </details>
-
-
 
 <details>
 <summary>How to migrate an MySQL database to an Aurora</summary>
@@ -2332,8 +2360,9 @@ EBS Optimization
 <summary>Limits</summary>
 
 - Max cluster volume:  64 TiB
+- Max cluster Replicas #: 15
 - Max Compute ressources: 32vCPUs 
-- Max Compute memory: 244GB 
+- Max Compute memory: 244GB
 
 </details>
 
@@ -2382,5 +2411,20 @@ EBS Optimization
 ## Deployment:
 
 ---
- 
 
+admin, lXZVNErCVL5uCsQPfhc3
+myauroradb
+
+myauroradb.cluster-cjvmru6x2ucp.us-east-1.rds.amazonaws.com
+myauroradb.cluster-cjvmru6x2ucp.us-east-1.rds.amazonaws.com
+
+myauroradb-instance-1.cjvmru6x2ucp.us-east-1.rds.amazonaws.com
+myauroradb-instance-1-us-east-1a.cjvmru6x2ucp.us-east-1.rds.amazonaws.com
+myauroradb-instance-2.cjvmru6x2ucp.us-east-1.rds.amazonaws.com
+
+Cluser Reader endpoint:     myauroradb.cluster-ro-cjvmru6x2ucp.us-east-1.rds.amazonaws.com
+Cluser Writer endpoint:     myauroradb.cluster-cjvmru6x2ucp.us-east-1.rds.amazonaws.com
+Instance 1 writer endpoint: myauroradb-instance-1.cjvmru6x2ucp.us-east-1.rds.amazonaws.com
+Instance 1 reader endpoint: myauroradb-instance-1-us-east-1a.cjvmru6x2ucp.us-east-1.rds.amazonaws.com
+Instance 2 reader endpoint: myauroradb-instance-2.cjvmru6x2ucp.us-east-1.rds.amazonaws.com
+Instance 3 reader endpoint: myauroradb-instance-3.cjvmru6x2ucp.us-east-1.rds.amazonaws.com
