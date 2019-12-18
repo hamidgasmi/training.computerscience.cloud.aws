@@ -2177,7 +2177,7 @@ EBS Optimization
 
 - Encryption At Rest:
 	- It is supported for all database types
-	- It can be configured when creating a DB instance
+	- It can be configured only when creating a DB instance
 	- It can be added by taking a snapshot, making an encrypted snapshot, and creating a new encrypted instance from that encrypted snapshot
 	- It can't be removed
 	- It is done using the AWS KMS
