@@ -2053,6 +2053,7 @@ EBS Optimization
 		- Down to a second within this retention period
 	- It's enabled by default
 		- Default retention period is 7 days
+	- It provides us with lower [RPO](https://en.wikipedia.org/wiki/Disaster_recovery#Recovery_Point_Objective)
 - Snapshot/Backups operation impacts:
 	- During the Snapshot/backup window, storage I/O may be suspended while data is being backed up 
 	- We may experience elevated latency
@@ -2065,6 +2066,55 @@ EBS Optimization
 	- It requires to perform some level of reconfiguration:
 		- At an application level, to change the DNS Name the application is pointing to
 		- At AWS level, to associate the new instance to the previous SG 
+
+ </details>
+
+<details>
+<summary>Single/Multi-AZ mode</summary>
+
+- Subnet Group: RDS requires a minimum of 2 subnets
+- Multi-AZ mode:
+	- RDS creates 2 db instances in the same region:
+		- The primary database (production)
+		- The Standby database is created in a different AZ 
+	- It is for resilience Only
+		- Disaster Recovery: Database failure, AZ failure
+		- DB maintenance 
+		- It isn't for performance (see read replicas)
+	- Primary instance:
+		- It's the only one that is accessed with the instance CNAME
+		- It has its own storage
+	- The Standby instance: 
+		- It's the exact copy of the primary database
+		- It has also its own storage
+		- The data replication from the primary db is synchronous: data is copied in real time  
+		- It's the source of backups (no performance impact)
+	- Failover Process:
+		- In case of a db maintenance or a failure (DB instance or AZ),
+		- RDS will try to minimize the outages
+		- It will automatically failover to the standby db
+		- Its CNAME @ won't change 
+		- Its CNAME @ will point to the standby db
+		- It may be a brief outage: 
+		- It can have some level of lag or caching that can slow down it: 2 digits seconds or ~1 or 2 minute(s)
+	- DB maintenance Process:
+		- In case of a planned db maintenance (change the db size),
+		- RDS will try to minimize the outages
+		- It will apply the change on the standby database 1st
+		- It will then "failover" to the standby db that will become the new primary db (See failover process)
+		- It will finally apply the change on the new primary db
+	- Fault Tolerant System?
+		- Except Aurora, RDS is not a truly fault tolerant system
+		- This is because of the brief outage that could happen during the failover process
+	- It provides us with better [RTO](https://en.wikipedia.org/wiki/Disaster_recovery#Recovery_Time_Objective)
+	- It allows to force AZ changing: actions > reboot  
+		- We can actually reboot with failover  
+		- This is a way of forcing our AZ to change
+		- So we can change from one AZ to another by just rebooting with failover 
+		- It's possible for MySQL, MariaDB, PostgreSQL, Oracle, SQL Server
+- Single AZ Mode:
+	- The RDS instance is in a single AZ
+	- The Standby instance isn't created
 
  </details>
 
@@ -2102,35 +2152,6 @@ EBS Optimization
         all database types except Microsoft SQL-Server. 
 
     There is no extra charge in read-replica creation. 
-
- </details>
-
-<details>
-<summary>Single/Multi-AZ mode</summary>
-
-- Subnet Group: RDS requires a minimum of 2 subnets
-- Multi-AZ mode:
-	- RDS created 2 databases:
-		- The primary database (production)
-		- The Standby database is created in a different AZ 
-	- It is for resilience Only
-		- Disaster Recovery: Database failure, AZ failure
-		- DB maintenance 
-		- It isn't for performance (see read replicas) 
-	- The Standby database the exact copy of the primary database
-	- The synchronization between them is automatic
-	- When a planned database maintenance happens or in case of a failure (DB instance or AZ), 
-		- RDS will automatically failover to the standby database
-		- RDS CNAME @ will point to the standby database 
-		- Its operations can resume quickly without administrative intervention 
-	- It allows force AZ changing: actions > reboot  
-		- We can actually reboot with failover  
-		- This is a way of forcing our AZ to change
-		- So we can change from one AZ to another by just rebooting with failover 
-		- It's possible for MySQL, MariaDB, PostgreSQL, Oracle, SQL Server	
-- Single AZ Mode:
-	- The RDS instance is in a single AZ
-	- There Standby instance isn't created
 
  </details>
 
