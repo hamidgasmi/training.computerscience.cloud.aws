@@ -1952,7 +1952,7 @@ EBS Optimization
 
 ---
 
-## Database - Relational Database Service (RDS):
+## SQL - Relational Database Service (RDS):
 
 <details>
 <summary>Description</summary>
@@ -2001,9 +2001,9 @@ EBS Optimization
 	- We want our application to check whether a request generated an error before we spend any time processing results.  
 	- The easiest way to find out if an error occurred is to look for an Error node in the response from the Amazon RDS API.  
 
- </details>
+</details>
 
- <details>
+<details>
 <summary>Pricing</summary>
 
 - It's based on:
@@ -2024,7 +2024,7 @@ EBS Optimization
 	- See EC2 Description
 - [For more details](https://aws.amazon.com/rds/mysql/pricing/)
 
- </details>
+</details>
 
 <details>
 <summary>Snapshot/Backups</summary>
@@ -2067,7 +2067,7 @@ EBS Optimization
 		- At an application level, to change the DNS Name the application is pointing to
 		- At AWS level, to associate the new instance to the previous SG 
 
- </details>
+</details>
 
 <details>
 <summary>Single/Multi-AZ mode</summary>
@@ -2116,7 +2116,7 @@ EBS Optimization
 	- The RDS instance is in a single AZ
 	- The Standby instance isn't created
 
- </details>
+</details>
 
 <details>
 <summary>Read Replica</summary>
@@ -2151,11 +2151,11 @@ EBS Optimization
 		- It provides with a better [RTO](https://en.wikipedia.org/wiki/Disaster_recovery#Recovery_Time_Objective) better than snapshot's one
 - [Multi-AZ vs. Read-Replicas](https://aws.amazon.com/rds/details/multi-az/)
 
- </details>
+</details>
 
- <details>
+<details>
 <summary>Logs/Events</summary>
- </details>
+</details>
 
 <details>
 <summary>Security</summary>
@@ -2188,26 +2188,132 @@ EBS Optimization
 	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html)
 - Encryption in Transit:
 	- Data in transit is encrypted for asynchronous replication of read-replicas in different regions
- </details>
+</details>
 
- <details>
+<details>
+<summary>Option Group</summary>
+
+- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithOptionGroups.html)
+
+</details>
+
+<details>
+<summary>Param Group</summary>
+
+- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithParamGroups.html)
+
+</details>
+
+<details>
 <summary>Limits</summary>
 
 - [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Limits.html)
 
 </details>
 
- <details>
+---
+
+## SQL - RDS Aurora:
+
+<details>
 <summary>Description</summary>
- </details>
 
- <details>
-<summary>Description</summary>
- </details>
+- It's a custom-designed relational database engine that forms part of RDS
+- It has 2 editions:
+	- Amazon Aurora with MySQL compatibility
+	- Amazon Aurora with Postgre compatibility
+- It operates with a radically different architecture as opposed to the other RDS db engines
+	- It uses a base configuration of a "cluser"
+	- A cluster contains a single primary instance and zero or more replicas
+	- Nodes: Primary node and 
+- It has 6 replicas across 3 AZs:
+	- 2 copies in each AZ with minimum of 3 AZs
+	- All this storage is replicating between all of these replicas
+- It's capable of self healing any data problems that exists in a shared storage
+- It's available in regions that have at least 3 AZs (not all regions)
+- Writes and Reads:
+	- Writes are performed by the primary nodes to all shared replicas
+	- Reads are performed by all nodes from shared replicas
+- Its location could be 
+	- Regional
+	- Gloabl
+	- Not all MySQL versions support this feature
+- It combines the speed and availability of high-end commercial dbs with the simplicity and cost-effectiveness of open-source db:
+	- 5 times better performance than MySQL 
+	- at a price 1/10 than of a commercial db while delivering similar performance and availability
+- Storage Autoscaling: 
+ 	- It starts with 10 GB
+	- It scales in 10 GB increments to 64TB
+	- It scales Compute ressources up to 32vCPUs and 244GB of memory
 
-Option Group: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithOptionGroups.html
-Param Group: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithParamGroups.html
+</details>
 
+<details>
+<summary>Pricing</summary>
+
+- It's based on high watermark system:
+	- It's based on the used storage
+	- It start off with zero allocation
+- E.g.:
+	- If we consume 10 TiB, we're billed for 10 TiB 
+	- If we delete 5 TiB, we're still using 10 TiB and, billed for 10 TiB
+- To reduce the high watermark, we should take a backup and make a new cluster with just that data
+
+</details>
+
+
+<details>
+<summary>Cluster volume</summary>
+
+- It's a shared storage where all instances (primary and replicas) use
+- It's totally SSD based
+- It can scale to 64 TiB in size
+- It replicates data 6 times, across 3 AZs
+- Aurora can tolerate 
+	- 2 failures without writes being impacted
+	- 3 failures without reads being impacted 
+- Cluster Scalling and Availability:
+	- It scales automatically
+	- It's constantly backed up to S3
+	- Aurora replicas improve availability, 
+	- Aurora replicas can be promoted to be primary instance quickly
+	- Aurora replicas allow for efficient read scaling
+- Read and writes use the cluster endpoint
+- Read can use the read endpoint: it balances connections over all replica instances
+
+- To improve resilience, use additional replicas
+- To scale write workloads, scale up the instance size (Vertical scalling)
+- To scale reads, scale out (horizental scalling)
+
+</details>
+
+
+
+<details>
+<summary>How to migrate an MySQL database to an Aurora</summary>
+
+- Way 1: 
+	- Create an Aurora read-replica for the primary MySQL database. 
+	- Promote the read-replica to a primary database. 
+- Way 2: 
+	- Create an Aurora read-replica for the primary MySQL database. 
+	- Create a snapshot a the Aurora read-replica. 
+	- Create a new Aurora database from the snapshot. 
+
+</details>
+
+<details>
+<summary>Limits</summary>
+
+- Max cluster volume:  64 TiB
+- Max Compute ressources: 32vCPUs 
+- Max Compute memory: 244GB 
+
+</details>
+
+---
+
+## NoSQL:
 
  
 
