@@ -2161,8 +2161,13 @@ EBS Optimization
 <summary>Security</summary>
 
 - Network Security:
-	- It could be Public: a Public IP will be provided
-	- It could be Private: No IP @
+	- It could be Public:
+		- It will be in a public subnet 
+		- It will be assigned a public IP @
+		- It will be accessible by resources from outside the VPC it's attached to
+	- It could be Private: 
+		- It won't be assigned a public IP @
+		- It will be accessible only by resources inside the VPC it's attached to
 	- Its network access is controlled by Security Groups (SG)
 	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithOptionGroups.html)
 - IAM DB authentication:
@@ -2198,8 +2203,18 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Param Group</summary>
+<summary>DB Parameter Group</summary>
 
+- It acts as a container for engine configuration values that are applied to one or more DB instances
+	- E.g. 1, autocommit DB parameter for MySQL 5.6 RDS instance
+	- E.g. 2, auto_increment_increment DB parameter for MySQL 5.6 RDS instance
+- A default one is created 
+	- When a db instance is created without specifying a custom DB parameter group
+	- It contains db engine defaults and Amazon RDS system defaults based on the engine, compute class and, allocated storage of the instance
+	- It's not possible to modify it
+- To modify the DB Parameter Group of an existing RDS instance:
+	- Create a new DB Parameter Group
+	- Modify the RDS Instance by associating the new DB Parameter Group
 - [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithParamGroups.html)
 
 </details>
