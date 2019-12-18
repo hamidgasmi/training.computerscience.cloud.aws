@@ -2053,7 +2053,7 @@ EBS Optimization
 		- Down to a second within this retention period
 	- It's enabled by default
 		- Default retention period is 7 days
-	- It provides us with lower [RPO](https://en.wikipedia.org/wiki/Disaster_recovery#Recovery_Point_Objective)
+	- It provides us with low [RPO](https://en.wikipedia.org/wiki/Disaster_recovery#Recovery_Point_Objective)
 - Snapshot/Backups operation impacts:
 	- During the Snapshot/backup window, storage I/O may be suspended while data is being backed up 
 	- We may experience elevated latency
@@ -2121,37 +2121,35 @@ EBS Optimization
 <details>
 <summary>Read Replica</summary>
 
-    They allow to have a read-only copy of our production database. 
-
-    It is achieved by using Asynchronous replication from the primary RDS instance to the read replica. 
-
-    Automatic backups must be turned on. 
-
-    Up to 5 read-replica copies of any database. 
-
-    It is possible to have read-replicas of read replicas (latency). 
-
-    Each read-replica will have its own DNS end point. 
-
-    It is possible for read-replicas to have Multi-AZ. 
-
-    It is possible to create read-replicas of Multi-AZ source databases. 
-
-    It is possible to have a read-replica in a different region. 
-
-    They can be promoted to be their own databases (this breaks the replication). 
-
-    It is used for scaling. 
-
-    We use replicas primarily for very read-heavy database workloads. 
-
-    It is available for  
-
-        MySQL, PostgreSQL, MariaDB, Oracle, Aurora 
-
-        all database types except Microsoft SQL-Server. 
-
-    There is no extra charge in read-replica creation. 
+- It's a read-only copy of an RDS instance
+- It's created from a primary instance
+	- The source primary instance is called the Master Instance
+	- The copy instance is called the Read-Replica Instance
+- It's achieved by using asynchronous replication from the Master Primary instance to the read replica instance
+- Reads from a Read-Replica are eventually consistent - normally seconds
+- It can be created in the same region or in a different region
+	- For different region, AWS handles the secure communications between those regions (Encryption in Transit)
+	- Without a need to any networking configurations
+- It requires Automatic backups to be turned on Master Instance
+- It can be addressed indepently from its primary instance (each read-replica has its own DNS name)
+- It's used for scaling reads:
+- It's possible to have up to 5 read-replica (5x increase in reads)
+	- It's not possible to have a single DNS name to address all of those read replicas
+	- Our application need to be aware of our database topology in order to take advantage of these read replicas
+- It's possible to have read-replicas of read replicas (latency)
+- It can be promoted to be a primary instance
+	- The read-replica db becomes then its own database (master)
+	- It breaks the asynchnous replication
+	- It can be used for read and write operations
+- It can be multi-AZ 
+- It's available for all database types (MySQL, PostgreSQL, MariaDB, Oracle, Aurora) except SQL-Server
+- Database engine version upgrade is independent from master instance (it must be handled manually)
+- Use Cases:
+	- Scalability: It's used for read-heavy database workloads (It doesn't scale writes)
+	- Global resilience: 
+		- Improve the ability to recover from a serious failure either within a region or internationally
+		- It provides with a better [RTO](https://en.wikipedia.org/wiki/Disaster_recovery#Recovery_Time_Objective) better than snapshot's one
+- [Multi-AZ vs. Read-Replicas](https://aws.amazon.com/rds/details/multi-az/)
 
  </details>
 
@@ -2188,7 +2186,8 @@ EBS Optimization
 	- Read Replicas need to be the same state as the primary instance (encypted or not)
 	- An Encrypted snapshot requires a new destination region KMS CMK to be copied to a new region
 	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html)
-        
+- Encryption in Transit:
+	- Data in transit is encrypted for asynchronous replication of read-replicas in different regions
  </details>
 
  <details>
