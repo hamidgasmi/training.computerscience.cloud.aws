@@ -1952,7 +1952,7 @@ EBS Optimization
 
 ---
 
-## SQL - Relational Database Service (RDS):
+## Database - SQL - Relational Database Service (RDS):
 
 <details>
 <summary>Description</summary>
@@ -2239,7 +2239,7 @@ EBS Optimization
 
 ---
 
-## SQL - RDS Aurora:
+## Database - SQL - RDS Aurora:
 
 <details>
 <summary>Description</summary>
@@ -2339,11 +2339,48 @@ EBS Optimization
 
 ---
 
-## NoSQL:
+## Database - NoSQL:
 
- 
+---
 
+## Database - In-Memory Caching:
 
+---
 
+## Hybrid and Scaling - Load Balancing and Auto Scaling:
+
+---
+
+## Hybrid and Scaling - VPN and Direct Connect:
+
+---
+
+## Hybrid and Scaling - Snow*:
+
+---
+
+## Hybrid and Scaling - Identity Federation and SSO:
+
+---
+
+## Application Integration:
+
+---
+
+## Analytics:
+
+---
+
+## Logging and Monitoring:
+
+---
+
+##  Operations:
+
+---
+
+## Deployment:
+
+---
  
 
