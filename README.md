@@ -2302,9 +2302,15 @@ EBS Optimization
 - One writer and multiple readers:
 	- It supports multiple reader instances connected to the same storage volume as a single writer instance 
 	- It's a good general-purpose option for most workloads
-- One writer and multiple readers (Parallel query):
+- Parallel query:
+	- One writer and multiple readers
+	- It parallelizes some of the I/O and computation involved in processing data-intensive queries
+	- It allows queries to be executed across all nodes of a cluster at the same time
+	- It's currently available only for Aurora MySQL edition
 	- It improves the performance of analytic queries by pushing processing down to the Aurora storage layer 
-	- It's good for hybrid transactional/analytic workloads
+	- Use cases: 
+		- Hybrid transactional and analytic workloads
+		- Queries with larger data sets
 	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-mysql-parallel-query.html)
 - Multiple writers:
 	- It supports multiple writer instances connected to the same storage volume
@@ -2313,6 +2319,21 @@ EBS Optimization
 	- It scales the capacity based on database load
 	 - We specify the minimum and maximum amount of resources needed
 	 - It's a good option for intermittent or unpredictable workloads
+- They need to be enabled when a database cluster is made
+
+</details>
+
+<details>
+<summary>Global Database Location</summary>
+
+- It's currently available only for Aurora MySQL edition and version MySQL 5.6.10a 
+- It consists of 1 primary cluster in a primary AWS region and 1 read-only cluster in a secondary region
+	- This implies that data is replicated 12 times (2 copies x 3 AZs x 2 Regions)
+	- Writes are done in the primary cluster 
+	- Writes are replicated to secondary AWS Regions with typical latency of less than 1 sec
+- It requires large DB instances: a Memory Optimized DB instance class (includes r and x classes)
+- It requires to be enabled when a database cluster is made
+- When enabled, database features aren't available
 
 </details>
 
@@ -2358,12 +2379,6 @@ EBS Optimization
 - Cons:
 	- It does cause an outage because it's rolling back the entire shared storage
 - [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.Managing.Backtrack.html)
-
-</details>
-
-<details>
-<summary>Regional/Global</summary>
-
 
 </details>
 
