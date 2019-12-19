@@ -2408,6 +2408,7 @@ EBS Optimization
 - Max cluster Replicas #: 15
 - Max Compute ressources: 32vCPUs 
 - Max Compute memory: 244GB
+- Backtrack maximum window: 72 hours
 
 </details>
 
