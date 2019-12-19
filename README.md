@@ -2457,20 +2457,3 @@ EBS Optimization
 ## Deployment:
 
 ---
-
-admin, lXZVNErCVL5uCsQPfhc3
-myauroradb
-
-myauroradb.cluster-cjvmru6x2ucp.us-east-1.rds.amazonaws.com
-myauroradb.cluster-cjvmru6x2ucp.us-east-1.rds.amazonaws.com
-
-myauroradb-instance-1.cjvmru6x2ucp.us-east-1.rds.amazonaws.com
-myauroradb-instance-1-us-east-1a.cjvmru6x2ucp.us-east-1.rds.amazonaws.com
-myauroradb-instance-2.cjvmru6x2ucp.us-east-1.rds.amazonaws.com
-
-Cluser Reader endpoint:     myauroradb.cluster-ro-cjvmru6x2ucp.us-east-1.rds.amazonaws.com
-Cluser Writer endpoint:     myauroradb.cluster-cjvmru6x2ucp.us-east-1.rds.amazonaws.com
-Instance 1 writer endpoint: myauroradb-instance-1.cjvmru6x2ucp.us-east-1.rds.amazonaws.com
-Instance 1 reader endpoint: myauroradb-instance-1-us-east-1a.cjvmru6x2ucp.us-east-1.rds.amazonaws.com
-Instance 2 reader endpoint: myauroradb-instance-2.cjvmru6x2ucp.us-east-1.rds.amazonaws.com
-Instance 3 reader endpoint: myauroradb-instance-3.cjvmru6x2ucp.us-east-1.rds.amazonaws.com
