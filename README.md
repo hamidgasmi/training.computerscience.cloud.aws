@@ -2264,10 +2264,14 @@ EBS Optimization
 	- 0 to 15 Replica instances:
 		- They're also called replica nodes
 		- They support only read operations
-		- They can be promoted to be primary instance quickly
-		- They have less than 100 ms of replication lag (Latency)
-		- They improve availability (Better resilience)
-		- They allow for efficient read scaling (read havy workloads)
+		- There is less than 100 ms of replication lag (Latency)
+- Adding a reader is quick:
+	- It's more quicker than converting a mySQL based RDS from no to multi-AZ
+	- It only needs to provision a new instance and point it at the shared storage
+	- It's not adding a new storage; there's no copy involved
+- Failover:
+	- It could be initiated manually (action > Failover) or automatically (if there is any issue on the current primary instance)
+	- The replica with the highest priority is promoted to be the primary during failover	
 - It's available in regions that have at least 3 AZs (not all regions)
 - It can tolerate
 	- The loss of up to 2 data copies or an AZ failure without losing write availability
@@ -2285,9 +2289,30 @@ EBS Optimization
 	- 5 times better performance than MySQL 
 	- at a price 1/10 than of a commercial db while delivering similar performance and availability
 - Storage Autoscaling: 
- 	- It starts with 10 GB
+	- It starts with 10 GB
 	- It scales in 10 GB increments to 64TB
-	- It scales Compute ressources up to 32vCPUs and 244GB of memory
+	- It scales Compute ressources up to 32vCPUs and 244GB of memory 
+	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Integrating.AutoScaling.html)
+
+</details>
+
+<details>
+<summary>Database Features</summary>
+
+- One writer and multiple readers:
+	- It supports multiple reader instances connected to the same storage volume as a single writer instance 
+	- It's a good general-purpose option for most workloads
+- One writer and multiple readers (Parallel query):
+	- It improves the performance of analytic queries by pushing processing down to the Aurora storage layer 
+	- It's good for hybrid transactional/analytic workloads
+	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-mysql-parallel-query.html)
+- Multiple writers:
+	- It supports multiple writer instances connected to the same storage volume
+	- It's good for when continuous writer availability is required
+- Serverless:
+	- It scales the capacity based on database load
+	 - We specify the minimum and maximum amount of resources needed
+	 - It's a good option for intermittent or unpredictable workloads
 
 </details>
 
@@ -2303,9 +2328,11 @@ EBS Optimization
 	- It load balances read operations across all available Read Replicas
 	- It's for read only
 	- It offloads read queries and reduces load on the primary DB instance
-- Instance Endpoints 
+- Instance Endpoints: 
 	- It connects to a specific instance in the cluster 
 	- It allows to have fine-grained control over query allocation, rather than having Aurora handle connection distribution
+- Custom Endpoints:
+	- It connects explicitly to an individual database instances
 - Use cases:
 	- Eventual consistency is acceptable: 
 		- To use the cluster endpoint for writes
@@ -2319,8 +2346,46 @@ EBS Optimization
 
 </details>
 
-- , 
+<details>
+<summary>Backtrack</summary>
 
+- It lets quickly recover from a user error, without having to create another DB cluster
+- It has a maximum window of 72 hours
+- E.g., if we accidentally deleted an important record at 10am, we could use Backtrack to move the Aurora database back to its state at 9:59am
+- Pros:
+	- It doesn't create a new database (with a new DNS Name)
+	- It doesn't require to perform any reconfiguration (see the required reconfiguration for the other RDS based engines)
+- Cons:
+	- It does cause an outage because it's rolling back the entire shared storage
+- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.Managing.Backtrack.html)
+
+</details>
+
+<details>
+<summary>Regional/Global</summary>
+
+
+</details>
+
+<details>
+<summary>Aurora Serverless</summary>
+
+
+</details>
+
+<details>
+<summary>Migrating a RDS MySQL to RDS Aurora</summary>
+
+- Way 1: 
+	- Create an Aurora read-replica for the primary MySQL database. 
+	- Promote the read-replica to a primary database. 
+- Way 2: 
+	- Create an Aurora read-replica for the primary MySQL database. 
+	- Create a snapshot a the Aurora read-replica. 
+	- Create a new Aurora database from the snapshot. 
+- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.Migrating.RDSMySQL.Import.html)
+
+</details>
 
 <details>
 <summary>Pricing</summary>
@@ -2332,27 +2397,7 @@ EBS Optimization
 	- If we consume 10 TiB, we're billed for 10 TiB 
 	- If we delete 5 TiB, we're still using 10 TiB and, billed for 10 TiB
 - To reduce the high watermark, we should take a backup and make a new cluster with just that data
-
-</details>
-
-<details>
-<summary>Backtrack</summary>
-
-- It lets quickly recover from a user error, without having to create another DB cluster
-- E.g., if we accidentally deleted an important record at 10am, we could use Backtrack to move the Aurora database back to its state at 9:59am
-
-</details>
-
-<details>
-<summary>How to migrate an MySQL database to an Aurora</summary>
-
-- Way 1: 
-	- Create an Aurora read-replica for the primary MySQL database. 
-	- Promote the read-replica to a primary database. 
-- Way 2: 
-	- Create an Aurora read-replica for the primary MySQL database. 
-	- Create a snapshot a the Aurora read-replica. 
-	- Create a new Aurora database from the snapshot. 
+- [For more details](https://aws.amazon.com/rds/aurora/pricing/)
 
 </details>
 
