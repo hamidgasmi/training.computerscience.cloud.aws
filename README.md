@@ -2633,11 +2633,36 @@ EBS Optimization
 	- It's writing an item
 	- It requires to specify an item's primary key: PK only or PK and SK
 	- It isn't allowed to put a partial item: all attributes must be written at the same time
-	- When it's succesful (data stored persistently), it returns a HTTP status code: 200
+	- It returns HTTP status code 200 when data it stored persistently (succesfuly)
 - Scan:
-	- 
+	- It doesn't require any parameters 
+	- It no parameter is added, it will then list/retrieve all item in the scaned table
+	- It allow additional filters on any attribute of the table
+	- When a filter isn't on a primary key, 
+		- It read all items of a table; 
+		- It excludes items that don't match the filter; 
+		- It returns the remaining items
+		- It consumes the capacity of the entire table
+	- Pros: It's more flexible; It'sapplied on different PS
+	- Cons: It isn't an efficient operation
 - Query:
+	- It allows to perform lookups on the table (like scan operation)
+	- It doesn't scan all items of a table
+	- It requires a filter on the PS or PS and SK
+	- It allows additional filters on any non key attribute
+	- It consumes the data corresponding to the filtered keys (PS or PS and SK)
+	- Pros: It's an efficient operation
+	- Cons: It's always applied on 1 single PS
 - Filter:
+	- It could be applied on any attribute (PK, SK or a simple attribute not key)
+	- It requires a value
+	- It requires a type of the attribute when it isn't applied on a PK nor a SK
+
+</details>
+
+<details>
+<summary>Consistency</summary>
+
 
 </details>
 
@@ -2646,7 +2671,8 @@ EBS Optimization
 
 
 - It's resilient on a regional level
-- It stores tables in at least 3 replicas in 3 AZs
+- It stores tables in at least 3 different AZs (1 replica / AZ)
+- It can survive the failure of an AZ without any additional configuration
 
 
 </details>
@@ -2656,14 +2682,21 @@ EBS Optimization
 
 - It's a public service (like S3)
 - It's private by default (like S3)
-- To access a DynamoDB table,
-	- It requires to give access to an IAM Identity in the same account (user, role, group) using identity policies or 
-	- It requires an IAM role in the same account that allows an external identity to assume it 
+- To access a DynamoDB table, it requires
+	- to give access to an IAM Identity in the same account (user, role, group) using identity policies or
+	- to give access to an IAM role in the same account that allows an external identity to assume it
+- It's NOT possible to apply ressource level permission (unlike S3)
 
 </details>
 
 <details>
 <summary>Encryption</summary>
+
+
+</details>
+
+<details>
+<summary>Performance</summary>
 
 
 </details>
