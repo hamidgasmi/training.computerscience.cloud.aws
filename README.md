@@ -2551,6 +2551,7 @@ EBS Optimization
 
 </details>
 
+<details>
 <summary>Limits</summary>
 
 - It exists in a single AZ (See failover description)
