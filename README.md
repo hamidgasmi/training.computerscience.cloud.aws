@@ -2582,31 +2582,88 @@ EBS Optimization
 - It's partitioned regionally
 - It's a Multimodel database, 
 	- It includes features of more than one data model
-	- It's Key Value database
-	- It's also a wide column store database
-- It supports
-	- Item: it's like a row in other dbs
-	- Table: 
-		- It's a collection of items
-		- A table has zero or more items
-	- Attribute:
+	- It's wide-column store:
+		- It's Key Value database
+		- It's a 2 dimensional column store database
+- It supports Attribute concept:
+	- It's like a column in other dbs
+	- It's a key (attribute name) and value
+	- It could be a "Partition Key" (PK) or a "Hash Key"
+	- It could be a "Sort Key" (SK) or a "Range Key"
+	- It supports different types
+	- A type of a given attribute could be different across rows
+	- It could be Nested
+- It supports Item concept: 
+	- It's like a row in other dbs
+	- It's a collection of attributes
+	- It's inside a table that share the same key structure as every other item in the table
+	- It has its unique primary key: PK only or PK and SK
+	- It's a Json document
+	- It could have up to 400 KB in size
+- It supports Table concept: 
+	- It's a collection of items: 0 or more items
+	- Its name must be unique within its region and AWS account
+	- It doesn't enforce a rigid schema across all of its items
+	- It does only require a primary key for the table to be defined upfront
+		- It could consist of 1 attribute: PK
+		- It could consist of a composite key: (PK, SK)
+	- Its ARN: 
+		- Format: arn:${Partition}:dynamodb:${Region}:${Account}:table/${TableName}
+		- E.g., arn:aws:dynamodb:us-east-1:191449997525:table/myDynamoDBTable
+- E.g. We need to store weather data that is sent by weather station every 30 mn
+	- We need a table: weather_data
+	- We need a Partition Key (a number) to identify weather station
+	- We need a Sort Key (date and time) to identify every single data sent by a weather station
 
 </details>
 
 <details>
 <summary>Architecture</summary>
 
+</details>
+
+<details>
+<summary>Operations</summary>
+
+- Get and Put an item:
+	- It's reading an item
+	- It requires to specify an item's primary key: PK only or PK and SK
+	- It isn't allowed to get a partial item: its full size is read at once (all attributes)
+- Put an item:
+	- It's writing an item
+	- It requires to specify an item's primary key: PK only or PK and SK
+	- It isn't allowed to put a partial item: all attributes must be written at the same time
+	- When it's succesful (data stored persistently), it returns a HTTP status code: 200
+- Scan:
+	- 
+- Query:
+- Filter:
 
 </details>
 
 <details>
-<summary>Table</summary>
+<summary>Resilience</summary>
+
+
+- It's resilient on a regional level
+- It stores tables in at least 3 replicas in 3 AZs
 
 
 </details>
 
 <details>
-<summary>Pricing</summary>
+<summary>Security</summary>
+
+- It's a public service (like S3)
+- It's private by default (like S3)
+- To access a DynamoDB table,
+	- It requires to give access to an IAM Identity in the same account (user, role, group) using identity policies or 
+	- It requires an IAM role in the same account that allows an external identity to assume it 
+
+</details>
+
+<details>
+<summary>Encryption</summary>
 
 
 </details>
@@ -2619,6 +2676,8 @@ EBS Optimization
 
 <details>
 <summary>Limits</summary>
+
+- Item's max size: 400 KB
 
 </details>
 
