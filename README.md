@@ -2004,29 +2004,6 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Pricing</summary>
-
-- It's based on:
-	- Instance pricing model (Reserved, On Demand)
-	- Instance size
-	- Provisioned storage (allocated): it isn't Elastic
-	- IOPS if using io1
-	- Data transferred out
-	- Extra storage (backups/snapshots) beyond the 100% of provisioned db:
-		- We get a free storage space equal to the db size
-		- For an 100GB allocated RDS DB, 100GB of snapshot/backups are included
-- Reserved DB instance: 
-	- It let optimize Amazon RDS costs based on expected usage 
-    - We can reserve a DB instance for a 1- or 3-year term  
-    - Reserved DB instances provide with a significant discount compared to on-demand DB instance pricing
-	- Discounts for reserved DB instances are tied to instance type and AWS Region  
-	- It is available in 3 varieties: No Upfront, Partial Upfront,  All Upfront
-	- See EC2 Description
-- [For more details](https://aws.amazon.com/rds/mysql/pricing/)
-
-</details>
-
-<details>
 <summary>Snapshot/Backups</summary>
 
 - Snapshot:
@@ -2232,6 +2209,29 @@ EBS Optimization
 </details>
 
 <details>
+<summary>Pricing</summary>
+
+- It's based on:
+	- Instance pricing model (Reserved, On Demand)
+	- Instance size
+	- Provisioned storage (allocated): it isn't Elastic
+	- IOPS if using io1
+	- Data transferred out
+	- Extra storage (backups/snapshots) beyond the 100% of provisioned db:
+		- We get a free storage space equal to the db size
+		- For an 100GB allocated RDS DB, 100GB of snapshot/backups are included
+- Reserved DB instance: 
+	- It let optimize Amazon RDS costs based on expected usage 
+    - We can reserve a DB instance for a 1- or 3-year term  
+    - Reserved DB instances provide with a significant discount compared to on-demand DB instance pricing
+	- Discounts for reserved DB instances are tied to instance type and AWS Region  
+	- It is available in 3 varieties: No Upfront, Partial Upfront,  All Upfront
+	- See EC2 Description
+- [For more details](https://aws.amazon.com/rds/mysql/pricing/)
+
+</details>
+
+<details>
 <summary>Limits</summary>
 
 - [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Limits.html)
@@ -2240,7 +2240,7 @@ EBS Optimization
 
 ---
 
-## Database - SQL - RDS Aurora:
+## Database - SQL - RDS Aurora Provisioned:
 
 <details>
 <summary>Description</summary>
@@ -2297,7 +2297,7 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Database Features</summary>
+<summary>Aurora Provisioned Db Features</summary>
 
 - One writer and multiple readers:
 	- It supports multiple reader instances connected to the same storage volume as a single writer instance 
@@ -2315,10 +2315,7 @@ EBS Optimization
 - Multiple writers:
 	- It supports multiple writer instances connected to the same storage volume
 	- It's good for when continuous writer availability is required
-- Serverless:
-	- It scales the capacity based on database load
-	 - We specify the minimum and maximum amount of resources needed
-	 - It's a good option for intermittent or unpredictable workloads
+
 - They need to be enabled when a database cluster is made
 
 </details>
@@ -2383,12 +2380,6 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Aurora Serverless</summary>
-
-
-</details>
-
-<details>
 <summary>Migrating a RDS MySQL to RDS Aurora</summary>
 
 - Way 1: 
@@ -2402,12 +2393,16 @@ EBS Optimization
 
 </details>
 
-<details>
 <summary>Pricing</summary>
 
 - It's based on high watermark system:
 	- It's based on the used storage
 	- It start off with zero allocation
+- "Auto scalling" feature:
+	- It's to dynamicaly scale up/down of reader instances
+	- When the database isn't used, it allows to scale down the database
+	- But there is a minimum and the level of reader instances increase/decrease is limited
+	- We're not going to get the linear alignment between the capacity that we need (the amount of resources actually used) and the capacity that is provided
 - E.g.:
 	- If we consume 10 TiB, we're billed for 10 TiB 
 	- If we delete 5 TiB, we're still using 10 TiB and, billed for 10 TiB
@@ -2424,6 +2419,146 @@ EBS Optimization
 - Max Compute ressources: 32vCPUs 
 - Max Compute memory: 244GB
 - Backtrack maximum window: 72 hours
+
+</details>
+
+---
+
+## Database - SQL - RDS Aurora Serverless:
+
+<details>
+<summary>Architecture</summary>
+
+![Aurora Serverless Architecture](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/images/aurora-serverless-arch.png)
+
+</details>
+
+<details>
+<summary>Description</summary>
+
+- It handles certain resource allocation as a service
+- It's based on the same db engine as Aurora Provisioned
+- It has a shared storage accessible for all db instances
+- It's a self-managed db product:
+	- We access it just as we would do if we were accessing a provisioned database
+	- But it removes the complexity of managing a database such as:
+		- Provision a hardware or virtual machines (All RDS remove this complexity)
+		- Install of the database software (All RDS remove this complexity)
+		- Manage of backups, High Availability, performance (All RDS remove this complexity)
+		- Manage the server instances themselves (Only RDS Serverless removes this complexity)
+	- It does only require to specify a minimum and maximum amount of resources (see ACUs, below)
+	- It handles the scaling without any distruption to its related application
+- Snapshot:
+	- It's always encrypted (We can't turn off encryption)
+	- It's possible to restore an Aurora Serverless db from an Aurora Previsioned db snapshot 
+- Data API
+	- It's a web-based query editor tool
+	- It allows you to access the database using traditional APIs
+	- It requires to be enabled to work
+	- Rather than having to open a traditional database connection and execute SQL queries, we can connect to it using standard API
+	- It could be used by web services-based application including AWS Lambda, AWS AppSync and, AWS Cloud9
+	- It's much easier if you're designing an application from scratch and code it to utilize Aurora Serverless
+- Use cases:
+	- Intermittent workloads
+	- Unpredictable workloads
+	- Development databases (Test, Staging, A/B Testing) used during work hours (it will be shutted down automatically after work hours)
+
+</details>
+
+<details>
+<summary>ACUs (Aurora Capacity Units)</summary>
+
+- It's an abstraction away from physical hardware specifications
+- [Setting the Capacity of an Aurora Serverless DB Cluster](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless.setting-capacity.html)
+
+</details>
+
+<details>
+<summary>Instance Pool</summary>
+
+- It contains "hot" instances of various different sizes:
+	- They're ready to use, 
+	- They're stateless (they have not any storage attached)
+	- They have the Aurora Serverless software installed on them
+	- They can be quickly allocated for any AWS customer as soon as they're needed
+- It's used to reallocate a paused db or to scale up or down (see Proxy Feet)
+
+</details>
+
+<details>
+<summary>Proxy Fleet</summary>
+
+- It's a transparent set of proxying instances
+	- They sit between an application and its Aurora Serverless instances
+	- They abstract db instances layer from their application
+	- They grow and shrink based on demand
+- It directs transparently connections from an application to Aurora Serverless instances without this application knowing any different	
+- It's used to reallocate a paused db or to scale up or down
+	- E.g., When a current capacity is exceeded,
+	- It transparently uses the instance pool to provision a new larger database instance or multiple smaller database instances 
+	- It transparently attachs them to the database shared storage
+	- It transparently redirects connection to the new instances
+	- It then transparently removes the small instances which are no longer needed anymore
+
+</details>
+
+<details>
+<summary>Private Link</summary>
+
+- It's a service that allows to place endpoints inside a customer VPC to access remote services
+- Since Aurora Serverless DB instances aren't hosted inside a customer VPC (there's no physical instance inside it)
+- Aurora Serverless uses Private Link to access its db instances
+- It's like a VPC endpoints
+- Aurora Serverless cluster can't currently be accessed from across a VPN or an inter-region VPC peer
+
+</details>
+
+<details>
+<summary>Automatic Pause and Resume for Aurora Serverless</summary>
+
+- It's an additional scaling configuration
+- It allows to pause (0 ACU) automatically the db instance after consecutive minutes of inactivity
+- It reallocates quickly a new db instances when an activity is detected (see Instance Pool and Proxy Fleet)
+
+</details>
+
+<details>
+<summary>Failover</summary>
+
+- Aurora separates computation capacity and storage
+- Its storage volume is spread across multiple AZs 
+	- The data remains available even if outages affect the DB instance or the associated AZ
+- DB Instance Automatic multi-AZ failover:
+	- The DB instance of an Aurora Serverless DB cluster is created in a single AZ
+	- If the DB instance or the AZ fails, Aurora recreates the DB instance in a different AZ 
+	- In case of a failure, the Automatic multi-AZ failover takes longer than an Aurora Provisioned cluster
+	- Its time is currently undefined: it depends on demand and capacity availability in other AZs within the given AWS Region
+
+</details>
+
+<details>
+<summary>Pricing</summary>
+
+- For Shared storage:
+	- The pricing is based on high watermark system 
+	- See RDS provisioned pricing
+- For DB instances:
+	- We pay for the database resources that are used on a per second basis
+	- It's attempting to provide a linear alignment between the needed compute capacity and the provided one
+	- We could enable the pausing feature (scale it down to 0 ACU) to pause the db instance when it isn't needed
+
+</details>
+
+<summary>Limits</summary>
+
+- It exists in a single AZ (See failover description)
+	- The Aurora Serverless Automatic multi-AZ failover takes longer than an Aurora Provisioned cluster (it has an ongoing costs 24/7 while it's running)
+	- There is a trade-off here between different priorities: 
+	- It's between a slight increase in the amount of time that failover takes vs. being able to scale back to zero capacity and then only pay for the storage
+- It can't be set to be public: 
+	- It's not a drop-in replacement for DynamoDB
+	- But we can use its Query editor (Data API)
+- Its cluster can't currently be accessed from across a VPN or an inter-region VPC peer
 
 </details>
 
