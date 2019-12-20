@@ -2572,7 +2572,55 @@ EBS Optimization
 
 ---
 
-## Database - NoSQL:
+## Database - NoSQL - DynamoDB:
+
+<details>
+<summary>Description</summary>
+
+- It's a NoSQL database service
+- It's a global service
+- It's partitioned regionally
+- It's a Multimodel database, 
+	- It includes features of more than one data model
+	- It's Key Value database
+	- It's also a wide column store database
+- It supports
+	- Item: it's like a row in other dbs
+	- Table: 
+		- It's a collection of items
+		- A table has zero or more items
+	- Attribute:
+
+</details>
+
+<details>
+<summary>Architecture</summary>
+
+
+</details>
+
+<details>
+<summary>Table</summary>
+
+
+</details>
+
+<details>
+<summary>Pricing</summary>
+
+
+</details>
+
+<details>
+<summary>Pricing</summary>
+
+
+</details>
+
+<details>
+<summary>Limits</summary>
+
+</details>
 
 ---
 
