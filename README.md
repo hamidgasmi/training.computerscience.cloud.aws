@@ -363,13 +363,6 @@ EBS Optimization
 ## Networking - VPC (Virtual Private Cloud):
 
 <details>
-<summary>Architecture (UML notations)</summary>
-
-![VPC Architecture with UML notations](https://awscertifiedsolutionsarchitectassociatedocs.s3.amazonaws.com/VPC_ArchitectureUML.PNG)
-
-</details>
-
-<details>
 <summary>Description</summary>
  
 - It is a virtual network within AWS: it is our private data center inside AWS platform
@@ -383,6 +376,13 @@ EBS Optimization
 - It supports different Tenancy types: it could be:
 	- Dedicated tenant: it can't be changed (Locked). It is expensive
 	- multi-tenant (default): it still could be switched to a dedicated tenant
+
+</details>
+
+<details>
+<summary>Architecture (UML notations)</summary>
+
+![VPC Architecture with UML notations](https://awscertifiedsolutionsarchitectassociatedocs.s3.amazonaws.com/VPC_ArchitectureUML.PNG)
 
 </details>
 
@@ -2393,6 +2393,7 @@ EBS Optimization
 
 </details>
 
+<details>
 <summary>Pricing</summary>
 
 - It's based on high watermark system:
@@ -2427,13 +2428,6 @@ EBS Optimization
 ## Database - SQL - RDS Aurora Serverless:
 
 <details>
-<summary>Architecture</summary>
-
-![Aurora Serverless Architecture](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/images/aurora-serverless-arch.png)
-
-</details>
-
-<details>
 <summary>Description</summary>
 
 - It handles certain resource allocation as a service
@@ -2458,10 +2452,18 @@ EBS Optimization
 	- Rather than having to open a traditional database connection and execute SQL queries, we can connect to it using standard API
 	- It could be used by web services-based application including AWS Lambda, AWS AppSync and, AWS Cloud9
 	- It's much easier if you're designing an application from scratch and code it to utilize Aurora Serverless
+
 - Use cases:
 	- Intermittent workloads
 	- Unpredictable workloads
 	- Development databases (Test, Staging, A/B Testing) used during work hours (it will be shutted down automatically after work hours)
+
+</details>
+
+<details>
+<summary>Architecture</summary>
+
+![Aurora Serverless Architecture](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/images/aurora-serverless-arch.png)
 
 </details>
 
