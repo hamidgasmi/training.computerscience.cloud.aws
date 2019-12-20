@@ -2271,7 +2271,8 @@ EBS Optimization
 	- It's not adding a new storage; there's no copy involved
 - Failover:
 	- It could be initiated manually (action > Failover) or automatically (if there is any issue on the current primary instance)
-	- The replica with the highest priority is promoted to be the primary during failover	
+	- The replica with the highest priority is promoted to be the primary during failover
+	- Tier 0 has the highest priority	
 - It's available in regions that have at least 3 AZs (not all regions)
 - It can tolerate
 	- The loss of up to 2 data copies or an AZ failure without losing write availability
@@ -2452,11 +2453,12 @@ EBS Optimization
 	- Rather than having to open a traditional database connection and execute SQL queries, we can connect to it using standard API
 	- It could be used by web services-based application including AWS Lambda, AWS AppSync and, AWS Cloud9
 	- It's much easier if you're designing an application from scratch and code it to utilize Aurora Serverless
-
 - Use cases:
-	- Intermittent workloads
-	- Unpredictable workloads
-	- Development databases (Test, Staging, A/B Testing) used during work hours (it will be shutted down automatically after work hours)
+	- Intermittent workloads: an application uses a database and has random surges of traffic
+	- Unpredictable workloads: an application has unpredictable database usage patterns
+	- Development databases (Test, Staging, A/B Testing) used during work hours and will be shutted down automatically after work hours
+	- We want to remove the complexity of managing database instances
+	- We want automatically scaling database instances
 
 </details>
 
@@ -2494,6 +2496,9 @@ EBS Optimization
 	- They sit between an application and its Aurora Serverless instances
 	- They abstract db instances layer from their application
 	- They grow and shrink based on demand
+
+	Aurora Serverless is capable of rapid scaling because it uses proxy fleets to route the workload to "warm" resources that are always ready to service requests.
+
 - It directs transparently connections from an application to Aurora Serverless instances without this application knowing any different	
 - It's used to reallocate a paused db or to scale up or down
 	- E.g., When a current capacity is exceeded,
