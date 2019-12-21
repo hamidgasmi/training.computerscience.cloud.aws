@@ -1997,6 +1997,7 @@ EBS Optimization
 - Every modification of the instance could be:
 	- run immediately
 	- or run at maintenance time that is created when the instance is created
+- It requires a minimum of 2 subnets in a Subnet Group
 - Troubleshooting: 
 	- We want our application to check whether a request generated an error before we spend any time processing results.  
 	- The easiest way to find out if an error occurred is to look for an Error node in the response from the Amazon RDS API.  
@@ -2004,52 +2005,87 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Snapshot/Backups</summary>
+<summary>Architecture</summary>
+</details>
 
-- Snapshot:
-	- It's a manual backup: 
-		- It's user initiated
-		- E.g., Console, CLI, Lambda function
-	- It's created automatically when a new RDS instance is created/restored
-	- It's stored in S3
-    - It's kept even after the original RDS instance is deleted
-	- It can be copied to the same region or to a different one
-- Backups:
-	- It's an automated backup: 
-		- It occurs once a day during a backup window: it takes a full daily snapshot
-		- Log backups occur every 5 minutes (Point in time)
-	- It's taken from the Standby instance 
-	- It's stored in S3
-	- It's an incremental backup:
-		- The 1st backup stores the entire used space
-		- After, changed data only stored
-	- It's automatically deleted when the original RDS instance is deleted
-	- It allows to recover our db to any point in time within a retention period
-		- Retention period is from 1 to 35 days
-		- Retention period is 0 means it's disabled
-		- Down to a second within this retention period
-	- It's enabled by default
-		- Default retention period is 7 days
-	- It provides us with low [RPO](https://en.wikipedia.org/wiki/Disaster_recovery#Recovery_Point_Objective)
-- Snapshot/Backups operation impacts:
-	- During the Snapshot/backup window, storage I/O may be suspended while data is being backed up 
-	- We may experience elevated latency
-- Restoring Backups/snapshots:
-	- AWS chooses the most recent daily backup, then
-	- It applies transaction logs relevant to that day 
-	- It results a new RDS instance: 
-		- With a new DNS endpoint
-		- With a new SG
-	- It requires to perform some level of reconfiguration:
-		- At an application level, to change the DNS Name the application is pointing to
-		- At AWS level, to associate the new instance to the previous SG 
+<details>
+<summary>Read Replica</summary>
+
+- It's a read-only copy of an RDS instance
+- It's created from a primary instance
+	- The source primary instance is called the Master Instance
+	- The copy instance is called the Read-Replica Instance
+- It's achieved by using asynchronous replication from the Master Primary instance to the read replica instance
+- Reads from a Read-Replica are eventually consistent - normally seconds
+- It can be created in the same region or in a different region
+	- For different region, AWS handles the secure communications between those regions (Encryption in Transit)
+	- Without a need to any networking configurations
+- It requires Automatic backups to be turned on Master Instance
+- It can be addressed indepently from its primary instance (each read-replica has its own DNS name)
+- It's used for scaling reads:
+- It's possible to have up to 5 read-replica (5x increase in reads)
+	- It's not possible to have a single DNS name to address all of those read replicas
+	- Our application need to be aware of our database topology in order to take advantage of these read replicas
+- It's possible to have read-replicas of read replicas (latency)
+- It can be promoted to be a primary instance
+	- The read-replica db becomes then its own database (master)
+	- It breaks the asynchnous replication
+	- It can be used for read and write operations
+- It can be multi-AZ 
+- It's available for all database types (MySQL, PostgreSQL, MariaDB, Oracle, Aurora) except SQL-Server
+- Database engine version upgrade is independent from master instance (it must be handled manually)
+- Use Cases:
+	- Scalability: It's used for read-heavy database workloads (It doesn't scale writes)
+	- Global resilience: 
+		- Improve the ability to recover from a serious failure either within a region or internationally
+		- It provides with a better [RTO](https://en.wikipedia.org/wiki/Disaster_recovery#Recovery_Time_Objective) better than snapshot's one
+- [Multi-AZ vs. Read-Replicas](https://aws.amazon.com/rds/details/multi-az/)
 
 </details>
 
 <details>
-<summary>Single/Multi-AZ mode</summary>
+<summary>Option Group</summary>
 
-- Subnet Group: RDS requires a minimum of 2 subnets
+- It allows to configure (enable, disable, ...) some of the RDS database engines specific features
+	- E.g. 1, MySQL Memcached support (MEMCACHED)
+	- E.g. 2, Oracle Native Network Encrytion (NATIVE_NETWORK_ENCRYPTION)
+- It's currently available for MariaDB, MySQL, Oracle and, Microsoft SQL Server 
+- It's not currently available for PostgreSQL and Aurora
+
+- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithOptionGroups.html)
+
+</details>
+
+<details>
+<summary>DB Parameter Group</summary>
+
+- It acts as a container for engine configuration parameters that are applied to one or more DB instances
+	- E.g. 1, autocommit DB parameter for MySQL 5.6 RDS instance
+	- E.g. 2, auto_increment_increment DB parameter for MySQL 5.6 RDS instance
+- A default one is created 
+	- When a db instance is created without specifying a custom DB parameter group
+	- It contains db engine defaults and Amazon RDS system defaults based on the engine, compute class and, allocated storage of the instance
+	- It's not possible to modify it
+	- To modify the DB Parameter Group of an RDS instance associated with a default Parameter Group:
+		- Create a new DB Parameter Group
+		- Modify the RDS Instance to use the new parameter group
+- If a non-default DB parameter group is updated, 
+	- The changes is applied to all DB instances that are associated with it
+	- When the change is applied depends on the "Apply Type" of the changed parameter:
+		- If it's a dynamic parameter, the change is applied immediately regardless of the Apply Immediately setting 
+		- If it's a static parameter, the parameter change takes effect after the DB instance is manually reboot
+- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithParamGroups.html)
+
+</details>
+
+<details>
+<summary>Consistency</summary>
+ 
+</details>
+
+<details>
+<summary>Resilience</summary>
+
 - Multi-AZ mode:
 	- RDS creates 2 db instances in the same region:
 		- The primary database (production)
@@ -2092,46 +2128,48 @@ EBS Optimization
 - Single AZ Mode:
 	- The RDS instance is in a single AZ
 	- The Standby instance isn't created
+- Snapshot:
+	- It's a manual backup: 
+		- It's user initiated
+		- E.g., Console, CLI, Lambda function
+	- It's created automatically when a new RDS instance is created/restored
+	- It's stored in S3
+    - It's kept even after the original RDS instance is deleted
+	- It can be copied to the same region or to a different one
+- Backups:
+	- It's an automated backup: 
+		- It occurs once a day during a backup window: it takes a full daily snapshot
+		- Log backups occur every 5 minutes (Point in time)
+	- It's taken from the Standby instance 
+	- It's stored in S3
+	- It's an incremental backup:
+		- The 1st backup stores the entire used space
+		- After, changed data only stored
+	- It's automatically deleted when the original RDS instance is deleted
+	- It allows to recover our db to any point in time within a retention period
+		- Retention period is from 1 to 35 days
+		- Retention period is 0 means it's disabled
+		- Down to a second within this retention period
+	- It's enabled by default
+		- Default retention period is 7 days
+	- It provides us with low [RPO](https://en.wikipedia.org/wiki/Disaster_recovery#Recovery_Point_Objective)
+- Snapshot/Backups operation impacts:
+	- During the Snapshot/backup window, storage I/O may be suspended while data is being backed up 
+	- We may experience elevated latency
+- Restoring Backups/snapshots:
+	- AWS chooses the most recent daily backup, then
+	- It applies transaction logs relevant to that day 
+	- It results a new RDS instance: 
+		- With a new DNS endpoint
+		- With a new SG
+	- It requires to perform some level of reconfiguration:
+		- At an application level, to change the DNS Name the application is pointing to
+		- At AWS level, to associate the new instance to the previous SG 
 
 </details>
 
 <details>
-<summary>Read Replica</summary>
-
-- It's a read-only copy of an RDS instance
-- It's created from a primary instance
-	- The source primary instance is called the Master Instance
-	- The copy instance is called the Read-Replica Instance
-- It's achieved by using asynchronous replication from the Master Primary instance to the read replica instance
-- Reads from a Read-Replica are eventually consistent - normally seconds
-- It can be created in the same region or in a different region
-	- For different region, AWS handles the secure communications between those regions (Encryption in Transit)
-	- Without a need to any networking configurations
-- It requires Automatic backups to be turned on Master Instance
-- It can be addressed indepently from its primary instance (each read-replica has its own DNS name)
-- It's used for scaling reads:
-- It's possible to have up to 5 read-replica (5x increase in reads)
-	- It's not possible to have a single DNS name to address all of those read replicas
-	- Our application need to be aware of our database topology in order to take advantage of these read replicas
-- It's possible to have read-replicas of read replicas (latency)
-- It can be promoted to be a primary instance
-	- The read-replica db becomes then its own database (master)
-	- It breaks the asynchnous replication
-	- It can be used for read and write operations
-- It can be multi-AZ 
-- It's available for all database types (MySQL, PostgreSQL, MariaDB, Oracle, Aurora) except SQL-Server
-- Database engine version upgrade is independent from master instance (it must be handled manually)
-- Use Cases:
-	- Scalability: It's used for read-heavy database workloads (It doesn't scale writes)
-	- Global resilience: 
-		- Improve the ability to recover from a serious failure either within a region or internationally
-		- It provides with a better [RTO](https://en.wikipedia.org/wiki/Disaster_recovery#Recovery_Time_Objective) better than snapshot's one
-- [Multi-AZ vs. Read-Replicas](https://aws.amazon.com/rds/details/multi-az/)
-
-</details>
-
-<details>
-<summary>Logs/Events</summary>
+<summary>Scalability</summary>
 </details>
 
 <details>
@@ -2173,40 +2211,6 @@ EBS Optimization
 
 </details>
 
-<details>
-<summary>Option Group</summary>
-
-- It allows to configure (enable, disable, ...) some of the RDS database engines specific features
-	- E.g. 1, MySQL Memcached support (MEMCACHED)
-	- E.g. 2, Oracle Native Network Encrytion (NATIVE_NETWORK_ENCRYPTION)
-- It's currently available for MariaDB, MySQL, Oracle and, Microsoft SQL Server 
-- It's not currently available for PostgreSQL and Aurora
-
-- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithOptionGroups.html)
-
-</details>
-
-<details>
-<summary>DB Parameter Group</summary>
-
-- It acts as a container for engine configuration parameters that are applied to one or more DB instances
-	- E.g. 1, autocommit DB parameter for MySQL 5.6 RDS instance
-	- E.g. 2, auto_increment_increment DB parameter for MySQL 5.6 RDS instance
-- A default one is created 
-	- When a db instance is created without specifying a custom DB parameter group
-	- It contains db engine defaults and Amazon RDS system defaults based on the engine, compute class and, allocated storage of the instance
-	- It's not possible to modify it
-	- To modify the DB Parameter Group of an RDS instance associated with a default Parameter Group:
-		- Create a new DB Parameter Group
-		- Modify the RDS Instance to use the new parameter group
-- If a non-default DB parameter group is updated, 
-	- The changes is applied to all DB instances that are associated with it
-	- When the change is applied depends on the "Apply Type" of the changed parameter:
-		- If it's a dynamic parameter, the change is applied immediately regardless of the Apply Immediately setting 
-		- If it's a static parameter, the parameter change takes effect after the DB instance is manually reboot
-- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithParamGroups.html)
-
-</details>
 
 <details>
 <summary>Pricing</summary>
@@ -2249,7 +2253,7 @@ EBS Optimization
 - It has 2 editions:
 	- 1st one with MySQL compatibility
 	- 2nd one with Postgre compatibility
-- It operates with a radically different architecture as opposed to the other RDS db engines
+- It's available in regions that have at least 3 AZs (not all regions)
 - It uses a base configuration of a "DB cluster" that consists of:
 	- A single primary instance: 
 		- It's also called the primary node
@@ -2258,8 +2262,6 @@ EBS Optimization
 	- A cluster volume:  
 		- It's an all-SSD virtual database storage volume 
 		- It's shared by the primary instance and all replica instances
-		- It replicates data 6 times across 3 AZs (2 cluster data copies in each AZ)
-		- It's constantly backed up to S3
 		- It scales automatically
 	- 0 to 15 Replica instances:
 		- They're also called replica nodes
@@ -2269,36 +2271,19 @@ EBS Optimization
 	- It's more quicker than converting a mySQL based RDS from no to multi-AZ
 	- It only needs to provision a new instance and point it at the shared storage
 	- It's not adding a new storage; there's no copy involved
-- Failover:
-	- It could be initiated manually (action > Failover) or automatically (if there is any issue on the current primary instance)
-	- The replica with the highest priority is promoted to be the primary during failover
-	- Tier 0 has the highest priority	
-- It's available in regions that have at least 3 AZs (not all regions)
-- It can tolerate
-	- The loss of up to 2 data copies or an AZ failure without losing write availability
-	- The loss of up to 3 data copies without losing read availability
-- It's capable of self healing any data problems that exists in a shared storage
-	- It scans continuously data blocks and disks for errors
-	- It replaces them automatically 
-	- It monitors disks and nodes for failures
-	- It automatically replaces/repairs the disks/nodes without the need to interrupt read/write processing from the db node
 - Its location could be 
 	- Regional
 	- Gloabl
 	- Not all MySQL versions support this feature
-- It combines the speed and availability of high-end commercial dbs with the simplicity and cost-effectiveness of open-source db:
-	- 5 times better performance than MySQL 
-	- at a price 1/10 than of a commercial db while delivering similar performance and availability
-- Storage Autoscaling: 
-	- It starts with 10 GB
-	- It scales in 10 GB increments to 64TB
-	- It scales Compute ressources up to 32vCPUs and 244GB of memory 
-	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Integrating.AutoScaling.html)
 
 </details>
 
 <details>
-<summary>Aurora Provisioned Db Features</summary>
+<summary>Architecture</summary>
+</details>
+
+<details>
+<summary>Db Features</summary>
 
 - One writer and multiple readers:
 	- It supports multiple reader instances connected to the same storage volume as a single writer instance 
@@ -2366,21 +2351,6 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Backtrack</summary>
-
-- It lets quickly recover from a user error, without having to create another DB cluster
-- It has a maximum window of 72 hours
-- E.g., if we accidentally deleted an important record at 10am, we could use Backtrack to move the Aurora database back to its state at 9:59am
-- Pros:
-	- It doesn't create a new database (with a new DNS Name)
-	- It doesn't require to perform any reconfiguration (see the required reconfiguration for the other RDS based engines)
-- Cons:
-	- It does cause an outage because it's rolling back the entire shared storage
-- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.Managing.Backtrack.html)
-
-</details>
-
-<details>
 <summary>Migrating a RDS MySQL to RDS Aurora</summary>
 
 - Way 1: 
@@ -2392,6 +2362,59 @@ EBS Optimization
 	- Create a new Aurora database from the snapshot. 
 - [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.Migrating.RDSMySQL.Import.html)
 
+</details>
+
+<details>
+<summary>Consistency</summary>
+</details>
+
+<details>
+<summary>Resilience</summary>
+
+- Storage:
+	- It's replicated (the cluster volume) 6 times across 3 AZs (2 cluster data copies in each AZ)
+	- It's constantly backed up to S3
+	- It can tolerate
+		- The loss of up to 2 data copies or an AZ failure without losing write availability
+		- The loss of up to 3 data copies without losing read availability
+	- Backtrack:
+		- It lets quickly recover from a user error, without having to create another DB cluster
+		- It has a maximum window of 72 hours
+		- E.g., if we accidentally deleted an important record at 10am, we could use Backtrack to move the Aurora database back to its state at 9:59am
+		- Pro 1: It doesn't create a new database (with a new DNS Name)
+		- Pro 2: It doesn't require to perform any reconfiguration (see the required reconfiguration for the other RDS based engines)
+		- Con: It does cause an outage because it's rolling back the entire shared storage
+		- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.Managing.Backtrack.html)
+- Instance DB:
+	- It automatically initiates a Failover when there is any issue on the current primary instance
+	- It's also possible to initiate a Failover manually (action > Failover)
+	- The replica with the highest priority is promoted to be the primary during failover
+	- Tier 0 has the highest priority
+- It's capable of self healing any data problems that exists in a shared storage
+	- It scans continuously data blocks and disks for errors
+	- It replaces them automatically 
+	- It monitors disks and nodes for failures
+	- It automatically replaces/repairs the disks/nodes without the need to interrupt read/write processing from the db node
+
+</details>
+
+<details>
+<summary>Scalability</summary>
+
+- Storage Autoscaling: 
+	- It starts with 10 GB
+	- It scales in 10 GB increments to 64TB
+	- It scales Compute ressources up to 32vCPUs and 244GB of memory 
+	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Integrating.AutoScaling.html)
+
+</details>
+
+<details>
+<summary>Security</summary>
+</details>
+
+<details>
+<summary>Encryption</summary>
 </details>
 
 <details>
@@ -2443,9 +2466,6 @@ EBS Optimization
 		- Manage the server instances themselves (Only RDS Serverless removes this complexity)
 	- It does only require to specify a minimum and maximum amount of resources (see ACUs, below)
 	- It handles the scaling without any distruption to its related application
-- Snapshot:
-	- It's always encrypted (We can't turn off encryption)
-	- It's possible to restore an Aurora Serverless db from an Aurora Previsioned db snapshot 
 - Data API
 	- It's a web-based query editor tool
 	- It allows you to access the database using traditional APIs
@@ -2478,38 +2498,6 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Instance Pool</summary>
-
-- It contains "hot" instances of various different sizes:
-	- They're ready to use, 
-	- They're stateless (they have not any storage attached)
-	- They have the Aurora Serverless software installed on them
-	- They can be quickly allocated for any AWS customer as soon as they're needed
-- It's used to reallocate a paused db or to scale up or down (see Proxy Feet)
-
-</details>
-
-<details>
-<summary>Proxy Fleet</summary>
-
-- It's a transparent set of proxying instances
-	- They sit between an application and its Aurora Serverless instances
-	- They abstract db instances layer from their application
-	- They grow and shrink based on demand
-
-	Aurora Serverless is capable of rapid scaling because it uses proxy fleets to route the workload to "warm" resources that are always ready to service requests.
-
-- It directs transparently connections from an application to Aurora Serverless instances without this application knowing any different	
-- It's used to reallocate a paused db or to scale up or down
-	- E.g., When a current capacity is exceeded,
-	- It transparently uses the instance pool to provision a new larger database instance or multiple smaller database instances 
-	- It transparently attachs them to the database shared storage
-	- It transparently redirects connection to the new instances
-	- It then transparently removes the small instances which are no longer needed anymore
-
-</details>
-
-<details>
 <summary>Private Link</summary>
 
 - It's a service that allows to place endpoints inside a customer VPC to access remote services
@@ -2521,25 +2509,56 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Automatic Pause and Resume for Aurora Serverless</summary>
-
-- It's an additional scaling configuration
-- It allows to pause (0 ACU) automatically the db instance after consecutive minutes of inactivity
-- It reallocates quickly a new db instances when an activity is detected (see Instance Pool and Proxy Fleet)
-
+<summary>Consistency</summary>
+ 
 </details>
 
 <details>
-<summary>Failover</summary>
+<summary>Resilience</summary>
 
 - Aurora separates computation capacity and storage
-- Its storage volume is spread across multiple AZs 
-	- The data remains available even if outages affect the DB instance or the associated AZ
+- Storage volume:
+	- Replicas:
+		- It's spread across multiple AZs 
+		- The data remains available even if outages affect the DB instance or the associated AZ
+	- Snapshot:
+		- It's possible to restore an Aurora Serverless db from a snapshot
+		- It's possible to do it from an Aurora Previsioned db snapshot
+		- It's always encrypted (We can't turn off encryption)
 - DB Instance Automatic multi-AZ failover:
 	- The DB instance of an Aurora Serverless DB cluster is created in a single AZ
 	- If the DB instance or the AZ fails, Aurora recreates the DB instance in a different AZ 
 	- In case of a failure, the Automatic multi-AZ failover takes longer than an Aurora Provisioned cluster
 	- Its time is currently undefined: it depends on demand and capacity availability in other AZs within the given AWS Region
+
+</details>
+
+<details>
+<summary>Scalability</summary>
+
+- It's capable of rapid scaling
+- Instance Pool:
+	- It contains "hot" instances of various different sizes:
+	- They're ready to use
+	- They're stateless (they have not any storage attached)
+	- They have the Aurora Serverless software installed on them
+	- They can be quickly allocated for any AWS customer as soon as they're needed
+- Proxy Fleet:
+	- It's a transparent set of proxying instances
+	- It sits between an application and its Aurora Serverless instances
+	- It abstracts db instances layer from their application
+	- It grows and shrinks based on demand
+	- It routes transparently connections from an application to Aurora Serverless instances without this application knowing any different	
+	- It's used to route the workload to "warm" resources that are always ready to service requests (see instance pool)
+- Automatic Pause and Resume:
+	- It's an additional scaling configuration
+	- It allows to pause (0 ACU) automatically a db instance after consecutive minutes of inactivity
+	- It reallocates quickly a new db instances when an activity is detected
+- E.g., When a current capacity is exceeded,
+	- It transparently uses the instance pool to provision a new larger database instance or multiple smaller database instances 
+	- It transparently attachs them to the database shared storage
+	- It transparently redirects connection to the new instances
+	- It then transparently removes the small instances which are no longer needed	
 
 </details>
 
@@ -2612,8 +2631,8 @@ EBS Optimization
 		- E.g., arn:aws:dynamodb:us-east-1:191449997525:table/myDynamoDBTable
 - E.g. We need to store weather data that is sent by weather station every 30 mn
 	- We need a table: weather_data
-	- We need a Partition Key (a number) to identify weather station
-	- We need a Sort Key (date and time) to identify every single data sent by a weather station
+	- For each item, we need a Partition Key (a number) to identify weather station
+	- For each item, we need a Sort Key (date and time) to identify every single data sent by a weather station
 
 </details>
 
@@ -2662,19 +2681,19 @@ EBS Optimization
 
 <details>
 <summary>Consistency</summary>
-
-
 </details>
 
 <details>
 <summary>Resilience</summary>
 
-
 - It's resilient on a regional level
 - It stores tables in at least 3 different AZs (1 replica / AZ)
 - It can survive the failure of an AZ without any additional configuration
 
+</details>
 
+<details>
+<summary>Scalability</summary>
 </details>
 
 <details>
@@ -2691,20 +2710,10 @@ EBS Optimization
 
 <details>
 <summary>Encryption</summary>
-
-
-</details>
-
-<details>
-<summary>Performance</summary>
-
-
 </details>
 
 <details>
 <summary>Pricing</summary>
-
-
 </details>
 
 <details>
