@@ -10,6 +10,10 @@
 </details>
 
 <details>
+<summary>Scalability</summary>
+</details>
+
+<details>
 <summary>Consistency</summary>
 </details>
 
@@ -18,7 +22,7 @@
 </details>
 
 <details>
-<summary>Scalability</summary>
+<summary>Disaster Recovery</summary>
 </details>
 
 <details>
@@ -30,12 +34,22 @@
 </details>
 
 <details>
+<summary>Monitoring</summary>
+</details>
+
+<details>
 <summary>Pricing</summary>
+</details>
+
+<details>
+<summary>Use cases</summary>
 </details>
 
 <details>
 <summary>Limits</summary>
 </details>
+
+
 
 <details>
 <summary>Best practices</summary>
