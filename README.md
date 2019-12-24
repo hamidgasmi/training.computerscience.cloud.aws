@@ -2704,6 +2704,15 @@ EBS Optimization
 <details>
 <summary>Architecture</summary>
 
+- DynamoDB data is split across Partitions:
+	- A table starts with 1 partition and it grows depending on this table's size and its capacity (see scalability)
+- A Hashing function is used to associate a data's PS to a partition where data will be put to or got from
+- A partition contain 3 nodes:
+	- 1 Leader node:
+	- 2 additional nodes
+- ![Architecture](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/images/HowItWorksPartitionKeySortKey.png)
+- ![Partitions](https://d1o2okarmduwny.cloudfront.net/wp-content/uploads/2014/07/Screen-Shot-2019-04-23-at-2.10.39-PM.png)
+
 </details>
 
 <details>
@@ -2757,37 +2766,76 @@ EBS Optimization
 
 </details>
 
-
 <details>
-<summary>Scalability</summary>
+<summary>Scalability (Capacity)</summary>
 
-- A table Capacity:
-- Partitions: 
-	- DynamoDB splits data across partitions
-	- A Hashing function is used to associate a data's partition keys to a partition where data will be put/got to/from 
-	- A table partitions number grows depending on this table's size and its capacity (performance)
-	- A table with 5 partitions, each partition has 20% of the table capacity
-	- Reading/Writing a given key value can't exceed the maximum performance that's allocated to the partition (not the table)
-- How to Calculate Read and Write Capacity:
-	- Capacity (performance) is allocated to partitions (not the table)
+- Reading/Writing: 
+	- For a given key value can't exceed the maximum performance that's allocated to the partition (not the table)
+	- For 1 single PS value, we can only ever get the maximum performance that's allocated to the partition (not to the table)
+	- So when we're allocating performance for a DynamoDB table, we're actually doing is allocating it to its partitions (not to the table)
+- Writtings:
+	- They're done on the leader node
+	- Replications are made from the leader node to the other non leader nodes
+	- It will consume 1 WCU for every 1KB or less of data
+- Readings support 2 modes:
+	- Strongly consistent read:
+		- Data is read from the leader node
+		- It returns the most up-to-date copy of data
+		- It takes longer
+		- It will consume 1 RCU for every 4KB or less of data
+	- Eventually consistent mode:
+		- Data is read in any of the 3 nodes
+		- It's a mode that is preferring speed
+		- Data received may not reflect the recent write
+		- It's the default for read operations
+		- It will consume 0.5 WCU for every 4KB or less of data
+	- E.g., for 10 gets of items of 10 bytes:
+		- We'll consume 10 RCU with strongly consistent read
+		- We'll consume 5 RCU with eventually consistent mode
+	- All costs and calculations are based on Strongly consistent mode
+- Read/Writting modes:
+	- On demand:
+	- Provisioned Throughput mode:
+		- A table is configured with read and write capacity units (RCU and WCU)
+		- Every operation on items consumes at least 1 RCU/WCU
+		- Partial RCU/WCU cannot be consumed
+		- WCU: 1 KB of data or less written to a table per second 
+		- RCU: 4 KB of data or less read from a table per second in a stronly consistent way
+		- RCU: 8 KB of data or less read from a table per second in an eventual consistent way
+		- Atomic transactions requires x2 the RCU
+	- Auto-Scaling Provisioned:
+		- We don't have to explicitly specify the RCU and WCU
+		- We can enable auto-scaling
+		- We can define a minimum and maximum RCU and WCU and 
+		- DynamoDB will automatically adjust the RCU and WCU allocated to a table based on those demands
+- Provisioned Throughput calculations:
+	- E.g. 1: A system needs to store 60 patient records of 1.5 every minute
+		- Assumption: 1 record written per second = 1 WCU of a maximum of 1 KB item (AWS provides a buffer to smooth this out)
+		- Each write has a size of 1.5 KB = 2 WCU
+		- Total WCU: 2
+	- E.g. 2: A weather application reads data from a Dynamo DB table, Each Item in the table is 7 KB in size. How many RCUs should be set on the table to allow for 10 read per second:
+		- Assumption: Eventual consistent read mode (since it's the default)
+		- 10 reads per second = 10 RCU of a maximum 4 KB item
+		- Each read has a size of 7 KB = 2 RCU
+		- Total RCU for eventual consistent read = 20 RCUs / 2 = 10 RCUs
 	- [How to Calculate Read and Write Capacity](https://linuxacademy.com/guide/20310-how-to-calculate-read-and-write-capacity-for-dynamodb/)
-
-
-- Auto Scaling:
-
 
 </details>
 
 <details>
 <summary>Consistency</summary>
+
+-  Data is written in all AZs within a second (< 1s):
+
 </details>
 
 <details>
 <summary>Resilience</summary>
 
 - It's resilient on a regional level
-- It stores tables in at least 3 different AZs (1 replica / AZ)
+- It stores table's partitions in at least 3 different AZs (1 replica / AZ)
 - It can survive the failure of an AZ without any additional configuration
+- They're stored on nodes
 
 </details>
 <details>
@@ -2865,6 +2913,22 @@ Encryption At rest
 
 <details>
 <summary>Pricing</summary>
+
+- It depends on the used read/write mode: On-demand, Provisioned
+- On-demand:
+	- No capacity planning is required
+	- We're charged by operations (reads and writes)
+	- New applications where the workload is too complex to forecast 
+	- E.g., for a multi-tenant app. that it uses pay per use pricing: 
+		- by using on-demand we make sure that our costs are directly aligned to the income that you're generating from the app
+		- So we make sure that wherever price that we sell our application to our customers for we have included an appropriate amount of on-demand pricing for our underlying database
+- Provisioned:
+	- We specify a read and write capacity value on a table
+	- It's cheaper than On-demande mode
+- Reads:
+	- Any costs for DynamoDB are based on strongly consistent reads 
+	- Eventually consistent reads are half the cost of strongly consistent reads
+
 </details>
 
 <details>
@@ -2884,7 +2948,13 @@ Encryption At rest
 
 <summary>Limits</summary>
 
-- Item's max size: 400 KB
+- Item's max size: 400 KB; it includes:
+	- Attribute name binary length (UTF-8 length) 
+	- Attribute value lengths (again binary length)
+	- E.g., an item with 2 attributes: 
+		- 1st is "shirt-color" with value "R" and 
+		- 2nd is "shirt-size" with value "M" 
+		- Item Total Size is 23 bytes 
 
 </details>
 
