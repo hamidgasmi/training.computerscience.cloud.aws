@@ -2767,6 +2767,49 @@ EBS Optimization
 </details>
 
 <details>
+<summary>Stream</summary>
+
+- Stream:
+	- It provides an ordered list of changes that occur to items within a table
+	- It's a rolling 24-hour window of changes:
+		- Every time an item is added, updated or, deleted to a table which has streams enabled 
+		- An entry is added to that stream which details the insert, update, or delete operation
+	- The information that is written in the stream can be configured with one of 4 view types:
+		- KEY_ONLY: Whenever an item is added, updated, or deleted, the key(s) of that item are added to the stream
+		- NEW_IMAGE: 
+			- The entire item is added to the stream (post-change)
+			- It's great when we want to perform an action based on the new value of an item
+			- E.g., when we create a new account, we should send a confirmation email to the new email @
+		- OLD_IMAGE: 
+			- The entire item is added to the stream (pre-change)
+			- It's great when we want to perform an action based on the old value of an item
+			- E.g., when we update an email address, we should send an approval email to the old email @
+		- NEW-AND-OLD-IMAGES: 
+			- Both the new and old versions of the item are added to the stream
+	- It's disabled by table
+	- It's enabled per table
+	- It contains data from the point of being enabled
+	- It's durable, scalable and, reliable (HA achitecture)
+	- ARN:
+		- Format: arn:${Partition}:dynamodb:${Region}:${Account}:table/${TableName}/stream/${StreamLabel}
+		- E.g.: arn:aws:dynamodb:us-west-1:191449997525:table/myDynamoDBTable/stream/2015-05-11T21:21:33.291
+- Trigger:
+	- It's similar to triggers in relational database engines
+- Use cases:
+	- Stream is used by AWS for replications envolved in globa tables
+	- To implement an event driven pipeline: 
+		- Stream containing changes + Trigger + Lamda function
+		- E.g. 1, Send approval or confirmation email when it's changed or a new account is created
+		- E.g. 2, Send a notification when something happen
+
+</details>
+
+<details>
+<summary>Index</summary>
+
+</details>
+
+<details>
 <summary>Scalability (Capacity)</summary>
 
 - Reading/Writing: 
