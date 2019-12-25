@@ -2807,6 +2807,17 @@ EBS Optimization
 <details>
 <summary>Index</summary>
 
+- It provides an alternative representation of data in a table
+- It's useful for applications with warying query demands
+- Local Secondary Index (LSI):
+	- It must be created at the same time as creating a table
+	- It uses the same PK but an alternative SK
+	- It shares the RCU and WCU values for the main table
+- Global Secondary Index (GSI):
+	- It can be created at any point after the table is created
+	- It can use different PK and SK
+	- It has its own RCU and WCU values
+
 </details>
 
 <details>
