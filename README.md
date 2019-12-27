@@ -2759,6 +2759,11 @@ EBS Optimization
 
 - It provides an alternative representation of data in a table
 - It's useful for applications with varying query demands
+- Projected attributes: 
+	- Indexes can have either Keys only, All table's attributes or some attributes
+	- It allows to reduce the amount of data read when items are read from the index
+	- It can help to improve performance but...
+	- It can cause a huge performance penalty if non-projected attributes are read from it (they're fetched from its table)
 - Local Secondary Index (LSI):
 	- It must be created at the same time as creating a table
 	- It must be created on tables with composite primary key
@@ -2768,11 +2773,19 @@ EBS Optimization
 		- It shares its table's read/writting modes: privisioned or on-demand
 		- It shares the RCU and WCU values for the main table
 		- It allows performing strongly consistent and eventually consistent reads on the table
+	- The table’s SK is always projected into the index
 	- ![E.g.,](https://blog.h4.nz/media/DynamoDB/LSI.png)
 - Global Secondary Index (GSI):
 	- It can be created at any point after the table is created
 	- It can use different PK and SK
-	- It has its own RCU and WCU values
+	- It's separated from its table:
+		- It doesn't share the data with its table
+		- Its data is replicated asynchronously from its table => latency
+		- It doesnt' support Strong consistent read
+		- It has its own setting: RCU/WCU; Auto-scalling WC and RC
+		- It has its own RCU and WCU values
+- Use cases:
+	- We have a different type of access pattern not supported by table's PS or PS and SK
 
 </details>
 
@@ -3016,7 +3029,8 @@ Encryption At rest
 		- 1st is "shirt-color" with value "R" and 
 		- 2nd is "shirt-size" with value "M" 
 		- Item Total Size is 23 bytes 
-- Table's max LSI: 5
+- Table's hard max LSI #: 5
+- Table's default max GSI #: 20 (could be increased by a support ticket)
 - [For more details](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html)
 
 </details>
