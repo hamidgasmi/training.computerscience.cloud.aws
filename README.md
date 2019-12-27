@@ -2660,7 +2660,7 @@ EBS Optimization
 <details>
 <summary>Description</summary>
 
-- It's a NoSQL database service
+- It's a NoSQL database service that provides access to data in milliseconds
 - It's a serveless database product
 - It's a global service
 - It's partitioned regionally
@@ -2956,7 +2956,7 @@ EBS Optimization
 <details>
 <summary>Encryption</summary>
 
-Encryption At rest 
+- Encryption At rest 
 	- It's enabled by default
 	- DEFAULT: 
 		- The key is owned by Amazon DynamoDB 
@@ -3048,6 +3048,59 @@ Encryption At rest
 ---
 
 ## Database - In-Memory Caching:
+
+<details>
+<summary>DynamoDB Accelerator (DAX)</summary>
+
+- It's an in-memory cache
+- It's designed specifically for DynamoDB (it's the prefered solution with DynamoDB)
+- It delivers results in microseconds (~400 us):
+	- Rather than in the single-digit milliseconds available from DynamoDB (~5ms)
+	- When a DynamoDB item is read, it's returned to the application and store inside DAX
+	- When it's read again, it's returned from DAX (without using DynamoDB): cache hit
+- It runs inside a VPC
+- It uses a cluster architecture with 1 or more nodes 
+- DAX client:
+	- It's used by applications 
+	- It's generally installed on the same compute resources as the application itself
+- It maintains 2 distinct caches:
+	- Item cache:
+		- It's populated with results from GetItem and BatchGetItem
+		- It has a 5-minute default TTL
+	- Query cache:
+		- It stores results of Query and Scan operations
+		- It caches based on the parameters specified
+- Consistency: It provides eventual consistency read
+- Resilience: It's HA (multi-AZs)
+- Use cases:
+	- Application that require microseconds response for reads
+	- Read attensive applications and we don't want to allocate its DynamoDB with a high RCU level
+	- Online stores during busy sale periods or popular products
+	- Applications that require eventual consistent read
+- Antipatterns: 
+	- Applications that requires strongly consistent reads
+	- Application that don't require microseconds reads: optimizing our app. access pattern may be needed
+	- Write intensive Applications
+	- Legacy applications that already use a different caching solution: they won't get any benefit from DAX without significant retouling (refactoring)
+	- Existing applications that aren't compatible with DAX
+
+</details>
+
+<details>
+<summary>ElasticCache</summary>
+
+- It's a managed in-memory data store
+- It's a key value store
+- It supports the Redis or Memcached engines
+- It was historically used with DynamoDB
+- It's designed to operate with other products (outside of DynamoDB)
+- Use cases:
+	- Offloading database reads by caching responses, improving application speed and reducing costs
+	- It stores user session state: allowing for stateless compute instances (used for fault-tolerant architectures)
+	- It's generally used with key value databases
+	- But it can be used with SQL database engines
+
+</details>
 
 ---
 
