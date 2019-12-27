@@ -2698,6 +2698,7 @@ EBS Optimization
 	- We need a table: weather_data
 	- For each item, we need a Partition Key (a number) to identify weather station
 	- For each item, we need a Sort Key (date and time) to identify every single data sent by a weather station
+- [Best practices](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/best-practices.html)
 
 </details>
 
@@ -2754,6 +2755,28 @@ EBS Optimization
 </details>
 
 <details>
+<summary>Index</summary>
+
+- It provides an alternative representation of data in a table
+- It's useful for applications with varying query demands
+- Local Secondary Index (LSI):
+	- It must be created at the same time as creating a table
+	- It must be created on tables with composite primary key
+	- It uses the same PK but an alternative SK
+	- Query operations could be run on the table or its LSIs (filter: PS and index's SK)
+	- It's a part of the table:
+		- It shares its table's read/writting modes: privisioned or on-demand
+		- It shares the RCU and WCU values for the main table
+		- It allows performing strongly consistent and eventually consistent reads on the table
+	- ![E.g.,](https://blog.h4.nz/media/DynamoDB/LSI.png)
+- Global Secondary Index (GSI):
+	- It can be created at any point after the table is created
+	- It can use different PK and SK
+	- It has its own RCU and WCU values
+
+</details>
+
+<details>
 <summary>Global Tables</summary>
 
 - It's possible to create a set of multi-master table
@@ -2805,22 +2828,6 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Index</summary>
-
-- It provides an alternative representation of data in a table
-- It's useful for applications with warying query demands
-- Local Secondary Index (LSI):
-	- It must be created at the same time as creating a table
-	- It uses the same PK but an alternative SK
-	- It shares the RCU and WCU values for the main table
-- Global Secondary Index (GSI):
-	- It can be created at any point after the table is created
-	- It can use different PK and SK
-	- It has its own RCU and WCU values
-
-</details>
-
-<details>
 <summary>Scalability (Capacity)</summary>
 
 - Reading/Writing: 
@@ -2842,7 +2849,7 @@ EBS Optimization
 		- It's a mode that is preferring speed
 		- Data received may not reflect the recent write
 		- It's the default for read operations
-		- It will consume 0.5 WCU for every 4KB or less of data
+		- It will consume 1 RCU for every 8KB or less of data
 	- E.g., for 10 gets of items of 10 bytes:
 		- We'll consume 10 RCU with strongly consistent read
 		- We'll consume 5 RCU with eventually consistent mode
@@ -3009,6 +3016,8 @@ Encryption At rest
 		- 1st is "shirt-color" with value "R" and 
 		- 2nd is "shirt-size" with value "M" 
 		- Item Total Size is 23 bytes 
+- Table's max LSI: 5
+- [For more details](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html)
 
 </details>
 
