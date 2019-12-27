@@ -3104,8 +3104,168 @@ EBS Optimization
 
 ---
 
-## Hybrid and Scaling - Load Balancing and Auto Scaling:
+## Hybrid and Scaling - Elastic Load Balancing:
 
+<details>
+<summary>Description</summary>
+
+- An Elastic Load Balancer (ELB) is a AWS load balancer(LB) provided as a service
+- It's highly available and scalable  
+- It's designed to help balance the network load across multiple web servers
+- It's typically used for internet facing application
+- It's also used for applications that are not facing Internet
+- It has a DNS record: it allows access at the external side
+
+</details> 
+
+<details>
+<summary>Architecture</summary>
+
+- A node is placed in each AZ the ELB is active in
+- ELB DNS record automatically points at each of the individual ELB nodes
+- Each node gets 1/N of the traffic (N the number of nodes)
+
+</details>
+
+<details>
+<summary>Cross Zone Load Balancing</summary>
+
+- Each node could LB across multiple AZ
+- It's enabled by default
+- Historically, it wasn disabled by default
+	- Each node could only LB to instances in the same AZ
+	- It resulted in uneven traffic distribution
+	- If 2 nodes (1st node AZ: 5 instances; 2nd node AZ: 1 instance)
+		- 1st node instances receive 10% of the total traffic
+		- 2nd node instance receives 50% of total traffic
+
+</details>
+
+<details>
+<summary>X-Forwarded-For</summary>
+
+- It let the web server get the actual public customer IP @ (X-Forwarded-For header)
+- The LB is passing its own internal IP address to the web server (EC2 instance) 
+- The EC2 instance is logging the internal LB IP @ as end-users IP @ 
+- It could be annoying because we might want to know end-users actual IP @
+
+</details>
+
+<details>
+<summary>Classic Load Balancer (CLB)</summary>
+
+- It is the legacy Elastic Load Balancer (it is cheaper)
+- We can load balance HTTP/HTTPS applications
+- It uses Layer 7 specific features such as X-Forwarded and "Sticky sessions"
+- But it isn't application aware: it doesn't do it at the Layer 7 level
+- It can also use Strict Layer 4 load balancing for applications that rely strictly on TCP protocol
+- It is best suited for application that don't really care about how traffic is routed and just doing basic Round-Robin Load Balancing
+- It routes each request independently to the registered easy to instance with the smallest load
+- In other words, it is suited for applications that aren't depending on region/language (same across all web servers)
+
+</details>
+
+<details>
+<summary>Application Load Balancer (ALB)</summary>
+
+- It's best suited for load balancing of HTTP and HTTPS traffic
+- It operates at Layer 7 and is application aware
+- It's Application aware: see inside the application, even see the html and then make advance rooting
+- Use cases:
+	- A multilanguage web application: 
+		- E.g., French and English
+		- When we switch from English to French on the app., the ALB can see what we have done (application aware)
+		- ... and then could load balance across all the French web servers
+	- Multi-Currency website:
+		- Same idea as the previous use case 
+		- E.g., $ and €
+		- If a customer select US $ as a currency, the ALC can see that and load balance across the USD servers
+
+</details>
+
+<details>
+<summary>Network Load Balancer (NLB)</summary>
+
+- It's best suited for load balancing of TCP traffic where extreme performance is required
+- It operates at the connection level: Layer 4
+- It is capable of handling millions of requests per second while maintaining ultra low latency
+
+</details>
+
+
+<details>
+<summary>Scalability (Auto Scalling groups)</summary>
+
+- It's a group of EC2 instances
+- It scales in and out automatically
+- It can be paired with ELB 
+	- This allow to automate scaling and elasticity
+	- This enhances High Availability and fault tolerance
+- When it's associates with an ELB, automatically...
+	- The ELB associates itself with any instance inside the auto scalling group (scaling out)
+	- The ELB disassociates itself with any instance inside the auto scalling group (scaling down)
+
+
+</details>
+
+<details>
+<summary>Consistency</summary>
+</details>
+
+<details>
+<summary>Resilience</summary>
+</details>
+
+<details>
+<summary>Disaster Recovery</summary>
+</details>
+
+<details>
+<summary>Security</summary>
+
+</details>
+
+<details>
+<summary>Encryption</summary>
+
+- SSL offloading:
+	- An ELB can be configured to accept traffic using a secure protocol (HTTPS) 
+	- and then it can be configured to talk to the backend instances using HTTP
+	- It handles the encryption for us
+	- This means we don't have to configure it on backend instances
+
+</details>
+
+
+<details>
+<summary>Monitoring</summary>
+
+- Gateway Timeout - Error 504:
+	- If an application stops responding the ELB responds with a 504 error
+	- It means that the application is having issues but it's not the LB 
+	- It could either be at the web server layer or the db layer that's having issues 
+    - We need to identify where the application is failing and scale it up or out where possible
+
+</details>
+
+<details>
+<summary>Pricing</summary>
+</details>
+
+<details>
+<summary>Use cases</summary>
+</details>
+
+<details>
+<summary>Limits</summary>
+</details>
+
+<details>
+<summary>Best practices</summary>
+</details>
+
+
+     
 ---
 
 ## Hybrid and Scaling - VPN and Direct Connect:
