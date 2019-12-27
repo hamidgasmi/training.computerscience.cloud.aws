@@ -2698,7 +2698,6 @@ EBS Optimization
 	- We need a table: weather_data
 	- For each item, we need a Partition Key (a number) to identify weather station
 	- For each item, we need a Sort Key (date and time) to identify every single data sent by a weather station
-- [Best practices](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/best-practices.html)
 
 </details>
 
@@ -3006,8 +3005,6 @@ Encryption At rest
 </details>
 
 <details>
-
-<details>
 <summary>Use cases</summary>
 
 - Unstructured data:
@@ -3020,6 +3017,7 @@ Encryption At rest
 
 </details>
 
+<details>
 <summary>Limits</summary>
 
 - Item's max size: 400 KB; it includes:
@@ -3032,6 +3030,13 @@ Encryption At rest
 - Table's hard max LSI #: 5
 - Table's default max GSI #: 20 (could be increased by a support ticket)
 - [For more details](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html)
+
+</details>
+
+<details>
+<summary>Best practices</summary>
+
+- [More details](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/best-practices.html)
 
 </details>
 
