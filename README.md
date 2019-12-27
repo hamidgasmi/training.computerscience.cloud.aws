@@ -2797,6 +2797,10 @@ EBS Optimization
 	- Reads and Writes are possible from/to all replicas
 - It requires to enable "streams" (see streams topic below)
 - It requires the table to be empty
+- To create a global table: 
+	- Enable Streams, 
+	- Start with an empty table 
+	- Add a region
 - It employs a [last writer wins conflict resolution protocol](https://dzone.com/articles/conflict-resolution-using-last-write-wins-vs-crdts)
 
 </details>
@@ -2821,7 +2825,7 @@ EBS Optimization
 			- E.g., when we update an email address, we should send an approval email to the old email @
 		- NEW-AND-OLD-IMAGES: 
 			- Both the new and old versions of the item are added to the stream
-	- It's disabled by table
+	- It's disabled by default
 	- It's enabled per table
 	- It contains data from the point of being enabled
 	- It's durable, scalable and, reliable (HA achitecture)
@@ -2840,15 +2844,21 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Scalability (Capacity)</summary>
+<summary>Scalability</summary>
 
-- Reading/Writing: 
-	- For a given key value can't exceed the maximum performance that's allocated to the partition (not the table)
-	- For 1 single PS value, we can only ever get the maximum performance that's allocated to the partition (not to the table)
-	- So when we're allocating performance for a DynamoDB table, we're actually doing is allocating it to its partitions (not to the table)
+- For a given key value can't exceed the maximum performance that's allocated to the partition (not the table)
+- For 1 single PS value, we can only ever get the maximum performance that's allocated to the partition (not to the table)
+- So when we're allocating performance for a DynamoDB table, we're actually doing is allocating it to its partitions (not to the table)
+
+</details>
+
+<details>
+<summary>Consistency</summary>
+
 - Writtings:
 	- They're done on the leader node
 	- Replications are made from the leader node to the other non leader nodes
+	- Data is written in all AZs within a second (< 1s)
 	- It will consume 1 WCU for every 1KB or less of data
 - Readings support 2 modes:
 	- Strongly consistent read:
@@ -2892,13 +2902,6 @@ EBS Optimization
 		- Each read has a size of 7 KB = 2 RCU
 		- Total RCU for eventual consistent read = 20 RCUs / 2 = 10 RCUs
 	- [How to Calculate Read and Write Capacity](https://linuxacademy.com/guide/20310-how-to-calculate-read-and-write-capacity-for-dynamodb/)
-
-</details>
-
-<details>
-<summary>Consistency</summary>
-
--  Data is written in all AZs within a second (< 1s):
 
 </details>
 
@@ -3013,6 +3016,8 @@ Encryption At rest
 	- Json documents
 	- Complex data types
 - Serverless Applications that needs a web scale database, a serverless non relational database (not a fixed schema) + ID federation 
+- When needing a web-scalable DBaaS product that provides integration with CloudWatch
+- When needing a lightweight, on-demand database product
 - It isn't for relational data
 
 </details>
