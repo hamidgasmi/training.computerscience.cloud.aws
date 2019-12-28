@@ -3142,7 +3142,7 @@ EBS Optimization
 </details>
 
 <details>
-<summary>X-Forwarded-For</summary>
+<summary>X-Forwarded-For header</summary>
 
 - It let the web server get the actual public customer IP @ (X-Forwarded-For header)
 - The LB is passing its own internal IP address to the web server (EC2 instance) 
@@ -3152,16 +3152,30 @@ EBS Optimization
 </details>
 
 <details>
+<summary>Sticky Session</summary> 
+
+- It allows to bind a user's session to a specific EC2 instance 
+- In other words, the LB is going to stick a user's session to a particular EC2 instance
+- It sends a user's requests to the same EC2 instance during a session
+- Available with CLB and 
+- Used with Stateful servers: when a specific instance is caching a user session data
+
+</details>
+
+<details>
 <summary>Classic Load Balancer (CLB)</summary>
 
-- It is the legacy Elastic Load Balancer (it is cheaper)
-- We can load balance HTTP/HTTPS applications
+- It's the legacy Elastic Load Balancer (it is cheaper)
+- It can load balance HTTP/HTTPS applications
 - It uses Layer 7 specific features such as X-Forwarded and "Sticky sessions"
 - But it isn't application aware: it doesn't do it at the Layer 7 level
 - It can also use Strict Layer 4 load balancing for applications that rely strictly on TCP protocol
 - It is best suited for application that don't really care about how traffic is routed and just doing basic Round-Robin Load Balancing
 - It routes each request independently to the registered easy to instance with the smallest load
 - In other words, it is suited for applications that aren't depending on region/language (same across all web servers)
+- Sticky session:
+	- It's available
+	- It sends traffic to an EC2 instance
 
 </details>
 
@@ -3171,6 +3185,9 @@ EBS Optimization
 - It's best suited for load balancing of HTTP and HTTPS traffic
 - It operates at Layer 7 and is application aware
 - It's Application aware: see inside the application, even see the html and then make advance rooting
+- Sticky session:
+	- It's available
+	- It sends traffic to the target group level
 - Use cases:
 	- A multilanguage web application: 
 		- E.g., French and English
@@ -3189,6 +3206,7 @@ EBS Optimization
 - It's best suited for load balancing of TCP traffic where extreme performance is required
 - It operates at the connection level: Layer 4
 - It is capable of handling millions of requests per second while maintaining ultra low latency
+- Sticky session: It's NOT available
 
 </details>
 
@@ -3264,8 +3282,6 @@ EBS Optimization
 <summary>Best practices</summary>
 </details>
 
-
-     
 ---
 
 ## Hybrid and Scaling - VPN and Direct Connect:
