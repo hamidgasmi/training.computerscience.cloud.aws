@@ -3113,8 +3113,9 @@ EBS Optimization
 - It's highly available and scalable  
 - It's designed to help balance the network load across multiple web servers
 - It's typically used for internet facing application
-- It's also used for applications that are not facing Internet
+- It can also be an internal load balancer
 - It has a DNS record: it allows access at the external side
+- It's can be configured which protocol and port it will listen to
 
 </details> 
 
@@ -3123,7 +3124,10 @@ EBS Optimization
 
 - A node is placed in each AZ the ELB is active in
 - ELB DNS record automatically points at each of the individual ELB nodes
-- Each node gets 1/N of the traffic (N the number of nodes)
+- Each node gets:
+	- 1/N of the traffic (N the number of nodes)
+	- a Private IP @ in case of an internal only LB and an internet facing LB
+	- a Public IP @ in case of an internet facing LB
 
 </details>
 
@@ -3138,6 +3142,14 @@ EBS Optimization
 	- If 2 nodes (1st node AZ: 5 instances; 2nd node AZ: 1 instance)
 		- 1st node instances receive 10% of the total traffic
 		- 2nd node instance receives 50% of total traffic
+
+</details>
+
+<details>
+<summary>Health Check</summary> 
+
+- It can be configured to check the health of any attached services
+- If a problem is detected, incoming connections won't be routed to instances until it returns to health
 
 </details>
 
@@ -3165,38 +3177,77 @@ EBS Optimization
 <details>
 <summary>Classic Load Balancer (CLB)</summary>
 
-- It's the legacy Elastic Load Balancer (it is cheaper)
-- It can load balance HTTP/HTTPS applications
-- It uses Layer 7 specific features such as X-Forwarded and "Sticky sessions"
-- But it isn't application aware: it doesn't do it at the Layer 7 level
-- It can also use Strict Layer 4 load balancing for applications that rely strictly on TCP protocol
-- It is best suited for application that don't really care about how traffic is routed and just doing basic Round-Robin Load Balancing
-- It routes each request independently to the registered easy to instance with the smallest load
-- In other words, it is suited for applications that aren't depending on region/language (same across all web servers)
+- It's the legacy Elastic Load Balancer: NOT recommended for new projects
+- It's Layer 3 & 4 device:
+	- It supports TCP and SSL/TLS protocols
+	- It supports 1 SSL certificate per CLB:
+		- It means that every single app. that we deploy into our environment needs its own CLB
+		- For 10 websites hosted with their own DNS name and SSL certificate, we need 10 CLB
+	- It can offload SSL connections: receives HTTPS and forward it to backend as HTTP
+- It supports some HTTP/HTTPS feature: 
+	- It isn't application aware (not a layer 7 device) but...
+	- It supports some HTTP/HTTPS features: "X-Forwarded" and "Sticky sessions"
+	- It supports health checks for HTTP/HTTPS (see health checks)
+- Listener Configuration allows
+	- To configure which protocols and ports to listen to
+	- To configure which protocols and ports to use to communicate with backend instances 
+- It can be associated with Auto Scalling groups
+- DNS A Record is used to connect to the CLB
+- Health checks: 
+	- It can be TCP, HTTP, HTTPS and, SSL based on ports 1-65,535
+	- HTTP/S checks: a HTTP/S path can be tested
+	- Ping Protocol (E.g., HTTP); Ping Port (E.g., 80); Ping Path (E.g., /index.html; /index.php)
+	- Response Timeout; Interval; Unhealthy threshold; Health treshold
 - Sticky session:
 	- It's available
 	- It sends traffic to an EC2 instance
+- SSL offloading:
+	- The CLB accepts connections on HTTPS on port 443 (SSL certificate is applied) and
+	- The CLB uses HTTP on port 80 to communicate with underlying instances
+	- The CLB handles all the encryptions and /decryptions
 
 </details>
 
 <details>
 <summary>Application Load Balancer (ALB)</summary>
 
-- It's best suited for load balancing of HTTP and HTTPS traffic
-- It operates at Layer 7 and is application aware
-- It's Application aware: see inside the application, even see the html and then make advance rooting
+- It's a OSI model layer 7 device:
+	- It understand HTTP/HTTPS
+	- It can LB based on this protocol layer
+	- It's Application aware 
+	- It sees inside the application (even sees the html) and then makes advanced rooting
+- It's now the recommended as the default LB for VPCs
+- It support IPv4 and IPv6
+- It can host multiple SSL certificates using SNI
+- It supports EC2, ECS, EKS, Lambda, HTTPS, HTTP/2 and, WebSockets
+- It can be integrated with AWS Web Application Firewall (WAF)
+- Listener Configuration allows to configure the ALB which protocols and ports to listen to
+- Target Group allows to configure which target type/protocols and ports to use to communicate with backend:
+	- Target Type: Instance, IP, Lambda Function
+	- Protocl and Port
+- It's almost always cheaper that CLB
+- Contant Rules: 
+	- It can direct certain traffic to specific target groups:
+	- Host-based rules: Route traffic based on the host used
+		- E.g., 
+		- It can direct traffic of "cats.com" to CAT target group (this target group would contain instance with a specific app. for cats)
+		- It can direct traffic of "dogs.com" to DOG target group (this target group would contain instance with a specific app. for dogs)
+	- Path-based rules: Route traffic based on URL path
+		- E.g., 
+		- It can direct traffic of "pets.com/cats" (/cats/*) to CAT target group (this target group would contain instance with a specific app. for cats)
+		- It can direct traffic of "pets.com/dogs" (/dogs/*) to DOG target group (this target group would contain instance with a specific app. for dogs)
+	- Default rules: used when no rules applies
+		- E.g., "pets.com"
+- Health checks: 
+	- It can be HTTP or HTTPS
+	- Ping Protocol (E.g., HTTP); Ping Port (Traffic port or Override Port); Ping Path (E.g., /index.html; /index.php)
+	- Response Timeout; Interval; Unhealthy threshold; Health treshold; Success Code (E.g., 200)
 - Sticky session:
 	- It's available
 	- It sends traffic to the target group level
-- Use cases:
-	- A multilanguage web application: 
-		- E.g., French and English
-		- When we switch from English to French on the app., the ALB can see what we have done (application aware)
-		- ... and then could load balance across all the French web servers
-	- Multi-Currency website:
-		- Same idea as the previous use case 
-		- E.g., $ and €
-		- If a customer select US $ as a currency, the ALC can see that and load balance across the USD servers
+- SSL offloading:
+	- The ALB listener Configuration is set up to protocol/port HTTPS on port 443 (SSL certificate is applied)
+	- The ALB Target Group is setup to HTTP on port 80 to communicate with its backend
 
 </details>
 
@@ -3222,7 +3273,7 @@ EBS Optimization
 - When it's associates with an ELB, automatically...
 	- The ELB associates itself with any instance inside the auto scalling group (scaling out)
 	- The ELB disassociates itself with any instance inside the auto scalling group (scaling down)
-
+	- If the Auto Scalling group uses the ELB health check, if an instance is unhealthy, it will be terminated and recreated
 
 </details>
 
@@ -3241,19 +3292,19 @@ EBS Optimization
 <details>
 <summary>Security</summary>
 
+- Security Group:
+	- LB SG will allow protocols/ports it's listning to
+	- Underlying backend instances could restrict traffic for LB SG only
+
 </details>
 
 <details>
 <summary>Encryption</summary>
 
-- SSL offloading:
-	- An ELB can be configured to accept traffic using a secure protocol (HTTPS) 
-	- and then it can be configured to talk to the backend instances using HTTP
-	- It handles the encryption for us
-	- This means we don't have to configure it on backend instances
+- Listener Configuration
+	
 
 </details>
-
 
 <details>
 <summary>Monitoring</summary>
@@ -3272,14 +3323,64 @@ EBS Optimization
 
 <details>
 <summary>Use cases</summary>
+
+- Internal LB (Scheme):
+	- It's generally used between tiers of an application (frontend tier, application tier)
+		- It abstracts tiers away from each other
+		- A frontend web server will send a request to the internal LB
+		- The internal LB will forward it towards a specific app. server
+		- The frontend web server won't care wich app. server it's talking to
+- Internet facing LB (Scheme)
+	- It's generally presented at the front of an application stack 
+		- It sits between an app. and its users/customers 
+		- It abstracts away from our underlying infrastructure
+		- A customer doesn't need to care how many EC2 instances we have providing our app. 
+- CLB:
+	- If we don't have access to VPC: So we need to deploy it into EC2 classic situations (legacy method of configuring EC2 instances)
+	- Apps. with Round-Robin Load Balancing: 
+		- They don't really care about how traffic is routed 
+		- They're depending on region/language/currency (same across all web servers)
+- ALB:
+	- If we need to use containers or microservices
+	- A multilanguage web app: 
+		- E.g., French and English
+		- If language is switched from English to French, the ALB sees that
+		- It loadbalances across all the French web servers
+	- A Multi-Currency website:
+		- Same idea as the previous use case 
+		- E.g., $ and €
+		- If USD is selected as a currency, the ALB sees that and loadbalances across the USD servers
+- NLB:
+
 </details>
 
 <details>
 <summary>Limits</summary>
+
+- SSL certificate #: 
+	- 1 per CLB
+	- ALB: it uses SNI (see SNI limit)
+	- per NLB
+
 </details>
 
 <details>
 <summary>Best practices</summary>
+
+- To offload SSL if it's not requested to complete encryption from start to finish:
+	- It reduces admin overhead: backend instances don't need to configure and install SSL certificate
+	- It reduces the CPU cycles required on backend instances: They don't need to perform any encryption/decryption (Lower CPU)
+	- Backend instances could then be smaller and serve more customers
+- To allow access to backend instances access from LB only:
+	- Backend instances could be associated with SG that are allowing traffic from LB's SG
+	- Because SGs are capable of being referenced from each other
+- It's NOT recommended to use CLB
+	- It's a legacy LB
+	- It works with EC2 classic
+	- It's limited to 1 SSL certificate:
+		- It requires 1 CLB per website with DNS name and SSL certificate
+		- It becomes expensive when we have multiple websites with their own SSL certificate
+
 </details>
 
 ---
