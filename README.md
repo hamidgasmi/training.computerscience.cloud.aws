@@ -3254,39 +3254,27 @@ EBS Optimization
 <details>
 <summary>Network Load Balancer (NLB)</summary>
 
-- It's best suited for load balancing of TCP traffic where extreme performance is required
-- It operates at the connection level: Layer 4
-- It is capable of handling millions of requests per second while maintaining ultra low latency
+- It's a OSI model layer 4 device:
+	- It doesn't touch any data inside packets above layer 4
+	- It forwards upper layers unchanged
+	- It can support any protocols based on TCP or UDP
+- It's fastest ELB:
+	- It's capable of handling millions of requests/s while maintaining ultra low latency
+- It can allocate static IP @: it's easier to integrate with any security or firewall products
+- It supports registering targets outside of a VPC
+- It supports routing requests to multiple app. on a single EC2 instance:
+	- It can register each instance or IP @ with the same target group using multiple ports
+- It supports containerized applications
+
 - Sticky session: It's NOT available
 
 </details>
 
-
 <details>
-<summary>Scalability (Auto Scalling groups)</summary>
+<summary>Scalability</summary>
 
-- It's a group of EC2 instances
-- It scales in and out automatically
-- It can be paired with ELB 
-	- This allow to automate scaling and elasticity
-	- This enhances High Availability and fault tolerance
-- When it's associates with an ELB, automatically...
-	- The ELB associates itself with any instance inside the auto scalling group (scaling out)
-	- The ELB disassociates itself with any instance inside the auto scalling group (scaling down)
-	- If the Auto Scalling group uses the ELB health check, if an instance is unhealthy, it will be terminated and recreated
+- See Auto Scalling Groups below
 
-</details>
-
-<details>
-<summary>Consistency</summary>
-</details>
-
-<details>
-<summary>Resilience</summary>
-</details>
-
-<details>
-<summary>Disaster Recovery</summary>
 </details>
 
 <details>
@@ -3341,6 +3329,7 @@ EBS Optimization
 		- They don't really care about how traffic is routed 
 		- They're depending on region/language/currency (same across all web servers)
 - ALB:
+	- It's the default choice
 	- If we need to use containers or microservices
 	- A multilanguage web app: 
 		- E.g., French and English
@@ -3351,6 +3340,9 @@ EBS Optimization
 		- E.g., $ and €
 		- If USD is selected as a currency, the ALB sees that and loadbalances across the USD servers
 - NLB:
+	- When supporting other protocol than HTTP/HTTPS is required (it forwards upper layers unchanged)
+	- and extreme performance is required
+	- and we need to forward request's packets without any modification
 
 </details>
 
@@ -3385,6 +3377,151 @@ EBS Optimization
 
 ---
 
+## Hybrid and Scaling - Auto scaling Groups:
+
+<details>
+<summary>Description</summary>
+
+- It scales in and out automatically
+- It uses "Launch Templates" or "Launch Configurations" to define the "What" instance to launch 
+- It defines "How" these instances will perform
+	- How they can scale: adding new instances (scaling out), removing instances (scaling in)
+	- Under which circumstances do we want these instances to scale out/in
+- It uses some Configuration values:
+	- Minimum Size: the minim number of instances to create (1 by default)
+	- Desired Capacity:
+		- It's the # that the auto scaling group will attempt to aim for 
+		- E.g., 
+			- If we have currently 1 EC2 instance and the desired capacity is 2, then 
+			- the auto scaling group will attempt to create a new EC2 instance 
+			- to bring the number of running instances to the desired capacity
+	- Maximum Capacity: 
+		- The maximum # of EC2 instances the group will ever grow to
+		- Even when every instance is completely overloaded, it won't grow beyond the maximum capacity
+		- It's as a cost control value
+		- We don't want to set it too low: it can impact the performance of our application 
+		- We don't want to set it too high: it could massively increase costs 
+- It uses certain monitoring metrics
+	- to increase/decrease the desired capacity 
+	- It either terminates instances when scaling in
+	- or it creates new instances when scaling out (using the launch configuration/template)
+	- in order to match its capacity
+- Health check grass period:
+	- It allows to enter the amount of time we should wait an instance to be ready
+	- EC2 instance may need some time to perform whatever auto-configuration
+	- 300 s the default period
+- It can be paired with ELB 
+	- This allow to automate scaling and elasticity
+	- This enhances High Availability and fault tolerance
+- When it's associates with an ELB, automatically...
+	- The ELB associates itself with any instance inside the auto scalling group (scaling out)
+	- The ELB disassociates itself with any instance inside the auto scalling group (scaling in)
+
+</details>
+
+<details>
+<summary>Architecture</summary>
+</details>
+
+<details>
+<summary>Launch Configurations</summary>
+
+- It's the 1st way to provision scaleable infrastructure
+
+- Its typical configurations include:
+	- AMI to use for EC2 launch
+	- Instance type, storage, Key pair, IAM role, User data, Purchase options, 
+	- Network configuration, Security Groups
+- It can NOT be used to launch en EC2 instance
+- It's an immutable object: 
+	- It can't be edited after creation: 
+	- Modification requires to create a Launch configuration
+
+</details>
+
+<details>
+<summary>Launch Template</summary>
+
+- It's the new version to provision scaleable infrastructure
+- It addresses the weakness of Launch Configurations
+- It adds the following features:
+	- Versioning and inheritance:
+		- We can create a base template
+		- Then we can enherit its settings and create new templates based on that base template
+- It can be used to launch en EC2 instance
+- It's an immutable object: 
+	- It can't be edited after creation: 
+	- Modification requires to create a new version or a new Launch Template
+- Scaling Groups asks for
+	- Launch Template version: To select Default, Latest or, a specific version #
+	- Fleet conposition: whether to adhere to "Launch Template" instances or Combine purshase options and instances
+
+</details>
+
+<details>
+<summary>Scalability</summary>
+
+
+- Scaling policy:
+	- Simple scaling policy:
+	- Step scaling policy:
+	- Target tracking scaling policy:
+- Cooldowns:
+	- It's to ensure rapid in/out events don't occur
+	- It's avoiding experience significant costs (there's a minimum billing for EC2 instances) 
+	- It puts like a pause timer between 2 consecutive scaling events 
+	- If a scaling event happens, the following scaling events can occur for the cooldowns period
+	- 300 s is the default value 
+
+</details>
+
+<details>
+<summary>Consistency</summary>
+
+- It can be configured to use multiple AZs to improve HA (high availability)
+- It tries to even the instances # across it subnets (AZs)
+
+</details>
+
+<details>
+<summary>Security</summary>
+</details>
+
+<details>
+<summary>Encryption</summary>
+</details>
+
+<details>
+<summary>Monitoring</summary>
+
+- Unhealthy instances are terminated and recreated. It can use:
+	- ELB health checks:
+	- EC2 status:
+- Metrics such as CPU utilization or network transfer can be used either to scale out/in
+
+</details>
+
+<details>
+<summary>Pricing</summary>
+</details>
+
+<details>
+<summary>Use cases</summary>
+</details>
+
+<details>
+<summary>Limits</summary>
+</details>
+
+<details>
+<summary>Best practices</summary>
+
+- For new projects, it's recommended to use Launch Templates because they add significantly more functionaly
+- Include a buffer in the Health check grass period
+
+</details>
+
+---
 ## Hybrid and Scaling - VPN and Direct Connect:
 
 ---
