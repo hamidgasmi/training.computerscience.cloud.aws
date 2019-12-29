@@ -3400,22 +3400,25 @@ EBS Optimization
 		- Even when every instance is completely overloaded, it won't grow beyond the maximum capacity
 		- It's as a cost control value
 		- We don't want to set it too low: it can impact the performance of our application 
-		- We don't want to set it too high: it could massively increase costs 
+		- We don't want to set it too high: it could massively increase costs
+	- Cooldowns:
+		- It's to ensure rapid in/out events don't occur
+		- It's avoiding experience significant costs (there's a minimum billing for EC2 instances) 
+		- It puts like a pause timer between 2 consecutive scaling events 
+		- If a scaling event happens, the following scaling events can occur for the cooldowns period
+		- 300 s is the default value
 - It uses certain monitoring metrics
 	- to increase/decrease the desired capacity 
 	- It either terminates instances when scaling in
 	- or it creates new instances when scaling out (using the launch configuration/template)
 	- in order to match its capacity
-- Health check grass period:
-	- It allows to enter the amount of time we should wait an instance to be ready
-	- EC2 instance may need some time to perform whatever auto-configuration
-	- 300 s the default period
-- It can be paired with ELB 
+- It can be paired with an ELB:
+	- It's done by associating it with the ELB's Target Groups
 	- This allow to automate scaling and elasticity
 	- This enhances High Availability and fault tolerance
-- When it's associates with an ELB, automatically...
-	- The ELB associates itself with any instance inside the auto scalling group (scaling out)
-	- The ELB disassociates itself with any instance inside the auto scalling group (scaling in)
+	- When it's associates with an ELB, automatically...
+		- The ELB associates itself with any instance inside the auto scalling group (scaling out)
+		- The ELB disassociates itself with any instance inside the auto scalling group (scaling in)
 
 </details>
 
@@ -3460,16 +3463,36 @@ EBS Optimization
 <details>
 <summary>Scalability</summary>
 
+- Auto Scaling group allows to automate the scaling in/out
+	- It modifies the default "Desired Capacity" entered when the Auto-Scaling Group is created
+	- It then create/remove instances based on the new "Desired Capacity"
+- Scheduled Action:
+	- It automates the scaling in/out based on day/time and recurrence
+	- Input: Start Day/Time; Recurrence (every week; every day; every 5 mn); Max, Min and Desired Capacity
+	- E.g.: 
+		- A website is busy at a certain point in the day or a certain periods during the week, 
+		- "Schedule Action" will let us to automatically scale out and adjust the desired capacity based on the load that we expect during this period
+		- "Schedule Action" will also let us to automatically scale in after this period
 - Scaling policy:
+	- It automates the scaling in/out based on measure that's monitored (E.g., CPU utilization)
 	- Simple scaling policy:
+		- It allows us to define a rule based on an alarm that we create
+		- Inputs: Alarm; Action; Cooldowns
+		- E.g., if AVG CPU utilization of all the instances > 50% (Alarm) => Add n instance(s) (Action) and wait 300 s (Cooldowns)
+		- E.g., if AVG CPU utilization of all the instances < 40% => Remove n instance(s)
 	- Step scaling policy:
+		- It allows to scale in/out differently based on measure ranges (E.g., CPU utilization)
+		- Inputs: Alarm; Steps: measure range, Action; Cooldown 
+		- E.g.,: 
+		- Step 1: if 20% < AVG CPU utilization of all the instances > 30% => Add 1 instance and wait 300s
+		- Step 2: if 30% < AVG CPU utilization of all the instances > 40% => Add 2 instance and wait 300s
+		- Step 3: if 40% < AVG CPU utilization of all the instances > 50% => Add 4 instance and wait 300s
 	- Target tracking scaling policy:
-- Cooldowns:
-	- It's to ensure rapid in/out events don't occur
-	- It's avoiding experience significant costs (there's a minimum billing for EC2 instances) 
-	- It puts like a pause timer between 2 consecutive scaling events 
-	- If a scaling event happens, the following scaling events can occur for the cooldowns period
-	- 300 s is the default value 
+		- It allows us to define a rule based on desired load
+		- Inputs: Metric type; Target value; Cooldowns
+		- E.g., We would like AVG CPU utilization of all instances (Metric type) of ~ 30% (Target value) and wait for 300 (cooldowns or warmup)
+		- If the AVG CPU utilization > 30%, it would create 1 or more instances to reach that desired load
+		- If the AVG CPU utilization < 30%, it would remove 1 or more instances to reach that desired load
 
 </details>
 
@@ -3492,9 +3515,14 @@ EBS Optimization
 <details>
 <summary>Monitoring</summary>
 
-- Unhealthy instances are terminated and recreated. It can use:
-	- ELB health checks:
-	- EC2 status:
+- Health check:
+	- It could be based on EC2 health check type: it uses the instance status and instance host status
+	- It could be based on an associated ELB health check
+	- Health Check Grass Period:
+		- It allows to enter the amount of time we should wait an instance to be ready
+		- EC2 instance may need some time to perform whatever auto-configuration
+		- 300 s the default period
+	- Unhealthy instances are terminated and recreated
 - Metrics such as CPU utilization or network transfer can be used either to scale out/in
 
 </details>

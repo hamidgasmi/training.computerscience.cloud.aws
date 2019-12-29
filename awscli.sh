@@ -1,7 +1,13 @@
 #1. AMI
 #1.1 aws configure
 aws configure
+
 #2. EC2:
+#2.1 Stress test an EC2 instance:
+sudo amazon-linux-extras install epel -y
+sudo yum install stress -y
+stress --cpu 2 --timeout 30
+
 #3. VPC
 #4. Route 53:
 #5. S3:
