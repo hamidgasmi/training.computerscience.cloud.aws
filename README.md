@@ -3427,7 +3427,6 @@ EBS Optimization
 <summary>Launch Configurations</summary>
 
 - It's the 1st way to provision scaleable infrastructure
-
 - Its typical configurations include:
 	- AMI to use for EC2 launch
 	- Instance type, storage, Key pair, IAM role, User data, Purchase options, 
@@ -3460,7 +3459,6 @@ EBS Optimization
 
 <details>
 <summary>Scalability</summary>
-
 
 - Scaling policy:
 	- Simple scaling policy:
