@@ -3544,6 +3544,9 @@ EBS Optimization
 
 - For new projects, it's recommended to use Launch Templates because they add significantly more functionaly
 - Include a buffer in the Health check grass period
+- High Availability, elastically scalling and self healing architecture: 
+	- Elasticity: Launch Template + Auto Scaling Group + Scaling Policy 
+	- Self Healing Architecture: Auto Scaling Group + ELB + ELB Health Check
 
 </details>
 
