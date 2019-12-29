@@ -3551,7 +3551,81 @@ EBS Optimization
 </details>
 
 ---
-## Hybrid and Scaling - VPN and Direct Connect:
+## Hybrid and Scaling - Virtual Private Networks (VPN):
+
+<details>
+<summary>Description</summary>
+
+- It provides a software-based secrure connection between a VPC and on-premises networks
+- It
+</details>
+
+<details>
+<summary>Architecture</summary>
+
+- A Virtual Private Cloud (VPC)
+- Virtual Private Gateway (VGW) attached to a VPC
+- A Customer Gateway (CGW): configuration for on-premises router
+- VPN connection using 1 or 2 IPsec tunnels
+
+![VPN components](https://d2908q01vomqb2.cloudfront.net/da4b9237bacccdf19c0760cab7aec4a8359010b0/2017/01/27/Figure-1-AWS-Managed-VPN-1-1024x831.png)
+
+</details>
+
+<details>
+<summary>Scalability</summary>
+</details>
+
+<details>
+<summary>Consistency</summary>
+</details>
+
+<details>
+<summary>Resilience</summary>
+</details>
+
+<details>
+<summary>Disaster Recovery</summary>
+</details>
+
+<details>
+<summary>Security</summary>
+</details>
+
+<details>
+<summary>Encryption</summary>
+</details>
+
+<details>
+<summary>Monitoring</summary>
+</details>
+
+<details>
+<summary>Pricing</summary>
+</details>
+
+<details>
+<summary>Use cases</summary>
+</details>
+
+<details>
+<summary>Limits</summary>
+</details>
+
+<details>
+<summary>Best practices</summary>
+
+- Use dynamic VPNs (uses BGP) where possible
+- Connect both tunnels to our CGW - VPC VPN is HA by design
+- Where possible, use 2 VPN connections and 2 CGWs
+
+![Example of HA Architecture for Software VPN Instances](https://d2908q01vomqb2.cloudfront.net/da4b9237bacccdf19c0760cab7aec4a8359010b0/2017/01/23/awsmarketplace3.jpg)
+
+</details>
+
+---
+
+## Hybrid and Scaling - Direct Connect:
 
 ---
 
