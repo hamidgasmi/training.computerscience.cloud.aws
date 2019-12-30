@@ -706,7 +706,6 @@ EBS Optimization
 		- All rules are analyzed
 		- If a rule matches, the request is allowed
 		- If there is no match, the request is implicitly denied
-
 - Types:
 	- Default SG in a default VPC: 
 		- It is created at the same time as a VPC
@@ -719,7 +718,6 @@ EBS Optimization
 		- It is created by users in a default or custom VPC
 		- It implicitly denies all inbound traffic: there isn't any inbound rule
 		- It allows all outbound traffic
-
 - Associations:
 	- SG : VPC - * : 1 
 		- It's associated with a single VPC: it doesn't span VPC's
@@ -3635,7 +3633,8 @@ EBS Optimization
 	- Use 2 VPN connections 
 	- Use 1 CGWs
 	- Create 2 tunnels
-- Full HA Architecture (in AWS and Customer sides):
+- Fully HA Architecture (fully mush):
+	- In both sides: AWS and Customer side
 	- Use 1 VPN: it's HA by design
 	- Use 2 VPN connections 
 	- Use 2 CGWs
@@ -3672,12 +3671,20 @@ EBS Optimization
 
 - Pros: 
 	- It's quick to set up: only few minutes are required 
-	- Direct Connect could take potentially weeks or months
+	- It's cheap and economical particularly with low amounts of data
+	- It provides encryption end to end
+	- Flexibility to change location
+	- HA options are available
+	- Short term connectivity
 - Cons:
 	- Data charge is higher than Direct Connect: this is why it's good for lowest loads
 	- The performance is limited by the CGW CPU capability (because of the encryption end to end) + Internet Performance
-- It's good for Sporadic or low usage:
-	- It's good for a lower requirements or lower data transfer requirements
+- Use cases:
+	- Urgent need
+	- Cost constrained
+	- Low end or consumer hardware
+	- It's good for Sporadic or low usage:
+		- It's good for a lower requirements or lower data transfer requirements
 - It's NOT good for High load
 
 </details>
@@ -3702,38 +3709,94 @@ EBS Optimization
 
 ---
 
-## Hybrid and Scaling - Direct Connect:
+## Hybrid and Scaling - Direct Connect (DX):
 
 <details>
 <summary>Description</summary>
+
+- It's a physical connection between a customer's network and AWS
+	- It's a physical connection because it's not a software-based connection as a VPN (see above)
+	- It uses cross-connect, a single-mode fiber, a physical piece of notworking cable
+- It's at a DX location between an AWS router and a another router at a DX location:
+	- It's Direct if a customer router is connected to an AWS router at a DX location
+	- It's via a partner router that is connected to an AWS router at a DX location
+	- DX locations are distributed globally
+- It's a high-speed, low-latency physical connection:
+	- It runs either 1 Gbps using 1000Base-LX or 10 Gbps using 10GBASE-LR
+	- It provides a dedicated connection
+	- It provisions a dedicated port on 1 of AWS edge networking devices
+	- It doesn't share bandwidth or speed
+	- It doesn't contend with customer's existing internet connections
+- It provides access to public and private AWS services from a customer business premises
+- It requires:
+	- To have equipement located at one DX location or 
+	- To have an arrangement with a DX partner
+	- To have higher cost routers because it requires to use BGP protocol
+
 </details>
 
 <details>
 <summary>Architecture</summary>
+
+- DX location
+- VIF: Virtual InterFace
+- ![Typical AWS Direct Connect and Amazon VPC Architecture](https://d2908q01vomqb2.cloudfront.net/77de68daecd823babbb58edb1c8e14d7106e83bb/2019/02/19/phoenixNAP-3.jpg)
 </details>
 
 <details>
-<summary>Scalability</summary>
+<summary>DX Locations</summary>
+
+- They're distributed globally
+
+</details>
+
+<details>
+<summary>Virtual InterFace (VIF)</summary>
+
+- It run on top of a DX
+- It's possible to have multiple VIFs running on top of a single Direct Connect
+- Public VIF:
+	- It allow to access AWS public services from on premises networks
+	- E.g., S3, DynamoDB, SQS, SNS
+- Private VIF:
+	- It's used to access into a VPC from on premises networks
+	- It could be associated to 0 or 1 VPC
+	- It works like a VPN
+	- It requires to be associated with a VGW that is attached to the VPC we would like to connect to
+
 </details>
 
 <details>
 <summary>Consistency</summary>
+
+- It's a consistent low latency connection
+- It uses a dedicated cable
+- It doesn't have to traverse the public Internet: no high/low ping time variances
+
 </details>
 
 <details>
 <summary>Resilience</summary>
-</details>
 
-<details>
-<summary>Disaster Recovery</summary>
-</details>
+- It's NOT highly available because it's a single physical connection
+- Solution:
+	- To provision an additional DX or 
+	- To use a VPN connection as a backup 
 
-<details>
-<summary>Security</summary>
 </details>
 
 <details>
 <summary>Encryption</summary>
+
+- It's NOT encrypted for private and public VIFs
+- To use an encryption at application level (HTTPS) or 
+- to run a VPN connection over the top of a Public VIF running on a Direct Connect connection:
+	- A public VIF would grant access to public AWS services 
+	- A public VIF could be used with VGW:
+		- VGW's endpoints are public space services 
+		- We could then create an IP set VPN over the top of that public VIF to the endpoints
+of this VGW
+
 </details>
 
 <details>
@@ -3742,10 +3805,39 @@ EBS Optimization
 
 <details>
 <summary>Pricing</summary>
+
+- Initial Set up cost + 
+- Data transfer charge (cheaper than data transfer with a VPN)
+
 </details>
 
 <details>
 <summary>Use cases</summary>
+
+- Pros:
+	- Higher throughput: It gets a full speed (1Gbps or 10Gbps)
+	- Consistent performance (throughput)
+	- Consistency low latency: it uses a dedicated cable (it doesn't have to traverse the public Internet)
+	- Cheaper than VPN for higher volume
+	- No contention with existing internet connection
+- Cons:
+	- Longer to set up (days, weeks, months) but while we're waiting, we could use 1st a VPN
+	- More Expensive to set up
+	- HA connection is more expensive (2 DXs) 
+	- It requires higher end hardware (because of BGP)
+	- There is no flexibility to change locations
+- Use Cases:
+	- Situations where we need speed and performance consistency 
+		- Applications that are very latency sensitive
+		- E.g., IP telephony or scientific applications that use real time telemetry
+		- E.g., Application for trading activities or financial analysis
+	- Situation where we need to transfer Large amounts of data
+	- DX + VPN:
+		- VPN as a cheaper HA option for DX
+		- VPN as an additional layer of HA (in addition to 2 DXs)
+		- If some form of connectivity is needed immediately, VPN provides it before the DX connection is live
+		- VPN can be used to add encryption over the top of a DX (public VIF VPN)
+
 </details>
 
 <details>
