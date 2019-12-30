@@ -549,17 +549,10 @@ EBS Optimization
 	 	- They contain a destination and a target 
 		- Traffic is forwarded to the target if its destination matches the route's destination
 	 	- Default Routes (0.0.0.0/0 IPv4 and ::/0 IPv6) could be added
-	- Most Specific Route is always chosen:
-	 	- It's when multiple routes' destination maches with traffic destination
-	 	- A matched /32 destination route (a single IP address) will be always chosen first...
-		- A matched /24 destination route will be chosen before a matched /16 destination route... 
-		- The default route matches with all traffic destination but will be chosen last
 	- A route Target can be: 
 	 	- An IP @ or 
 	 	- An AWS networking object: Egress-Only G., IGW, NAT G., Network Interface, Peering Connection, Transit G., Virtual Private G.,...
-
 - Location: -
-
 - Types:
 	- Local Route:
 		- Its (Destination, Target) = (VPC CIDR, Local)
@@ -568,7 +561,6 @@ EBS Optimization
 		- It allows all subnets in a VPC to be able to talk to one another even if they're in different AZs
 		- It's included in all route tables
 		- It can't be deleted from its route table
-
 	- Static Route: It's added manually to a route table
 	- Propagated Route:
 		- It's added dynamically to a route table by attaching a Virtual Private Gateway (VPG) to the VPC
@@ -577,7 +569,6 @@ EBS Optimization
 		- Certain types of AWS networking products (VPN, Direct Connect) can dynamically learn routes using BGP (Border Gateway Protocol)
 		- External networking products (a VPN or direct connect) that support BGP could be integrated with AWS VPC, they can dynamically generate Routes and insert them to a route table
 		- We don't need then to do it manually by a static route table
-
 	- Main Route table:
 		- It's created by default at the same time as a VPC it is attached to
 		- It's associated "implicitly" by default to all subnets in the VPC until they're explicitly associated to a custom one
@@ -586,15 +577,25 @@ EBS Optimization
 	- "Custom" route table: 
 		- It could be created and customized to subnets' requirements
 		- It is explicitly associated with subnets
-
-- Limits: -
-
+- Routing rules:
+	- Rule #1: 
+		- It's applied 1st 
+		- Most Specific Route is always chosen:
+	 	- It's when multiple routes' destination maches with traffic destination
+	 	- A matched /32 destination route (a single IP address) will be always chosen first...
+		- A matched /24 destination route will be chosen before a matched /16 destination route... 
+		- The default route matches with all traffic destination but will be chosen last
+	- Rule #2: 
+		- It's applied after rule #1
+		- Static routes are prefered to Propagated routes:
+		- When multiple routes' destination with same prefix maches with traffic destination, static is prefered over the dynamic ones
+	 	- A matched /24 destination static route will be always chosen first before a matched /24 destination propagated route
+- Limits:
 - Best Practice: 
 	- It is recommended not to update the main route table
 	- It is particularly recommended not to add the route to the Internet Gateway in the main route table: 
 	- Since by default, all VPC's Subnets are associated "implicitly" to the main route table
 	- All existing and future subnets could be public by default (if Public IP is enabled)		
-
 - Associations:
 	- A RT could be associated with multiple subnets
 	- A subnet must be associated with 1 and only 1 route table (main or custom)
@@ -3551,25 +3552,165 @@ EBS Optimization
 </details>
 
 ---
+
 ## Hybrid and Scaling - Virtual Private Networks (VPN):
 
 <details>
 <summary>Description</summary>
 
-- It provides a software-based secrure connection between a VPC and on-premises networks
+- It's also known as Hardware VPN
+- It's a virtual network solution to connect a VPC to a non-AWS network such as on-premises networks
+- It allows to access any remote VPC networks from on premises networks and vice versa
+- It provides a fully encrypted transit path across the internet from our VPC to onpremise location
+- Its tunnels operate over IPv4 
+- It's a highly available solution
+- It can be configured to use either static or Border Gateway (BGW) routing 
 - It
 </details>
 
 <details>
 <summary>Architecture</summary>
 
-- A Virtual Private Cloud (VPC)
+- A Customer Gateway (CGW)
 - Virtual Private Gateway (VGW) attached to a VPC
-- A Customer Gateway (CGW): configuration for on-premises router
+- A Virtual Private Cloud (VPC)
+- [More details about the architecture](https://docs.aws.amazon.com/vpn/latest/s2svpn/site-site-architechtures.html)
+
 - VPN connection using 1 or 2 IPsec tunnels
 
 ![VPN components](https://d2908q01vomqb2.cloudfront.net/da4b9237bacccdf19c0760cab7aec4a8359010b0/2017/01/27/Figure-1-AWS-Managed-VPN-1-1024x831.png)
 
+</details>
+
+<details>
+<summary>IPsec</summary>
+
+
+</details>
+
+<details>
+<summary>Customer Gateway (CGW)</summary>
+
+- It's a physical piece of hardware at the customer side
+- It's generally a router
+- It's capable of IPsec VPN connectivity using either static or dynamic routing
+- It has a logical representation inside AWS (see VPC page > VPN seciton > Customer Gateways)
+	- Static Routing:
+		- It's the simplest form of routing within AWS VPN
+		- We simply have to tell either side of the VPN connection what subnets are available at the remote end of the connection
+	- Dynamic Routing:
+		- It uses [BGP](https://en.wikipedia.org/wiki/Border_Gateway_Protocol) to dynamically exchange this routing information (subnets available either side of the VPN connection)
+		- It requires a BGP ASN (Autonomous System Number): it's a unique identifier for the BGP router at either side of the relationship
+		- If we don't have a BGP ASN allocated to our network, we can use a private ASN
+		- Private ASNs occupy the range of 64512 to 65534
+
+</details>
+
+<details>
+<summary>Virtual Private Gateway (VGW)</summary>
+
+- It's a gateway entity
+- It's attached to a single VPC
+- It's used by the VPC router via route tables to direct traffic towards
+- It can act as the termination point for many different VPN connections:
+	- The VPN connections occur between 1 VGW and multiple CGWs
+	- ![Example of Multiple Site-to-Site VPN Connections](https://docs.aws.amazon.com/vpn/latest/s2svpn/images/Branch_Offices_diagram.png)
+
+</details>
+
+<details>
+<summary>Site-to-Site VPN Connection</summary>
+
+- It's the logical entity that links the VGW and the CGW
+- It supports 2 different connection types
+	- Virtual Private Gateway
+	- Transit Gateway
+
+</details>
+
+<details>
+<summary>Resilience</summary>
+
+- Partially HA Architecture (in AWS side only):
+	- Use 1 VPN: it's HA by design
+	- Use 2 VPN connections 
+	- Use 1 CGWs
+	- Create 2 tunnels
+- Full HA Architecture (in AWS and Customer sides):
+	- Use 1 VPN: it's HA by design
+	- Use 2 VPN connections 
+	- Use 2 CGWs
+	- Create 4 tunnels
+	- [For more details](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNConnections.html)
+
+</details>
+
+<details>
+<summary>Security</summary>
+</details>
+
+<details>
+<summary>Encryption</summary>
+
+- It provides a fully encrypted transit path across the internet from our VPC to onpremise location
+
+</details>
+
+<details>
+<summary>Monitoring</summary>
+</details>
+
+<details>
+<summary>Pricing</summary>
+
+- There's a per hour cost for running an active VPN connection + 
+- a data charge for any outgoing data 
+
+</details>
+
+<details>
+<summary>Use cases</summary>
+
+- Pros: 
+	- It's quick to set up: only few minutes are required 
+	- Direct Connect could take potentially weeks or months
+- Cons:
+	- Data charge is higher than Direct Connect: this is why it's good for lowest loads
+	- The performance is limited by the CGW CPU capability (because of the encryption end to end) + Internet Performance
+- It's good for Sporadic or low usage:
+	- It's good for a lower requirements or lower data transfer requirements
+- It's NOT good for High load
+
+</details>
+
+<details>
+<summary>Limits</summary>
+</details>
+
+<details>
+<summary>Best practices</summary>
+
+- Use dynamic VPNs (uses BGP) where possible
+- Connect both tunnels to our CGW - VPC VPN is HA by design
+- Implement a full HA Architecture (in AWS and Customer sides):
+	- Use 1 VPN: it's HA by design
+	- Use 2 VPN connections and 2 CGWs, where possible
+	- Create 4 tunnels
+	- ![Example of HA Architecture for Software VPN Instances](https://docs.aws.amazon.com/vpn/latest/s2svpn/images/Multiple_Gateways_diagram.png)
+	- [For more details](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNConnections.html)
+
+</details>
+
+---
+
+## Hybrid and Scaling - Direct Connect:
+
+<details>
+<summary>Description</summary>
+</details>
+
+<details>
+<summary>Architecture</summary>
 </details>
 
 <details>
@@ -3614,20 +3755,10 @@ EBS Optimization
 
 <details>
 <summary>Best practices</summary>
-
-- Use dynamic VPNs (uses BGP) where possible
-- Connect both tunnels to our CGW - VPC VPN is HA by design
-- Where possible, use 2 VPN connections and 2 CGWs
-
-![Example of HA Architecture for Software VPN Instances](https://d2908q01vomqb2.cloudfront.net/da4b9237bacccdf19c0760cab7aec4a8359010b0/2017/01/23/awsmarketplace3.jpg)
-
 </details>
 
 ---
 
-## Hybrid and Scaling - Direct Connect:
-
----
 
 ## Hybrid and Scaling - Snow*:
 
