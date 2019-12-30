@@ -577,19 +577,18 @@ EBS Optimization
 	- "Custom" route table: 
 		- It could be created and customized to subnets' requirements
 		- It is explicitly associated with subnets
-- Routing rules:
-	- Rule #1: 
-		- It's applied 1st 
-		- Most Specific Route is always chosen:
+- Routing Priority:
+	- Rule #1: Most Specific Route is always chosen:
 	 	- It's when multiple routes' destination maches with traffic destination
 	 	- A matched /32 destination route (a single IP address) will be always chosen first...
 		- A matched /24 destination route will be chosen before a matched /16 destination route... 
 		- The default route matches with all traffic destination but will be chosen last
-	- Rule #2: 
-		- It's applied after rule #1
-		- Static routes are prefered to Propagated routes:
-		- When multiple routes' destination with same prefix maches with traffic destination, static is prefered over the dynamic ones
-	 	- A matched /24 destination static route will be always chosen first before a matched /24 destination propagated route
+	- Rule #2:
+		- Static routes take priority over the propagated routes
+		- When multiple routes' destination with same prefix maches with traffic destination and longest prefix match cannot be applied (Rule #1):
+			- Static is prefered over the dynamic ones
+	 		- A matched /24 destination static route will be always chosen first before a matched /24 destination propagated route
+	- [More details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html#route-tables-priority)
 - Limits:
 - Best Practice: 
 	- It is recommended not to update the main route table
