@@ -4047,10 +4047,30 @@ of this VGW
 
 ---
 
-## Hybrid and Scaling - Data Migration - DB Migration Service:
+## Hybrid and Scaling - Data Migration - DB Migration Service (DMS):
 
 <details>
 <summary>Description</summary>
+
+- It's a managed service capable of relation databases migration and schema conversion
+- It can migrate to and from any locations with network connectivity to AWS
+- It's compatible with a broad range of DB sources, including Oracle, MS SQL, MySQL, Maria DB, PostgreSQL, MongoDB, Aurora and, SAP
+- It can sync data to AWS RDS, Redshift, S3 and, DynamoDB
+- It provides a "Schema Conversion Tool" (AWS SCT) to transform between different db engines as part of a migration
+- It allows to avoid db migration overhead and outage during the migration process:
+	- The usual migration requires:
+		- Stop all input and output on the existing db 
+		- Perform a full backup of that db
+		- Store the backup somewhere else
+		- Do a restore, and
+		- Change all of our applications which utilize that db to point at the new endpoint
+	- It does require a full outage during the migration process
+	- It could take days (weeks) for large databases
+- It allows to do replication with little downtime
+	- It generally involves some form of replication,
+	- So you have to configure a replication between a source and the destination
+	- allow that replication to take all of the existing data and bring the databases into parity and then migrate any new transactions from the source to destination
+
 </details>
 
 <details>
@@ -4058,31 +4078,10 @@ of this VGW
 </details>
 
 <details>
-<summary>Scalability</summary>
-</details>
+<summary>Schema Conversion Tool (AWS SCT)</summary>
 
-<details>
-<summary>Consistency</summary>
-</details>
+- It's to transform between different db engines as part of a migration 
 
-<details>
-<summary>Resilience</summary>
-</details>
-
-<details>
-<summary>Disaster Recovery</summary>
-</details>
-
-<details>
-<summary>Security</summary>
-</details>
-
-<details>
-<summary>Encryption</summary>
-</details>
-
-<details>
-<summary>Monitoring</summary>
 </details>
 
 <details>
@@ -4091,6 +4090,12 @@ of this VGW
 
 <details>
 <summary>Use cases</summary>
+
+- When scaling db resources up or down without downtime
+- When migrating dbs from on-premises to AWS, from AWS to on-premises or to/from other cloud platforms
+- When moving data between different DB engines, including schema conversion
+- When migrating partial/subset data
+- When wanted a data migration as a service with little to no admin overhead
 </details>
 
 <details>
