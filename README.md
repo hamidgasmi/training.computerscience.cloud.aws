@@ -11,7 +11,7 @@
 - Regions AZs are independ from each other (to decrease failure likeliness)
 - Regions AZs are close enough to each other so that latency is low between them
 - Some regions are linked by a direct high speed network (see link above)
-	- It isn't a public network 
+	- It'sn't a public network 
 	- E.g., Paris and Virginia regions are linked by a high speed network 
 - Data created is a specific region wont leave the region 
 	- Unless we decide otherwise (data replication to another region)
@@ -104,8 +104,8 @@
 - Instance name: Type + Generation # + [a] + [d] + [n] + ".Size"
 	- Type letter + Generation #: see item above (families)
     - "a" if uses  AMD CPUs 
-    - "d" if it is NVMe storage + 
-    - "n" if it is Higher speed networking +
+    - "d" if It's NVMe storage + 
+    - "n" if It's Higher speed networking +
     - ".Size": "nano", "micro", "small", "medium", "large", "xlarge", "nxlarge" (n > 2) and, "large"
     - E.g.,: t2.micro, t2.2xlarge, t3a.nano, m5ad.4xlarhe 
 - [For more details](https://aws.amazon.com/ec2/instance-types/) 
@@ -135,7 +135,7 @@
 <details>
 <summary>Bootstrap</summary>
 
-- It is the process of providing "build" directives to an EC2 instance
+- It's the process of providing "build" directives to an EC2 instance
 - It uses user data and can take in 
 	- Shell script-style commands: Power Shell for Windows or Bash for Linux  
 	- [Cloud-init directives](https://cloudinit.readthedocs.io/en/latest/) 
@@ -153,18 +153,18 @@
 <details>
 <summary>Security: Instance Role</summary>
 
-- It is a type of IAM Role that could be assumed by EC2 instance or application
+- It's a type of IAM Role that could be assumed by EC2 instance or application
 - An application that is running within EC2, 
-	- It isn't a valid AWS identity 
+	- It'sn't a valid AWS identity 
 	- It can't therefore assume AWS Role directly
 - They need to use an intermediary called  instance profile:  
-	- It is a container for the role that is associated with an EC2 instance
+	- It's a container for the role that is associated with an EC2 instance
 	- It allows applications running on EC2 to assume a role and  
     - It allows application to access to temporary security credentials available in the instance metadata 
-    - It is attached to an EC2 instance at launch process or after 
-    - Its name is similar to the IAM role's one it is associated to 
-    - It is created automatically when using the AWS console UI
-    - Or it is created manually when using the CLI or Cloud Formation
+    - It's attached to an EC2 instance at launch process or after 
+    - Its name is similar to the IAM role's one It's associated to 
+    - It's created automatically when using the AWS console UI
+    - Or It's created manually when using the CLI or Cloud Formation
 - EC2 AWS CLI Credential Order:
 	- (1) Command Line Options:
 		- aws [command] —profile [profile name] 
@@ -211,7 +211,7 @@
         - They're given to EC2 Host which stores them in its memory 
         - It uses them to decrypt data into EC2 instance or encrypt data from EC2 instance to EBS 
     	- When the instance is stopped/rebooted, the Host erases these plaintext DEKs
-    - So, AWS KMS isn't encrypting neither it is decrypting data 
+    - So, AWS KMS isn't encrypting neither It's decrypting data 
 - When an encrypted EBS snapshot is copied into another region: 
     - A new CMK should be created in the destination region
     - The new snapshot will be encrypted
@@ -229,9 +229,9 @@ EBS Optimization
 
 - Performance of restoring a volume from a Snapshot: 
 	- When we restore a volume from a snapshot, it doesn't immediately copy all that data to EBS 
-	- Data is copied as it is requested 
+	- Data is copied as It's requested 
     - So, we get the max performance of a the EBS volume, only when all that data has been copied across in the background 
-    - Solution: to perform a read of every part of that volume in advance before it is moved into production  
+    - Solution: to perform a read of every part of that volume in advance before It's moved into production  
     - To ensure that our restored volume always functions at peak capacity in production, we can force the immediate initialization of the entire volume using dd or fio 
     - For more details:
 		- [EBS restoring volume](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-restoring-volume.html) 
@@ -248,22 +248,22 @@ EBS Optimization
 - Enhanced Networking - Placement Groups: Good to increase Performance or Reliability 
 	- Clustered Placement Group:  
 		- Instances grouped within a single AZ 
-        - It is good to increase performance 
-		- It is recommended for application that need low network latency, high network throughput (or both) 
+        - It's good to increase performance 
+		- It's recommended for application that need low network latency, high network throughput (or both) 
 		- Only certain instances can be launched in to a clustered group 
 		- Best practices:  
 			- We should always try to launch all of the instances that go inside a placement group at the same time  
 			- AWS recommends homogenous instances within cluster placement groups 
 			- We might get a capacity issue when we ask to launch additional instances in an existing placement group
 	- Spread Placement Group: 
-		- It is good to increase availability
+		- It's good to increase availability
 		- Instances are each individual placed on distinct underlying hardware (separate racks)
-		- It is possible to have spread placement groups inside different AZ within one region
+		- It's possible to have spread placement groups inside different AZ within one region
 		- We can launch up to 7 instances into this placement group
-		- So if a rack does go through and fail, it is only going to affect 1 instance
-		- It is recommended for applications that have a small # of critical instances that should be kept separate from each other: email servers, Domain controllers, file servers
+		- So if a rack does go through and fail, It's only going to affect 1 instance
+		- It's recommended for applications that have a small # of critical instances that should be kept separate from each other: email servers, Domain controllers, file servers
 	- Partition Placement Group: 
-        - It is good to increase availability for large infrastructure platforms where we want to have some visibility of where those instances are from a partition perspective 
+        - It's good to increase availability for large infrastructure platforms where we want to have some visibility of where those instances are from a partition perspective 
         - Similar to spread placement group except there are multiple EC2 instances within a partition 
         - Each partition within a placement group has its own hardware (own set of racks) 
         - Each rack has its own network and power source 
@@ -279,13 +279,13 @@ EBS Optimization
 
 - On Demand: 
 	- It allows to pay a fixed rate by second with a minimum of 60 seconds
-    - No commitment and it is the default 
+    - No commitment and It's the default 
     - Use cases: 
         - Application with short term, spiky, or unpredictable workloads that can't be interrupted 
         - Application being developed or tested on Amazon EC2 for the 1st time 
 - Spot: 
     - It enables to bid whatever price we want for instance capacity  
-	- It is exactly like the stock market: it goes up and down (The price moves around) 
+	- It's exactly like the stock market: it goes up and down (The price moves around) 
 	- When Amazon have excess capacity (there're available EC2 servers capacity. Not used) 
 	- Amazon drops then the price of their EC2 instances to try and get people to use that spare capacity 
 	- The maximum price indicate the highest amount the customer is willing to pay for an EC2 instance 
@@ -304,7 +304,7 @@ EBS Optimization
     	- Spot instances tend to be useful for dev/test workloads, or perhaps for adding extra computing power to large-scale data analytics projects 
 		- Antipattern: spot isn't suitable for long-running workloads and require stability and can't tolerate interruptions 
     - Spot Fleet: 
-        - It is a container for "capacity needs" 
+        - It's a container for "capacity needs" 
     	- We can specify pools of instances of certain types/sizes aiming for a given "capacity" 
     	- A minimum percentage of on-demand can be set to ensure the fleet is always active 
 - Reserved: 
@@ -365,16 +365,16 @@ EBS Optimization
 <details>
 <summary>Description</summary>
  
-- It is a virtual network within AWS: it is our private data center inside AWS platform
+- It's a virtual network within AWS: It's our private data center inside AWS platform
 - It can be configured to be public/private or a mixture
-- It is isolated from other VPCs by default
+- It's isolated from other VPCs by default
 	- It can't talk to anything outside itself unless we configure it otherwise
 	- It's isolated from network blast radius
-- It is Regional: it can't span regions
-- It is highly available: it is on multiple AZs which allows a HA (Highly Available) architecture
+- It's Regional: it can't span regions
+- It's highly available: It's on multiple AZs which allows a HA (Highly Available) architecture
 - It can be connected to our data center and corporate networks: Hardware Virtual Private Network (VPN)
 - It supports different Tenancy types: it could be:
-	- Dedicated tenant: it can't be changed (Locked). It is expensive
+	- Dedicated tenant: it can't be changed (Locked). It's expensive
 	- multi-tenant (default): it still could be switched to a dedicated tenant
 
 </details>
@@ -389,7 +389,7 @@ EBS Optimization
 <details>
 <summary>IPv4 CIDR</summary>
 
-- It is from /28 (16 IPs) to /16 (65,536 IPs) 
+- It's from /28 (16 IPs) to /16 (65,536 IPs) 
 - We need to plan in advance CIDR to support whatever service we will deploy in the VPC:
 	- We need to make sure our CIDR will support enough subnets
 	- We need to make sure our CIDR will let our subnets have enough IP addresses
@@ -403,7 +403,7 @@ EBS Optimization
 	- This will just make things a lot easier further down
 	- Our corporate network VPCs, any other VPC we work with, 
 	- VPCs of any partners and vendors that we interact with
-- Best Practice: It is recommended to plan for our VPC in advance even though, we can now update VPC CIDR
+- Best Practice: It's recommended to plan for our VPC in advance even though, we can now update VPC CIDR
 
 </details>
 
@@ -411,13 +411,13 @@ EBS Optimization
 <summary>Types</summary>
 
 - Default VPC:
-	- It is created by default in every region for each new AWS account (to make easy the onboarding process)
-	- It is required for some services:
+	- It's created by default in every region for each new AWS account (to make easy the onboarding process)
+	- It's required for some services:
 	 	- Historically some services failed if the default VPC didn't exist
 	 	- It was initially not something we could create, but we could delete it
 	 	- So if we delete, we could run into problems where certain services wouldn't launch,
 	 	- We needed to create a ticket to get it recreated on our behalf
-	 	- It is used as a default for most
+	 	- It's used as a default for most
 	- Its initial state is as follow:
 	 	- CIDR: default 172.31.0.0/16 (65,000 IP addresses)
 	 	- Subnet: 1 "/20" public subnet by AZ
@@ -474,14 +474,14 @@ EBS Optimization
 <details>
 <summary>Subnet</summary>
 
-- Analogy: it is like a floor (or a component of it) in our data center
-- Description: it is a part of a VPC
-- Location: It is inside an AZ: subnets can't span AZs
+- Analogy: It's like a floor (or a component of it) in our data center
+- Description: It's a part of a VPC
+- Location: It's inside an AZ: subnets can't span AZs
 
 - CIDR blocks:
-	- It can't be bigger than CIDR blocks of the VPC it is attached to
-	- It can't overlap with any CIDR blocks inside the VPC it is attached to
-	- It can't be created outside of the CIDR of the VPC it is attached to
+	- It can't be bigger than CIDR blocks of the VPC It's attached to
+	- It can't overlap with any CIDR blocks inside the VPC It's attached to
+	- It can't be created outside of the CIDR of the VPC It's attached to
 - 5 Reserved IPs:
 	- Subnet's Network IP address: e.g., 10.0.0.0
 	- Subnet's Router IP address ("+1"): Example: 10.0.0.1.
@@ -498,16 +498,16 @@ EBS Optimization
 	 	- The account we shared the subnet with can't update our subnet (what if there is a role that allow them so?)
 	- A subnet is private by default
 	- A subnet is Public if:
-	 	- If it is configured to allocate public IP
+	 	- If It's configured to allocate public IP
 	 	- If the VPC has an associated Internet Gateway
-	 	- If it is attached to a route table with a default route to the Internet Gateway
+	 	- If It's attached to a route table with a default route to the Internet Gateway
 
 - Type:
 	- Default Subnet:
-	 	- It is a subnet that is created automatically by AWS at the same time as a default VPC
-	 	- It is public
+	 	- It's a subnet that is created automatically by AWS at the same time as a default VPC
+	 	- It's public
 	 	- There is as many default subnets as AZs of the region where the default VPC is created in
-	- Custom Subnet: it is a subnet created by a customer in a costum VPC
+	- Custom Subnet: It's a subnet created by a customer in a costum VPC
 
 - Limits:
 	- Subnet max/min netmask: /16 ... /28 (same as VPC netmask limit)
@@ -520,10 +520,10 @@ EBS Optimization
 	 	- For a VPC of /16, we could create: 1 single subnet of a /16 netmask; 2 subnets of /17; 4 subnets of /18; ... 256 subnets of /24
 	- Subnet & Route Table:
 	 	- A subnet must be associated with 1 and only 1 route table (main or custom)
-	 	- When a subnet is created, it is associated by default to the VPC main route table
+	 	- When a subnet is created, It's associated by default to the VPC main route table
 	- Subnet & NACL:
 	 	- A subnet must be associated with 1 and only 1 NACL (default or custom)
-	 	- When a subnet is created, it is associated by default to the VPC default NACL
+	 	- When a subnet is created, It's associated by default to the VPC default NACL
 
 </details>
 
@@ -535,7 +535,7 @@ EBS Optimization
 - It control traffic leaving the subnets 
 - It has an interface in every subnet known as the "Subnet+1" address (is it the ENI?)
 - It's fully managed by AWS
-- It is highly available and scalable
+- It's highly available and scalable
 
 </details>
 
@@ -544,7 +544,7 @@ EBS Optimization
 
 - Description:
 	- It controls what the VPC router does with subnet Outbound traffic	
-	- It is a collection of Routes:
+	- It's a collection of Routes:
 	 	- They're used when traffic from a subnet arrives at the VPC router
 	 	- They contain a destination and a target 
 		- Traffic is forwarded to the target if its destination matches the route's destination
@@ -570,13 +570,13 @@ EBS Optimization
 		- External networking products (a VPN or direct connect) that support BGP could be integrated with AWS VPC, they can dynamically generate Routes and insert them to a route table
 		- We don't need then to do it manually by a static route table
 	- Main Route table:
-		- It's created by default at the same time as a VPC it is attached to
+		- It's created by default at the same time as a VPC It's attached to
 		- It's associated "implicitly" by default to all subnets in the VPC until they're explicitly associated to a custom one
 		- In a default VPC: it routes outbound traffic to local and to outside (Internet Gateway)
 		- In a custom VPC: It routes outbound traffic to local	
 	- "Custom" route table: 
 		- It could be created and customized to subnets' requirements
-		- It is explicitly associated with subnets
+		- It's explicitly associated with subnets
 - Routing Priority:
 	- Rule #1: Most Specific Route is always chosen:
 	 	- It's when multiple routes' destination maches with traffic destination
@@ -591,8 +591,8 @@ EBS Optimization
 	- [More details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html#route-tables-priority)
 - Limits:
 - Best Practice: 
-	- It is recommended not to update the main route table
-	- It is particularly recommended not to add the route to the Internet Gateway in the main route table: 
+	- It's recommended not to update the main route table
+	- It's particularly recommended not to add the route to the Internet Gateway in the main route table: 
 	- Since by default, all VPC's Subnets are associated "implicitly" to the main route table
 	- All existing and future subnets could be public by default (if Public IP is enabled)		
 - Associations:
@@ -605,11 +605,11 @@ EBS Optimization
 <summary>Internet Gateway</summary>
 
 - It can route traffic for public IPs to and from the internet
-- It is created and attached to a VPC
+- It's created and attached to a VPC
 - A VPC could be attached to 1 and only 1 Internet Gateway
 - It doesn't applies public IPv4 addresses to a resource's ENI
 - It provides Static NAT (Network Address Translation):
-	- It is the process of 1:1 translation where an internet gateway converts a private address to a public IP address
+	- It's the process of 1:1 translation where an internet gateway converts a private address to a public IP address
 	- It make the instance a true public machine
 	- When an Internet Gateway receives any traffic from an EC2 instance, if the EC2 has an allocated public IP: 
 		- Then the Internet Gateway adjusts those traffic's packets (Layer 3 in OSI model)
@@ -626,11 +626,11 @@ EBS Optimization
 <summary>NACL - Network Access Control Lists</summary>
 
 - Description
-	- It is a security feature that operates at Layer 4 of the OSI model (Transport Layer: TCP/UDP and below)
+	- It's a security feature that operates at Layer 4 of the OSI model (Transport Layer: TCP/UDP and below)
 	- It impacts traffic crossing the boundary of a subnet
 	- It doesn't impact traffic local to a subnet: Communications between 2 instances inside a subnet aren't impacted
 	- It acts FIRST before Security Groups: if an IP is denied, it won't reach security group
-	- It is stateless
+	- It's stateless
 	- It includes Rules:
 		- There're 2 sets of rules: Inbound and Outbound rules
 		- They're explicitly allow or deny traffic based on: traffic Type (protocol), Ports (or range), Source (or Destination)
@@ -639,7 +639,7 @@ EBS Optimization
 		- Each rule has a Rule #
 		- They're processed in number of order, "Rule #": Lowest first
 		- When a match is found, that action is taken and processing stops
-		- The "*" rule is an implicit deny: It is processed last
+		- The "*" rule is an implicit deny: It's processed last
 	- Its rules include Ephemeral Ports:
 		- When a client initiates communications with a server, it uses a well-known port # on that server: e.g., TCP/443
 		- The response is from that well-known port to an ephemeral port on the client
@@ -649,15 +649,15 @@ EBS Optimization
 		- We should think to "allow" traffic for every "ephemeral" ports on Client Inbound and Outbound rules and, 
 		- We should think to "allow" traffic for every "ephemeral" ports on Destination Inbound and Outbound rules as well
 	 
-- Location: It isn't specific to any AZ
+- Location: It'sn't specific to any AZ
 
 - Type:
 	- Default NACL:
-		- It is created by default at the same as the VPC it is attached to
-		- It is associated "implicitly" to all subnets as long as they're not associated explicitly to a custom NACL 
+		- It's created by default at the same as the VPC It's attached to
+		- It's associated "implicitly" to all subnets as long as they're not associated explicitly to a custom NACL 
 		- It Allows ALL traffic: Rule 100: Allow everything
 	- Custom NACL:
-		- It is created by users
+		- It's created by users
 		- It should be associated "explicitly" to a subnet
 		- It blocks ALL traffic, by default: it only includes "*" rule only
 
@@ -686,16 +686,16 @@ EBS Optimization
 	- It a Layer 5 firewall (session layer) in OSI model
 	- It acts at the instance level, not the subnet level
 	- It could be attached/detached from an EC2 instance at anytime
-	- It is Stateful:
+	- It's Stateful:
 		- The response to an allowed inbound (or outbound) request, will be allowed to flow out (or in), regardless of outbound (or inbound) rules
-		- If we send a request from our instance and it is allowed by the corresponding SG rule, its response is then allowed to flow in regardless of inbound rules
+		- If we send a request from our instance and It's allowed by the corresponding SG rule, its response is then allowed to flow in regardless of inbound rules
 		- [More details (see Tracking)](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#security-group-connection-tracking])
 		- [Comparison between Security Group and ACL (stateless)](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Security.html#VPC_Security_Comparison])
 	- SG Rules include: Inbound and Outbound rule sets:
 		- Type: TCP
 		- Protocol: e.g., HTTP, SSH
 		- Port Ranges: e.g., Port 22 (SSH), Port 53 (UDP), Port 3060 (MySQL), Port 80 (http), Port 443 (https)... 
-		- Source/Destination: Since it is a Layer 5 Firewall, it supports:
+		- Source/Destination: Since It's a Layer 5 Firewall, it supports:
 		- IP addresses, CIDRs (Layer 4 info)
 		- a Security Group (Layer 5 info)
 		- It can auto-reference itself in an Inbound rules' Source: 
@@ -708,14 +708,14 @@ EBS Optimization
 		- If there is no match, the request is implicitly denied
 - Types:
 	- Default SG in a default VPC: 
-		- It is created at the same time as a VPC
+		- It's created at the same time as a VPC
 		- It allows all inbound and outbound traffic (open to the word)
 	- Default SG in a custom VPC:	
-		- It is created at the same time as a VPC 
+		- It's created at the same time as a VPC 
 		- It allows all inbound traffic from the same SG 
 		- It allows all outbound traffic
 	- Custom SG:
-		- It is created by users in a default or custom VPC
+		- It's created by users in a default or custom VPC
 		- It implicitly denies all inbound traffic: there isn't any inbound rule
 		- It allows all outbound traffic
 - Associations:
@@ -723,7 +723,7 @@ EBS Optimization
 		- It's associated with a single VPC: it doesn't span VPC's
 		- A VPC could contain multiple SGs
 	- SG : ENI - * : 1		
-		- It is attached to 1 ENI
+		- It's attached to 1 ENI
 		- An ENI could be attached to multiple SGs		 
 	- SG : EC2 Instance : * : *	
 		- It could be assigned to multiple instances
@@ -735,12 +735,12 @@ EBS Optimization
 <details>
 <summary>Bastion Host - JumpBox</summary>
 
-- It is a host (EC2 instance) that sits at the perimeter of a VPC
-- It is in a public Subnet 
+- It's a host (EC2 instance) that sits at the perimeter of a VPC
+- It's in a public Subnet 
 - it usually involves access from untrusted networks or computers
 - It functions as an entry point to the VPC for trusted admins
 - It allows for updates or configuration tweaks remotely while allowing the VPC to stay private and protected (private subnets)
-- It is generally connected to via SSH (Linux) or RDP (Windows)
+- It's generally connected to via SSH (Linux) or RDP (Windows)
 - Its goal is to reduce the surface area in which we need to harden:
 	- Instead to harden all private instances (we could have many of them),
 	- We just need to harden 1 Bastion Host
@@ -748,12 +748,12 @@ EBS Optimization
 - How it works:
 	- Traffic is going through the Internet gateway > route tables > NACL > Security Groups > Bastion host
 	- Then the bastion host basically just forwards the connection through SSH/ADP to private instances
-	- All what we need to do is harden our bastion host as strongly as possible because it is exposed to the public
+	- All what we need to do is harden our bastion host as strongly as possible because It's exposed to the public
 	- Then, we don't have to worry about hardening our private instances in our private subnet
 - Best Practice: 
 	- Bastion hosts must be kept updated, and security hardened and, audited regularly
 	- Multifactor authentication, ID federation, and/or IP blocks
-	- It is recommended to add tags to be able to differentiate from other regular EC2 instances
+	- It's recommended to add tags to be able to differentiate from other regular EC2 instances
 	- Create a specific SG for bastion hosts:
 		- Since bastion hosts require specific rules, we could make them in a unique SG
 		- The SG could then be shared with bastion hosts only
@@ -769,7 +769,7 @@ EBS Optimization
 <summary>NAT Instances & NAT Gateway</summary>
 
 - It provides Dynamic NAT (Network Address Translation):
-	- It is a variation of Static NAT (see Internet Gateway, above)
+	- It's a variation of Static NAT (see Internet Gateway, above)
 	- It allows many private IP addresses to get outgoing internet access using a smaller number of public IPs (generally one)
 	- 1 public IP <-> many private IPs.
 - Its purpose is to let EC2 instances in private subnets to go out and download software.
@@ -789,10 +789,10 @@ EBS Optimization
 		- The Internet Gateway will also update the packet Src IP by its Public IP: (Src IP, Dest IP) = (53.12.23.11, 1.3.3.7)
 		- The Internet Gateway will then send the packet to the Internet
 	- Ingoing Traffic:
-		- it is similar to the outgoing process above
+		- It's similar to the outgoing process above
 		- In this case, the packet Destination IP is updated
-		- It is updated 1st by the Internet Gateway with the NAT Gateway EIP
-		- Then, it is updated by the NAT Gateway with the EC2 Private IP
+		- It's updated 1st by the Internet Gateway with the NAT Gateway EIP
+		- Then, It's updated by the NAT Gateway with the EC2 Private IP
 - NAT Gateway: 
 	- 1 NAT Gateway inside an AZ
 	- It requires a Public Subnet and a Public Elastic IP
@@ -808,15 +808,15 @@ EBS Optimization
 		- For more bandwidth, we can distribute the workload by splitting our resources into multiple subnets inside an AZ
 		- Then specify for each subnet to go to a separate gateway
 - NAT Instance:
-	- It is a single EC2 instance
+	- It's a single EC2 instance
 	- It could be created from a specific AMI
 	- it requires to Disable EC2 Source/Destination Checks:
 		- Each EC2 instance performs source/destination checks by default
 		- This means that the instance must be the source or destination of any traffic it sends or receives
 		- However, a NAT instance must be able to send and receive traffic when the source or destination is not itself
-		- Therefore, it is required tp disable source/destination checks on the NAT instance
+		- Therefore, It's required tp disable source/destination checks on the NAT instance
 	- Disadvantage: 
-		- It is a single point of failure
+		- It's a single point of failure
 		- If the instance is terminated, the route status: blackhole
 	- Use cases: there is only one use case
 		- When cost saving is absolutely required and, a NAT and bastion hosts are needed
@@ -841,11 +841,11 @@ EBS Optimization
 		- NACLs and SGs can be used to control access
 		- SG reference is cross-account but it's not cross-region (see limits below)
 	- DNS resolution to private IPs can be enabled, 
-		- It is needed in both sides
+		- It's needed in both sides
 		- Public DNSes will therefore be resolved to their private IP and,
 		- It won't be traveling over the public Internet
 - Data transit:
-	- It is encrypted
+	- It's encrypted
 	- It uses AWS global-backbone for VPC peering cross-region: low latency and higher performance than public internet
 - Limits:
 	- VPC CIDR blocks can't overlap
@@ -866,27 +866,27 @@ EBS Optimization
 <details>
 <summary>VPC EndPoint</summary>
 
-- It is a virtual gateway object created in a VPC
+- It's a virtual gateway object created in a VPC
 - It provides a method of connecting to public AWS services: 
 	- Its related traffic doesn't leave AWS network
 	- It doesn't require a public IP address, 
 	- It doesn't require an Internet gateway, 
 	- It doesn't require any other resource: a NAT device, a VPN connection nor, an AWS Direct Connect connection instances
-- It is horizontally scaled (bandwidth)
+- It's horizontally scaled (bandwidth)
 - There're 2 types of VPC endpoints:
 	- Gateway endpoint: 
-		- It is used for S3 buckets and DynamoDB
-		- It is similar to Internet Gateway
+		- It's used for S3 buckets and DynamoDB
+		- It's similar to Internet Gateway
 		- Its related traffic goes through RT: (Destination, Target) = (AWS Service Prefix Lists, Gateway Endpoint ID)
 		- Prefix Lists are more specific than general public internet (0.0.0.0/0)
 		- Therefore, Prefix Lists will override the use of the IG when they're in the same RT
 		- It can be restricted via policies: full access is selected by default
-		- It is HA (Highly available) across AZs in a region: 1 Gateway endpoint by VPC
+		- It's HA (Highly available) across AZs in a region: 1 Gateway endpoint by VPC
 	- Interface endpoint:
-		- It is used for most other AWS services such as SNS, SQS
-		- It is an ENI with a private IP address
+		- It's used for most other AWS services such as SNS, SQS
+		- It's an ENI with a private IP address
 		- It provides another unique endpoint for the selected service (different from the service public endpoint)
-		- It is attached to a subnet
+		- It's attached to a subnet
 		- For HA, it should be associated with multiple AZs
 		- Its related traffic goes through SGs and NACLs
 		- It doesn't require a RT: it adds or replaces the DNS for the service
@@ -908,15 +908,15 @@ EBS Optimization
 <summary>IPv6</summary>
 
 - VPC IPv6:
-	- It is currently opt-in (disabled by default)
-	- It is enabled from VPC -> Edit CIDR feature
+	- It's currently opt-in (disabled by default)
+	- It's enabled from VPC -> Edit CIDR feature
 	- It's a /56 CIDR allocated from AWS pool
 	- It can't be adjusted
 - Subnet IPv6:
-	- It is a /64 CIDR
+	- It's a /64 CIDR
 	- It can be chosen from the VPC /56 range
-	- It is enabled from subnet -> Edit CIDR feature
-- It is publicly routable: 
+	- It's enabled from subnet -> Edit CIDR feature
+- It's publicly routable: 
 	- There is no concept of Private IPv6 address
 	- There is no concept of Elastic IPs with IPv6
 	- IG doesn't do static NATs for IPv6
@@ -934,11 +934,11 @@ EBS Optimization
 	- It let resources of subnets with IPv6 range configure a public IPv6 address
 	- The OS is configured with the public IPv6
 - DNS Name:
-	- It isn't allocated to IPv6 addresses
+	- It'sn't allocated to IPv6 addresses
 - Limits:
-	- It isn't currently supported across every AWS product 
-	- It isn't currently supported with every feature
-	- It isn't currently supported by VPNs, customer gateways, and VPC endpoints
+	- It'sn't currently supported across every AWS product 
+	- It'sn't currently supported with every feature
+	- It'sn't currently supported by VPNs, customer gateways, and VPC endpoints
 	- [For more details]()
 
 </details>
@@ -950,8 +950,8 @@ EBS Optimization
 - It prevents them from being accessed from the internet (or outside VPC?)
 - It allows outbound and inbound response traffic
 - Analogy: 
-	- it is similar to NAT Gateway but
-	- it doesn't provide Dynamic NAT since it isn't relevent with IPv6
+	- It's similar to NAT Gateway but
+	- it doesn't provide Dynamic NAT since It'sn't relevent with IPv6
 	- NAT Gateway doesn't support IPv6
 
 </details>
@@ -993,14 +993,14 @@ EBS Optimization
 <details>
 <summary>Description</summary>
  
-- It is AWS Domain Registrar and DNS service
+- It's AWS Domain Registrar and DNS service
 
 </details>
 
 <details>
 <summary>Domain Registrar</summary>
 
-- It checks a domain is available: it is done against the database of the TLD or the subdomain operator
+- It checks a domain is available: It's done against the database of the TLD or the subdomain operator
 - It allows to register a domain: 
 	- It contacts then the TLD to add a record into the corresponding zone (the registration is "Pending")
 	- It publishes All or Some Registrant Contact details in the public WHOIS database
@@ -1017,18 +1017,18 @@ EBS Optimization
 
 - Hosted Zone:
 	- It corresponds to a domain name
-	- It is a collection of records (see below)
+	- It's a collection of records (see below)
 	- It supports public and private hosted zones:
 - Public Zone:
-	- It is created by default when a domain is registered/transfered with Route 53
-	- It is also created when we create a domain manually (how could it be done?) 
-	- It has the same name as the domain it relates to: It is FQDN (Fully Qualified Domain Name)
-	- It is accessible globally since the TLD zone delegates to its name servers
-	- It is accessible either from internet-based DNS clients or from within any AWS VPC 
+	- It's created by default when a domain is registered/transfered with Route 53
+	- It's also created when we create a domain manually (how could it be done?) 
+	- It has the same name as the domain it relates to: It's FQDN (Fully Qualified Domain Name)
+	- It's accessible globally since the TLD zone delegates to its name servers
+	- It's accessible either from internet-based DNS clients or from within any AWS VPC 
 	- It has an NS record that is given to the corresponding domain operator (Route 53 becomes then "Authoritative") 
 - Private Zone:
-	- It is created manually and associated with one or more VPCs
-	- It is accessible from VPCs it is associated with 
+	- It's created manually and associated with one or more VPCs
+	- It's accessible from VPCs It's associated with 
 	- It needs "enableDnsHostname" and "enbaleDnsSupport" enabled on a VPC 
 	- Not all Route 53 features supported (limits on health checks)
 - Split-view: 
@@ -1059,15 +1059,15 @@ EBS Optimization
 		- If the original record IP address changes, there's no impact on CName records
 		- We can reference names that are outside our domain with FQDN (the last . is required "anotherexample.com.")
 	- Alias record type:
-		- It is a Route 53 specific feature
-		- It is an extension of CNames
+		- It's a Route 53 specific feature
+		- It's an extension of CNames
 		- It can be used at the APEX of a domain (for naked domain names)
 		- It can refer to AWS logical services (LBs, S3 buckets)
 		- It allows to specify a hostname in our DNS records which then resolve to the correct A/AAAA records at the time of a request
 		- AWS doesn't charge for alias records against AWS resources
-		- It is recommended by AWS
+		- It's recommended by AWS
 	- MX record:
-		- It is quired whenever a server is attempting to send an email to a given domain
+		- It's quired whenever a server is attempting to send an email to a given domain
 		- It provides the email servers for a given domain
 		- Eeach server within MX record has a priority value
 		- The lower priority value is preferred
@@ -1095,7 +1095,7 @@ EBS Optimization
 - Endpoint Check:
 	- It checks the physical health of an endpoint
 	- It species an endpoint by IP address or a domain name (usefull when we have a domain name which IP address changes often)
-	- It is impacted by resources security features (SG, NACL)
+	- It's impacted by resources security features (SG, NACL)
 	- It occurs every 30 seconds (default) or every 10s
 	- It has a failure threshold: if x checks are unhealthy, then the healthcheck is unhealthy
 	- E.g., If the check occurs every 30s and the failure threshold is 3, then Route 53 will be able react for a fealure only after 90s (long time) 
@@ -1144,14 +1144,14 @@ EBS Optimization
 		- Simple as a starting point for our DNS architecture: Good when we're not aware of how our traffic patterns are
 		- Simple with a somewhat even spread of requests (TTL is very important here to avoid the issue below)
 	- Cons:
-		- No performance control (It isn't a LB architecture): if a big organization caches an IP @, all its users will query a single IP
+		- No performance control (It'sn't a LB architecture): if a big organization caches an IP @, all its users will query a single IP
 		- No healthcheck: if a resource behind an IP @ fail, it will continue sending requests to it
 - Failover Routing policy: 
 	- It enhances "Simple Routing" policy
 	- It's a single Primary record + a single Secondary record with the same name
 	- It (primary and second records) can contain multiple values (IP addresses) or a single AWS resource as an alias type record
 	- They support healthcheck (calculated healthchecks if primary record contains multiple values?)
-	- Queries will resolve to the primary unless it is unhealthy:
+	- Queries will resolve to the primary unless It's unhealthy:
 	- Queries will resolve to the secondary if the primary is unhealthy
 	- The secondary records cold provide emergency resources during failures:
 		- E.g., an S3 static website that presents a maintenance page 
@@ -1170,10 +1170,10 @@ EBS Optimization
 	- It can be used to control the amount of traffic that reaches specific resources:
 		- To test new software/products/ AB Testing?
 		- When resources are being added or removed from a configuration that doesn't use a LB
-		- No performance or loading control (It isn't a LB architecture)
+		- No performance or loading control (It'sn't a LB architecture)
 	- We can attach a health check to a record so that Route 53 can omit the record as long as the associated EC2 instance isn't healthy 
 	- E.g., we can set 10% of our traffic to go to US-EAST-1 and 90% to go to EU-WEST-1 
-	- The weight is a value. It isn't a % 
+	- The weight is a value. It'sn't a % 
 	- So, if we add to address with the following weights: 20 and 30 => the corresponding % will be: 40% and 60% 
 - Latency-based Routing policy: 
 	- It's multiple records with the same name: they're considered part of the same latency-based set (if the name is different, they're not)
@@ -1181,7 +1181,7 @@ EBS Optimization
 	- It consults a latency database (DNS Resolver location - Policy Region - Latency) when a request occurs from a resolver server
 	- It returns the record set with the lowest network latency to the resolver server (end-user)
 	- The latency calculation is NOT made between customer's resolver server location and our resource location!
-	- It isn't related to geography but to network condition instead 
+	- It'sn't related to geography but to network condition instead 
 	- We can attach a health check to a record
 - Geolocation Routing policy:
 	- It's multiple records with the same name
@@ -1195,7 +1195,7 @@ EBS Optimization
 		- When multiple regions match a query region, the record set with the lowest abstraction level is returned
 	  	- If this process fails, the default record set is returned (if it exists) 
 		- If no record set is configured for the originating query region, the default record set is returned (if it exists)
-		- If matching record set health check fails, it is then excluded in this process
+		- If matching record set health check fails, It's then excluded in this process
 		- If there is no record matching and there is no default record, then "No answer" is returned 
 	- E.g. 1, a website like Netflix: its content is based on their customer' country
 	- E.g. 2, we might want all queries from Europe (/US) to be routed to a fleet of EC2 instances:
@@ -1204,7 +1204,7 @@ EBS Optimization
 		- They may display all prices in Euros ($)
 		- We could set US record set as a default, canadien customers will be then redirected to the US EC2 fleet
 - Geoproximity Routing (Traffic Flow Only): 
-	- To use Geoproximity routing, it is required to use Route 53 traffic flow 
+	- To use Geoproximity routing, It's required to use Route 53 traffic flow 
 	- Traffic flow is: ?
 	- Geoproximity Routing lets Route 53 routes traffic to our resources based on the geographic location of our users and our resources 
 	- We can also optionally choose to route more or less traffic to a given resource by specifying a value, known as a bias 
@@ -1236,7 +1236,7 @@ EBS Optimization
 - An object is: 
 	- Object key: object name 
 	- Value: object data 
-	- Version ID: it is possible to do version control
+	- Version ID: It's possible to do version control
 	- Object Metadata: expires, content-type, cache
 	- Subresources:
 		- ACLs: see permission below 
@@ -1396,7 +1396,7 @@ EBS Optimization
 		- Minimu capacity doesn't mean that we can't upload a file less than the minimum size
 		- Minimum duration doesn't mean neither that we can't delete an object before the minimum duration 
 		- They only mean that we'll be billed for a minimum size and a minimum period of time
-- It is setup at object level
+- It's setup at object level
 	- Initially: during the upload process or
 	- Once the object is loaded, it can be Changed manually or by Lifecycle policies
 - ![S3 Tiers/Classes](https://awscertifiedsolutionsarchitectassociatedocs.s3.amazonaws.com/S3_StorageClasses.png)
@@ -1428,7 +1428,7 @@ EBS Optimization
 		- Non important data (non mission critical data) 
 	- Use cases: ?
 - S3 RRS - Reduced Redundancy Storage 
-	- It is obsolete (not recommended)
+	- It's obsolete (not recommended)
 	- Durability Design: 4 nines (99.99%)
 	- Durability SLA: ?
 	- Availability Design: 4 nines (99.99%)
@@ -1447,7 +1447,7 @@ EBS Optimization
 	- Use cases: file system or disk back ups
 - S3 - Glacier Deep Archive: 
     - It's for long-term archival
-	- It is like tape storage
+	- It's like tape storage
 	- It's S3 lowest-cost storage class
 	- We're charged: 
 		- A retrieval fee
@@ -1516,7 +1516,7 @@ EBS Optimization
 
 - It's an S3 feature that can be enabled on S3 buckets
 - It allows a one-way replication of data from a source bucket to a destination bucket in another region
-- It is a set of rules:
+- It's a set of rules:
 	- They could be applied on the entire source bucket objects
 	- They could also be applied on a part of source bucket objects (based on prefixes and/or tags)
 	- They could be overlapping
@@ -1556,7 +1556,7 @@ EBS Optimization
 <details>
 <summary>Consistency</summary>
 
-- Read after write consistency for PUTS of new objects: a new object is ready to read as soon as it is uploaded
+- Read after write consistency for PUTS of new objects: a new object is ready to read as soon as It's uploaded
 - Eventual Consistency for overwrite PUTS and DELETE: update and deletes may need some time to propagate
 
 </details>
@@ -1993,7 +1993,7 @@ EBS Optimization
 - It can be made publicly accessible
 - It can be configured for demanding availability and durability scenarios
 	- It can be deployed in a single AZ or Multi-AZ mode
-- It isn't Serverless
+- It'sn't Serverless
 - It supports different database engines: 
     - MySQL:
     - MariaDB:  
@@ -2117,10 +2117,10 @@ EBS Optimization
 	- RDS creates 2 db instances in the same region:
 		- The primary database (production)
 		- The Standby database is created in a different AZ 
-	- It is for resilience Only
+	- It's for resilience Only
 		- Disaster Recovery: Database failure, AZ failure
 		- DB maintenance 
-		- It isn't for performance (see read replicas)
+		- It'sn't for performance (see read replicas)
 	- Primary instance:
 		- It's the only one that is accessed with the instance CNAME
 		- It has its own storage
@@ -2226,18 +2226,18 @@ EBS Optimization
 <summary>Encryption</summary>
 
 - Encryption At Rest:
-	- It is supported for all database types
+	- It's supported for all database types
 	- It can be configured only when creating a DB instance
 	- It can be added by taking a snapshot, making an encrypted snapshot, and creating a new encrypted instance from that encrypted snapshot
 	- It can't be removed
-	- It is done using the AWS KMS
+	- It's done using the AWS KMS
 	- Once an RDS instance is encrypted, the data stored at rest in the underlying storage is encrypted too (
 		- Its automated backups, read replicas, and snapshots are encrypted
 	- Read Replicas need to be the same state as the primary instance (encypted or not)
 	- An Encrypted snapshot requires a new destination region KMS CMK to be copied to a new region
 	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html)
 - Encryption in Transit:
-	- Data in transit is encrypted for asynchronous replication of read-replicas in different regions
+	- Data in transIt's encrypted for asynchronous replication of read-replicas in different regions
 
 </details>
 
@@ -2247,7 +2247,7 @@ EBS Optimization
 - It's based on:
 	- Instance pricing model (Reserved, On Demand)
 	- Instance size
-	- Provisioned storage (allocated): it isn't Elastic
+	- Provisioned storage (allocated): It'sn't Elastic
 	- IOPS if using io1
 	- Data transferred out
 	- Extra storage (backups/snapshots) beyond the 100% of provisioned db:
@@ -2258,7 +2258,7 @@ EBS Optimization
     - We can reserve a DB instance for a 1- or 3-year term  
     - Reserved DB instances provide with a significant discount compared to on-demand DB instance pricing
 	- Discounts for reserved DB instances are tied to instance type and AWS Region  
-	- It is available in 3 varieties: No Upfront, Partial Upfront,  All Upfront
+	- It's available in 3 varieties: No Upfront, Partial Upfront,  All Upfront
 	- See EC2 Description
 - [For more details](https://aws.amazon.com/rds/mysql/pricing/)
 
@@ -2622,7 +2622,7 @@ EBS Optimization
 - For DB instances:
 	- We pay for the database resources that are used on a per second basis
 	- It's attempting to provide a linear alignment between the needed compute capacity and the provided one
-	- We could enable the pausing feature (scale it down to 0 ACU) to pause the db instance when it isn't needed
+	- We could enable the pausing feature (scale it down to 0 ACU) to pause the db instance when It'sn't needed
 
 </details>
 
@@ -2719,11 +2719,11 @@ EBS Optimization
 - Get and Put an item:
 	- It's reading an item
 	- It requires to specify an item's primary key: PK only or PK and SK
-	- It isn't allowed to get a partial item: its full size is read at once (all attributes)
+	- It'sn't allowed to get a partial item: its full size is read at once (all attributes)
 - Put an item:
 	- It's writing an item
 	- It requires to specify an item's primary key: PK only or PK and SK
-	- It isn't allowed to put a partial item: all attributes must be written at the same time
+	- It'sn't allowed to put a partial item: all attributes must be written at the same time
 	- It returns HTTP status code 200 when data it stored persistently (succesfuly)
 - Scan:
 	- It doesn't require any parameters 
@@ -2735,7 +2735,7 @@ EBS Optimization
 		- It returns the remaining items
 		- It consumes the capacity of the entire table
 	- Pros: It's more flexible; It'sapplied on different PS
-	- Cons: It isn't an efficient operation
+	- Cons: It'sn't an efficient operation
 - Query:
 	- It allows to perform lookups on the table (like scan operation)
 	- It doesn't scan all items of a table
@@ -2747,7 +2747,7 @@ EBS Optimization
 - Filter:
 	- It could be applied on any attribute (PK, SK or a simple attribute not key)
 	- It requires a value
-	- It requires a type of the attribute when it isn't applied on a PK nor a SK
+	- It requires a type of the attribute when It'sn't applied on a PK nor a SK
 
 </details>
 
@@ -3016,7 +3016,7 @@ EBS Optimization
 - Serverless Applications that needs a web scale database, a serverless non relational database (not a fixed schema) + ID federation 
 - When needing a web-scalable DBaaS product that provides integration with CloudWatch
 - When needing a lightweight, on-demand database product
-- It isn't for relational data
+- It'sn't for relational data
 
 </details>
 
@@ -3183,7 +3183,7 @@ EBS Optimization
 		- For 10 websites hosted with their own DNS name and SSL certificate, we need 10 CLB
 	- It can offload SSL connections: receives HTTPS and forward it to backend as HTTP
 - It supports some HTTP/HTTPS feature: 
-	- It isn't application aware (not a layer 7 device) but...
+	- It'sn't application aware (not a layer 7 device) but...
 	- It supports some HTTP/HTTPS features: "X-Forwarded" and "Sticky sessions"
 	- It supports health checks for HTTP/HTTPS (see health checks)
 - Listener Configuration allows
@@ -3850,8 +3850,256 @@ of this VGW
 
 ---
 
-
 ## Hybrid and Scaling - Snow*:
+
+<details>
+<summary>Description</summary>
+
+- It's a secure data transfer server in and out of AWS
+- It solves challenges of large-scale data transfer: cost, long transfer times, and security concerns
+- It doesn't need VPN or DX connection
+- It requires 
+	- To log an in or out job in AWS: An empty or full device is received
+	- To perform a data copy in or out to/from the device
+	- To ship the device back to AWS
+- It provides 3 methods:
+	- Snowball
+	- Snowball Edge
+	- Snowmobile
+- [For more details]()
+
+</details>
+
+<details>
+<summary>Snowball</summary>
+
+- It can be used for in or out jobs
+- It includes Storage only
+- It comes in: 
+	- 50 TB (42 TB of usable capacity) available only in the US regions (what about Canada?) 
+	- 80 TB (72 TB of usable capacity) available worldwide
+- It runs either 1 Gbps using RJ45 1GBase-TX or 10 Gbps using a [LR/SR SFP (a fiber)](https://en.wikipedia.org/wiki/Small_form-factor_pluggable_transceiver)
+- It provides Data encryption using KMS
+- Large jobs or multiple locations can use multiple Snowballs
+- End-to-end process time is low for the amount of data: Weeks
+- It provides AWS S3 adapter: 
+	- It's a tool to install on the device
+	- It allows to configure the device like an AWS CLI, use it as an S3 endpoint and, transfer data directly
+
+</details>
+
+<details>
+<summary>Snowball Edge</summary>
+
+- It can be used for in or out jobs
+- It includes Storage and Compute
+- It comes by default with 100 TB (83 TB of usable capacity)
+- It comes in 3 versions:
+	- Edge Storage Optimized: 80 TB, 24 vCPU and, 32 GiB RAM
+	- Edge Compute Optimized: 100 TB + 7.68 TB NVMe, 52 vCPUs and, 208 GiB RAM
+	- Edge compute Optimized with GPU: as above with a GPU equivalent to P3 EC2 instance
+- It runs either: 
+	- 10 Gbps using RJ45 
+	- 10/25 GBase using a [LR/SR SFP (a fiber)](https://en.wikipedia.org/wiki/Small_form-factor_pluggable_transceiver)
+    - 45/50/100 Gbps using a QSFP+ (a fast fiber): requires a hardware on site to take advantage of it
+- It provides AWS S3 adapter (see Snowball)
+- It provides additionally a file interface:
+	- It allows to essentially present storage through AWS NFS
+	- It can be mounted as an NFS mount points on servers where to transfer directly data into
+
+</details>
+
+<details>
+<summary>Snowmobile</summary>
+
+- It can be used for in or out jobs
+- It's a portable storage data center within a shipping container on a truck
+- It's available in certain areas via special order from AWS
+- It comes with up to 100 PB
+
+</details>
+
+<details>
+<summary>Pricing</summary>
+</details>
+
+<details>
+<summary>Use cases</summary>
+
+- We have a large amount of data and a limited internet bandwidth: 
+	- Cost requirements: No economical to use the Internet (transfer costs)
+	- Time requirements: if transferring data over the internet would take longer than required time (prohibitive)
+	- E.g., Migrate database in premise to AWS cloud
+- Snowball use cases:
+	- Economical range: It's generally used from 10 TB to 10 PB
+- Snowball Edge use cases:
+	- Economical range: 10 TB to 10 PB? with compute requirement
+	- When Multiple locations are required
+	- It can be used for local IoT
+	- It can be used for data processing prior to ingestion into AWS
+	- When usd as temporary storage tier for large locale datasets
+	- When used to support local workloads in remote or offline locations (see exemple below) 
+    - E.g. of a major airline: 
+		- It uses a Snowball Edges in its aircrafs to store and compute (lambda functions) all data 
+		- got while it's doing lot of testing of its aircrafts 
+- Snowmobile use cases:
+	- Economical range: 10 PB+ is required in a single location
+	- When it's used in a single location
+
+</details>
+
+---
+
+## Hybrid and Scaling - Data Migration - Storage Gateway:
+
+<details>
+<summary>Description</summary>
+
+- It's a software appliance to connect on-premise servers to S3:
+	- It's installed and run on an on-premise
+	- It's available for download as a VM image
+	- It can be run on VMWare ESXi or Microsoft Hyper-V 2008 R2, Hyper-V 2012/2016 
+	- It can also be run on the hardware appliance???
+	- It could also be run on an EC2 instance
+- It allows to migrate a storage platform (or part of it) into AWS
+- It allows to use it as extension to an on premises storage platform 
+- It's created via AWS management console 
+- It can also be used within a VPC in a similar way
+- It comes with 3 types:
+	- File Gateway (NFS & SMB)
+	- Volume Gateway (iSCSI)
+	- Tape Gateway (VTL)
+
+</details>
+
+<details>
+<summary>Architecture</summary>
+
+![Architecture](https://docs.aws.amazon.com/storagegateway/latest/userguide/images/file-gateway-concepts-diagram.png)
+
+</details>
+
+<details>
+<summary>File Gateway</summary>
+
+- It presents its storage as SMB shares
+	- They're the type of shares that are used for Windows file servers
+- It stores files as objects in S3 buckets
+	- Files uploaded in these shares are directly stored in S3
+	- Files are accessed through a NFS mount point 
+	- File Ownership, permissions, and timestamps are durably stored in S3 in the corresponding S3 object user-metadata. 
+	- Once files are stored in S3, they can be managed as native S3 files 
+- It allows to migrate existing file servers into S3 on a gradual basis
+- It allows to benefit from unlimited space available in S3 and use it as an extension of on-premise storage
+
+</details>
+
+<details>
+<summary>Volume Gateway (iSCSI)</summary>
+
+- It's a way of storing volumes in S3 in a form of EBS snapshot
+- It uses [iSCSI protocol (Internet Small Computer Systems Interface)](https://en.wikipedia.org/wiki/ISCSI) to access these volumes
+	- We can't access the files individually without mounting the entire volume
+- It asynchronously backes up data written to such volumes as point in time volume snapshot
+	- It stores these volumes in the cloud as an Amazon EBS snapshot 
+	- It stores them incrementally (backups that capture only changed blocks)
+	- It compresses snapshot storage to to minimize storage charges (see S3) 
+- Stored Volumes: 
+	- It allows to keep our primary data on-premise while it's backed in S3 in a form of EBS snapshot
+    - It allows on-premise applications a low-latency access to theirs datasets while they're backed up in AWS 
+	- EBS snapshot size currently is between 1GB to 16TB (it may change)
+	- ![Architecture](https://docs.aws.amazon.com/storagegateway/latest/userguide/images/aws-storage-gateway-stored-diagram.png)
+- Cached Volumes: 
+	- It allows to keep on-premise the most frequently used dataset in our storage getaway
+	- It minimises the need to scale our on-premise storage infrastructure
+	- While It's still providing our apps with the low-latency access to their frequently access data 
+    - We can create storage volumes of up to 32 TB and attach then as a device from our on-premise app. servers
+	- ![Architecture](https://docs.aws.amazon.com/storagegateway/latest/userguide/images/aws-storage-gateway-cached-diagram.png)
+- [For more details](https://docs.aws.amazon.com/storagegateway/latest/userguide/StorageGatewayConcepts.html#file-gateway-concepts)
+
+</details>
+
+<details>
+<summary>Tape Gateway (VTL)</summary>
+
+- It stands for Virtual Tape Library: 
+- It's used typically for backup and recovery purposes 
+- It's a way of getting rid of tapes 
+- It lets leverage existing tape based backup application infrastructure to store data on virtual tape cartridges that we create on our tape gateway 
+- Each tape Gateway is reconfigured with a media change and tape drives which are available on our existing client backup applications as a iSCSI devices 
+- ![Architecture](https://campus.barracuda.com/resources/attachments/image/78809691/1/AWSGateway.png)
+- [For more details](https://campus.barracuda.com/product/backup/doc/78809691/aws-storage-gateway-vtl/)
+
+</details>
+
+<details>
+<summary>Use cases</summary>
+
+- File Gateway:
+	- Storage migration into AWS: it allows to migrate existing file servers into S3 on a gradual basis
+	- Extension of existing storage platform with AWS: it allows to benefit from unlimited space available in S3
+- Volume Gateway:
+- VTL:
+	- We have a high admin overhead backup system, it's expensive
+	- We want to remove that from your local premises
+
+</details>
+
+---
+
+## Hybrid and Scaling - Data Migration - DB Migration Service:
+
+<details>
+<summary>Description</summary>
+</details>
+
+<details>
+<summary>Architecture</summary>
+</details>
+
+<details>
+<summary>Scalability</summary>
+</details>
+
+<details>
+<summary>Consistency</summary>
+</details>
+
+<details>
+<summary>Resilience</summary>
+</details>
+
+<details>
+<summary>Disaster Recovery</summary>
+</details>
+
+<details>
+<summary>Security</summary>
+</details>
+
+<details>
+<summary>Encryption</summary>
+</details>
+
+<details>
+<summary>Monitoring</summary>
+</details>
+
+<details>
+<summary>Pricing</summary>
+</details>
+
+<details>
+<summary>Use cases</summary>
+</details>
+
+<details>
+<summary>Limits</summary>
+</details>
+
+<details>
+<summary>Best practices</summary>
+</details>
 
 ---
 
