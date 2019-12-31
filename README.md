@@ -56,6 +56,14 @@
 <summary>Description</summary>
 </details>
 
+<details>
+<summary>Security Token Service (STS)</summary>
+
+- For more details:
+	- [Assume Role](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html)
+
+</details>
+
 ---
 
 ## Compute - EC2 (Elastic Cloud Computing):
@@ -4108,7 +4116,188 @@ of this VGW
 
 ---
 
-## Hybrid and Scaling - Identity Federation and SSO:
+## Hybrid and Scaling - Cognito:
+
+<details>
+<summary>Description</summary>
+
+- It's an AWS Web IDentity Federation service
+	- It allows to sign up and sign in to an apps 
+	- It acts as an identity broker between our application and a Web I.D. 
+	- It uses Token Service (STS) to provide temporary credentials which map to an IAM role  
+    - It allow to synchronize our users data for multiple devices
+- IDentity Federation (IDF): 
+	It's an architecture where identities of an external identity provider (IDP) are recongnized
+- IDentity Provider (IDP):
+	- It has an identity internally for customers
+	- It uses this identity to log on to their platform
+	- It offers this identity as a service for other platforms to use it as an external identity
+	- Google mail
+	- Facebook
+	- Twitter
+	- Canadien banks
+	- Microsoft Active Directory
+- Single Sign-On (SSO): 
+	- It's where the credentials of an external identity are used to allow access to a local system like AWS
+	- [For more details](https://en.wikipedia.org/wiki/Single_sign-on)
+	- E.g. Service Canada website asks to sign in with a canadian bank for authentification purposes
+- IDF types:
+	- Cross-account roles: a
+		- A remote account (IDP) is allowed to assume a role and access our account's resources
+		- E.g. AWS IAM cross-account roles is a kind of IDF:
+		- We create a role in a 1st AWS account and 
+		- We'll trust a 2nd account to be able to assume that role and perform actions in the 1st account
+	- SAML 2.0 IDF (Security Assertion Markup Language):
+		- It's a standard often used in on-premise systems with an Active Directory Federation Server (ADFS)
+		- E.g. 1, Microsoft Active Directory, 
+		- E.g. 2, AWS-hosted directory service: is configured to allow Active Directory users to log in to the AWS console
+		- [For more details about SAML 2.0](https://en.wikipedia.org/wiki/SAML_2.0)
+		- ![SAML 2.0 IDF inside AWS](https://docs.amazonaws.cn/en_us/IAM/latest/UserGuide/images/saml-based-sso-to-console.diagram.png)
+	- Web Identity Federation:
+		- It's where we use IDP and we allow them to assume roles and access resources in our AWS account
+		- [Identity Federation Playground](https://web-identity-federation-playground.s3.amazonaws.com/index.html)
+		- [Web IDentity Federation inside AWS](https://d2908q01vomqb2.cloudfront.net/1b6453892473a467d07372d45eb05abc2031647a/2017/06/18/CognitoDiagram.png)
+- IDF Process:
+	- It's the same process for all IDF types
+	- A user logs in to an extenal IDP
+	- The IDP returns a proof of successfull loggin:
+		- a SAML assertion in case of SAML 2.0 IDF (Microsoft Active DIrectory or AWS-hosted directory service)
+		- a Token in case of Web Identity Federation (Google, Facebook, Twitter)
+	- The proof is exchanged with AWS credentials (STSTemp Credentials) 
+	- These credentials are used access AWS Services
+
+</details>
+
+<details>
+<summary>Architecture</summary>
+
+- Cognito user pools
+- Cognito identity pools
+- Token Service (STS)
+- ![](https://d2908q01vomqb2.cloudfront.net/b6692ea5df920cad691c20319a6fffd7a4a766b8/2017/10/03/quicksight-federated-1.jpg)
+
+</details>
+
+<details>
+<summary>Cognito user pool</summary>
+
+- It's an identity directory
+- It merges all identities from different IDPs (Google, Facebook, Twitter, etc.) and considers them as one individual identity
+- It generates a Jason Web Token (JWT) for successful authentication:
+	- It's not possible to access AWS Service (S3) directly using an external IDP (E.g., Google login)
+	- There is an identity exchange (JWT)
+- It uses STS to provide temporary AWS credentials to access AWS services 
+- Use cases: 
+	- To Use it as an IDP: Users' usernames and passwords are stored with Incognito itself
+	- To use it as an identity broker for a 3rd party IDP
+
+</details>
+
+<details>
+<summary>Cognito identity pool</summary>
+
+- It's about the authorization of access to AWS resources 
+- It's the actual granting someone access to an AWS resource 
+
+</details>
+
+<details>
+<summary>Cognito Synchronization</summary>
+
+- It maps a user identity with their different devices they signed in from
+- It pushes updates and synchronizes user data across multiple devices
+	- It uses AWS SNS to send notifications whenever there is a change with a user identity
+- It allows to provide a seamless user experience for applications  
+- E.g., a user is using an application on different devices (Phone, Tabet)
+	- They change a username/email address on one the mobile phone 
+	- Those changes will be replicated out to theirs other devices (tablet)
+
+</details>
+
+<details>
+<summary>Security</summary>
+
+- See STS description in AWS IAM section
+- For more details:
+	- [Assume Role With SAML](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRoleWithSAML.html)
+	- [Assume Role With Web Identity](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRoleWithWebIdentity.html)
+
+</details>
+
+<details>
+<summary>Pricing</summary>
+</details>
+
+<details>
+<summary>Use cases</summary>
+</details>
+
+<details>
+<summary>Limits</summary>
+</details>
+
+<details>
+<summary>Best practices</summary>
+</details>
+
+---
+
+## Hybrid and Scaling - Single Sign-On (SSO):
+
+<details>
+<summary>Description</summary>
+
+- 
+- 
+</details>
+
+<details>
+<summary>Architecture</summary>
+</details>
+
+<details>
+<summary>Scalability</summary>
+</details>
+
+<details>
+<summary>Consistency</summary>
+</details>
+
+<details>
+<summary>Resilience</summary>
+</details>
+
+<details>
+<summary>Disaster Recovery</summary>
+</details>
+
+<details>
+<summary>Security</summary>
+</details>
+
+<details>
+<summary>Encryption</summary>
+</details>
+
+<details>
+<summary>Monitoring</summary>
+</details>
+
+<details>
+<summary>Pricing</summary>
+</details>
+
+<details>
+<summary>Use cases</summary>
+</details>
+
+<details>
+<summary>Limits</summary>
+</details>
+
+<details>
+<summary>Best practices</summary>
+</details>
 
 ---
 
