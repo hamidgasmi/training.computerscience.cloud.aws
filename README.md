@@ -4156,7 +4156,7 @@ of this VGW
 	- Web Identity Federation:
 		- It's where we use IDP and we allow them to assume roles and access resources in our AWS account
 		- [Identity Federation Playground](https://web-identity-federation-playground.s3.amazonaws.com/index.html)
-		- [Web IDentity Federation inside AWS](https://d2908q01vomqb2.cloudfront.net/1b6453892473a467d07372d45eb05abc2031647a/2017/06/18/CognitoDiagram.png)
+		- ![Web IDentity Federation inside AWS](https://d2908q01vomqb2.cloudfront.net/1b6453892473a467d07372d45eb05abc2031647a/2017/06/18/CognitoDiagram.png)
 - IDF Process:
 	- It's the same process for all IDF types
 	- A user logs in to an extenal IDP
