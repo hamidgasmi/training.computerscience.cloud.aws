@@ -4164,7 +4164,7 @@ of this VGW
 		- a SAML assertion in case of SAML 2.0 IDF (Microsoft Active DIrectory or AWS-hosted directory service)
 		- a Token in case of Web Identity Federation (Google, Facebook, Twitter)
 	- The proof is exchanged with AWS credentials (STSTemp Credentials) 
-	- These credentials are used access AWS Services
+	- These credentials are used to access AWS Services
 
 </details>
 
@@ -4230,65 +4230,24 @@ of this VGW
 
 <details>
 <summary>Use cases</summary>
-</details>
 
-<details>
-<summary>Limits</summary>
-</details>
-
-<details>
-<summary>Best practices</summary>
-</details>
-
----
-
-## Hybrid and Scaling - Single Sign-On (SSO):
-
-<details>
-<summary>Description</summary>
-
-- 
-- 
-</details>
-
-<details>
-<summary>Architecture</summary>
-</details>
-
-<details>
-<summary>Scalability</summary>
-</details>
-
-<details>
-<summary>Consistency</summary>
-</details>
-
-<details>
-<summary>Resilience</summary>
-</details>
-
-<details>
-<summary>Disaster Recovery</summary>
-</details>
-
-<details>
-<summary>Security</summary>
-</details>
-
-<details>
-<summary>Encryption</summary>
-</details>
-
-<details>
-<summary>Monitoring</summary>
-</details>
-
-<details>
-<summary>Pricing</summary>
-</details>
-
-<details>
-<summary>Use cases</summary>
+- Entreprise Access to AWS Resources:
+	- Users/Staff have an existing pool of identities
+	- We need those identities to be used across all entreprise systems, including AWS
+	- Access to AWS resources using SSO
+	- Potentially tens or hundreds of thousands of users - more than IAM limit
+	- We might have an ID team within our business
+- Mobile and Web Applications:
+	- Mobile or web application requires access to AWS resources
+	- We need a certain level of guest access and extra once we're logged in
+	- Customers have other identities and need to use those - google, Twitter, Facebook
+	- We don't want credentials stored within the application
+	- Could be millions or more users - more than IAM limit
+	- Customers might have multiple 3rd-party logins, but they represent one real person
+- Centralized Identity Management (AWS Accounts):
+	- Tens or hundreds of AWS accounts in an organization
+	- Need central store of IDs - either IAM or an external provider
+	- Role switching used from an ID account into member accounts
 </details>
 
 <details>
