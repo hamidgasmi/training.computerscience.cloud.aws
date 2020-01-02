@@ -10,13 +10,18 @@
 - It has 2 or more data centers (AZs)
 - Regions AZs are independ from each other (to decrease failure likeliness)
 - Regions AZs are close enough to each other so that latency is low between them
-- Some regions are linked by a direct high speed network (see link above)
-	- It'sn't a public network 
-	- E.g., Paris and Virginia regions are linked by a high speed network 
+- High Speed network:
+	- Some regions are linked by a direct high speed network (see link above)
+	- It'sn't a public network
+	- E.g., Paris and Virginia regions are linked by a high speed network
 - Data created is a specific region wont leave the region 
 	- Unless we decide otherwise (data replication to another region)
 	- Regions allow to operate in a specific country where laws are known
-	- We make sure that data will only operate under the jurisdiction of those laws 
+	- We make sure that data will only operate under the jurisdiction of those laws
+- E.g., US East (N. Virginia) region:
+	- It is the 1st AWS region (launched in 2006)
+	- It's always up-to-date: all new services are delivered 1st in this region
+	- It's good for all training purposes  
 
 </details>
 
@@ -4260,7 +4265,102 @@ of this VGW
 
 ---
 
-## Application Integration:
+## Application Integration: Simple Notification Service (SNS)
+
+SNS - Simple Notification Service: 
+    It is a web service that makes it easy to set up, operate, and send notifications from the cloud. 
+    It provides developers with a highly scalable, flexible, and cost-effective capability to publish messages from an application and immediately deliver them to subscribers or other application. 
+    It allows to push notification to mobile devices: 
+        Apple, Google, Fire OS, and Windows devices,  
+        Android devices in China with Baidu Cloud Push. 
+    It allow also to deliver notifications by text message (SMS) or email to SQS queue, or to any HTTP endpoint. 
+    It allows to group multiple recipients using topics. 
+    To prevent published messages from being lost, they're stored redundantly across multiple AZ. 
+
+SNS Topic: 
+    It is an "access point" for allowing recipients to dynamically subscribe for identical copies of the same notification. 
+    It can support deliveries to multiple endpoint types. 
+    Example 1: We could group together iOS, Android and SMS recipients. 
+    When we publish once to a topic, SNS delivers appropriately formatted copies of our message to each subscriber. 
+    Example 2: Billing Alarm top, Performance Alarm topic, Health Alarm topic. 
+
+SNS Subscriber: 
+    A topic could contain several subscribers. 
+    A protocol is associated with a subscriber (SMS, email, email Json, HTTP, HTTPS, SQS). 
+
+---
+
+## Application Integration: Simple Queue Service (SQS)
+
+SQS - Simple Queue Service: 
+    A web service that allowing asynchronous processing. 
+    It gives access to a message queue that can be used to store messages while waiting for a computer to process them. 
+    It is allowing to decouple the components of an application so they run independently from each other. 
+    It is a distributed queue system. It is a fail-safe queue.  
+    Message Size limits: 
+        Up to 256 KB of text in any format is store directly in SQS. 
+        Between 256 KB up to 2 GB is supported but the messages are stored in S3 by Amazon SQS Extended Client Library for Java. 
+    Message Retention is defined in term of seconds: 
+        By default, a message is retained for 4 days.  
+        The minimum is 1 minute (60 s).  
+        The maximum is 14 days (1,209,600‬ s).  
+    The messages are retrieved programmatically by using Amazon SQS API. 
+    Use cases: 
+        It resolves issues that arise if the producer (caller) is producing work faster than the consumer can process it.  
+        It resolves issues that arise if the producer or consumer are intermittently connected to the network. 
+    The 1st AWS service!
+SQS and EC2 Auto scaling Groups: 
+    We can set up an auto scaling group and have a trigger as to how many messages are in the queue. 
+    If # of messages goes over the defined threshold, it triggers an auto scaling event. 
+SQS Types: 
+    Standard Queue: 
+        It is the default queue type 
+        It lets us have a nearly-unlimited number of transactions per second. 
+        It guarantees that a message is delivered at least once. 
+        This means that occasionally a message might be delivered multiple times. 
+        It provide best-effort ordering which ensures that messages are generally delivered in the same order as they're sent. 
+        This means that occasionally the messages might be delivered out of order. 
+        This is due to the highly-distributed architecture that allows high throughput. 
+    FIFO Queue: 
+        "First in, First Out" queue. 
+        No duplication: messages are delivered once. 
+        Order is kept: Messages are delivered in the same order in which that are sent. 
+        A message remains available until a consumer processes and deletes it. 
+        Message Groups:  
+            it is also supported. 
+            They allow multiple ordered message groups within a single queue. 
+        TPS (Throughput Per Second) Limit: 300 transaction per second. 
+        It has all capabilities of standard Queue.
+Visibility Time Out: 
+    It is the amount of time that a message is invisible in the queue after it is picked up by a consumer. 
+    In other words, when an EC2 instance picks up a message, it makes the message invisible for other EC2 instances. 
+    If the consumer doesn't delete the message within that time, the message will become visible again for other consumers. 
+    This could result in the same message being delivered twice. 
+    Visibility timeout is maximum 12 hours. 
+    Short polling vs. Long polling: 
+        It is a way to retrieve messages from AWS SQS queue. 
+        Short polling: 
+            It is the default way to retrieve message from SQS queues. 
+            When a consumer sends a ReceivedMessage request, a response is returned immediately. 
+            Even if the message queue being polled is empty. 
+        Long polling: 
+            When a consumer sends a ReceivedMessage request, a response isn't returned until  
+                a message arrives in the queue  
+                or the long poll connection times out. 
+            It helps reduce the cost of using Amazon SQS by eliminating the number of... 
+                Empty responses: when there are no messages available for a ReceivedMessage request.  
+                False empty responses: when messages are available but aren't included in a response. 
+
+---
+
+## Application Integration: Elastic Transcder
+
+Media and Services - Elastic Transcoder: 
+    It is a media transcoder in the cloud. 
+    It converts media files from their original source format into different formats that will play on smartphones, tablets, PCs, etc. 
+    It provides transcoding presets for popular output formats. 
+    This means that we don't need to guess about which settings work best on particular devices. 
+    Pay based on transcoded minutes and the resolution at which we transcode. 
 
 ---
 
