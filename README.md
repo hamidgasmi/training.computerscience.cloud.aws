@@ -4352,13 +4352,12 @@ EBS Optimization
 		- Its total capacity is the sum of shards capacities
 	- Data consumers:EC2 instances that analyze the data inside those shards
 	- Once the data is analyzed and something is done with it, the data can then be stored in different places
-Kinesis Firehose:
+- Kinesis Firehose:
 	- There's no persistent storage: the data has to be analysed as it comes in
 	- It's optional to have lambda functions inside
 	- Lambda function is triggered as soon as the data comes in
 	- Lambda function could run a particular set of code for that data
 	- Lambda function outputs it somewhere safe: S3 or Redshift via S3 though, Elastic Search Cluster
-	- Kitesis F*etwse - Kinesis Producers Firehose Optional Lambda function -+iiD No Persistence 
 - Kinesis Analytics:
 	- It works with Kinesis Streams and with Kinesis Firehose
 	- It can analyze the data on the fly inside either service
@@ -4500,10 +4499,15 @@ Kinesis Firehose:
 	- It doesn't require to maintain a database infrastructure
 	- It doesn't require to to load the data into Athena first
 	- It can query it directly from S3
+	- It's used for serverless querying
 - EMR:
 	- It's used for a large scale analysis
-	- It's used to perform analytics and actual modification on data 
+	- It's used to perform analytics and actual modification on data
 	- It's for Big Data: It's uses semistructured or unstructured data
+	- It's used for for on-demand EC2 billing: 
+		- Its clusters are EC2s instance
+		- They can be spun up and terminated for short term or ad-hoc tasks,
+		- It utilizes on-demand billing
 - RedShift:
 	- It's used as an end state repository and as a single location for data from different sources
 	- It's used for summarization, aggregations (analytical queries) on all of our data
