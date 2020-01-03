@@ -4529,42 +4529,93 @@ EBS Optimization
 
 ---
 
-## Logging and Monitoring:
+## Logging and Monitoring - CloudWatch
 
-Security, Identity, and Compliance - KMS (Key Management Service): 
+<details>
+<summary>Description</summary>
 
-    It is a regional service. 
-
-    Encryption generates a Data Encryption Key (DEK) from a Customer Master Key (CMK) in each region. 
-
-    There're 2 types of CMK: 
-
-        AWS Managed Keys:  
-
-            They're provided and managed by AWS (very limited amount of control for customers). 
-
-            Their alias format is: aws/serviceUsingIt: aws:ebs, aws:rds. 
-
-        Customer Managed Keys: more control (for example, key rotations). 
-
-    When any service within a specific wants to use encryption, it creates an AWS Managed Key inside the particular region. 
+- It's for Performance purposes
+- It's monitoring resources and applications run on AWS 
+- It can trigger notification through SNS 
+- Datapoint data is collected: 1 every 5 minutes for example for EC2 
+- We can create dashboard Global or Regional
+- We can analyze your logs with Cloud Watch Logs Insights
+- Events delivers a near real-time stream of system events that describe changes in AWS resources. 
+- Compute Monitoring: 
+	- EC2 Instances: 
+		- Every 5 minutes by default
+		- Every 1 minute by enabling detailed monitoring 
+        - Metrics are displayed by AMI Id, Per-instance Metrics, aggregated by instance type, across all instances  
+        - CPU: 
+        - Netwrok: 
+        - Disk: 
+        - Status Check (System Status Checks, Instance Status Checks): 
+    - Auto scaling Groups: 
+    - Elastic Load Balancers: 
+    - Route53 Health Checks 
+    - Storage & Content Delivery Monitoring: 
+    	- EBS Volume: 
+        - Storage Gateway 
+        - CloudFront 
+    - Billing:
 
 </details>
 
-Athena 
+---
 
-     
+## Logging and Monitoring - CloudTrail
 
-      
+<details>
+<summary>Description</summary>
 
- 
+- It's for Auditing purposes 
+- It increases visibility into our users and Resource activity 
+- It's by recording AWS Management Console actions and API calls 
+- We can identify...
+	- which users and accounts called AWS, 
+	- which IP address the calls were made from,  
+    - When the calls occurred 
+
+</details>
 
 ---
 
-##  Operations:
+## Logging and Monitoring - VPC Flow Logs
 
 ---
 
-## Deployment:
+##  Operations: Key Management Service (KMS)
+
+<details>
+<summary>Description</summary>
+
+- It is a regional service. 
+- Encryption generates a Data Encryption Key (DEK) from a Customer Master Key (CMK) in each region. 
+- There're 2 types of CMK: 
+	- AWS Managed Keys:  
+		- They're provided and managed by AWS (very limited amount of control for customers). 
+		- Their alias format is: aws/serviceUsingIt: aws:ebs, aws:rds. 
+    - Customer Managed Keys: more control (for example, key rotations). 
+- When any service within a specific wants to use encryption, it creates an AWS Managed Key inside the particular region
+
+</details>
+
+
+---
+
+## Deployment: Elastic BeansTalk
+
+<details>
+<summary>Description</summary>
+
+- It lets deploy, monitor, and scale an application quickly and easily
+- Let us do the heavy lifting so we can focus on your business
+- It is like Cloud Formation for people that don't know anything about AWS. 
+- E.g., We can upload our application code and Beanstalk will create all required AWS infrastructure for us. 
+- Its Configuration:
+	- Software:
+	- Instance:  
+
+</details>
 
 ---
