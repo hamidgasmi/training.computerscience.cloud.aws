@@ -4360,7 +4360,102 @@ Media and Services - Elastic Transcoder:
 
 ---
 
-## Analytics:
+## Analytics: Kinesis
+
+Kinesis: 
+
+    It is a platform on AWS to send our streaming data to. 
+
+        It is data that is generated continuously by thousand of data sources. 
+
+        They typically send in the data records simultaneously and in small sizes. 
+
+        Data size order: order of Kilobytes (small). 
+
+        Examples: 
+
+            Purchase from online stores (amazon.com, for example): order is data piece. 
+
+            Stock prices. 
+
+            Gaming data as the  
+
+            Social network data 
+
+            Geospatial data (Uber) 
+
+            IOT sensors data. 
+
+    It makes it easy to load and analyze streaming data. 
+
+    It provides the ability for us to build our own custom applications. 
+
+    There're 3 Kinesis types. 
+
+ 
+
+Kinesis Stream: 
+
+    It is a place to store that data. 
+
+    It stores the data for 24 hours (by default) and up to 7 days. 
+
+    Data is contained in Shards: 
+
+        We might have a shard for different purposes  
+
+        We might have a shard for our geospatial data, our stock data, our social network, etc. 
+
+        Reads: 5 transactions/s 
+
+        Maximum Total Read rate: up to 2 MB/s. 
+
+        Writes: Up to 1,000 records /s. 
+
+        Maximum Total Writes rate: up to 1MB/s. This is including partition keys. 
+
+    Kinesis Stream data capacity: 
+
+        It is a function of stream's shards #    
+
+        Its total capacity is the sum of shards capacities. 
+
+    Data consumers:EC2 instances that analyze the data inside those shards. 
+
+    Once the data is analyzed and something is done with it, the data can then be stored in different places. 
+
+Streatb Producers Kinesis Streams Social Ne Shard Geaspacial Dat 24 Hour - 7 Days Retention A CLOUD Storage Analysis Consumers iction Analysis path
+
+ 
+
+ 
+
+Kinesis Firehose: 
+
+    There's no persistent storage: the data has to be analysed as it comes in. 
+
+    It's optional to have lambda functions inside. 
+
+    Lambda function is triggered as soon as the data comes in. 
+
+    Lambda function could run a particular set of code for that data. 
+
+    Lambda function outputs it somewhere safe: S3 or Redshift via S3 though, Elastic Search Cluster. 
+    Kitesis F*etwse - Kinesis Producers Firehose Optional Lambda function -+iiD No Persistence 
+
+ 
+
+ 
+
+Kinesis Analytics: 
+
+    It works with Kinesis Streams and with Kinesis Firehose. 
+
+    It can analyze the data on the fly inside either service  
+
+    It stores this data either on S3,  Redshift, or Elastic Search Cluster. 
+
+roducers Kinesis Redshift Kinesis Firehose
 
 ---
 
