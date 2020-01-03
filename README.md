@@ -2050,36 +2050,6 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Read Replica</summary>
-
-- It's a read-only copy of an RDS instance
-- It's created from a primary instance
-	- The source primary instance is called the Master Instance
-	- The copy instance is called the Read-Replica Instance
-- It's achieved by using asynchronous replication from the Master Primary instance to the read replica instance
-- Reads from a Read-Replica are eventually consistent - normally seconds
-- It can be created in the same region or in a different region
-	- For different region, AWS handles the secure communications between those regions (Encryption in Transit)
-	- Without a need to any networking configurations
-- It requires Automatic backups to be turned on Master Instance
-- It can be addressed indepently from its primary instance (each read-replica has its own DNS name)
-- It's used for scaling reads:
-- It's possible to have up to 5 read-replica (5x increase in reads)
-	- It's not possible to have a single DNS name to address all of those read replicas
-	- Our application need to be aware of our database topology in order to take advantage of these read replicas
-- It's possible to have read-replicas of read replicas (latency)
-- It can be promoted to be a primary instance
-	- The read-replica db becomes then its own database (master)
-	- It breaks the asynchnous replication
-	- It can be used for read and write operations
-- It can be multi-AZ 
-- It's available for all database types (MySQL, PostgreSQL, MariaDB, Oracle, Aurora) except SQL-Server
-- Database engine version upgrade is independent from master instance (it must be handled manually)
-- [Multi-AZ vs. Read-Replicas](https://aws.amazon.com/rds/details/multi-az/)
-
-</details>
-
-<details>
 <summary>Option Group</summary>
 
 - It allows to configure (enable, disable, ...) some of the RDS database engines specific features
@@ -2115,7 +2085,33 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Scalability</summary>
+<summary>Scalability (Read Replica)</summary>
+
+- It's a read-only copy of an RDS instance
+- It's created from a primary instance
+	- The source primary instance is called the Master Instance
+	- The copy instance is called the Read-Replica Instance
+- It's achieved by using asynchronous replication from the Master Primary instance to the read replica instance
+- Reads from a Read-Replica are eventually consistent - normally seconds
+- It can be created in the same region or in a different region
+	- For different region, AWS handles the secure communications between those regions (Encryption in Transit)
+	- Without a need to any networking configurations
+- It requires Automatic backups to be turned on Master Instance
+- It can be addressed indepently from its primary instance (each read-replica has its own DNS name)
+- It's used for scaling reads:
+- It's possible to have up to 5 read-replica (5x increase in reads)
+	- It's not possible to have a single DNS name to address all of those read replicas
+	- Our application need to be aware of our database topology in order to take advantage of these read replicas
+- It's possible to have read-replicas of read replicas (latency)
+- It can be promoted to be a primary instance
+	- The read-replica db becomes then its own database (master)
+	- It breaks the asynchnous replication
+	- It can be used for read and write operations
+- It can be multi-AZ 
+- It's available for all database types (MySQL, PostgreSQL, MariaDB, Oracle, Aurora) except SQL-Server
+- Database engine version upgrade is independent from master instance (it must be handled manually)
+- [Multi-AZ vs. Read-Replicas](https://aws.amazon.com/rds/details/multi-az/)
+
 </details>
 
 <details>
