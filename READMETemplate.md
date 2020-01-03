@@ -30,10 +30,6 @@
 </details>
 
 <details>
-<summary>Encryption</summary>
-</details>
-
-<details>
 <summary>Monitoring</summary>
 </details>
 

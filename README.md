@@ -202,39 +202,36 @@
 		- IAM Roles associated with Amazon Elastic Compute Cloud (EC2) instances via Instance Profiles 
 		- Temporary credentials are available to the Instance
 		- This is recommended for EC2 environments
+- Encryption:
+	- Volume encryption uses EC2 host hardware to encrypt data at rest and in transit between EBS and EC2 instance
+	- Encryption generates a Data Encryption Key (DEK) from a Customer Master Key (CMK) in each region
+	- When a volume is encrypted (or an instance is created), each volume is encrypted by a unique DEK 
+	- Snapshot, AMI and volumes created from these AMI or snapshots will use the same DEK
+	- AWS KMS encryption is supported by most instance types (any of the current modern instance generation, especially those that use the nitro platform)
+	- There are some older generation instances which don't support it!
+	- EC2 instance and OS see plaintext data as normal (no any encryption): 
+    	- There is no performance impact
+    	- Encrypted DEKs stored with EBS volume are decrypted by KMS using a CMK
+    	- These decrypted DEKs (plaintext DEKs):
+        	- They're given to EC2 Host which stores them in its memory 
+        	- It uses them to decrypt data into EC2 instance or encrypt data from EC2 instance to EBS 
+    		- When the instance is stopped/rebooted, the Host erases these plaintext DEKs
+    	- So, AWS KMS isn't encrypting neither It's decrypting data 
+	- When an encrypted EBS snapshot is copied into another region: 
+    	- A new CMK should be created in the destination region
+    	- The new snapshot will be encrypted
+	- Encryption from an OS perspective:
+		- AWS KMS isn't enough for that
+    	- We need to use an OS level encryption available on most OS (Microsoft Windows, Linux) 
+    	- Only OS encryption will ensure that from an operating system perspective, the file's encrypted 
+    	- We're able to use both, though
 - For more details:  
     - [User Guide](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html)
     - [...](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html)
 	- [CLI Order of things](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
 
 </details>
-<details>
-<summary>Encryption</summary>
 
-- Volume encryption uses EC2 host hardware to encrypt data at rest and in transit between EBS and EC2 instance
-- Encryption generates a Data Encryption Key (DEK) from a Customer Master Key (CMK) in each region
-- When a volume is encrypted (or an instance is created), each volume is encrypted by a unique DEK 
-- Snapshot, AMI and volumes created from these AMI or snapshots will use the same DEK
-- AWS KMS encryption is supported by most instance types (any of the current modern instance generation, especially those that use the nitro platform)
-- There are some older generation instances which don't support it, though!
-- EC2 instance and OS see plaintext data as normal (no any encryption): 
-    - Therefore, there is no performance impact
-    - Encrypted DEKs stored with EBS volume are decrypted by KMS using a CMK
-    - These decrypted DEKs (plaintext DEKs):
-        - They're given to EC2 Host which stores them in its memory 
-        - It uses them to decrypt data into EC2 instance or encrypt data from EC2 instance to EBS 
-    	- When the instance is stopped/rebooted, the Host erases these plaintext DEKs
-    - So, AWS KMS isn't encrypting neither It's decrypting data 
-- When an encrypted EBS snapshot is copied into another region: 
-    - A new CMK should be created in the destination region
-    - The new snapshot will be encrypted
-- Encryption from an OS perspective:
-	- AWS KMS isn't enough for that
-    - We need to use an OS level encryption available on most OS (Microsoft Windows, Linux) 
-    - Only OS encryption will ensure that from an operating system perspective, the file's encrypted 
-    - We're able to use both, though
-
-</details>
 <details>
 <summary>Performance</summary>
 
@@ -1591,7 +1588,7 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Security(Permission)</summary>
+<summary>Security</summary>
 
 - The only entity that initially has access to a booket is the account that creates it (the root account)
 - The bucket by default isn't public (it doesn't trust any other aws account; it doesn allow public access)
@@ -1620,13 +1617,6 @@ EBS Optimization
 		- 1- Explicit Denies are the top priority
 		- 2- Explicit Allows are the second priority
 		- 3- Implicit Denies are the default
-- For more details: [Controlling Access to S3 Resources](https://aws.amazon.com/blogs/security/iam-policies-and-bucket-policies-and-acls-oh-my-controlling-access-to-s3-resources/)
-
-</details>
-
-<details>
-<summary>Encryption</summary>
-
 - Client-side Encryption: 
 	- It's the responsibility of the client/application:
 		- Encryption/decryption process (CPU intensive process)
@@ -1677,7 +1667,9 @@ EBS Optimization
 	- A bucket captures any PUT operations where no encryption method/directive is specified
 	- It doesn't enforce what type can and can't be used
 	- Bucket policies can enfore what type can be used
-- [For more details](https://aws.amazon.com/blogs/security/how-to-prevent-uploads-of-unencrypted-objects-to-amazon-s3/)
+- For more details:
+	- [Controlling Access to S3 Resources](https://aws.amazon.com/blogs/security/iam-policies-and-bucket-policies-and-acls-oh-my-controlling-access-to-s3-resources/)
+	- [How to prevent uploads of unencryted object to S3](https://aws.amazon.com/blogs/security/how-to-prevent-uploads-of-unencrypted-objects-to-amazon-s3/)
 
 </details>
 
@@ -1925,7 +1917,7 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Encryption</summary>
+<summary>Security</summary>
 
 - Encryption at rest:
 	- It's configured when creating a file system 
@@ -2228,12 +2220,6 @@ EBS Optimization
 	- It allows to manage database users credentials through IAM
 	- It's disabled by default
 	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAM.html)
-
-</details>
-
-<details>
-<summary>Encryption</summary>
-
 - Encryption At Rest:
 	- It's supported for all database types
 	- It can be configured only when creating a DB instance
@@ -2456,10 +2442,6 @@ EBS Optimization
 
 <details>
 <summary>Security</summary>
-</details>
-
-<details>
-<summary>Encryption</summary>
 </details>
 
 <details>
@@ -2957,12 +2939,6 @@ EBS Optimization
 	- to give access to an IAM Identity in the same account (user, role, group) using identity policies or
 	- to give access to an IAM role in the same account that allows an external identity to assume it
 - It's NOT possible to apply ressource level permission (unlike S3)
-
-</details>
-
-<details>
-<summary>Encryption</summary>
-
 - Encryption At rest 
 	- It's enabled by default
 	- DEFAULT: 
@@ -3290,14 +3266,7 @@ EBS Optimization
 - Security Group:
 	- LB SG will allow protocols/ports it's listning to
 	- Underlying backend instances could restrict traffic for LB SG only
-
-</details>
-
-<details>
-<summary>Encryption</summary>
-
-- Listener Configuration
-	
+- Listener Configuration (Encryption)
 
 </details>
 
@@ -3516,10 +3485,6 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Encryption</summary>
-</details>
-
-<details>
 <summary>Monitoring</summary>
 
 - Health check:
@@ -3591,7 +3556,6 @@ EBS Optimization
 <details>
 <summary>IPsec</summary>
 
-
 </details>
 
 <details>
@@ -3654,12 +3618,9 @@ EBS Optimization
 
 <details>
 <summary>Security</summary>
-</details>
 
-<details>
-<summary>Encryption</summary>
-
-- It provides a fully encrypted transit path across the internet from our VPC to onpremise location
+- Encryption in transit: 
+	- It provides a fully encrypted transit path across the internet from a VPC to an on-premise location
 
 </details>
 
@@ -3795,16 +3756,16 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Encryption</summary>
+<summary>Security</summary>
 
-- It's NOT encrypted for private and public VIFs
-- To use an encryption at application level (HTTPS) or 
-- to run a VPN connection over the top of a Public VIF running on a Direct Connect connection:
-	- A public VIF would grant access to public AWS services 
-	- A public VIF could be used with VGW:
-		- VGW's endpoints are public space services 
-		- We could then create an IP set VPN over the top of that public VIF to the endpoints
-of this VGW
+- Encryption in Transit:
+	- It's NOT encrypted for private and public VIFs
+	- To use an encryption at application level (HTTPS) or 
+	- To run a VPN connection over the top of a Public VIF running on a Direct Connect connection:
+		- A public VIF would grant access to public AWS services 
+		- A public VIF could be used with VGW:
+			- VGW's endpoints are public space services 
+			- We could then create an IP set VPN over the top of that public VIF to the endpoints of this VGW
 
 </details>
 
@@ -4261,7 +4222,7 @@ of this VGW
 
 ---
 
-## Application Integration: Simple Notification Service (SNS)
+## Application Integration - Simple Notification Service (SNS)
 
 - It is a web service that makes it easy to set up, operate, and send notifications from the cloud 
 - It provides developers with a highly scalable, flexible, and cost-effective capability to publish messages from an application and immediately deliver them to subscribers or other application
@@ -4283,7 +4244,7 @@ of this VGW
 
 ---
 
-## Application Integration: Simple Queue Service (SQS)
+## Application Integration - Simple Queue Service (SQS)
  
 - A web service that allowing asynchronous processing. 
 - It gives access to a message queue that can be used to store messages while waiting for a computer to process them. 
@@ -4343,7 +4304,7 @@ of this VGW
 
 ---
 
-## Application Integration: Elastic Transcder
+## Application Integration - Elastic Transcder
 
 - Media and Services - Elastic Transcoder: 
 	- It is a media transcoder in the cloud
@@ -4354,7 +4315,15 @@ of this VGW
 
 ---
 
-## Analytics: Kinesis
+## Analytics - Athena
+
+---
+
+## Analytics - Elastic Map Reduce (EMR)
+
+---
+
+## Analytics - Kinesis
 
 - Kinesis:
 	- It is a platform on AWS to send our streaming data to
@@ -4397,7 +4366,198 @@ Kinesis Firehose:
 
 ---
 
+## Analytics - Redshift
+
+<details>
+<summary>Description</summary>
+
+- It's a petapyte-scale data warehousing solution
+- It's designed for OLAP-based transaction (OnLine Analytical Processing)
+- It's a column-based database
+	- Data is stored in columns (as opposite of RDS that stores data in rows)
+	- Aggregation queries are fast
+	- Advanced data compression (see below)
+- It could be provisioned on 
+	- Ad hoc basis for a particular task or
+	- Only used when we require a warehousing functionality
+- It can load/unload data from/to S3
+- It can perform backups to S3
+- It can be used as a target for many AWS products as a final data storage location:
+	- E.g., Kinesis, Kinesis Firehose, EMR
+
+</details>
+
+<details>
+<summary>Architecture</summary>
+
+- It uses a cluster architecture
+- It could be configured as a Single Node or Multi-Node: 
+- ![Data Warehouse System Architecture](https://docs.aws.amazon.com/redshift/latest/dg/images/02-NodeRelationships.png)
+- [More details](https://docs.aws.amazon.com/redshift/latest/dg/c_high_level_system_architecture.html)
+
+</details>
+
+<details>
+<summary>Multi-Node</summary>
+
+- Leader Node:
+	- It manages client connections 
+	- It receives queries
+	- It distributes queries across nodes
+	- It splits queries into individual components
+	- It allocates a component to a particular slice of a node 
+- Multiple compute nodes:
+		- They has slices of data
+		- They perform distributed queries on their sliced data
+
+</details>
+
+<details>
+<summary>Compression</summary>
+
+- It's a Columnar data store
+- It compresses data much more than in row-based data stores because similar data is stored sequentially on disk 
+- It employs multiple compression techniques
+- When loading data into an empty table:
+	- It samples data and 
+	- It selects the most appropriate compression scheme 
+- It uses less space since it doesn't require indexes or materialized views
+
+</details>
+
+<details>
+<summary>Scalability</summary>
+
+- Massively Parallel Processing (MPP): 
+	- It distributes data and query load across all nodes 
+	- It makes it easy to add nodes to a data warehouse 
+
+</details>
+
+<details>
+<summary>Consistency</summary>
+
+- It's strong consistent since it uses 1 AZ only
+
+</details>
+
+<details>
+<summary>Resilience</summary>
+
+- It's only available in 1 AZ
+- It can restore snapshots to new AZs in the event of an outage 
+- It always attempts to maintain at least 3 copies of data:
+	- The original data
+	- a Replica on the compute nodes 
+	- a Backup in Amazon S3
+
+</details>
+
+<details>
+<summary>Disaster Recovery</summary>
+
+- A backup is enabled by default with a 1 day retention period 
+- A backup maximum retention period is 35 days
+- Snapshots can be asynchronously replicated to S3 in another region for disaster recovery
+
+</details>
+
+<details>
+<summary>Security</summary>
+
+- Encrypted in transit using SSL
+- Encrypted at rest: 
+	- It uses AES-256 
+	- It takes care of key management 
+	- It manages customer's own keys through KMS 
+
+</details>
+
+<details>
+<summary>Monitoring</summary>
+</details>
+
+<details>
+<summary>Pricing</summary>
+
+- Compute Node + Backup + Data Transfer
+- Compute Node Hours: 
+	- Total number of hours run across all compute nodes for the billing period
+		- We're billed for 1 unit per node per hour 
+		- E.g., a 3-node data warehouse cluster running persistently for an entire month would incur 2,160 instance hours (3 x 24 x 30)
+- Leader node isn't charged
+- Data transfer:
+	- only within a VPC (not outside it)
+ • Backup
+
+</details>
+
+<details>
+<summary>Use cases</summary>
+
+- Athena:
+	- It's used for doing OLTP-type queries on data that's in S3
+	- It doesn't require to maintain a database infrastructure
+	- It doesn't require to to load the data into Athena first
+	- It can query it directly from S3
+
+- EMR:
+	- It's used for a large scale analysis
+	- It's used to perform analytics and actual modification on data 
+	- It's for Big Data: It's uses semistructured or unstructured data
+- RedShift:
+	- It's used as an end state repository and as a single location for data from different sources
+	- It's used for summarization, aggregations (analytical queries) on all of our data
+	- E.g. a large organization like Amazon.com: 
+		- It might have hundreds or thousands of isolated databases around the organization
+		- It might be different engines, types of databases
+		- From amazon.com, Amazon Prime, Audio book purchases, ...
+		- RedShift might be the right solution to store all this data to perform some analytical style queries
+
+<details>
+<summary>Limits</summary>
+
+- Single Node: 160Gb
+- Max Compute Nodes #: 128 
+
+</details>
+
+
+
+
+
+
+---
+
 ## Logging and Monitoring:
+
+Security, Identity, and Compliance - KMS (Key Management Service): 
+
+    It is a regional service. 
+
+    Encryption generates a Data Encryption Key (DEK) from a Customer Master Key (CMK) in each region. 
+
+    There're 2 types of CMK: 
+
+        AWS Managed Keys:  
+
+            They're provided and managed by AWS (very limited amount of control for customers). 
+
+            Their alias format is: aws/serviceUsingIt: aws:ebs, aws:rds. 
+
+        Customer Managed Keys: more control (for example, key rotations). 
+
+    When any service within a specific wants to use encryption, it creates an AWS Managed Key inside the particular region. 
+
+</details>
+
+Athena 
+
+     
+
+      
+
+ 
 
 ---
 
