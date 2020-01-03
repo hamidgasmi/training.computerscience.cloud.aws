@@ -4500,7 +4500,6 @@ Kinesis Firehose:
 	- It doesn't require to maintain a database infrastructure
 	- It doesn't require to to load the data into Athena first
 	- It can query it directly from S3
-
 - EMR:
 	- It's used for a large scale analysis
 	- It's used to perform analytics and actual modification on data 
@@ -4514,6 +4513,8 @@ Kinesis Firehose:
 		- From amazon.com, Amazon Prime, Audio book purchases, ...
 		- RedShift might be the right solution to store all this data to perform some analytical style queries
 
+</details>
+
 <details>
 <summary>Limits</summary>
 
@@ -4521,11 +4522,6 @@ Kinesis Firehose:
 - Max Compute Nodes #: 128 
 
 </details>
-
-
-
-
-
 
 ---
 
