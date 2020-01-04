@@ -4558,7 +4558,6 @@ EBS Optimization
 - It can be configured with alarms:
 	- An alarm can trigger notification through SNS 
 - It can present data in a dashboard (Global or Regional)
-- Events delivers a near real-time stream of system events that describe changes in AWS resources
 - For more details:
 	- [How it works](https://www.journaldev.com/27259/amazon-cloudwatch)
 	- [AWS Services That Publish CloudWatch Metrics](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/aws-services-cloudwatch-metrics.html)
@@ -4629,9 +4628,39 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Cloud Watch Logs Insights</summary>
+<summary>Cloud Watch Logs</summary>
 
-- It allows to analyze logs
+- It provides functionality to store, monitor and, access logs
+- Its logs could be from:
+	- EC2 or on-premises servers
+	- Lambda
+	- CloudTrail
+	- Route 53
+	- VPC Flow Logs
+	- Custom applications
+- It's data is based on *Log Event* (It isn't datapoints and metrics):
+	- It's a timestanp and raw message
+	- YYYYMMDDHHMMSS	RAW-MESSAGE
+- A *Log Stream* is a group of log events with the same source: 
+	- A log stream is a sequence of log events that share the same source 
+	- E.g., 
+- A *Log Group* is a container for log streams:
+	- It defines groups of log streams that share the same retention, monitoring, and access control settings
+	- It controls retention, monitoring, access control and, metric filters (see below)
+	- Its name is usually prefixed, e.g., for AWS Lambda: aws/lambda/myLambdaFuncitonName/
+	- Multiple operations are available at this level:
+		- Export settings: to S3 
+		- Stream settings: to AWS Lambda, to AWS Elastic Search
+		- Expiration settings (change the retention period) by default it doesn't expire
+		- Metric filter setting: Add a new one; 
+- E.g., 
+	- We could have a separate log stream for the Apache access logs from 3 hosts, 
+	- We could group them into a single log group called MyWebsite.com/Apache/access_log
+- It allows to analyze logs at Log Group level:
+	- by creating Filter Patterns
+	- by creating new metrics
+	- by creating alarm
+	- e.g., failed SSH logins
 
 </details>
 
@@ -4652,6 +4681,7 @@ EBS Optimization
 
 - Every AWS account should have Billing alarm
 - Install by default CloudWatch agent in our EC2 instances
+- Give the right IAM role to AWS Services to let them use Cloud Watch Logs
 
 </details>
 
@@ -4662,9 +4692,16 @@ EBS Optimization
 <details>
 <summary>Description</summary>
 
-- It's for Auditing purposes 
-- It increases visibility into our users and Resource activity 
-- It's by recording AWS Management Console actions and API calls 
+- It's a governance, compliance, risk management, and auditing service
+- It records account activity within an AWS account
+	- Activity is recorded as a CloudTrail event
+	- By default, it's available for 90 days (event history)
+- Trails can be created, giving more control over logging and allowing events to be stored in S3 and CloudWatch logs
+- *Management Events*:
+	- Even can be management events
+	- They log control plane events (e.g., user login, configuring security and, adjusting security groups)
+- *Data Events#:
+	- E.g., Object-level events in S3; Function-level events in Lambda
 - We can identify...
 	- which users and accounts called AWS, 
 	- which IP address the calls were made from,  
