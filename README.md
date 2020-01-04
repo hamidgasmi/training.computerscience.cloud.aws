@@ -4534,30 +4534,124 @@ EBS Optimization
 <details>
 <summary>Description</summary>
 
-- It's for Performance purposes
-- It's monitoring resources and applications run on AWS 
-- It can trigger notification through SNS 
-- Datapoint data is collected: 1 every 5 minutes for example for EC2 
-- We can create dashboard Global or Regional
-- We can analyze your logs with Cloud Watch Logs Insights
-- Events delivers a near real-time stream of system events that describe changes in AWS resources. 
-- Compute Monitoring: 
-	- EC2 Instances: 
-		- Every 5 minutes by default
-		- Every 1 minute by enabling detailed monitoring 
-        - Metrics are displayed by AMI Id, Per-instance Metrics, aggregated by instance type, across all instances  
-        - CPU: 
-        - Netwrok: 
-        - Disk: 
-        - Status Check (System Status Checks, Instance Status Checks): 
-    - Auto scaling Groups: 
-    - Elastic Load Balancers: 
-    - Route53 Health Checks 
-    - Storage & Content Delivery Monitoring: 
-    	- EBS Volume: 
-        - Storage Gateway 
-        - CloudFront 
-    - Billing:
+- It provides near real-time monitoring of AWS services (performance purposes)
+- It's a metrics repository
+- It support customer metric data from some AWS services and on-premises platforms
+- Its metrics is a collection of time ordered set of datapoints of specific type:
+	- E.g., CPU usage metric is a collection of datapoint of CPU usage
+	- Some metrics are captured by default:
+		- E.g., External things of an EC2 instance: network usage, CPU usage
+	- Some other metrics aren't captured by default:  
+		- Internal to an AWS resource such as internal metrics of EC2
+		- On-premise or custom metrics
+		- CloudWatch agent or CloudWatch API allow to publish these metrics (see below) 
+		- E.g. 1, Memory usage of an individual process in an EC2 instance 
+		- E.g. 2, Overall memory utilization in an EC2 instance
+	- The capture frequency depends on AWS products:
+		- every less than every 60 seconds
+		- Every 1 minute
+		- Every 5 minutes: it's the default for EC2 instances
+		- ...
+	- They're grouped into namespaces:
+		- A namespace is a container of metrics
+		- E.g. AWS/EC2 namespace
+- It can be configured with alarms:
+	- An alarm can trigger notification through SNS 
+- It can present data in a dashboard (Global or Regional)
+- Events delivers a near real-time stream of system events that describe changes in AWS resources
+- For more details:
+	- [How it works](https://www.journaldev.com/27259/amazon-cloudwatch)
+	- [AWS Services That Publish CloudWatch Metrics](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/aws-services-cloudwatch-metrics.html)
+
+</details>
+
+
+<details>
+<summary>Architecture</summary>
+
+![High level description](https://cdn.journaldev.com/wp-content/uploads/2019/04/how-cloudwatch-works.png)
+
+</details>
+
+<details>
+<summary>Data Retention</summary>
+
+- Its retains datapoint for a certain period of time depending on how it's old:
+	- It aggregates data the older it is
+	- The older data gets, the less granularity there is
+	- Generally, detailed data only matters in the short term. Over long term, we're looking for trends
+- It retains for 3 hours datapoints with a period of less than 60 seconds:
+	- After 3 hours, they're aggregated to every 1 minute
+- It retains 15 days datapoints with a period of 1 minute:
+	- After 15 days, they're aggregated to every 5 minutes
+- It retains for 63 days datapoints with a period of 5 minutes:
+	- After 63 days, they're aggregated to every 1 hour
+- It retains for 455 days datapoints with a period of 1 hour:
+	- After 1 hour, they're deleted?
+
+</details>
+
+<details>
+<summary>Alarm</summary>
+
+- It can be create on a metric
+- It allows to take an action if the it's triggered
+- Its components are:
+	- A metric: the datapoints over time being measured
+	- Threshold
+		- It could be static
+		- Anomalie detection:
+		- [Using CloudWatch Anomaly Detection](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Anomaly_Detection.html)
+	- Period: How long the threshold should be bad before an alarm is generated
+	- Action: which action to trigger:
+		- SNS
+		- Auto Scaling
+		- EC2
+- Its states are:
+	- Insufficient:
+		- It's the state alarms start in 
+		- There isn't enough data to judge the state
+	- Alarm:
+		- The alarm threshold has been breached
+		- E.g., > 90% CPU
+	- OK: The alarm threshold hasn't been breached
+
+</details>
+
+<details>
+<summary>Cloud Watch Agent</summary>
+
+- It allows to publish metrics into CloudWatch agent
+- It allows to publish an AWS service internal metric that isn't capture by default
+	- E.g., memory usage of an individual process in an EC2 instance 
+- It sits internally on EC2 instances and injects metrics into CloudWatch
+
+</details>
+
+<details>
+<summary>Cloud Watch Logs Insights</summary>
+
+- It allows to analyze logs
+
+</details>
+
+<details>
+<summary>Pricing</summary>
+</details>
+
+<details>
+<summary>Use cases</summary>
+</details>
+
+<details>
+<summary>Limits</summary>
+</details>
+
+<details>
+<summary>Best practices</summary>
+
+- Every AWS account should have Billing alarm
+- Install by default CloudWatch agent in our EC2 instances
 
 </details>
 
