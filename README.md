@@ -4600,7 +4600,7 @@ EBS Optimization
 	- A metric: the datapoints over time being measured
 	- Threshold
 		- It could be static
-		- Anomalie detection:
+		- It could be automatic with Anomalie detection:
 		- [Using CloudWatch Anomaly Detection](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Anomaly_Detection.html)
 	- Period: How long the threshold should be bad before an alarm is generated
 	- Action: which action to trigger:
