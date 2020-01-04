@@ -4859,7 +4859,45 @@ EBS Optimization
 - Monitor All traffic (Accepted and Rejected traffic) 
 
 </details>
+
 ---
+
+## Operations - CloudWatch Events
+
+<details>
+<summary>Description</summary>
+
+- It's a sub product of CloudWatch
+- It's able to see in near real-time all the events which happen inside an AWS account
+- It's the glue that allows to receive events from sources and configure their delivery to targets:
+	- EC2 instances, Lambda functions, step function, state machines, SNS topics
+	- Add it as a message on SQS queue
+- It uses rules to deliver specific events to a supported target
+	- Event Source allows to filter and match against certain events within an account
+		- Event by Service: is based on a supported service
+		- Event Pattern: is for services that aren't directly supported (CloudTrail is required)
+		- Schedule: invokes a Target based on time: by fixed rate (every 2 mn) or [Cron expression](https://en.wikipedia.org/wiki/Cron) 
+	- Target:
+		- It's invoked when an event matches the Event Pattern or when schedule is triggered
+		- It could be a Lambda Function or any supported service or api
+- It's NOT CloudTrail:
+	- A CloudWatch events can take action based on what's happening
+	- A CloudWatch events is a real time service
+	- CloudTrail is an auditing tool and it's not a real-time product
+- E.g. of Events:
+	- An Instance stopping, 
+	- A security group being changed,
+	- A CloudTrail trail being switched off,
+	- A new user being added
+</details>
+
+<details>
+<summary>Use cases</summary>
+
+- Power off EC2 instances that don't need to be online outside of working hours:
+- Enable automatically a CloudTrail trail as soon as it's disabled
+
+</details>
 
 ##  Operations: Key Management Service (KMS)
 
