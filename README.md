@@ -4762,19 +4762,19 @@ EBS Optimization
 </details>
 
 <details>
+<summary>Insights Events</summary>
+
+- They're records that capture an unusual call volume of write management APIs in our AWS account (new)
+
+</details>
+
+<details>
 <summary>Data Events</summary>
 
 - They're also know as **data plane operations**
 - They're events that occur on data object level
 - E.g. 1, Object-level events in S3: GetObject, PutObject
 - E.g. 2, Function-level events in Lambda: Invoke API operations
-
-</details>
-
-<details>
-<summary>Insights Events</summary>
-
-- They'e records that capture an unusual call volume of write management APIs in our AWS account (new)
 
 </details>
 
@@ -4794,7 +4794,7 @@ EBS Optimization
 
 - Create a trail in our accounts and apply it to all regions and organization
 	- It should be the 2nd thing to do after creating an Admin user?
-	- Don't wait after a security breach happen to do it
+	- Don't wait after a security breach happen
 
 </details>
 
@@ -4802,6 +4802,63 @@ EBS Optimization
 
 ## Logging and Monitoring - VPC Flow Logs
 
+<details>
+<summary>Description</summary>
+
+- It allows to capture metadata about the traffic flowing in and out of a VPC networking interface:
+- It can be placed on:
+	- a specific network interface (ENI), 
+	- a subnet: it means Flow Logs monitors every ENI inside that subnet
+	- an entire VPC: it means Flow Logs monitors every ENI inside that VPC
+- It's NOT real time
+- It doesn't capture the actual traffic
+- It captures Metadata below:
+	- Account ID
+	- Interface ID
+	- Source and destination IP addresses
+    - Source and destination ports
+    - Protocol
+    - Bytes
+    - Start and end
+    - Log Status: ALLOW or REJECT
+	account-id, interface-id, srcaddr, dstaddr, srcport, dstport, protocol, packets, bytes, start, end, action, log-status
+- Creation Inputs:
+	- Filter: All, Accepted or, Rejected traffic
+	- Destination: 
+		- S3 bucket
+		- CloudWatch logs: log group + AMI Role
+	- Log Record format:
+		- Custom format
+		- AWS default format: 
+		${version} ${account-id} ${interface-id} ${srcaddr} ${dstaddr} ${srcport} ${dstport} ${protocol} ${packets} ${bytes} ${start} ${end} ${action} ${log-status}
+
+</details>
+
+<details>
+<summary>Architecture</summary>
+
+![Flow Logs reference architecture](https://image.slidesharecdn.com/net203-using-amazon-vpc-flow-l-f9174aef-74d9-4c4f-a53d-34d2b69789f4-2043954644-171201185801/95/net203using-amazon-vpc-flow-logs-to-do-predictive-security-analytics-4-638.jpg?cb=1512154795)
+
+</details>
+
+<details>
+<summary>Limits</summary>
+
+- It doesn't capture some traffic metadata:
+	- Amazon DNS server,
+	- Windows license activation: if we have any any Windows EC2 instances which the licenses are managed by AWS
+	- 169.254.169.254: instance metadata that occurs inside an instance
+	- DHCP traffic,
+	- VPC router
+
+</details>
+
+<details>
+<summary>Best practices</summary>
+
+- Monitor All traffic (Accepted and Rejected traffic) 
+
+</details>
 ---
 
 ##  Operations: Key Management Service (KMS)
