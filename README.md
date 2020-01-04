@@ -658,9 +658,7 @@ EBS Optimization
 		- A single Communication involves 4 individual sets of rules:
 		- We should think to "allow" traffic for every "ephemeral" ports on Client Inbound and Outbound rules and, 
 		- We should think to "allow" traffic for every "ephemeral" ports on Destination Inbound and Outbound rules as well
-	 
 - Location: It'sn't specific to any AZ
-
 - Type:
 	- Default NACL:
 		- It's created by default at the same as the VPC It's attached to
@@ -670,18 +668,15 @@ EBS Optimization
 		- It's created by users
 		- It should be associated "explicitly" to a subnet
 		- It blocks ALL traffic, by default: it only includes "*" rule only
-
 - Best Practice: 
 	- Inbound and Outbound Rules # should use an increment of 100: 
 		- 100 for the 1st IPv4 rule, 101 for the 1st IPv6 rule
 		- 200 for the 2nd IPv4 rule, 201 for the 2nd IPv6 rule
 	- Ensure that you place the DENY rules earlier in the table than the ALLOW rules that open the wide range of ephemeral ports
-
 - Use cases:
 	- Because of NACL management overhead (4 sets of rules for each communication), 
 	- They tend not to be used all that much generally in production usage (Security Groups are preferred)
 	- They're used when we have an explicit deny that we would like to add (E.g., an IP @ we were attacked from)
-	
 - Associations:	
 	- It could be associated with multiples subnets
 	- A subnet has to be associated with 1 NACL
@@ -4638,13 +4633,13 @@ EBS Optimization
 	- Route 53
 	- VPC Flow Logs
 	- Custom applications
-- It's data is based on *Log Event* (It isn't datapoints and metrics):
+- It's data is based on **Log Event** (It isn't datapoints and metrics):
 	- It's a timestanp and raw message
 	- YYYYMMDDHHMMSS	RAW-MESSAGE
-- A *Log Stream* is a group of log events with the same source: 
+- A **Log Stream** is a group of log events with the same source: 
 	- A log stream is a sequence of log events that share the same source 
 	- E.g., 
-- A *Log Group* is a container for log streams:
+- A **Log Group** is a container for log streams:
 	- It defines groups of log streams that share the same retention, monitoring, and access control settings
 	- It controls retention, monitoring, access control and, metric filters (see below)
 	- Its name is usually prefixed, e.g., for AWS Lambda: aws/lambda/myLambdaFuncitonName/
@@ -4694,18 +4689,112 @@ EBS Optimization
 
 - It's a governance, compliance, risk management, and auditing service
 - It records account activity within an AWS account
-	- Activity is recorded as a CloudTrail event
-	- By default, it's available for 90 days (event history)
-- Trails can be created, giving more control over logging and allowing events to be stored in S3 and CloudWatch logs
-- *Management Events*:
-	- Even can be management events
-	- They log control plane events (e.g., user login, configuring security and, adjusting security groups)
-- *Data Events#:
-	- E.g., Object-level events in S3; Function-level events in Lambda
+- It's enabled by default in all AWS accounts (It's used to be optional)
+- Its activity is record as a **CloudTrail event**
+	- It's a recorded action taken by users, roles or, aws services
+	- It's essentially a JSON document that details a specific action on that account
+	- It's recorded for 90 days in **Event history** that allows to browse through events; Search them; Interact with them, etc
 - We can identify...
 	- which users and accounts called AWS, 
 	- which IP address the calls were made from,  
     - When the calls occurred 
+
+</details>
+
+<details>
+<summary>Architecture</summary>
+
+![High Level architecture](https://miro.medium.com/max/1101/1*DsdZhWDGlER7PGAa4e6Dug.png)
+
+</details>
+
+<details>
+<summary>Trail</summary>
+
+- It allows to define advanced options inside CloudTrails:
+	- To retain CloudTrail events for than 90 days by storing them in S3 and CloudWatch logs 
+	- To create event metrics, 
+	- To trigger alerts, 
+	- To run advanced queries in Amazon Athena, 
+	- To create event workflows, 
+	- To create a trail for an organization by logging in with the master account for AWS Organization
+- It's a regional object
+- It delivers log files in S3:
+	- It's done on a periodic basis (not in real time): ~ every 15 mn?
+	- S3 bucket could be in a different AWS account that may be dedicated for security and governance
+- It could deliver log files in CloudWatch:
+- Its creation Inputs are:
+	- Trail name,
+	- Option to apply it to current region or all regions
+	- Option to apply it to current accoutn or to a whole organization
+	- Options for Management Events:
+		- Select Read-only, Write-only, All or, None events
+		- Select Log AWS KMS events
+	- Options for Data Events:
+		- S3: Select all events related to all or specific buckets
+		- Lambda Function: Select all events related to all or specific lambda functions
+	- Options to select Insights Events
+	- Storage Location: 
+		- S3 bucket + Log file prefix
+		- Encrypt log files with SSE-KMS + KMS key
+		- Enable log file validation: to determine whether a log file was delete, modified or, unchanged after it's delivered
+		- Send SNS notification for every log file delivery (Topic)
+- It edition Imputs are:
+	- Configure CloudWatch Logs integration:
+		- Select an existing Log Group or create a new one
+		- Select an existing IAM role or create a new one
+
+</details>
+
+<details>
+<summary>Management Events</summary>
+
+- They're also know as **Control Plane Operations**
+- They're events that we were traditionally associate with an API monitor
+- They log control plane events: anything that is account level interacting with the management plane of an account
+- **Read-Only** event:
+	- They're generated from read API operations
+	- E.g., Describe*
+- **Write-Only** event:
+	- They're generated from write, delete and, update API operations
+- E.g., creating a user, deleting a user, creating a bucket, deleting a bucket, creating a Lambda function, user login, configuring security and, adjusting security groups
+
+</details>
+
+<details>
+<summary>Data Events</summary>
+
+- They're also know as **data plane operations**
+- They're events that occur on data object level
+- E.g. 1, Object-level events in S3: GetObject, PutObject
+- E.g. 2, Function-level events in Lambda: Invoke API operations
+
+</details>
+
+<details>
+<summary>Insights Events</summary>
+
+- They'e records that capture an unusual call volume of write management APIs in our AWS account (new)
+
+</details>
+
+<details>
+<summary>Pricing</summary>
+</details>
+
+<details>
+<summary>Limits</summary>
+
+- Event history: 90 days
+
+</details>
+
+<details>
+<summary>Best practices</summary>
+
+- Create a trail in our accounts and apply it to all regions and organization
+	- It should be the 2nd thing to do after creating an Admin user?
+	- Don't wait after a security breach happen to do it
 
 </details>
 
