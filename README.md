@@ -5142,10 +5142,8 @@ EBS Optimization
 		- Cons: It's the most expensive because we do need to maintain 2 environments
 
 </details> 
-<details>
-<summary>
 
-</details>
+<details>
 <summary>Host Manager (HM)</summary>
 
 - It's responsible for deploying and maintaining any application
@@ -5158,11 +5156,13 @@ EBS Optimization
 <summary>Use cases</summary>
 
 - Use cases:
-	- no admin overhead or the absolute minimal amount of admin overhead for developers
+	- To provision an environment for an application with no admin overhead or the absolute minimal amount of admin overhead for developers
+	- When one of the supported languages is used and can add EB-specific config
 - Antipattern:
 	- It's NOT for low level infrastructure control
 	- It's NOT for immutable architecture (deploying applications in a completely unaltered way)
-	- 
+	- Chef support is needed
+
 </details>
 
 <details>
@@ -5176,5 +5176,44 @@ EBS Optimization
 ---
 
 ## Deployment: OpsWorks
+
+<details>
+<summary>Description</summary>
+
+- It's an implementation of the [Chef](https://en.wikipedia.org/wiki/Chef_(software)) configuration management
+- It's a deployment platform
+- It allows to manage large sets of infrastructure
+- It takes away from the low-level configuration of CloudFormation
+- It's not as ar as Elastic Beanstalk: 
+	- It's designed for infrastructure engineer
+	- It's NOT designed for developers
+- It lets create a stack of resources with layers
+- It manages resources as a unit
+
+</details>
+
+<details>
+<summary>Architecture</summary>
+</details>
+
+<details>
+<summary>Stacks</summary>
+</details>
+
+<details>
+<summary>Layers</summary>
+</details>
+
+<details>
+<summary>Instances</summary>
+</details>
+
+<details>
+<summary>Apps</summary>
+</details>
+
+<details>
+<summary>Recipes</summary>
+</details>
 
 ---
