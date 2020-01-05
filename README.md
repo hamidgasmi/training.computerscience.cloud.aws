@@ -4301,12 +4301,11 @@ EBS Optimization
 
 ## Application Integration - Elastic Transcder
 
-- Media and Services - Elastic Transcoder: 
-	- It is a media transcoder in the cloud
-	- It converts media files from their original source format into different formats that will play on smartphones, tablets, PCs, etc
-	- It provides transcoding presets for popular output formats
-	- This means that we don't need to guess about which settings work best on particular devices
-	- Pay based on transcoded minutes and the resolution at which we transcode. 
+- It is a media transcoder in the cloud
+- It converts media files from their original source format into different formats that will play on smartphones, tablets, PCs, etc
+- It provides transcoding presets for popular output formats: we don't need to guess about which settings work best on particular devices
+- It also operates in a serverless fashion: we're not allocating the underlying infastructure that is used to transcode these files
+- Pay based on transcoded minutes and the resolution at which we transcode. 
 
 ---
 
@@ -4535,7 +4534,9 @@ EBS Optimization
 - Its metrics is a collection of time ordered set of datapoints of specific type:
 	- E.g., CPU usage metric is a collection of datapoint of CPU usage
 	- Some metrics are captured by default:
-		- E.g., External things of an EC2 instance: network usage, CPU usage
+		- E.g. 1, External things of an EC2 instance: network usage, CPU usage
+		- E.g. 2, DynamoDB writes and reads
+		- E.g. 3, EBS volume writes and reads
 	- Some other metrics aren't captured by default:  
 		- Internal to an AWS resource such as internal metrics of EC2
 		- On-premise or custom metrics
@@ -4623,7 +4624,7 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Cloud Watch Logs</summary>
+<summary>CloudWatch Logs</summary>
 
 - It provides functionality to store, monitor and, access logs
 - Its logs could be from:

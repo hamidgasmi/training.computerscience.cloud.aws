@@ -1,0 +1,2 @@
+#Download a video (mp4)
+curl https://raw.githubusercontent.com/linuxacademy/content-aws-csa2019/master/lab_files/08_application_analytics_operations/elastictranscode/ChiliChallenge.mp4 > ChiliChallenge.mp4

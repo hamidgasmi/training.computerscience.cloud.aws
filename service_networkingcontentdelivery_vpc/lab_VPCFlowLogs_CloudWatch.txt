@@ -1,0 +1,3 @@
+#Enter the following Filter Pattern to track failed SSH attempts on port 22:
+[version, account, eni, source, destination, srcport, destport="22", protocol="6", packets, bytes, windowstart, windowend, action="REJECT", flowlogstatus]
+
