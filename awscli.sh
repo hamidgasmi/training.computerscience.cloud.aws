@@ -43,4 +43,14 @@ cd /mnt/myefs
 
 #7. RDS:
 
+#8. KMS:
+aws kms create-key --description "LA KMS DEMO CMK"
+aws kms create-alias --target-key-id XXX --alias-name "alias/lakmsdemo" --region us-east-1
+echo "this is a secret message" topsecret.txt
+aws kms encrypt --key-id KEYID --plaintext file://topsecret.txt --output text --query CiphertextBlob 
+aws kms encrypt --key-id KEYID --plaintext file://topsecret.txt --output text --query CiphertextBlob | base64 --decode > topsecret.encrypted
+aws kms decrypt --ciphertext-blob fileb://topsecret.encrypted --output text --query Plaintext | base64 --decode 
+aws kms generate-data-key --key-id KEYID --key-spec AES_256 --region us-east-1
+
+
 

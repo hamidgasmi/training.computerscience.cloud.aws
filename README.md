@@ -4904,17 +4904,63 @@ EBS Optimization
 <details>
 <summary>Description</summary>
 
-- It is a regional service. 
-- Encryption generates a Data Encryption Key (DEK) from a Customer Master Key (CMK) in each region. 
-- There're 2 types of CMK: 
-	- AWS Managed Keys:  
-		- They're provided and managed by AWS (very limited amount of control for customers). 
-		- Their alias format is: aws/serviceUsingIt: aws:ebs, aws:rds. 
-    - Customer Managed Keys: more control (for example, key rotations). 
-- When any service within a specific wants to use encryption, it creates an AWS Managed Key inside the particular region
+- It provides regional, secure key management and encryption/decryption services
+- It's a regional service
+- It's used to be a part of AWS IAM
+- It's validated for [FIPS 140-2 Level 2](https://en.wikipedia.org/wiki/FIPS_140-2)
+	- CloudHSM is validated FIPS 140-2 Level 3
+- It allows
+	- to create, modify and, delete **Customer Master Keys** (**CMK**s):
+		- A CMK is created in a region and never leaves it
+		- A CMK has key policies and can be used to create other keys
+	- to encrypt a data:
+		- Input: a plaintext data + CMK
+		- Output: a ciphertext + a **Data Encryption Key** (**DEK**)
+	- to decypt a encrypted data:
+		- Input: ciphertext + CMK
+		- Output: plaintext data
+	- to reencrypt data:
+		- Input: ciphertext + New CMK
+		- Output: a new ciphertext (at no point do we see the plaintext)
 
 </details>
 
+<details>
+<summary>Customer Master Keys (CMK)</summary>
+
+- There're 3 types of CMK
+- Customer Managed Key:
+	- CanView: Yes; CanManage: Yes; DedicatedtoMyAccount: Yes
+	- It's allowed by certain services
+	- It allows key rotation, configuration
+	- It can be controlled via key policies and enabled/disabled
+- AWS Managed Keys:
+	- CanView: Yes; CanManage: No; DedicatedtoMyAccount: Yes
+	- It's used by default if encryption is picked within most AWS services
+	- It's formatted as *aws/service-name*
+	- It could be used by the service it belong to only
+	- E.g., aws:ebs, aws:rds
+- AWS Owned CMK:
+	- It's used by AWS on a shared basis across many accounts
+	- It's NOT available (hided)
+	
+</details>
+
+<details>
+<summary>Data Encryption Key (DEK)</summary>
+
+</details>
+
+<details>
+<summary>Limits</summary>
+
+- Encryption/Decryption Max data size: 4 KB
+
+</details>
+
+<details>
+<summary>Best practices</summary>
+</details>
 
 ---
 
