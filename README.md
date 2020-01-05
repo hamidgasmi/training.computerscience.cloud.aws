@@ -5057,14 +5057,124 @@ EBS Optimization
 <details>
 <summary>Description</summary>
 
-- It lets deploy, monitor, and scale an application quickly and easily
-- Let us do the heavy lifting so we can focus on your business
-- It is like Cloud Formation for people that don't know anything about AWS. 
+- It's a PaaS product (Platform as a Service)
+- It's Infrastucture as Code
+- It's a CI/CD system (Continuous Integration / Continuous Delivery)
+- It's like Cloud Formation for people that don't know anything about AWS
+	- CloudFromation is very close to infrastructure
+	- CloudFromation is flexible but there is a lot of admin overhead
+- It manages the infrastructure for any provided code
+	- It supports Java, DotNet, Node.js, PHP, Ruby, Python, Go, 
+	- It supports Docker, Apache, IIS, Nginx and, Tomcat based applications
+- It provides automated provisioning, monitoring, auto scaling, load balancing and, updating
+- It's an **application container**
+	- It contains **envronments**
+	- It contains 1 or more **Application versions** 
+		- They're added to a container
+		- They package a **source bundle** (a zip or a wire file depending on the the platform used to create it)
+		- They're deployed to an environment
+	- It doesn't contain a database because its environments are transitory
+
 - E.g., We can upload our application code and Beanstalk will create all required AWS infrastructure for us. 
-- Its Configuration:
-	- Software:
-	- Instance:  
 
 </details>
+
+<details>
+<summary>Architecture</summary>
+
+- An application has a beanstalk container
+- An application container has multiple environments
+	- 1 or more Web Server environments
+	- 1 worker environment
+- An environment has: 
+	- 1 LB, 
+	- 1 Auto Scaling Group across multiple AZs 
+	- 1 or more Instances that run a **Host Manager (HM)**
+- The database is outside of these environments which are transitory	
+- ![](https://blog.shikisoft.com/assets/images/post_imgs/eb-deployments/eb-blue-green-success.png)
+
+</details>
+
+<details>
+<summary>Environment</summary>
+
+- It's transitory: modified at each deployment
+- It doesn't contain a database because it's transitory
+- It has 2 types:
+	- **Web Server environment**
+		- It's designed to serve web applications on the Internet
+		- It has a DNS name
+		- Plateform
+	- **Worker environment**
+		- It's designed to be used in background SQS message processing for decoupling applications
+- It allows to configure different aspects about hot it's architected:
+	- It allows to modifiy the size and type of its instances, storage type that it uses
+	- It can change its capacity
+	- It allows to have a LB or not
+	- It allows to scale out to whatever number of instances needed
+	- It allows to change the deployment style
+	- It allows to change the monitoring and security that is used
+</details>
+
+<details>
+<summary>Deployment</summary>
+
+- **Deployment Options**:
+	- **All at once**: 
+		- An updated application version is deployed to all instances
+		- It's NOT recommended for production deployments
+		- Pros: It's quick and simple
+		- Cons: It may cause an outage if there's any problem
+	- **Rolling**
+		- It splits instances into batches
+		- It deploys on existing batches one at a time
+	- **Rolling with additional Batch** (immutable)
+		- It's as above but 
+		- It provisions a new batch of instances, 
+		- It deploys on them and tests them 
+		- It removes the old batch if there's no problem 
+		- Pros: it prevent outages: if there's any problem, its stops the deployment
+		- Cons: It's slightly more expensive
+	- **Blue/Green**:
+		- It maintains 2 environments
+		- It deploys, and swap CNAME
+		- Pros: It's the safest option
+		- Cons: It's the most expensive because we do need to maintain 2 environments
+
+</details> 
+<details>
+<summary>
+
+</details>
+<summary>Host Manager (HM)</summary>
+
+- It's responsible for deploying and maintaining any application
+- It's looking at events and metrics
+- It's maintaing server logs
+
+</details>
+
+<details>
+<summary>Use cases</summary>
+
+- Use cases:
+	- no admin overhead or the absolute minimal amount of admin overhead for developers
+- Antipattern:
+	- It's NOT for low level infrastructure control
+	- It's NOT for immutable architecture (deploying applications in a completely unaltered way)
+	- 
+</details>
+
+<details>
+<summary>Limits</summary>
+</details>
+
+<details>
+<summary>Best practices</summary>
+</details>
+
+---
+
+## Deployment: OpsWorks
 
 ---
