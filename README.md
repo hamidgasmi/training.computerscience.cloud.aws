@@ -487,7 +487,6 @@ EBS Optimization
 - Analogy: It's like a floor (or a component of it) in our data center
 - Description: It's a part of a VPC
 - Location: It's inside an AZ: subnets can't span AZs
-
 - CIDR blocks:
 	- It can't be bigger than CIDR blocks of the VPC It's attached to
 	- It can't overlap with any CIDR blocks inside the VPC It's attached to
@@ -501,7 +500,6 @@ EBS Optimization
 	- Subnet's Future IP address ("+3"): e.g., 10.0.0.3
 	- Subnet's Network Broadcast IP address ("Last"): E.g., 10.0.0.255
 	- [For more details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html)
-
 - Security and Sharing:
 	- Share a subnet with Organizations or AWS accounts
 	 	- Resources deployed to the subnet are owned by the account that deployed them: so we can't update them
@@ -511,17 +509,14 @@ EBS Optimization
 	 	- If It's configured to allocate public IP
 	 	- If the VPC has an associated Internet Gateway
 	 	- If It's attached to a route table with a default route to the Internet Gateway
-
 - Type:
 	- Default Subnet:
 	 	- It's a subnet that is created automatically by AWS at the same time as a default VPC
 	 	- It's public
 	 	- There is as many default subnets as AZs of the region where the default VPC is created in
 	- Custom Subnet: It's a subnet created by a customer in a costum VPC
-
 - Limits:
 	- Subnet max/min netmask: /16 ... /28 (same as VPC netmask limit)
-
 - Associations:	
 	- Subnet & VPC:
 	 	- A subnet is attached to 1 VPC
@@ -4906,56 +4901,148 @@ EBS Optimization
 <summary>Description</summary>
 
 - It provides regional, secure key management and encryption/decryption services
-- It's a regional service
+- It's validated for [FIPS 140-2 Level 2](https://en.wikipedia.org/wiki/FIPS_140-2) (Do NOT be confused with AWS CloudHSM which is validated FIPS 140-2 Level 3)
 - It's used to be a part of AWS IAM
-- It's validated for [FIPS 140-2 Level 2](https://en.wikipedia.org/wiki/FIPS_140-2)
-	- CloudHSM is validated FIPS 140-2 Level 3
+- It's a regional service
 - It allows
 	- to create, modify and, delete **Customer Master Keys** (**CMK**s):
-		- A CMK is created in a region and never leaves it
 		- A CMK has key policies and can be used to create other keys
-	- to encrypt a data:
+	- to encrypt data:
 		- Input: a plaintext data + CMK
-		- Output: a ciphertext + a **Data Encryption Key** (**DEK**)
-	- to decypt a encrypted data:
-		- Input: ciphertext + CMK
+		- Output: a ciphertext that includes a link back to the used CMK 
+	- to decrypt encrypted data:
+		- Input: ciphertext
 		- Output: plaintext data
-	- to reencrypt data:
+		- Action: AWS will use the link to the used CMK included in the ciphertext to decrypt the input
+	- to reencrypt encrypted data:
 		- Input: ciphertext + New CMK
-		- Output: a new ciphertext (at no point do we see the plaintext)
+		- Output: a new ciphertext (at no point do we see the plaintext) that includes a link to the new CMK
+		- Action: AWS will use the link to the old CMK included in the ciphertext to reencrypt it
+- 
 
 </details>
 
 <details>
 <summary>Customer Master Keys (CMK)</summary>
 
-- There're 3 types of CMK
-- Customer Managed Key:
-	- CanView: Yes; CanManage: Yes; DedicatedtoMyAccount: Yes
-	- It's allowed by certain services
-	- It allows key rotation, configuration
-	- It can be controlled via key policies and enabled/disabled
-- AWS Managed Keys:
-	- CanView: Yes; CanManage: No; DedicatedtoMyAccount: Yes
-	- It's used by default if encryption is picked within most AWS services
-	- It's formatted as *aws/service-name*
-	- It could be used by the service it belong to only
-	- E.g., aws:ebs, aws:rds
-- AWS Owned CMK:
-	- It's used by AWS on a shared basis across many accounts
-	- It's NOT available (hided)
-	
+- There're 3 types of CMK:
+	- **Customer Managed Key**:
+		- A customer can View it
+		- A customer can Manage it: Enable it, disable it, configure rotation, etc.
+		- It's Dedicated to a customer Account
+		- It's allowed by certain services
+		- It allows an automatic key rotation: every year (optional: disabled by default)
+		- It can be controlled via key policies (see below)
+		- It can be enabled/disabled
+	- **AWS Managed Key**:
+		- A customer can View it
+		- A customer can NOT Manage it
+		- It's Dedicated to a customer Account
+		- It's used by Default if encryption is picked within most AWS services
+		- It's formatted as *aws/service-name*
+		- It could be used by the service it belong to only
+		- It's automatically **rotated every 3 years** (1095 days)
+		- It can NOT be enabled/disabled
+		- E.g., aws:ebs, aws:rds
+	- AWS Owned CMK:
+		- A customer can NOT View it
+		- A customer can NOT Manage it
+		- It's NOT Dedicated to a customer Account
+		- It's used by AWS on a shared basis across many accounts
+		- It's used for AWS level encryption and decryption
+		- It's NOT available (hiden)
+- It's created in a region 
+	- It never leaves its region
+	- E.g. an encrypted S3 object in us-east-1:
+		- If we want to move this object to us-east-2, a new region
+		- We need to create a new CMK in us-east-2, the new region
+		- We need to reencrypt the S3 object with the new CMK of us-east-2
+- It has a unique **KeyId**
+- It could have an **Alias** that is pointing to the key (optional)
+	- Without an alias, a CMK isn't visible on the console
+
 </details>
 
 <details>
 <summary>Data Encryption Key (DEK)</summary>
 
+- It's used to encrypt or decrypt data of any size (> 4 KB)
+- It's generated from a CMK and it returns a DEK in 2 versions:
+	- A Plaintext version, **Data Encryption Key (DEK)** (non encrypted version)
+	- A Cipher version, **Encrypted Data Encryption Key** (An encrypted version)
+	- ![Data Key operation](https://docs.aws.amazon.com/kms/latest/developerguide/images/generate-data-key.png)
+- AWS KMS cannot use a data key to encrypt data
+	- It could be done by a customer outside of KMS 
+	- It could be done by using OpenSSL or a cryptographic library like the AWS Encryption SDK
+- The encryption operation is done as follow:
+	- Data is encrypted by using the Plaintext data key
+		- ![Data encryption with plaintext data key](https://docs.aws.amazon.com/kms/latest/developerguide/images/encrypt-with-data-key.png)
+	- The plaintext data key should be discarded (removed from memory) as soon as possible 
+	- Encrypted Data can be safely stored with the encrypted data key: it is available to decrypt the data
+- The decryption operation is done as follow:
+	- Decrypt the encrypted data key: AWS KMS Decrypt operation will uses the related CMK to decrypt it and returns the plaintext data key
+	- Use the plaintext data key to decrypt our data 
+	- Remove the plaintext data key from memory as soon as possible
+	- ![Data decryption operation with an encrypted data key](https://docs.aws.amazon.com/kms/latest/developerguide/images/decrypt.png)
+- **Envelope Encryption**
+	- When we encrypt our data, our data is protected, but we have to protect our encryption key 
+	- One strategy is to encrypt it 
+	- Envelope encryption is the practice of encrypting plaintext data with a data key, and then encrypting the data key under another key
+	- E.g., This is how S3 functions to encrypt objects
+	- ![Envelope Encryption](https://docs.aws.amazon.com/kms/latest/developerguide/images/key-hierarchy-master.png)
+- [For more details](https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#enveloping)
+
+</details>
+
+<details>
+<summary>Custom Key Stores</summary>
+
+- It allows to let KMS supprt FIPS 140-2 Level 3 by using AWS Cloud HSM which is validated FIPS 140-2 Level 3
+- It let customers to store a CMKs in a custom key store instead of the standard KMS key store
+	- A custom key store is created using an AWS CloudHSM cluster that customers own and manage
+	- A custom key store provides direct control of the hardware security modules (HSMs) that generate the key material for a customer's CMKs and perform cryptographic operations with them
+
+</details>
+
+<details>
+<summary>Security</summary>
+
+- **Key Policy**:
+	- For Customer Managed CMKs:
+		- By default, a CMK is accessible by everyone in the account it's created in
+		- A Customer Managed CMK by default trusts the account it's created in
+		- It could be updated
+		- If a CMK's key policy is deleted, we won't than have any access to the CMK (a support ticket will be then needed)
+	- For AWS Managed CMKs:
+		- It's NOT editable
+		- It allow access through its AWS service for all principals in the account that are authorized to use this AWS service
+
+</details>
+
+<details>
+<summary>Role separation</summary>
+
+- KMS has the concept of two types of uses on a key: 
+	- We have the ability to interact and manage a key
+	- But we also have a separate set of permissions, which allow to perform cryptographic operations using that key
+	- E.g., So we can reecrypt a data without having access to its plaintext
+- It allows an identity to be given administrator rights to an AWS Service such as S3, but not allow them to interact with this AWS Service data
+- [For more details](https://en.wikipedia.org/wiki/Separation_of_duties): 
+
+</details>
+
+<details>
+<summary>Pricing</summary>
+</details>
+
+<details>
+<summary>Use cases</summary>
 </details>
 
 <details>
 <summary>Limits</summary>
 
-- Encryption/Decryption Max data size: 4 KB
+- Encryption/Decryption without DEK Max data size: 4 KB
 
 </details>
 

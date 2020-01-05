@@ -44,13 +44,27 @@ cd /mnt/myefs
 #7. RDS:
 
 #8. KMS:
+#8.1. Create a Customer Managed CMK
+#8.1.1 Linux/Mac OS
 aws kms create-key --description "LA KMS DEMO CMK"
 aws kms create-alias --target-key-id XXX --alias-name "alias/lakmsdemo" --region us-east-1
-echo "this is a secret message" topsecret.txt
+echo "this is a secret message" > topsecret.txt
 aws kms encrypt --key-id KEYID --plaintext file://topsecret.txt --output text --query CiphertextBlob 
 aws kms encrypt --key-id KEYID --plaintext file://topsecret.txt --output text --query CiphertextBlob | base64 --decode > topsecret.encrypted
 aws kms decrypt --ciphertext-blob fileb://topsecret.encrypted --output text --query Plaintext | base64 --decode 
 aws kms generate-data-key --key-id KEYID --key-spec AES_256 --region us-east-1
+#8.1.2. Windows:
+aws kms create-key --description "LA KMS DEMO CMK"
+aws kms create-alias --target-key-id XXX --alias-name "alias/lakmsdemo" --region us-east-1
+echo "this is a secret message" topsecret.txt
+aws kms encrypt --key-id KEYID --plaintext file://topsecret.txt --output text --query CiphertextBlob 
+aws kms encrypt --key-id KEYID --plaintext file://topsecret.txt --output text --query CiphertextBlob > topsecret.base64.encrypted
+certutil -decode topsecret.base64.encrypted topsecret.encrypted
 
-
-
+aws kms decrypt --ciphertext-blob fileb://topsecret.encrypted --output text --query Plaintext > topsecret.decrypted.base64
+certutil topsecret.decrypted.base64 topsecret.decrypted
+#8.2. Create a DEK
+#8.2.1 Linux/Mac OS:
+aws kms generate-data-key --key-id KEYID --key-spec AES_256
+#8.2.2. Windows:
+aws kms generate-data-key --key-id KEYID --key-spec AES_256
