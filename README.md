@@ -2,39 +2,39 @@
 ## Table of Contents
 - [Infrastructure](#Infrastructure)
 - [Security: Identity and Access Control (IAM)](#Security-Identity-and-Access-Control-IAM)
-- [Compute - EC2 (Elastic Cloud Computing)]()
-- [Networking - VPC (Virtual Private Cloud)](Networking - VPC (Virtual Private Cloud))
-- [Networking - Route 53](Networking - Route 53)
-- [Storage - S3 (Simple Storage Service)](Storage - S3 (Simple Storage Service))
-- [Networking - CloudFront](Networking - CloudFront)
-- [Storage - Elastic File System (EFS)](Storage - Elastic File System (EFS))
-- [Database - SQL - Relational Database Service (RDS)](Database - SQL - Relational Database Service (RDS))
-- [Database - SQL - RDS Aurora Provisioned](Database - SQL - RDS Aurora Provisioned)
-- [Database - SQL - RDS Aurora Serverless](Database - SQL - RDS Aurora Serverless)
-- [Database - NoSQL - DynamoDB](Database - NoSQL - DynamoDB)
-- [Database - In-Memory Caching](Database - In-Memory Caching)
-- [Hybrid and Scaling - Elastic Load Balancing](Hybrid and Scaling - Elastic Load Balancing)
-- [Hybrid and Scaling - Auto scaling Groups](Hybrid and Scaling - Auto scaling Groups)
-- [Hybrid and Scaling - Virtual Private Networks (VPN)](Hybrid and Scaling - Virtual Private Networks (VPN))
-- [Hybrid and Scaling - Direct Connect (DX)](Hybrid and Scaling - Direct Connect (DX))
-- [Hybrid and Scaling - Snow*](Hybrid and Scaling - Snow*)
-- [Hybrid and Scaling - Data Migration - Storage Gateway](Hybrid and Scaling - Data Migration - Storage Gateway)
-- [Hybrid and Scaling - Data Migration - DB Migration Service (DMS)](Hybrid and Scaling - Data Migration - DB Migration Service (DMS))
-- [Hybrid and Scaling - Cognito](Hybrid and Scaling - Cognito)
-- [Application Integration - Simple Notification Service (SNS)](Application Integration - Simple Notification Service (SNS))
-- [Application Integration - Simple Queue Service (SQS)](Application Integration - Simple Queue Service (SQS))
-- [Application Integration - Elastic Transcder](Application Integration - Elastic Transcder)
-- [Analytics - Athena](Analytics - Athena)
-- [Analytics - Elastic Map Reduce (EMR)](Analytics - Elastic Map Reduce (EMR))
-- [Analytics - Kinesis](Analytics - Kinesis)
-- [Analytics - Redshift](Analytics - Redshift)
-- [Logging and Monitoring - CloudWatch](Logging and Monitoring - CloudWatch)
-- [Logging and Monitoring - CloudTrail](Logging and Monitoring - CloudTrail)
-- [Logging and Monitoring - VPC Flow Logs](Logging and Monitoring - VPC Flow Logs)
-- [Operations - CloudWatch Events](Operations - CloudWatch Events)
-- [Operations: Key Management Service (KMS)](Operations: Key Management Service (KMS))
-- [Deployment: Elastic BeansTalk](Deployment: Elastic BeansTalk)
-- [Deployment: OpsWorks](Deployment: OpsWorks)
+- [Compute - Elastic Cloud Computing (EC2))](#Compute-Elastic-Cloud-Computing-EC2)
+- [Networking - Virtual Private Cloud (VPC)](#Networking-Virtual-Private-Cloud-VPC)
+- [Networking - Route 53](#Networking-Route-53)
+- [Storage - Simple Storage Service (S3))](#Storage-Simple-Storage-Service-S3)
+- [Networking - CloudFront](#Networking-CloudFront)
+- [Storage - Elastic File System (EFS)](#Storage-Elastic-File-System-EFS)
+- [Database - SQL - Relational Database Service (RDS)](#Database-SQL-Relational-Database-Service-RDS)
+- [Database - SQL - RDS Aurora Provisioned](#Database-SQL-RDS-Aurora-Provisioned)
+- [Database - SQL - RDS Aurora Serverless](#Database-SQL-RDS-Aurora-Serverless)
+- [Database - NoSQL - DynamoDB](#Database-NoSQL-DynamoDB)
+- [Database - In-Memory Caching](#Database-In-Memory-Caching)
+- [Hybrid and Scaling - Elastic Load Balancing](#Hybrid-and-Scaling-Elastic-Load-Balancing)
+- [Hybrid and Scaling - Auto scaling Groups](#Hybrid-and-Scaling-Auto-scaling-Groups)
+- [Hybrid and Scaling - Virtual Private Networks (VPN)](#Hybrid-and-Scaling-Virtual-Private-Networks-VPN)
+- [Hybrid and Scaling - Direct Connect (DX)](#Hybrid-and-Scaling-Direct-Connect-DX)
+- [Hybrid and Scaling - Snow*](#Hybrid-and-Scaling-Snow)
+- [Hybrid and Scaling - Data Migration - Storage Gateway](#Hybrid-and-Scaling-Data-Migration-Storage-Gateway)
+- [Hybrid and Scaling - Data Migration - DB Migration Service (DMS)](#Hybrid-and-Scaling-Data-Migration-DB-Migration-Service-DMS)
+- [Hybrid and Scaling - Cognito](#Hybrid-and-Scaling-Cognito)
+- [Application Integration - Simple Notification Service (SNS)](#Application-Integration-Simple-Notification-Service-SNS)
+- [Application Integration - Simple Queue Service (SQS)](#Application-Integration-Simple-Queue-Service-SQS)
+- [Application Integration - Elastic Transcder](#Application-Integration-Elastic-Transcder)
+- [Analytics - Athena](#Analytics-Athena)
+- [Analytics - Elastic Map Reduce (EMR)](#Analytics-Elastic-Map-Reduce-EMR)
+- [Analytics - Kinesis](#Analytics-Kinesis)
+- [Analytics - Redshift](#Analytics-Redshift)
+- [Logging and Monitoring - CloudWatch](#Logging-and-Monitoring-CloudWatch)
+- [Logging and Monitoring - CloudTrail](#Logging-and-Monitoring-CloudTrail)
+- [Logging and Monitoring - VPC Flow Logs](#Logging-and-Monitoring-VPC Flow Logs)
+- [Operations - CloudWatch Events](#Operations-CloudWatch-Events)
+- [Operations: Key Management Service (KMS)](#Operations-Key-Management-Service-KMS)
+- [Deployment: Elastic BeansTalk](#Deployment-Elastic-BeansTalk)
+- [Deployment: OpsWorks](#Deployment-OpsWorks)
 
 ## Infrastructure:
 
@@ -108,7 +108,7 @@
 
 ---
 
-## Compute - EC2 (Elastic Cloud Computing):
+## Compute - Elastic Cloud Computing (EC2)):
 
 <details>
 <summary>Description</summary>
@@ -407,7 +407,7 @@ EBS Optimization
 
 ---
 
-## Networking - VPC (Virtual Private Cloud):
+## Networking - Virtual Private Cloud (VPC):
 
 <details>
 <summary>Description</summary>
@@ -1263,7 +1263,7 @@ EBS Optimization
 
 ---
 
-## Storage - S3 (Simple Storage Service):
+## Storage - Simple Storage Service (S3):
 
 <details>
 <summary>Description</summary>
