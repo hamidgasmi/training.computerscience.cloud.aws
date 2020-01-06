@@ -38,7 +38,12 @@
 
 ## Infrastructure
 
+<details>
+<summary>Global Infrastructure</summary>
+
 - [AWS Global Infrastructure](https://infrastructure.aws/)
+
+</details>
 
 <details>
 <summary>Region</summary>
@@ -75,7 +80,7 @@
 <summary>Edge Locations</summary>
 
 - They're also called "Points of Presence" (Pops)
-- They host CDN (Content Delivery Network)
+- They host [AWS CDN](#networking---cloudfront)
 - There're many more than regions
 
 </details>
