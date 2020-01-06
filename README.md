@@ -36,7 +36,7 @@
 - [Deployment: Elastic BeansTalk](#Deployment-Elastic-BeansTalk)
 - [Deployment: OpsWorks](#Deployment-OpsWorks)
 
-## Infrastructure:
+## Infrastructure
 
 - [AWS Global Infrastructure](https://infrastructure.aws/)
 
@@ -92,7 +92,7 @@
 
 ---
 
-## Security: Identity and Access Control (IAM):
+## Security: Identity and Access Control (IAM)
 
 <details>
 <summary>Description</summary>
@@ -108,7 +108,7 @@
 
 ---
 
-## Compute - Elastic Cloud Computing (EC2):
+## Compute - Elastic Cloud Computing (EC2)
 
 <details>
 <summary>Description</summary>
@@ -407,7 +407,7 @@ EBS Optimization
 
 ---
 
-## Networking - Virtual Private Cloud (VPC):
+## Networking - Virtual Private Cloud (VPC)
 
 <details>
 <summary>Description</summary>
@@ -1025,7 +1025,7 @@ EBS Optimization
 
 ---
 
-## Networking - Route 53:
+## Networking - Route 53
 
 <details>
 <summary>Description</summary>
@@ -1263,7 +1263,7 @@ EBS Optimization
 
 ---
 
-## Storage - Simple Storage Service (S3):
+## Storage - Simple Storage Service (S3)
 
 <details>
 <summary>Description</summary>
@@ -1724,7 +1724,7 @@ EBS Optimization
 
 ---
 
-## Networking - CloudFront:
+## Networking - CloudFront
 
 <details>
 <summary>Description</summary>
@@ -1875,7 +1875,7 @@ EBS Optimization
 
 ---
 
-## Storage - Elastic File System (EFS):
+## Storage - Elastic File System (EFS)
 
 <details>
 <summary>Description</summary>
@@ -2012,7 +2012,7 @@ EBS Optimization
 
 ---
 
-## Database - SQL - Relational Database Service (RDS):
+## Database - SQL - Relational Database Service (RDS)
 
 <details>
 <summary>Description</summary>
@@ -2305,7 +2305,7 @@ EBS Optimization
 
 ---
 
-## Database - SQL - RDS Aurora Provisioned:
+## Database - SQL - RDS Aurora Provisioned
 
 <details>
 <summary>Description</summary>
@@ -2518,7 +2518,7 @@ EBS Optimization
 
 ---
 
-## Database - SQL - RDS Aurora Serverless:
+## Database - SQL - RDS Aurora Serverless
 
 <details>
 <summary>Description</summary>
@@ -2671,7 +2671,7 @@ EBS Optimization
 
 ---
 
-## Database - NoSQL - DynamoDB:
+## Database - NoSQL - DynamoDB
 
 <details>
 <summary>Description</summary>
@@ -3057,7 +3057,7 @@ EBS Optimization
 
 ---
 
-## Database - In-Memory Caching:
+## Database - In-Memory Caching
 
 <details>
 <summary>DynamoDB Accelerator (DAX)</summary>
@@ -3114,7 +3114,7 @@ EBS Optimization
 
 ---
 
-## Hybrid and Scaling - Elastic Load Balancing:
+## Hybrid and Scaling - Elastic Load Balancing
 
 <details>
 <summary>Description</summary>
@@ -3380,7 +3380,7 @@ EBS Optimization
 
 ---
 
-## Hybrid and Scaling - Auto scaling Groups:
+## Hybrid and Scaling - Auto scaling Groups
 
 <details>
 <summary>Description</summary>
@@ -3551,7 +3551,7 @@ EBS Optimization
 
 ---
 
-## Hybrid and Scaling - Virtual Private Networks (VPN):
+## Hybrid and Scaling - Virtual Private Networks (VPN)
 
 <details>
 <summary>Description</summary>
@@ -3706,7 +3706,7 @@ EBS Optimization
 
 ---
 
-## Hybrid and Scaling - Direct Connect (DX):
+## Hybrid and Scaling - Direct Connect (DX)
 
 <details>
 <summary>Description</summary>
@@ -3847,7 +3847,7 @@ EBS Optimization
 
 ---
 
-## Hybrid and Scaling - Snow*:
+## Hybrid and Scaling - Snow*
 
 <details>
 <summary>Description</summary>
@@ -3947,7 +3947,7 @@ EBS Optimization
 
 ---
 
-## Hybrid and Scaling - Data Migration - Storage Gateway:
+## Hybrid and Scaling - Data Migration - Storage Gateway
 
 <details>
 <summary>Description</summary>
@@ -4044,7 +4044,7 @@ EBS Optimization
 
 ---
 
-## Hybrid and Scaling - Data Migration - DB Migration Service (DMS):
+## Hybrid and Scaling - Data Migration - DB Migration Service (DMS)
 
 <details>
 <summary>Description</summary>
@@ -4105,7 +4105,7 @@ EBS Optimization
 
 ---
 
-## Hybrid and Scaling - Cognito:
+## Hybrid and Scaling - Cognito
 
 <details>
 <summary>Description</summary>
