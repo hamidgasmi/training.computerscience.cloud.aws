@@ -5194,26 +5194,101 @@ EBS Optimization
 
 <details>
 <summary>Architecture</summary>
+
+- It's based on **Chef**
+- Chef uses **Recipes** 
+- A Recipe uses **cookbooks**
+- A Cookbook requires a **repository**
+- ![OpsWorks Stacks](https://secureservercdn.net/160.153.137.15/3d9.249.myftpupload.com/wp-content/uploads/2016/12/OpsWorks-Stacks.png)
+- For more details:
+	- [Chef quick start](https://docs.chef.io/quick_start.html)
+	- [About Cookbooks](https://docs.chef.io/cookbooks.html)
+
 </details>
 
 <details>
 <summary>Stacks</summary>
+
+- It's the base entity of OpsWorks (as in AWS CloudFormation)
+- It's an entity that is configured and build on using other configuration components (see below)
+	- It represents an isolated collection of infrastructure as for CloudFormation but 
+	- It's NOT created from a template
+- When we're controlling permissions and giving people permissions to interact with OpsWorks, we generally doing it on a per stack basis
+- It can be used per application or per platform
+- It could be used for development, staging or, production environments
+- It could be created based on:
+	- Chef 11 sack
+		- It's capable of managing Linux based OS
+	- Chef 12 stack:
+		- It's capable of managing Linux and Windows based OS
+	- Sample stack
+		- Node.js app.
+		- It's capable of managing Linux and Windows based OS
+- It includes 1 or more **Layers**
+- [For more details](https://docs.aws.amazon.com/opsworks/latest/userguide/welcome_classic.html)
+
 </details>
 
 <details>
 <summary>Layers</summary>
-</details>
 
-<details>
-<summary>Instances</summary>
-</details>
+- It's comparable to application tiers within a stack
+- E.g., a database layer, a web server layer, an application layer, a proxy layer
+- It could be
+	- An OpsWorks layer
+	- An ECS layer: if we have an ECS cluster in in our AWS infrastructure, we could add it and use that functionality inside OpsWrks
+	- An RDS layer: if we have any RDS database instances, they could be then referenced as a layer
+- It's at layer level that **Recipes** are applied (associated) and configure what to install on instances in that layer
+- It includes different settings such as
+	- Auto healing settings
+	- We can define the exact network configuration of any instance that is added to a layer 
+	- We can control the storage of any instance that is added to a layer
+	- We can add additional mount points to instances that get added
+	- We can configure CloudWatch log exports on a layer by layer basis
 
-<details>
-<summary>Apps</summary>
 </details>
 
 <details>
 <summary>Recipes</summary>
+
+- They're the essentially the documents that Chef uses to configure te instances that are inside a layer
+- It has different recipe types:
+	- **Setup**:
+		- It's executed on an instance when 1st provisioned
+		- E.g., installing a web server or installing base system components
+	- **Configure**:
+		- It's executed on **all** instances on the related layer when an instance is added or removed
+		- E.g., if a cluster is running inside a layer, when an instance is added, it may be needed to make all of the other instances in that layer aware of the newly added instance
+	- **Deploy** and **Undeploy**:
+		- They're executed when apps are added or removed
+	- **Shutdown**:
+		- It's executed when an instance is shut down but before it's stopped
+
 </details>
+
+<details>
+<summary>Instances</summary>
+
+- They're EC2 instances
+- They're associated with a layer
+- They're added within a layer in different ways:
+	- They could be configured to run 24/7
+	- They could be time based:
+		- They can be set to start and stop based on a specific schedule
+	- They could be load based:
+		- They can be set to start and stop automatically (scale in and out) based on the load that's incoming to that layer
+
+</details>
+
+<details>
+<summary>Apps</summary>
+
+- They're deployed to layers from a source code repo or S3
+- Actual deployment happens using recipes on a layer
+- Other recipes are run when deployments happen, potientially to reconfigure other instances
+
+</details>
+
+
 
 ---
