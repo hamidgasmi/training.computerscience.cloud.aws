@@ -108,7 +108,7 @@
 
 ---
 
-## Compute - Elastic Cloud Computing (EC2)):
+## Compute - Elastic Cloud Computing (EC2):
 
 <details>
 <summary>Description</summary>
