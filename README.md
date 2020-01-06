@@ -30,7 +30,7 @@
 - [Analytics - Redshift](#Analytics-Redshift)
 - [Logging and Monitoring - CloudWatch](#Logging-and-Monitoring-CloudWatch)
 - [Logging and Monitoring - CloudTrail](#Logging-and-Monitoring-CloudTrail)
-- [Logging and Monitoring - VPC Flow Logs](#Logging-and-Monitoring-VPC Flow Logs)
+- [Logging and Monitoring - VPC Flow Logs](#Logging-and-Monitoring-VPC-Flow-Logs)
 - [Operations - CloudWatch Events](#Operations-CloudWatch-Events)
 - [Operations: Key Management Service (KMS)](#Operations-Key-Management-Service-KMS)
 - [Deployment: Elastic BeansTalk](#Deployment-Elastic-BeansTalk)
