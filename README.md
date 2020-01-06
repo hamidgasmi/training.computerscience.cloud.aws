@@ -1,6 +1,6 @@
 # AWS:
 ## Table of Contents
-- [Infrastructure](#Infrastructure)
+- [Infrastructure](#infrastructure)
 - [Security: Identity and Access Control (IAM)](#security-identity-and-Access-control-iam)
 - [Compute - Elastic Cloud Computing (EC2))](#compute---elastic-cloud-computing-ec2)
 - [Networking - Virtual Private Cloud (VPC)](#networking---virtual-private-cloud-vpc)
