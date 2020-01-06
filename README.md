@@ -4909,7 +4909,7 @@ EBS Optimization
 		- A CMK has key policies and can be used to create other keys
 	- to encrypt data:
 		- Input: a plaintext data + CMK
-		- Output: a ciphertext that includes a link back to the used CMK 
+		- Output: an encoded text **base64** CiphertextBlob that includes a link back to the used CMK
 	- to decrypt encrypted data:
 		- Input: ciphertext
 		- Output: plaintext data
@@ -5068,8 +5068,8 @@ EBS Optimization
 	- It supports Docker, Apache, IIS, Nginx and, Tomcat based applications
 - It provides automated provisioning, monitoring, auto scaling, load balancing and, updating
 - It's an **application container**
-	- It contains **envronments**
-	- It contains 1 or more **Application versions** 
+	- It contains 0 or more **envronments**
+	- It contains 0 or more **Application versions** 
 		- They're added to a container
 		- They package a **source bundle** (a zip or a wire file depending on the the platform used to create it)
 		- They're deployed to an environment
@@ -5189,6 +5189,7 @@ EBS Optimization
 	- It's NOT designed for developers
 - It lets create a stack of resources with layers
 - It manages resources as a unit
+- It uses IAM permissions to interact with different components of AWS
 
 </details>
 
