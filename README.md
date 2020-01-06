@@ -1,4 +1,7 @@
 # AWS:
+## Table of Contents
+- [Infrastructure](#Infrastructure)
+
 ## Infrastructure:
 
 - [AWS Global Infrastructure](https://infrastructure.aws/)
