@@ -4635,6 +4635,7 @@ EBS Optimization
 		- An identical copy of the message will be delivered to multiple queues subscribing to that topic
 		- Behind each queue, there's a worker pool that is dedicated for a specific converson
 		- Each worker fleet has multiple EC2 instances to convert the raw media file into a bit rate specific to a queue
+	- ![Fanout architecture](https://media.amazonwebservices.com/blog/sns_sqs_image_proc_2.png)
 
 </details>
 
