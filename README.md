@@ -4360,7 +4360,7 @@ EBS Optimization
 	- It allows to reuse 1 topic for different functions
 	- ![Message Filtering Architecture](https://d2908q01vomqb2.cloudfront.net/1b6453892473a467d07372d45eb05abc2031647a/2017/11/20/introducing_sns_message_filtering_image_3.png)
 	- [For more details](https://aws.amazon.com/blogs/compute/simplify-pubsub-messaging-with-amazon-sns-message-filtering/)
-	
+
 </details>
 
 <details>
@@ -4444,77 +4444,197 @@ EBS Optimization
 
 ## Application Integration - Simple Queue Service (SQS)
 
-- A web service that allowing asynchronous processing.
-- It gives access to a message queue that can be used to store messages while waiting for a computer to process them.
-- It's allowing to decouple the components of an application so they run independently from each other.
-- It's a distributed queue system. It's a fail-safe queue.
-- Message Size limits:
-	- Up to 256 KB of text in any format is store directly in SQS
-	- Between 256 KB up to 2 GB is supported but the messages are stored in S3 by Amazon SQS Extended Client Library for Java.
-- Message Retention is defined in term of seconds:
-	- By default, a message is retained for 4 days
-	- The minimum is 1 minute (60 s)
-	- The maximum is 14 days (1,209,600‬ s).
-- The messages are retrieved programmatically by using Amazon SQS API
-- Use cases:
-	- It resolves issues that arise if the producer (caller) is producing work faster than the consumer can process it
-	- It resolves issues that arise if the producer or consumer are intermittently connected to the network.
-- The 1st AWS service!
-- SQS and EC2 Auto scaling Groups:
-	- We can set up an auto scaling group and have a trigger as to how many messages are in the queue
-	- If # of messages goes over the defined threshold, it triggers an auto scaling event.
-- SQS Types:
-	- Standard Queue:
-		- It's the default queue type
-		- It lets us have a nearly-unlimited number of transactions per second
-		- It guarantees that a message is delivered at least once
-		- This means that occasionally a message might be delivered multiple times
-		- It provide best-effort ordering which ensures that messages are generally delivered in the same order as they're sent
-		- This means that occasionally the messages might be delivered out of order
-		- This is due to the highly-distributed architecture that allows high throughput
-	- FIFO Queue:
-		- "First in, First Out" queue
-		- No duplication: messages are delivered once
-		- Order is kept: Messages are delivered in the same order in which that are sent
-		- A message remains available until a consumer processes and deletes it
-		- Message Groups: allow multiple ordered message groups within a single queue
-		- TPS (Throughput Per Second) Limit: 300 transaction per second
-		- It has all capabilities of standard Queue.
-- Visibility Time Out:
-	- It's the amount of time that a message is invisible in the queue after It's picked up by a consumer
-	- In other words, when an EC2 instance picks up a message, it makes the message invisible for other EC2 instances
-	- If the consumer doesn't delete the message within that time, the message will become visible again for other consumers
-	- This could result in the same message being delivered twice
-	- Visibility timeout is maximum 12 hours
-	- Short polling vs. Long polling:
-		- It's a way to retrieve messages from AWS SQS queue
-		- Short polling:
-			- It's the default way to retrieve message from SQS queues
-			- When a consumer sends a ReceivedMessage request, a response is returned immediately
-			- Even if the message queue being polled is empty
-		- Long polling:
-			- When a consumer sends a ReceivedMessage request, a response isn't returned until
-				- a message arrives in the queue
-				- or the long poll connection times out
-			- It helps reduce the cost of using Amazon SQS by eliminating the number of...
-				- Empty responses: when there are no messages available for a ReceivedMessage request
-				- False empty responses: when messages are available but aren't included in a response
+<details>
+<summary>Description</summary>
+
+- It's a queuing system (the 1st AWS service)
+- It provides fully managed, highly available message queues
+- It allows asynchronous processing:
+- It allows to decouple components of an application so they run independently from each other
+- **SQS Message**
+	- It can be in any text format up to 256 KB
+	- It could be bigger: it's stored in S3 and its location is added to SQS queue
+	- It's added to a queue
+	- It's **polled** by a **worker** or a consumer by using Amazon SQS API
+	- It's retained for a **retention period**
+		- By default, it's retained for 4 days
+		- The minimum is 1 minute (60 s)
+		- The maximum is 14 days (1,209,600‬ s).
+	- It's deleted from the queue when it's processed by the worker that polled it
+	
+</details>
 
 <details>
-<summary>Use casess</summary>
+<summary>Architecture</summary>
 
-- Fanout architecture:
-	- It allows to send a message to an SNS topic and fan it out to multiple queues for further processing
-		- E.g., an app. like YouTube:
-		- When a video is uploaded, a message is sent to a topic 
+- [Basic Architecture](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-basic-architecture.html)
+
+</details>
+
+<details>
+<summary>Polling</summary>
+
+- It's a single API call to retrieve a message from a SQS queue
+- It allows to define how many messages to retrieve (max is 10)
+- It has 2 types:
+- **Short polling**:
+	- It's the default way
+	- When a poll request (***ReceivedMessage***) is sent, a response is returned **immediately**
+		- It may contain the messages that are available in the queue up to a maximum of 10
+		- It may contain 0 message if the queue is empty
+		- E.g. 1, a short poll is sent for 10 messages
+			- 12 messages are available in the SQS queue
+			- A response is returned immediately with 10 messages
+		- E.g. 2, a short poll is sent for 10 messages
+			- 6 messages are available in the SQS queue
+			- A response is returned immediately with 6 messages
+	- It causes increased number of API calls
+- **Long polling**:
+	- When a poll request is sent, it waits for messages for a given ***WaitTimeSeconds***
+	- In other words, when a poll request is sent, a response isn't returned until
+		- the number of requested messages arrive in the queue
+		- or the long poll connection times out
+	- It's more efficient
+		- It eliminates the number of 
+			- Empty responses: it's when a queue is empty
+			- False empty responses: it's when messages are available but aren't included in a response (Messages are not visible or delayed))
+		- It helps to reduce the cost of using Amazon SQS
+- **Visibility Time Out**
+	- It's the amount of time that a message is invisible in the queue after it's polled by a consumer
+	- If a polled message isn't deleted within that time, the message will become visible again for other consumers
+	- This could result in the same message being delivered twice
+	- ![Message Lifecycle](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/images/sqs-message-lifecycle-diagram.png)
+- For more details:
+	- [Short and Long polling](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-short-and-long-polling.html)
+
+</details>
+
+<details>
+<summary>SQS Types</summary>
+
+- **Standard Queue**:
+	- It's the default queue type
+	- It's highly-distributed and scalable to nearly unlimited message throughput (transactions per second)
+	- It guarantees that messages are delivered at least once: 
+		- This means that a message could be delivered more than once
+	- It provides **best-effort** ordering:
+		- It ensures that messages are generally delivered in the same order as they're sent
+		- It's NOT guarantees
+		- This means that occasionally messages might be delivered out of order
+- **FIFO Queue**:
+	- "First in, First Out" queue
+	- It guarantees that messages are delivered once and once only 
+	- It guarantees that the order the messages are added to the queue will be the order they're delivered
+	- Its throughput is limited:
+		- 3,000 messages per second with batching 
+		- ~300 messages per second without batching
+	- A message remains available until a consumer processes and deletes it
+	- Message Groups: allow multiple ordered message groups within a single queue
+- ![Standard vs. FIFO queues](https://d2908q01vomqb2.cloudfront.net/0716d9708d321ffb6a00818614779e779925365c/2017/03/28/QueueTypes-1.jpg)
+- For more details:
+	- [Standard Queue](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/standard-queues.html)
+	- [FIFO Queue](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues.html)
+
+</details>
+
+<details>
+<summary>Scalability</summary>
+</details>
+
+<details>
+<summary>Consistency</summary>
+</details>
+
+<details>
+<summary>Resilience</summary>
+</details>
+
+<details>
+<summary>Disaster Recovery</summary>
+</details>
+
+<details>
+<summary>Security</summary>
+</details>
+
+<details>
+<summary>Monitoring</summary>
+</details>
+
+<details>
+<summary>Pricing</summary>
+</details>
+
+<details>
+<summary>Use cases</summary>
+
+- Interprocess, interserver, or interservice messaging
+- **Asynchronous messaging** architecture:
+	- When a producer (caller) is producing work faster than its consumer can process it
+	- When a producer or consumer are intermittently connected to the network
+- ***Workers Pool Architecture***:
+	- It allows to decouple components of an application: 
+		- They run independently from each other
+		- They scale independently from each other
+		- They fail independently from each other
+	- E.g., an app. like YouTube 
+		- People are uploading videos to this app. 
+		- The videos need to have some form of processing performed on them
+	- A frontend tier allows the user to upload the videos
+		- It's of EC2 instances which are under a ELB and an Auto Scaling Group
+		- It's fully scalable
+		- It stores these videos on S3 via a PUT API call
+	- S3 generates and sends a message to a SNS Topic:
+		- Once a video storage is completed, S3 generates an AWS SNS PUT notification
+		- This PUT notification is added to a SQS queue indicating that a video is ready to be processed
+	- At the backend, we have a fleet of EC2 instances + An Auto scaling Group:
+		- This workers pool is scalled out by the auto scaling group based on the number of messages in the queue
+		- The workers keep polling the queue above and process a message (video path to S3) as soon as it's received
+		- The workers put the result in S3
+	- This architecture means that the more video uploads we get (more customers), the more messages in the queue and the more instances inside this worker pool 
+		- It auto scales based on demand and 
+		- Overtime it reaches an equilibrium where video processing is occurring in a timely way
+	- This architecture also means is that the frontend and backend are decoupled from each other 
+		- They work independently from each other
+		- They scale independently from each other
+		- They fail independently from each other
+- ***Fanout architecture***
+ 	- It allows to send a message to an SNS topic and fan it out to multiple queues for further processing
+	- E.g., an app. like YouTube:
+		- People are uploading raw media files to this app. 
+		- The raw media files are converted into different bit rate
+	- A frontend tier allows the user to upload the videos
+		- It stores these videos on S3 via a PUT API call
+	- S3 generates and sends a message to a SNS Topic:
 		- The message indicates the uploaded of a raw media file and its location on S3
 		- An identical copy of the message will be delivered to multiple queues subscribing to that topic
-		- Behind each queue, there's a worker fleet that polls a message from that queue
+		- Behind each queue, there's a worker pool that is dedicated for a specific converson
 		- Each worker fleet has multiple EC2 instances to convert the raw media file into a bit rate specific to a queue
 	- 
 
 </details>
 
+<details>
+<summary>Limits</summary>
+
+- SQS message max size: 256 KB 
+- SQS Extended Client Library size limit: Between 256 KB up to 2 GB
+- Message retention maximum: 14 days (1,209,600‬ s)
+- Message retention manimum: 1 mn (60‬ s)
+- Poll APP Max message #: 10
+- FIFO Queue TPS (Throughput Per Second):
+	- 3,000 messages per second with batching 
+	- ~300 messages per second without batching
+- Visibility timeout maximum: 12 hours
+
+</details>
+
+<details>
+<summary>Best practices</summary>
+
+- To add a mecanism to check if a message is already processed
+	
+</details>
 
 
 
