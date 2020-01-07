@@ -4451,9 +4451,19 @@ EBS Optimization
 - It provides fully managed, highly available message queues
 - It allows asynchronous processing:
 - It allows to decouple components of an application so they run independently from each other
+- It's a **regional** service
+- It's a **public** AWS service: 
+	- It has a public endpoint (URL)
+	- It could be accessed from a VPC with either an Internet Gateway + a NAT Gateway or a VPC endpoint
+	- It could be accessed from any other location with a public Internet connection (on-premise locations)
 - **SQS Message**
 	- It can be in any text format up to 256 KB
 	- It could be bigger: it's stored in S3 and its location is added to SQS queue
+	- It's composed by:
+		- Body: the data that is queued
+		- ReceiptHandle: it's a unique ID for the message
+		- MD5OfBody:
+		- MessageId:
 	- It's added to a queue
 	- It's **polled** by a **worker** or a consumer by using Amazon SQS API
 	- It's retained for a **retention period**
@@ -4461,6 +4471,7 @@ EBS Optimization
 		- The minimum is 1 minute (60 s)
 		- The maximum is 14 days (1,209,600‬ s).
 	- It's deleted from the queue when it's processed by the worker that polled it
+		- It requeres the queue URL and the message ***ReceiptHandle***
 	
 </details>
 
@@ -4510,7 +4521,7 @@ EBS Optimization
 </details>
 
 <details>
-<summary>SQS Types</summary>
+<summary>Queue Types</summary>
 
 - **Standard Queue**:
 	- It's the default queue type
@@ -4550,15 +4561,29 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Disaster Recovery</summary>
-</details>
-
-<details>
 <summary>Security</summary>
+
+ **Ressource Policy**:
+	- It defines who has access to a queue
+	- By default, only the queue owner has access to it	
+- Encryptions:
+	- **Encryption at Rest** by using [AWS KMS](#operations---key-management-service-kms)
+	- **Encryption in Transit** by using SSL/TLS?
+
 </details>
 
 <details>
 <summary>Monitoring</summary>
+
+- It's done by AWS CloudWatch
+- Some metrics are:
+	- NumberOfMessagesSent
+	- NumberOfMessagesReceived
+	- NumberOfMessagesDeleted
+	- NumberOfMessagesVisible
+	- NumberOfEmptyReceives
+	- ApproximateNumberOfMessages
+	- ApproximateNumberOfMessagesNotVisible
 </details>
 
 <details>
@@ -4610,7 +4635,6 @@ EBS Optimization
 		- An identical copy of the message will be delivered to multiple queues subscribing to that topic
 		- Behind each queue, there's a worker pool that is dedicated for a specific converson
 		- Each worker fleet has multiple EC2 instances to convert the raw media file into a bit rate specific to a queue
-	- 
 
 </details>
 
@@ -4633,10 +4657,10 @@ EBS Optimization
 <summary>Best practices</summary>
 
 - To add a mecanism to check if a message is already processed
-	
+- For rapid and agile scalability, to use Lambda instead of a Worker Pool architecture (EC2 instances + Auto Scaling Group):
+	- When the processing time for the queue message is less than the maximum runtime of Lambda (15 mn)
+
 </details>
-
-
 
 ---
 
