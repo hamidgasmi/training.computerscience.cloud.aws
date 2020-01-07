@@ -56,14 +56,14 @@
 	- Some regions are linked by a direct high speed network (see link above)
 	- It'sn't a public network
 	- E.g., Paris and Virginia regions are linked by a high speed network
-- Data created is a specific region wont leave the region 
+- Data created is a specific region wont leave the region
 	- Unless we decide otherwise (data replication to another region)
 	- Regions allow to operate in a specific country where laws are known
 	- We make sure that data will only operate under the jurisdiction of those laws
 - E.g., US East (N. Virginia) region:
-	- It is the 1st AWS region (launched in 2006)
+	- It's the 1st AWS region (launched in 2006)
 	- It's always up-to-date: all new services are delivered 1st in this region
-	- It's good for all training purposes  
+	- It's good for all training purposes
 
 </details>
 
@@ -71,8 +71,8 @@
 <summary>Availability Zone (AZ)</summary>
 
 - It's a logical data center within a region
-- There could be more physical data centers within an AZ 
-- Its name could be different from 1 aws account to another 
+- There could be more physical data centers within an AZ
+- Its name could be different from 1 aws account to another
 
 </details>
 
@@ -84,7 +84,7 @@
 - There're many more than regions
 
 </details>
- 
+
 <details>
 <summary>Regional Edge Caches</summary>
 
@@ -118,13 +118,13 @@
 <details>
 <summary>Description</summary>
 
-- It provides sizable compute capacity in the cloud 
-- It's a IaaS (Infrastructure as a Service) AWS Service 
-- It takes 2mn to obtain and boot new server instances 
+- It provides sizable compute capacity in the cloud
+- It's a IaaS (Infrastructure as a Service) AWS Service
+- It takes 2mn to obtain and boot new server instances
 - It allows to quickly scale capacity both up and down as your computing requirement changes
-- ARN:  
+- ARN:
 	- Format: arn:${Partition}:ec2:${Region}:${Account}:instance/${InstanceId}
-    - E.g., arn:aws:ec2::191449997525:instance/1234j8r3kdj
+	- E.g., arn:aws:ec2::191449997525:instance/1234j8r3kdj
 - Use cases:
 	- Monolothic application that require a traditional OS to work
 
@@ -141,49 +141,46 @@
 	- General Purpose:
 		- A1: Arm-based machine
 		- T2, T3: Low-cost instance types; occasional traffic bursts (Credits)
-		- M4: 
+		- M4:
 		- M5, M5a, M5n: general workloads; 100% of resources at all times (24/7)
 	- Compute Optimized:
 		- C5, C5n, C4: Provides more capable CPU
 	- Memory Optimized:
-		- R5, R5a, R5n, R4: Optimize large amounts of fast memory 
-		- X1e, X1: Optimize large amounts of fast memory 
+		- R5, R5a, R5n, R4: Optimize large amounts of fast memory
+		- X1e, X1: Optimize large amounts of fast memory
 		- High Memory, z1d
-	- Storage Optimized: 
+	- Storage Optimized:
 		- I3, I3en: Deliver fast I/O
 		- D2, H1
-	- Accelerated Computing:  
+	- Accelerated Computing:
 		- P3, P2: Deliver GPU
 		- G4, G3: Deliver GPU
 		- F1: delivers FPGA
 - Instance name: Type + Generation # + [a] + [d] + [n] + ".Size"
 	- Type letter + Generation #: see item above (families)
-    - "a" if uses  AMD CPUs 
-    - "d" if It's NVMe storage + 
-    - "n" if It's Higher speed networking +
-    - ".Size": "nano", "micro", "small", "medium", "large", "xlarge", "nxlarge" (n > 2) and, "large"
-    - E.g.,: t2.micro, t2.2xlarge, t3a.nano, m5ad.4xlarhe 
-- [For more details](https://aws.amazon.com/ec2/instance-types/) 
+	- "a" if uses AMD CPUs
+	- "d" if It's NVMe storage +
+	- "n" if It's Higher speed networking +
+	- ".Size": "nano", "micro", "small", "medium", "large", "xlarge", "nxlarge" (n > 2) and, "large"
+	- E.g.,: t2.micro, t2.2xlarge, t3a.nano, m5ad.4xlarhe
+- [For more details](https://aws.amazon.com/ec2/instance-types/)
 
 </details>
 <details>
 <summary>Instance Metadata</summary>
 
-- It's available at: http://169.254.169.254/latest/meta-data/metadataName from within the EC2 instance itself 
-- To get the list of all available metadata: #curl http://169.254.169.254/latest/meta-data/ 
-- E.g., ami-id, instance-id, instance-type, local-ipv4, mac, public-ipv4, security-groups 
-- [For more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html) 
+- It's available at: http://169.254.169.254/latest/meta-data/metadataName from within the EC2 instance itself
+- To get the list of all available metadata: #curl http://169.254.169.254/latest/meta-data/
+- E.g., ami-id, instance-id, instance-type, local-ipv4, mac, public-ipv4, security-groups
+- [For more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html)
 
- 
-
-    
 </details>
 <details>
 <summary>User Data</summary>
 
-- It's available at: http://169.254.169.254/latest/user-data/ from within the EC2 instance 
-- To get the list of all available metadata: #curl http://169.254.169.254/latest/user-data/ 
-- [For more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html) 
+- It's available at: http://169.254.169.254/latest/user-data/ from within the EC2 instance
+- To get the list of all available metadata: #curl http://169.254.169.254/latest/user-data/
+- [For more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html)
 
 
 </details>
@@ -191,17 +188,17 @@
 <summary>Bootstrap</summary>
 
 - It's the process of providing "build" directives to an EC2 instance
-- It uses user data and can take in 
-	- Shell script-style commands: Power Shell for Windows or Bash for Linux  
-	- [Cloud-init directives](https://cloudinit.readthedocs.io/en/latest/) 
-- These commands or directives are executed during the instance launch process 
+- It uses user data and can take in
+	- Shell script-style commands: Power Shell for Windows or Bash for Linux
+	- [Cloud-init directives](https://cloudinit.readthedocs.io/en/latest/)
+- These commands or directives are executed during the instance launch process
 - User data can be used to run these commands or directives
-- Actions could be involved: 
-	- Configuring an existing application on an EC2 
-	- Performing software installation on an EC2 
-	- Configuring an EC2 instance 
-	- Action that can't be involved: 
-	- Configuring resource policies 
+- Actions could be involved:
+	- Configuring an existing application on an EC2
+	- Performing software installation on an EC2
+	- Configuring an EC2 instance
+	- Action that can't be involved
+	- Configuring resource policies
 	- Creating an IAM User
 
 </details>
@@ -209,67 +206,67 @@
 <summary>Security: Instance Role</summary>
 
 - It's a type of IAM Role that could be assumed by EC2 instance or application
-- An application that is running within EC2, 
-	- It'sn't a valid AWS identity 
+- An application that is running within EC2,
+	- It'sn't a valid AWS identity
 	- It can't therefore assume AWS Role directly
-- They need to use an intermediary called  instance profile:  
+- They need to use an intermediary called instance profile:
 	- It's a container for the role that is associated with an EC2 instance
-	- It allows applications running on EC2 to assume a role and  
-    - It allows application to access to temporary security credentials available in the instance metadata 
-    - It's attached to an EC2 instance at launch process or after 
-    - Its name is similar to the IAM role's one It's associated to 
-    - It's created automatically when using the AWS console UI
-    - Or It's created manually when using the CLI or Cloud Formation
+	- It allows applications running on EC2 to assume a role and
+	- It allows application to access to temporary security credentials available in the instance metadata
+	- It's attached to an EC2 instance at launch process or after
+	- Its name is similar to the IAM role's one It's associated to
+	- It's created automatically when using the AWS console UI
+	- Or It's created manually when using the CLI or Cloud Formation
 - EC2 AWS CLI Credential Order:
 	- (1) Command Line Options:
-		- aws [command] —profile [profile name] 
+		- aws [command] —profile [profile name]
 		- This approach uses longer term credentials stored locally on the instance
-		- It's NOT RECOMMENDED for production environments 
-	- (2) Environment Variables: 
+		- It's NOT RECOMMENDED for production environments
+	- (2) Environment Variables:
 		- You can store values in the environment variables: AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY, AWS_SESSION_TOKEN
-		- It's recommended for temporary use in non-production environments 
+		- It's recommended for temporary use in non-production environments
 	- (3) AWS CLI credentials file:
-		- aws configure 
-		- This command creates a credentials file 
+		- aws configure
+		- This command creates a credentials file
 		- Linux, macOS, Unix: it's stored at ~/.aws/credentials
 		- Windows, it's store at: C:\Users\USERNAME\.aws\credentials
-		- It can contain the credentials for the default profile and any named profiles 
+		- It can contain the credentials for the default profile and any named profiles
 		- This approach uses longer term credentials stored locally on the instance
-		- It's NOT RECOMMENDED for producuon environments. 
-	- (4) Container Credentials: 
-		- IAM Roles associated with AWS Elastic Container Service (ECS) Task Definitions 
-		- Temporary credentials are available to the Task's containers 
-		- This is recommended for ECS environments 
-	- (5) Instance Profile Credentials 
-		- IAM Roles associated with Amazon Elastic Compute Cloud (EC2) instances via Instance Profiles 
+		- It's NOT RECOMMENDED for producuon environments.
+	- (4) Container Credentials:
+		- IAM Roles associated with AWS Elastic Container Service (ECS) Task Definitions
+		- Temporary credentials are available to the Task's containers
+		- This is recommended for ECS environments
+	- (5) Instance Profile Credentials
+		- IAM Roles associated with Amazon Elastic Compute Cloud (EC2) instances via Instance Profiles
 		- Temporary credentials are available to the Instance
 		- This is recommended for EC2 environments
 - Encryption:
 	- Volume encryption uses EC2 host hardware to encrypt data at rest and in transit between EBS and EC2 instance
 	- Encryption generates a Data Encryption Key (DEK) from a Customer Master Key (CMK) in each region
-	- When a volume is encrypted (or an instance is created), each volume is encrypted by a unique DEK 
+	- When a volume is encrypted (or an instance is created), each volume is encrypted by a unique DEK
 	- Snapshot, AMI and volumes created from these AMI or snapshots will use the same DEK
 	- AWS KMS encryption is supported by most instance types (any of the current modern instance generation, especially those that use the nitro platform)
 	- There are some older generation instances which don't support it!
-	- EC2 instance and OS see plaintext data as normal (no any encryption): 
-    	- There is no performance impact
-    	- Encrypted DEKs stored with EBS volume are decrypted by KMS using a CMK
-    	- These decrypted DEKs (plaintext DEKs):
-        	- They're given to EC2 Host which stores them in its memory 
-        	- It uses them to decrypt data into EC2 instance or encrypt data from EC2 instance to EBS 
-    		- When the instance is stopped/rebooted, the Host erases these plaintext DEKs
-    	- So, AWS KMS isn't encrypting neither It's decrypting data 
-	- When an encrypted EBS snapshot is copied into another region: 
-    	- A new CMK should be created in the destination region
-    	- The new snapshot will be encrypted
+	- EC2 instance and OS see plaintext data as normal (no any encryption):
+		- There is no performance impact
+		- Encrypted DEKs stored with EBS volume are decrypted by KMS using a CMK
+		- These decrypted DEKs (plaintext DEKs):
+			- They're given to EC2 Host which stores them in its memory
+			- It uses them to decrypt data into EC2 instance or encrypt data from EC2 instance to EBS
+			- When the instance is stopped/rebooted, the Host erases these plaintext DEKs
+		- So, AWS KMS isn't encrypting neither It's decrypting data
+	- When an encrypted EBS snapshot is copied into another region:
+		- A new CMK should be created in the destination region
+		- The new snapshot will be encrypted
 	- Encryption from an OS perspective:
 		- AWS KMS isn't enough for that
-    	- We need to use an OS level encryption available on most OS (Microsoft Windows, Linux) 
-    	- Only OS encryption will ensure that from an operating system perspective, the file's encrypted 
-    	- We're able to use both, though
-- For more details:  
-    - [User Guide](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html)
-    - [...](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html)
+		- We need to use an OS level encryption available on most OS (Microsoft Windows, Linux)
+		- Only OS encryption will ensure that from an operating system perspective, the file's encrypted
+		- We're able to use both, though
+- For more details:
+	- [User Guide](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html)
+	- [...](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html)
 	- [CLI Order of things](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
 
 </details>
@@ -279,135 +276,152 @@
 
 EBS Optimization
 
-- Performance of restoring a volume from a Snapshot: 
-	- When we restore a volume from a snapshot, it doesn't immediately copy all that data to EBS 
-	- Data is copied as It's requested 
-    - So, we get the max performance of a the EBS volume, only when all that data has been copied across in the background 
-    - Solution: to perform a read of every part of that volume in advance before It's moved into production  
-    - To ensure that our restored volume always functions at peak capacity in production, we can force the immediate initialization of the entire volume using dd or fio 
-    - For more details:
-		- [EBS restoring volume](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-restoring-volume.html) 
-    	- [EBS initialize](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-initialize.html)
-- Enhanced Networking - SR-IOV: 
-	- It stands for Single Root I/O volume 
-    - Opposite to the traditional network virtualization that is using Multi-Root I/O Volume (MR-IOV) where a software-based hypervisor is managing virtual controllers of virtual machines to access one physical network card (slow) 
-    - SR-IOV allows virtual devices (controllers) to be implemented in hardware (virtual functions) 
-	- In other words, it allows a single physical network card to appear as multiple physical devices 
-	- Each instance be given one of these (fake) physical devices 
-    - This results in faster transfer rates, lower CPU usage, and lower consistent latency 
-    - EC2 delivers this via the Elastic Network Adapter (ENA) or Intel 82599 Virtual Function (VF) interface 
-    - [Fore more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/enhanced-networking.html) 
-- Enhanced Networking - Placement Groups: Good to increase Performance or Reliability 
-	- Clustered Placement Group:  
-		- Instances grouped within a single AZ 
-        - It's good to increase performance 
-		- It's recommended for application that need low network latency, high network throughput (or both) 
-		- Only certain instances can be launched in to a clustered group 
-		- Best practices:  
-			- We should always try to launch all of the instances that go inside a placement group at the same time  
-			- AWS recommends homogenous instances within cluster placement groups 
+- Performance of restoring a volume from a Snapshot:
+	- When we restore a volume from a snapshot, it doesn't immediately copy all that data to EBS
+	- Data is copied as It's requested
+	- So, we get the max performance of a the EBS volume, only when all that data has been copied across in the background
+	- Solution: to perform a read of every part of that volume in advance before It's moved into production
+	- To ensure that our restored volume always functions at peak capacity in production, we can force the immediate initialization of the entire volume using dd or fio
+	- For more details:
+		- [EBS restoring volume](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-restoring-volume.html)
+		- [EBS initialize](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-initialize.html)
+- Enhanced Networking - SR-IOV:
+	- It stands for Single Root I/O volume
+	- Opposite to the traditional network virtualization that is using Multi-Root I/O Volume (MR-IOV) where a software-based hypervisor is managing virtual controllers of virtual machines to access one physical network card (slow)
+	- SR-IOV allows virtual devices (controllers) to be implemented in hardware (virtual functions)
+	- In other words, it allows a single physical network card to appear as multiple physical devices
+	- Each instance be given one of these (fake) physical devices
+	- This results in faster transfer rates, lower CPU usage, and lower consistent latency
+	- EC2 delivers this via the Elastic Network Adapter (ENA) or Intel 82599 Virtual Function (VF) interface
+	- [Fore more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/enhanced-networking.html)
+- Enhanced Networking - Placement Groups: Good to increase Performance or Reliability
+	- Clustered Placement Group:
+		- Instances grouped within a single AZ
+		- It's good to increase performance
+		- It's recommended for application that need low network latency, high network throughput (or both)
+		- Only certain instances can be launched in to a clustered group
+		- Best practices:
+			- We should always try to launch all of the instances that go inside a placement group at the same time
+			- AWS recommends homogenous instances within cluster placement groups
 			- We might get a capacity issue when we ask to launch additional instances in an existing placement group
-	- Spread Placement Group: 
+	- Spread Placement Group:
 		- It's good to increase availability
 		- Instances are each individual placed on distinct underlying hardware (separate racks)
 		- It's possible to have spread placement groups inside different AZ within one region
 		- We can launch up to 7 instances into this placement group
 		- So if a rack does go through and fail, It's only going to affect 1 instance
 		- It's recommended for applications that have a small # of critical instances that should be kept separate from each other: email servers, Domain controllers, file servers
-	- Partition Placement Group: 
-        - It's good to increase availability for large infrastructure platforms where we want to have some visibility of where those instances are from a partition perspective 
-        - Similar to spread placement group except there are multiple EC2 instances within a partition 
-        - Each partition within a placement group has its own hardware (own set of racks) 
-        - Each rack has its own network and power source 
-        - A partition PL supports a maximum of 7 partitions per Availability Zone 
-        - It allows to isolate the impact of hardware failure within our application 
-        - We can use this to split those instances across all of those 7 partitions (we get visibility of that)  
-        - If needed, we can even make it automated, if we give that information to our applications itself, it can have visibility over its infrastructure placement 
-        - Multiple EC2 instances HDFS, HBase, and Cassandra 
+	- Partition Placement Group:
+		- It's good to increase availability for large infrastructure platforms where we want to have some visibility of where those instances are from a partition perspective
+		- Similar to spread placement group except there are multiple EC2 instances within a partition
+		- Each partition within a placement group has its own hardware (own set of racks)
+		- Each rack has its own network and power source
+		- A partition PL supports a maximum of 7 partitions per Availability Zone
+		- It allows to isolate the impact of hardware failure within our application
+		- We can use this to split those instances across all of those 7 partitions (we get visibility of that)
+		- If needed, we can even make it automated, if we give that information to our applications itself, it can have visibility over its infrastructure placement
+		- Multiple EC2 instances HDFS, HBase, and Cassandra
 
 </details>
-<details>
-<summary>Pricing Models</summary>
 
-- On Demand: 
-	- It allows to pay a fixed rate by second with a minimum of 60 seconds
-    - No commitment and It's the default 
-    - Use cases: 
-        - Application with short term, spiky, or unpredictable workloads that can't be interrupted 
-        - Application being developed or tested on Amazon EC2 for the 1st time 
-- Spot: 
-    - It enables to bid whatever price we want for instance capacity  
-	- It's exactly like the stock market: it goes up and down (The price moves around) 
-	- When Amazon have excess capacity (there're available EC2 servers capacity. Not used) 
-	- Amazon drops then the price of their EC2 instances to try and get people to use that spare capacity 
-	- The maximum price indicate the highest amount the customer is willing to pay for an EC2 instance 
-	- We get the price that we want to bid at, 
-    	- if it hits that price we have our instances  
-    	- If it goes above that price then we're going to lose our instances within 2 minutes window 
-    	- The default behavior is to automatically bid the current spot instance price  
-    	- The price fluctuates, but will never exceed the normal on-demand rates for EC2 instances 
-    	- Real examples: https://aws.amazon.com/ec2/spot/testimonials/ 
-	- Use Cases: 
-    	- Good for stateless parts of application (servers) 
-    	- Good for workloads that can tolerate failures 
-    	- Applications that have flexible start and end times 
-    	- Applications that are only feasible at very low compute prices 
-    	- Users with urgent computing needs for large amounts of additional capacity 
-    	- Spot instances tend to be useful for dev/test workloads, or perhaps for adding extra computing power to large-scale data analytics projects 
-		- Antipattern: spot isn't suitable for long-running workloads and require stability and can't tolerate interruptions 
-    - Spot Fleet: 
-        - It's a container for "capacity needs" 
-    	- We can specify pools of instances of certain types/sizes aiming for a given "capacity" 
-    	- A minimum percentage of on-demand can be set to ensure the fleet is always active 
-- Reserved: 
-	- Contract terms: 1 or 3 Year Terms 
-    - Payment Option: No Upfront, Partial Upfront, All Upfront (max cost saving) 
-    - It could be Zonal: The capacity is then reserved in the specific zone (capacity reservation). So if there capacity constraint on a zone, those with zonal reserved instances are prioritized 
-    - It could be also on regional: The capacity isn't reserved in a particular region's zone? (more flexibility) 
-    - It offers a significant discount on the hourly charge for an instance 
-    - Use cases: 
-    	- Long-running, understood, and consistent workloads 
-        - Applications that require reserved capacity 
-        - Users able to make upfront payments to reduce their total computing 
-    - Standard Reserved Instance: 
-        - Up to 75% off on demand instances 
-        - The more we pay up front and the longer the contract, the greater the discount 
-    - Convertible Reserved Instances: 
-        - Up to 54% off on demand capacity to change the attributes of the RI as long as the exchange results in the creation of reserved instances of equal or greater value 
-        - So it allows you to change between your different instance families 
-        - E.g.: We have an EC2 R5 instance that is very high ram with Ram utilization; we would like to convert it to EC2 C5 instance that has very very good CPE use 
-    - Scheduled Reserved Instances: 
-    	- They're available to launch within the time windows we reserve (predictable: fraction of a day/week/month) 
-        - E.g. 1: We run a school 
-        - E.g. 2: We need to scale when everyone comes in at 9:00 on logs 
-    - Capacity Priority: how AWS resolves capacity constraint: 
-    	- Zonal Reserved instance are guaranteed to get the reserved instances on the zone 
-    	- On Demand instances 
-    	- Spot instances 
-
-</details>
 <details>
 <summary>Dedicated Hosts</summary>
 
-- Physical server dedicated for our use for a given type and size (Type and Size are inputs)  
-- The number of instances that run on the host is fixed - depending on the type and size (see print screen below) 
-- It can help reduce cost by allowing us to use our existing server-bound software licenses 
-- It can be purchased On-Demand (hourly) 
-- Could be purchased as a reservation for up to 70% off On-Demand price 
-- Use Cases: 
-	- Regulatory requirements that may not support multi-tenant virtualization 
-	- Licensing which doesn't support multi-tenancy or cloud deployments 
-	- We can control instance placement 
+- Physical server dedicated for our use for a given type and size (Type and Size are inputs)
+- The number of instances that run on the host is fixed - depending on the type and size (see print screen below)
+- It can help reduce cost by allowing us to use our existing server-bound software licenses
+- It can be purchased On-Demand (hourly)
+- Could be purchased as a reservation for up to 70% off On-Demand price
+- Use Cases:
+	- Regulatory requirements that may not support multi-tenant virtualization
+	- Licensing which doesn't support multi-tenancy or cloud deployments
+	- We can control instance placement
 
 </details>
 <details>
 <summary>Virtualization</summary>
 
-- Xen-based hypervisor: The Xen Project is a Linux Foundation Collaborative Project 
-- The Nitro Hypervisor that is based on core KVM technology 
-- Bare metal instances: With virtualization (High Memory Instance) 
-- [For more details](http://www.brendangregg.com/blog/2017-11-29/aws-ec2-virtualization-2017.html) 
+- Xen-based hypervisor: The Xen Project is a Linux Foundation Collaborative Project
+- The Nitro Hypervisor that is based on core KVM technology
+- Bare metal instances: With virtualization (High Memory Instance)
+- [For more details](http://www.brendangregg.com/blog/2017-11-29/aws-ec2-virtualization-2017.html)
 
+</details>
+
+<details>
+<summary>Pricing</summary>
+
+- On Demand:
+	- It allows to pay a fixed rate by second with a minimum of 60 seconds
+	- No commitment and It's the default
+- Spot:
+	- It enables to bid whatever price we want for instance capacity
+	- It's exactly like the stock market: it goes up and down (The price moves around)
+	- When Amazon have excess capacity (there're available EC2 servers capacity. Not used)
+	- Amazon drops then the price of their EC2 instances to try and get people to use that spare capacity
+	- The maximum price indicate the highest amount the customer is willing to pay for an EC2 instance
+	- We get the price that we want to bid at,
+		- if it hits that price we have our instances
+		- If it goes above that price then we're going to lose our instances within 2 minutes window
+		- The default behavior is to automatically bid the current spot instance price
+		- The price fluctuates, but will never exceed the normal on-demand rates for EC2 instances
+		- Real examples: https://aws.amazon.com/ec2/spot/testimonials/
+	- Spot Fleet:
+		- It's a container for "capacity needs"
+		- We can specify pools of instances of certain types/sizes aiming for a given "capacity"
+		- A minimum percentage of on-demand can be set to ensure the fleet is always active
+- Reserved:
+	- Contract terms: 1 or 3 Year Terms
+	- Payment Option: No Upfront, Partial Upfront, All Upfront (max cost saving)
+	- It could be Zonal: The capacity is then reserved in the specific zone (capacity reservation). So if there capacity constraint on a zone, those with zonal reserved instances are prioritized
+	- It could be also on regional: The capacity isn't reserved in a particular region's zone? (more flexibility)
+	- It offers a significant discount on the hourly charge for an instance
+	- Standard Reserved Instance:
+		- Up to 75% off on demand instances
+		- The more we pay up front and the longer the contract, the greater the discount
+	- Convertible Reserved Instances:
+		- Up to 54% off on demand capacity to change the attributes of the RI as long as the exchange results in the creation of reserved instances of equal or greater value
+		- So it allows you to change between your different instance families
+		- E.g.: We have an EC2 R5 instance that is very high ram with Ram utilization; we would like to convert it to EC2 C5 instance that has very very good CPE use
+	- Scheduled Reserved Instances:
+		- They're available to launch within the time windows we reserve (predictable: fraction of a day/week/month)
+		- E.g. 1: We run a school
+		- E.g. 2: We need to scale when everyone comes in at 9:00 on logs
+	- Capacity Priority: how AWS resolves capacity constraint:
+		- Zonal Reserved instance are guaranteed to get the reserved instances on the zone
+		- On Demand instances
+		- Spot instances
+
+</details>
+
+<details>
+<summary>Use cases</summary>
+
+- On Demand:
+	- Application with short term, spiky, or unpredictable workloads that can't be interrupted
+	- Application being developed or tested on Amazon EC2 for the 1st time
+- Spot:
+	- Good for stateless parts of application (servers)
+	- Good for workloads that can tolerate failures
+	- Applications that have flexible start and end times
+	- Applications that are only feasible at very low compute prices
+	- Users with urgent computing needs for large amounts of additional capacity
+	- Spot instances tend to be useful for dev/test workloads, or perhaps for adding extra computing power to large-scale data analytics projects
+	- Antipattern: spot isn't suitable for long-running workloads and require stability and can't tolerate interruptions
+- Spot Fleet:
+- Reserved:
+	- Long-running, understood, and consistent workloads
+	- Applications that require reserved capacity
+	- Users able to make upfront payments to reduce their total computing
+
+</details>
+
+<details>
+<summary>Limits</summary>
+</details>
+
+<details>
+<summary>Best practices</summary>
 </details>
 
 ---
@@ -416,7 +430,7 @@ EBS Optimization
 
 <details>
 <summary>Description</summary>
- 
+
 - It's a virtual network within AWS: It's our private data center inside AWS platform
 - It can be configured to be public/private or a mixture
 - It's isolated from other VPCs by default
@@ -441,19 +455,19 @@ EBS Optimization
 <details>
 <summary>IPv4 CIDR</summary>
 
-- It's from /28 (16 IPs) to /16 (65,536 IPs) 
+- It's from /28 (16 IPs) to /16 (65,536 IPs)
 - We need to plan in advance CIDR to support whatever service we will deploy in the VPC:
 	- We need to make sure our CIDR will support enough subnets
 	- We need to make sure our CIDR will let our subnets have enough IP addresses
 	- Some AWS services require a minimum number of IP addresses before they can deploy
 - We need to plan a CIDR that allows HA architecture:
-	- We need to break our CIDR down based on the number of AZs we will be using and then 
+	- We need to break our CIDR down based on the number of AZs we will be using and then
 	- We need to break down our CIDR based on the number of tiers (subnets) our VPC will have. E.g., public/private/db tiers
 - We need to plan for future evolutions: additional AZs, additional tiers (subnets)
 - Best Practice: ensure that VPCs we work with don't overlap CIDR blocks, whatever this is possible:
 	- Lots of networking features don't like the same CIDR block
 	- This will just make things a lot easier further down
-	- Our corporate network VPCs, any other VPC we work with, 
+	- Our corporate network VPCs, any other VPC we work with,
 	- VPCs of any partners and vendors that we interact with
 - Best Practice: It's recommended to plan for our VPC in advance even though, we can now update VPC CIDR
 
@@ -481,7 +495,7 @@ EBS Optimization
 	 	- NACL: Default NACL allows all inbound and outbound traffic (see below)
 	 	- Security Group: Default SG allows all inbound traffic (see below)
 	 	- ENI: Same ENI is used by all subnets and all security group
-- Custom VPC (or "Bespoke"): 
+- Custom VPC (or "Bespoke"):
 	- it can be designed and configured in any valid way
 	- Its initial state is as follow:
 	 	- CIDR: initial configuration
@@ -562,7 +576,7 @@ EBS Optimization
 - Associations:	
 	- Subnet & VPC:
 	 	- A subnet is attached to 1 VPC
-	 	- A VPC can have 1 or more subnets: The number of subnets depends on VPC CIDR range and Subnets CIDR ranges 
+	 	- A VPC can have 1 or more subnets: The number of subnets depends on VPC CIDR range and Subnets CIDR ranges
 	 	- If all subnets have the same CIDR prefix, the formula would be: 2^(Subnet CIDR Prefix - VPC CIDR Prefix)
 	 	- For a VPC of /16, we could create: 1 single subnet of a /16 netmask; 2 subnets of /17; 4 subnets of /18; ... 256 subnets of /24
 	- Subnet & Route Table:
@@ -579,7 +593,7 @@ EBS Optimization
 
 - It's a virtual routing device that is in each VPC
 - It controls traffic entering the VPC (Internet Gateway, Peer Connection, Virtual Private Gateway, ...)
-- It control traffic leaving the subnets 
+- It control traffic leaving the subnets
 - It has an interface in every subnet known as the "Subnet+1" address (is it the ENI?)
 - It's fully managed by AWS
 - It's highly available and scalable
@@ -593,11 +607,11 @@ EBS Optimization
 	- It controls what the VPC router does with subnet Outbound traffic	
 	- It's a collection of Routes:
 	 	- They're used when traffic from a subnet arrives at the VPC router
-	 	- They contain a destination and a target 
+	 	- They contain a destination and a target
 		- Traffic is forwarded to the target if its destination matches the route's destination
 	 	- Default Routes (0.0.0.0/0 IPv4 and ::/0 IPv6) could be added
-	- A route Target can be: 
-	 	- An IP @ or 
+	- A route Target can be:
+	 	- An IP @ or
 	 	- An AWS networking object: Egress-Only G., IGW, NAT G., Network Interface, Peering Connection, Transit G., Virtual Private G.,...
 - Location: -
 - Types:
@@ -611,7 +625,7 @@ EBS Optimization
 	- Static Route: It's added manually to a route table
 	- Propagated Route:
 		- It's added dynamically to a route table by attaching a Virtual Private Gateway (VPG) to the VPC
-		- We could then elect to propagate any route that it learned onto a particular route table 
+		- We could then elect to propagate any route that it learned onto a particular route table
 		- It's a way that we can dynamically populate new routes that are learned by the VPG
 		- Certain types of AWS networking products (VPN, Direct Connect) can dynamically learn routes using BGP (Border Gateway Protocol)
 		- External networking products (a VPN or direct connect) that support BGP could be integrated with AWS VPC, they can dynamically generate Routes and insert them to a route table
@@ -621,14 +635,14 @@ EBS Optimization
 		- It's associated "implicitly" by default to all subnets in the VPC until they're explicitly associated to a custom one
 		- In a default VPC: it routes outbound traffic to local and to outside (Internet Gateway)
 		- In a custom VPC: It routes outbound traffic to local	
-	- "Custom" route table: 
+	- "Custom" route table:
 		- It could be created and customized to subnets' requirements
 		- It's explicitly associated with subnets
 - Routing Priority:
 	- Rule #1: Most Specific Route is always chosen:
 	 	- It's when multiple routes' destination maches with traffic destination
 	 	- A matched /32 destination route (a single IP address) will be always chosen first...
-		- A matched /24 destination route will be chosen before a matched /16 destination route... 
+		- A matched /24 destination route will be chosen before a matched /16 destination route...
 		- The default route matches with all traffic destination but will be chosen last
 	- Rule #2:
 		- Static routes take priority over the propagated routes
@@ -637,9 +651,9 @@ EBS Optimization
 	 		- A matched /24 destination static route will be always chosen first before a matched /24 destination propagated route
 	- [More details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html#route-tables-priority)
 - Limits:
-- Best Practice: 
+- Best Practice:
 	- It's recommended not to update the main route table
-	- It's particularly recommended not to add the route to the Internet Gateway in the main route table: 
+	- It's particularly recommended not to add the route to the Internet Gateway in the main route table:
 	- Since by default, all VPC's Subnets are associated "implicitly" to the main route table
 	- All existing and future subnets could be public by default (if Public IP is enabled)		
 - Associations:
@@ -658,7 +672,7 @@ EBS Optimization
 - It provides Static NAT (Network Address Translation):
 	- It's the process of 1:1 translation where an internet gateway converts a private address to a public IP address
 	- It make the instance a true public machine
-	- When an Internet Gateway receives any traffic from an EC2 instance, if the EC2 has an allocated public IP: 
+	- When an Internet Gateway receives any traffic from an EC2 instance, if the EC2 has an allocated public IP:
 		- Then the Internet Gateway adjusts those traffic's packets (Layer 3 in OSI model)
 		- It replaces the EC2 private IP in the packet source IP with the EC2 associated Public IP address
 		- It sends then the packets through to the public Internet
@@ -691,27 +705,27 @@ EBS Optimization
 		- When a client initiates communications with a server, it uses a well-known port # on that server: e.g., TCP/443
 		- The response is from that well-known port to an ephemeral port on the client
 		- The client decides the ephemeral port (e.g., TCP/22000): they're be thousands!
-		- Because NACL are stateless and ephemeral ports are thousands, to manage the overhead of NACL rules is very high 
+		- Because NACL are stateless and ephemeral ports are thousands, to manage the overhead of NACL rules is very high
 		- A single Communication involves 4 individual sets of rules:
-		- We should think to "allow" traffic for every "ephemeral" ports on Client Inbound and Outbound rules and, 
+		- We should think to "allow" traffic for every "ephemeral" ports on Client Inbound and Outbound rules and,
 		- We should think to "allow" traffic for every "ephemeral" ports on Destination Inbound and Outbound rules as well
 - Location: It'sn't specific to any AZ
 - Type:
 	- Default NACL:
 		- It's created by default at the same as the VPC It's attached to
-		- It's associated "implicitly" to all subnets as long as they're not associated explicitly to a custom NACL 
+		- It's associated "implicitly" to all subnets as long as they're not associated explicitly to a custom NACL
 		- It Allows ALL traffic: Rule 100: Allow everything
 	- Custom NACL:
 		- It's created by users
 		- It should be associated "explicitly" to a subnet
 		- It blocks ALL traffic, by default: it only includes "*" rule only
-- Best Practice: 
-	- Inbound and Outbound Rules # should use an increment of 100: 
+- Best Practice:
+	- Inbound and Outbound Rules # should use an increment of 100:
 		- 100 for the 1st IPv4 rule, 101 for the 1st IPv6 rule
 		- 200 for the 2nd IPv4 rule, 201 for the 2nd IPv6 rule
 	- Ensure that you place the DENY rules earlier in the table than the ALLOW rules that open the wide range of ephemeral ports
 - Use cases:
-	- Because of NACL management overhead (4 sets of rules for each communication), 
+	- Because of NACL management overhead (4 sets of rules for each communication),
 	- They tend not to be used all that much generally in production usage (Security Groups are preferred)
 	- They're used when we have an explicit deny that we would like to add (E.g., an IP @ we were attacked from)
 - Associations:	
@@ -736,11 +750,11 @@ EBS Optimization
 	- SG Rules include: Inbound and Outbound rule sets:
 		- Type: TCP
 		- Protocol: e.g., HTTP, SSH
-		- Port Ranges: e.g., Port 22 (SSH), Port 53 (UDP), Port 3060 (MySQL), Port 80 (http), Port 443 (https)... 
+		- Port Ranges: e.g., Port 22 (SSH), Port 53 (UDP), Port 3060 (MySQL), Port 80 (http), Port 443 (https)...
 		- Source/Destination: Since It's a Layer 5 Firewall, it supports:
 		- IP addresses, CIDRs (Layer 4 info)
 		- a Security Group (Layer 5 info)
-		- It can auto-reference itself in an Inbound rules' Source: 
+		- It can auto-reference itself in an Inbound rules' Source:
 		- It allows traffic from itself
 		- All resources in the same SG are allowed to communicate to each other
 	- Implicit Deny: Explicit Allow > Implicit Deny
@@ -749,27 +763,27 @@ EBS Optimization
 		- If a rule matches, the request is allowed
 		- If there is no match, the request is implicitly denied
 - Types:
-	- Default SG in a default VPC: 
+	- Default SG in a default VPC:
 		- It's created at the same time as a VPC
 		- It allows all inbound and outbound traffic (open to the word)
 	- Default SG in a custom VPC:	
-		- It's created at the same time as a VPC 
-		- It allows all inbound traffic from the same SG 
+		- It's created at the same time as a VPC
+		- It allows all inbound traffic from the same SG
 		- It allows all outbound traffic
 	- Custom SG:
 		- It's created by users in a default or custom VPC
 		- It implicitly denies all inbound traffic: there isn't any inbound rule
 		- It allows all outbound traffic
 - Associations:
-	- SG : VPC - * : 1 
+	- SG : VPC - * : 1
 		- It's associated with a single VPC: it doesn't span VPC's
 		- A VPC could contain multiple SGs
 	- SG : ENI - * : 1		
 		- It's attached to 1 ENI
-		- An ENI could be attached to multiple SGs		 
+		- An ENI could be attached to multiple SGs		
 	- SG : EC2 Instance : * : *	
 		- It could be assigned to multiple instances
-		- It could be assigned to multiple instances in another AWS account within the same region (Peering Connection?) 
+		- It could be assigned to multiple instances in another AWS account within the same region (Peering Connection?)
 		- An EC2 instance could be attached to Multiple SGs
 
 </details>
@@ -778,7 +792,7 @@ EBS Optimization
 <summary>Bastion Host - JumpBox</summary>
 
 - It's a host (EC2 instance) that sits at the perimeter of a VPC
-- It's in a public Subnet 
+- It's in a public Subnet
 - it usually involves access from untrusted networks or computers
 - It functions as an entry point to the VPC for trusted admins
 - It allows for updates or configuration tweaks remotely while allowing the VPC to stay private and protected (private subnets)
@@ -792,7 +806,7 @@ EBS Optimization
 	- Then the bastion host basically just forwards the connection through SSH/ADP to private instances
 	- All what we need to do is harden our bastion host as strongly as possible because It's exposed to the public
 	- Then, we don't have to worry about hardening our private instances in our private subnet
-- Best Practice: 
+- Best Practice:
 	- Bastion hosts must be kept updated, and security hardened and, audited regularly
 	- Multifactor authentication, ID federation, and/or IP blocks
 	- It's recommended to add tags to be able to differentiate from other regular EC2 instances
@@ -818,7 +832,7 @@ EBS Optimization
 - Its benefits:
 	- Security reasons: the concept of least privilege (if a resource doesn't need internet access, than we shouldn't give them access)
 	- We're running out IP addresses: so we can't allocate a specific IP address for each instance
-- How it works: let's have an example: 
+- How it works: let's have an example:
 	- A private EC2 instance which private IP is: 10.0.0.10
 	- The EC2 instance requires to update its software for a public IP: 1.3.3.7
 	- A NAT Gateway/Instance which Elastic IP is: 172.162.0.10
@@ -835,17 +849,17 @@ EBS Optimization
 		- In this case, the packet Destination IP is updated
 		- It's updated 1st by the Internet Gateway with the NAT Gateway EIP
 		- Then, It's updated by the NAT Gateway with the EC2 Private IP
-- NAT Gateway: 
+- NAT Gateway:
 	- 1 NAT Gateway inside an AZ
 	- It requires a Public Subnet and a Public Elastic IP
 	- It understands and allow session traffic (layer 5)
 	- It's scalable but isn't highly available by design (Redundant): if an AZ fails, all underlying NAT Gateway will fail
-	- Best Practice: 
+	- Best Practice:
 		- We need 1 NAT Gateway by AZ
 		- We need a Single Route table for each AZ (each NAT Gateway)
 		- Each NAT Gateway should be then associates with all private subnets of the related AZ
-	- Performance: 
-		- Initially 5GB of bandwidth 
+	- Performance:
+		- Initially 5GB of bandwidth
 		- It can scale to 45GB
 		- For more bandwidth, we can distribute the workload by splitting our resources into multiple subnets inside an AZ
 		- Then specify for each subnet to go to a separate gateway
@@ -857,13 +871,13 @@ EBS Optimization
 		- This means that the instance must be the source or destination of any traffic it sends or receives
 		- However, a NAT instance must be able to send and receive traffic when the source or destination is not itself
 		- Therefore, It's required tp disable source/destination checks on the NAT instance
-	- Disadvantage: 
+	- Disadvantage:
 		- It's a single point of failure
 		- If the instance is terminated, the route status: blackhole
 	- Use cases: there is only one use case
 		- When cost saving is absolutely required and, a NAT and bastion hosts are needed
 		- We could then combine bastion host and NAT in the same machine
-	- For more details: 
+	- For more details:
 		- [NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html)
 		- [NAT Gateway vs. NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-comparison.html)
 
@@ -875,14 +889,14 @@ EBS Optimization
 - It allows communication between 2 VPCs via a direct network route using private IP addresses
 - It can span AWS accounts and even regions (see limits below)
 - It's involved at layer 3 of OSI model (network)
-- It uses peering connection object: 
+- It uses peering connection object:
 	- it's a network gateway
 	- It's similar to Internet Gateway but used to link VPCs
 	- Traffic goes through RTs, NACLs and, SGs. Therefore: 	
 		- Routes are required at both sides
 		- NACLs and SGs can be used to control access
 		- SG reference is cross-account but it's not cross-region (see limits below)
-	- DNS resolution to private IPs can be enabled, 
+	- DNS resolution to private IPs can be enabled,
 		- It's needed in both sides
 		- Public DNSes will therefore be resolved to their private IP and,
 		- It won't be traveling over the public Internet
@@ -891,7 +905,7 @@ EBS Optimization
 	- It uses AWS global-backbone for VPC peering cross-region: low latency and higher performance than public internet
 - Limits:
 	- VPC CIDR blocks can't overlap
-	- Transitive Peering is NOT Possible: 
+	- Transitive Peering is NOT Possible:
 		- A VPC can't talk to another VPC through a 3rd VPC
 		- A Direct peering is required between 2 VPCs so that they can talk to each other
 	- Cross-Region:
@@ -909,14 +923,14 @@ EBS Optimization
 <summary>VPC EndPoint</summary>
 
 - It's a virtual gateway object created in a VPC
-- It provides a method of connecting to public AWS services: 
+- It provides a method of connecting to public AWS services:
 	- Its related traffic doesn't leave AWS network
-	- It doesn't require a public IP address, 
-	- It doesn't require an Internet gateway, 
+	- It doesn't require a public IP address,
+	- It doesn't require an Internet gateway,
 	- It doesn't require any other resource: a NAT device, a VPN connection nor, an AWS Direct Connect connection instances
 - It's horizontally scaled (bandwidth)
 - There're 2 types of VPC endpoints:
-	- Gateway endpoint: 
+	- Gateway endpoint:
 		- It's used for S3 buckets and DynamoDB
 		- It's similar to Internet Gateway
 		- Its related traffic goes through RT: (Destination, Target) = (AWS Service Prefix Lists, Gateway Endpoint ID)
@@ -958,7 +972,7 @@ EBS Optimization
 	- It's a /64 CIDR
 	- It can be chosen from the VPC /56 range
 	- It's enabled from subnet -> Edit CIDR feature
-- It's publicly routable: 
+- It's publicly routable:
 	- There is no concept of Private IPv6 address
 	- There is no concept of Elastic IPs with IPv6
 	- IG doesn't do static NATs for IPv6
@@ -978,7 +992,7 @@ EBS Optimization
 - DNS Name:
 	- It'sn't allocated to IPv6 addresses
 - Limits:
-	- It'sn't currently supported across every AWS product 
+	- It'sn't currently supported across every AWS product
 	- It'sn't currently supported with every feature
 	- It'sn't currently supported by VPNs, customer gateways, and VPC endpoints
 	- [For more details]()
@@ -991,7 +1005,7 @@ EBS Optimization
 - It provides instances with outgoing access to the public internet using IPv6 and,
 - It prevents them from being accessed from the internet (or outside VPC?)
 - It allows outbound and inbound response traffic
-- Analogy: 
+- Analogy:
 	- It's similar to NAT Gateway but
 	- it doesn't provide Dynamic NAT since It'sn't relevent with IPv6
 	- NAT Gateway doesn't support IPv6
@@ -1018,7 +1032,7 @@ EBS Optimization
 <summary>Conventions</summary>
 
 - Subnet Name: sn-[public/private]-[AZ]: sn-public-a; sn-private-a
-- Subnet range: 
+- Subnet range:
 	- In some cases, humans do need to understand the networking structure that we use inside a VPC
 	- So, we could match a subnet's CIDR to its AZ and its application tear:
 	- E.g., for a VPC 10.0.0.0/16 with Subnets: /24 + 2 AZs + 3 tiers:
@@ -1034,7 +1048,7 @@ EBS Optimization
 
 <details>
 <summary>Description</summary>
- 
+
 - It's AWS Domain Registrar and DNS service
 
 </details>
@@ -1043,11 +1057,11 @@ EBS Optimization
 <summary>Domain Registrar</summary>
 
 - It checks a domain is available: It's done against the database of the TLD or the subdomain operator
-- It allows to register a domain: 
+- It allows to register a domain:
 	- It contacts then the TLD to add a record into the corresponding zone (the registration is "Pending")
 	- It publishes All or Some Registrant Contact details in the public WHOIS database
 	- It stores Registrant Contact, Administrative Contact and, Technical Contact details in the domain record
-	- It allow to renew the domain automatically 
+	- It allow to renew the domain automatically
 - It allows to host a domain: It gives the rights to specify name servers (NS) to be authoritative for our domains
 - It allows to register and host a domain, register only or host only a domain
 - It allows to add records (www, ftp, mail…) into the name servers (NS) zone files
@@ -1063,22 +1077,22 @@ EBS Optimization
 	- It supports public and private hosted zones:
 - Public Zone:
 	- It's created by default when a domain is registered/transfered with Route 53
-	- It's also created when we create a domain manually (how could it be done?) 
+	- It's also created when we create a domain manually (how could it be done?)
 	- It has the same name as the domain it relates to: It's FQDN (Fully Qualified Domain Name)
 	- It's accessible globally since the TLD zone delegates to its name servers
-	- It's accessible either from internet-based DNS clients or from within any AWS VPC 
-	- It has an NS record that is given to the corresponding domain operator (Route 53 becomes then "Authoritative") 
+	- It's accessible either from internet-based DNS clients or from within any AWS VPC
+	- It has an NS record that is given to the corresponding domain operator (Route 53 becomes then "Authoritative")
 - Private Zone:
 	- It's created manually and associated with one or more VPCs
-	- It's accessible from VPCs It's associated with 
-	- It needs "enableDnsHostname" and "enbaleDnsSupport" enabled on a VPC 
+	- It's accessible from VPCs It's associated with
+	- It needs "enableDnsHostname" and "enbaleDnsSupport" enabled on a VPC
 	- Not all Route 53 features supported (limits on health checks)
-- Split-view: 
+- Split-view:
 	- It allows to have 2 different websites with the same domain name:
-		- One website is available on the public Internet and 
+		- One website is available on the public Internet and
 		- a different website available on a private network
 	- How it works:
-		- Create a public zone for a domain name 
+		- Create a public zone for a domain name
 		- Create a private zone with the same zone name and with specific VPCs
 		- The private zone will then override the public zone within the specificied VPCs
 		- It the private zone doesn't have any record, the private zone doesn't then override the public zone
@@ -1094,7 +1108,7 @@ EBS Optimization
 		- It allows to resolve one domain name to another
 		- It cannot be used at the APEX (top) of a domain
 		- E.g. 1, add Cnames for mobile.example.com that is pointing m.example.com server
-		- It could reference an original record (A or AAAA) instead of an explicit IP address 
+		- It could reference an original record (A or AAAA) instead of an explicit IP address
 		- E.g. 2, add a CNames (www, ftp, vpn) for example.com:
 		- www.example.com; ftp.example.com; vpn.example.com
 		- All CNames could reference the original A record (example.com)
@@ -1116,7 +1130,7 @@ EBS Optimization
 	- TXT record:
 		- It's used to store plain text inside a domain
 		- It's often used to verify domain ownership:
-		- If we are adding a domain to Gmail or Office 365, 
+		- If we are adding a domain to Gmail or Office 365,
 		- They'll probably ask to add a text record to the domain with some random text that they're aware of
 		- They can then perform a resolution on that text record against the text of that "TXT record"
 		- If it matches, it guarantees that we own that domain.
@@ -1140,7 +1154,7 @@ EBS Optimization
 	- It's impacted by resources security features (SG, NACL)
 	- It occurs every 30 seconds (default) or every 10s
 	- It has a failure threshold: if x checks are unhealthy, then the healthcheck is unhealthy
-	- E.g., If the check occurs every 30s and the failure threshold is 3, then Route 53 will be able react for a fealure only after 90s (long time) 
+	- E.g., If the check occurs every 30s and the failure threshold is 3, then Route 53 will be able react for a fealure only after 90s (long time)
 	- Each endpoint check corresponds actually to multiple healthchecks that are done by Health Checkers (a global health check system)
 	- Endpoint Check aggregates the data from the health checkers and determines whether the endpoint is healthy:
 		- If more than 18% of health checkers report that an endpoint is healthy, Route 53 considers it healthy
@@ -1156,18 +1170,18 @@ EBS Optimization
 		- Port (for TCP and HTTP/S):
 		- Path (for HTTP/S)
 		- Latency graphs: ?
-		- Invert health check status: 
+		- Invert health check status:
 		- Health checker regions:
-	- [More details](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-determining-health-of-endpoints.html#dns-failover-determining-health-of-endpoints-monitor-endpoint) 
+	- [More details](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-determining-health-of-endpoints.html#dns-failover-determining-health-of-endpoints-monitor-endpoint)
 - Calculated healthcheck:
 	- It monitors the health of multiple healthchecks
 	- We could select how many sub-healthcheck should be healthy to make the calculated health check healthy
-	- Usefull particularly when we have got lots of different services/components of our system 
+	- Usefull particularly when we have got lots of different services/components of our system
 	- We created an individual healthcheck for each of them
-	- It summarizes the health of all these individual components 
-	- E.g., We have a front-end tier, a logic tier and, a database tier, 
+	- It summarizes the health of all these individual components
+	- E.g., We have a front-end tier, a logic tier and, a database tier,
 	- Each tier has a healthcheck
-	- Whe can then create a calculated healthcheck that will check the status of these individual checks to report the whole system healthy. 
+	- Whe can then create a calculated healthcheck that will check the status of these individual checks to report the whole system healthy.
 - CloudWatch alrams health checks:
 	- They monitor CloudWatch alarms
 	- e.g., we may want to consider something unhealthy if a DynamoDB table is experiencing performance issues
@@ -1175,7 +1189,7 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Routing Policies</summary> 
+<summary>Routing Policies</summary>
 - Simple Routing policy:
 	- It's a single record with multiple values a hosted zone (Error for a new 2nd record with the same type and domain name)
 	- It can contain multiple values (IP addresses) or
@@ -1188,7 +1202,7 @@ EBS Optimization
 	- Cons:
 		- No performance control (It'sn't a LB architecture): if a big organization caches an IP @, all its users will query a single IP
 		- No healthcheck: if a resource behind an IP @ fail, it will continue sending requests to it
-- Failover Routing policy: 
+- Failover Routing policy:
 	- It enhances "Simple Routing" policy
 	- It's a single Primary record + a single Secondary record with the same name
 	- It (primary and second records) can contain multiple values (IP addresses) or a single AWS resource as an alias type record
@@ -1196,16 +1210,16 @@ EBS Optimization
 	- Queries will resolve to the primary unless It's unhealthy:
 	- Queries will resolve to the secondary if the primary is unhealthy
 	- The secondary records cold provide emergency resources during failures:
-		- E.g., an S3 static website that presents a maintenance page 
+		- E.g., an S3 static website that presents a maintenance page
 		- with usefull information: Failure status, contact details
 	- It can be conbined with other routing policies to allow multiple primary and secondary reconrds
 
-- Multivalue Answer Routing policy: 
+- Multivalue Answer Routing policy:
 	- It's multiple records with the same name
 	- Its records can contain 1 value only (IP address or AWS product)
 	- it supports healthcheck
 	- It responds to DNS queries with up to 8 random healthy records
-- Weighted Routing: 
+- Weighted Routing:
 	- It's multiple records with the same name
 	- Its records have a weight and a unique Set ID
 	- It allows to split traffic based on different weights assigned
@@ -1213,44 +1227,44 @@ EBS Optimization
 		- To test new software/products/ AB Testing?
 		- When resources are being added or removed from a configuration that doesn't use a LB
 		- No performance or loading control (It'sn't a LB architecture)
-	- We can attach a health check to a record so that Route 53 can omit the record as long as the associated EC2 instance isn't healthy 
-	- E.g., we can set 10% of our traffic to go to US-EAST-1 and 90% to go to EU-WEST-1 
-	- The weight is a value. It'sn't a % 
-	- So, if we add to address with the following weights: 20 and 30 => the corresponding % will be: 40% and 60% 
-- Latency-based Routing policy: 
+	- We can attach a health check to a record so that Route 53 can omit the record as long as the associated EC2 instance isn't healthy
+	- E.g., we can set 10% of our traffic to go to US-EAST-1 and 90% to go to EU-WEST-1
+	- The weight is a value. It'sn't a %
+	- So, if we add to address with the following weights: 20 and 30 => the corresponding % will be: 40% and 60%
+- Latency-based Routing policy:
 	- It's multiple records with the same name: they're considered part of the same latency-based set (if the name is different, they're not)
 	- Its records are allocated to a unique region and have a unique Set ID
 	- It consults a latency database (DNS Resolver location - Policy Region - Latency) when a request occurs from a resolver server
 	- It returns the record set with the lowest network latency to the resolver server (end-user)
 	- The latency calculation is NOT made between customer's resolver server location and our resource location!
-	- It'sn't related to geography but to network condition instead 
+	- It'sn't related to geography but to network condition instead
 	- We can attach a health check to a record
 - Geolocation Routing policy:
 	- It's multiple records with the same name
-	- It lets to choose the resources that server traffic based on the geographic region from which queries originate 
+	- It lets to choose the resources that server traffic based on the geographic region from which queries originate
 	- Its records are configured for:
-		- a Country: the lowest abstration level 
+		- a Country: the lowest abstration level
 		- a Continent:
 		- Default: the highest abstration level (while planete)
 	- Its IP matching process is:
 		- A record set is used for queries originated from its region
 		- When multiple regions match a query region, the record set with the lowest abstraction level is returned
-	  	- If this process fails, the default record set is returned (if it exists) 
+		- If this process fails, the default record set is returned (if it exists)
 		- If no record set is configured for the originating query region, the default record set is returned (if it exists)
 		- If matching record set health check fails, It's then excluded in this process
-		- If there is no record matching and there is no default record, then "No answer" is returned 
+		- If there is no record matching and there is no default record, then "No answer" is returned
 	- E.g. 1, a website like Netflix: its content is based on their customer' country
 	- E.g. 2, we might want all queries from Europe (/US) to be routed to a fleet of EC2 instances:
-		- They're specifically configured for our European (US) customers 
+		- They're specifically configured for our European (US) customers
 		- They may have the local language (English, Spanish, Chinese) of our European (US) customers
 		- They may display all prices in Euros ($)
 		- We could set US record set as a default, canadien customers will be then redirected to the US EC2 fleet
-- Geoproximity Routing (Traffic Flow Only): 
-	- To use Geoproximity routing, It's required to use Route 53 traffic flow 
+- Geoproximity Routing (Traffic Flow Only):
+	- To use Geoproximity routing, It's required to use Route 53 traffic flow
 	- Traffic flow is: ?
-	- Geoproximity Routing lets Route 53 routes traffic to our resources based on the geographic location of our users and our resources 
-	- We can also optionally choose to route more or less traffic to a given resource by specifying a value, known as a bias 
-	- A bias expands or shrinks the size of the geographic region from which traffic is routed to a resource 
+	- Geoproximity Routing lets Route 53 routes traffic to our resources based on the geographic location of our users and our resources
+	- We can also optionally choose to route more or less traffic to a given resource by specifying a value, known as a bias
+	- A bias expands or shrinks the size of the geographic region from which traffic is routed to a resource
 
 </details>
 
@@ -1275,27 +1289,27 @@ EBS Optimization
 
 - It's a secure, durable, highly scalable objects storage
 - Objects are organized into Buckets
-- An object is: 
-	- Object key: object name 
-	- Value: object data 
+- An object is:
+	- Object key: object name
+	- Value: object data
 	- Version ID: It's possible to do version control
 	- Object Metadata: expires, content-type, cache
 	- Subresources:
-		- ACLs: see permission below 
+		- ACLs: see permission below
 		- Torrents:
 - A folder could be created within a bucket:
 	- It's not an actual object
 	- It's added as a prefix into the underlying objects' key
-- It's a universal namespace:  
+- It's a universal namespace:
 	- A bucket name must be unique globally
 	- Its URL format is: https://region.amazonaws.com/bucketname
 	- E.g., https://selfservedweb.s3.amazonaws.com/Web_Scalability_for_StartupEngineers.pdf
-- ARN:  
-	- Format: arn:partition:service:region:account: 
-    - E.g., arn:aws:cloudfront::191449997525:?
+- ARN:
+	- Format: arn:partition:service:region:account:
+	- E.g., arn:aws:cloudfront::191449997525:?
 
 </details>
- 
+
 <details>
 <summary>Uploads</summary>
 
@@ -1304,17 +1318,17 @@ EBS Optimization
 - A successfull upload will return an HTTP 200 code
 - Single PUT Upload:
 	- An object is uploaded in a single stream of data
-	- Limit of 5 GB/PUT 
-	- It can cause performance issues 
-	- If the upload falls the whole upload falls 
+	- Limit of 5 GB/PUT
+	- It can cause performance issues
+	- If the upload falls the whole upload falls
 - Multipart Upload:
 	- An object is broken up into parts (up to 10,000)
 	- All parts are upluded in parallel
 	- All parts are merged once they're all uploaded
 	- Each part is 5MB to 5GB, except the last part which can be less
 	- It's faster
-	- If an individual part upload falls, 
-		- It won't impact the whole upload 
+	- If an individual part upload falls,
+		- It won't impact the whole upload
 		- It will be retried individually
 	- It's recommended for anything over 100 MB
 	- It's required for anything beyond 5 GB
@@ -1331,16 +1345,16 @@ EBS Optimization
 	- Content should be uploaded to the bucket:
 	- "Static web hosting" feature should be enabled
 - It can host many types of content: HTML, CSS, JavaScript, Media (audio, movies and, images)
-- It can host front-end code for serverless application or 
-- It can be an offload location for static content: 
-	- Instead storing media on a web server, 
-	- We could store it on S3 and 
+- It can host front-end code for serverless application or
+- It can be an offload location for static content:
+	- Instead storing media on a web server,
+	- We could store it on S3 and
 	- Direct the Web server to point S3
 - It can host custom domains:
 	- Create a bucket with an acual DNS name
 	- Create a record in Route 53 that points at the bucket (Alias)
 - It can redirect requests:
-	- We can specify a full set of redirection rules 
+	- We can specify a full set of redirection rules
 	- It can redirect requests for an object to another object in the same bucket or to an external URL
 - CloudFront can also be added as a CDN for global users
 - SSL can be added for custom domains
@@ -1359,29 +1373,29 @@ EBS Optimization
 - It allows multiple versions of an object to exist in an S3 bucket
 - It's disabled by default
 - It requires to be enabled at a bucket level
-- Once it's enabled, 
+- Once it's enabled,
 	- It can never switched off (only suspended)
 	- It add a new feature on the console to Hide or Show the older versions
 	- Any modification operation on an object,
 		- It generates a new version of the object with a new Version-ID
-		- It hides the older version  
+		- It hides the older version
 	- A delete operation on an object doesn't delete it:
 		- It generates a new version of the object marked as deleted ("Delete" marker)
 		- It can be undone: if the "Delete" marked version is deleted
 	- Older versions of an object are still accessible by using the object name and a version ID
 	- To delete physically an object, all versions must be selected and deleted
 - AWS accounts are billed for all versions:
-	- Be careful, the bucked size could get very big 
+	- Be careful, the bucked size could get very big
 	- Previous versions aren't deleted!
-- MFA Delete: 
+- MFA Delete:
 	- It's a feature designed to prevent accidental deletion of objects
 	- Once enabled, a one-time password is required:
-		- To delete an object version or 
+		- To delete an object version or
 		- To change the versioning state of a bucket
 	- Versioning is required
 - For more details:
 	- [Deleting Object Versions](https://docs.aws.amazon.com/AmazonS3/latest/dev/DeletingObjectVersions.html)
-    - [Using MFA Delete](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMFADelete.html)
+	- [Using MFA Delete](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMFADelete.html)
 
 </details>
 
@@ -1393,7 +1407,7 @@ EBS Optimization
 - The bearer of the URL gets the same level of authorization as the creator
 - It's encoded with authentication built in
 - It has an expiry time: 7 days maximum
-- When It's used, 
+- When It's used,
 	- AWS verifies the creator's access to the object
 	- AWS doesn't verifies the bearer access to the object
 - It can be created even on objects the creator doesn't have access to
@@ -1407,7 +1421,7 @@ EBS Optimization
 		- Presigned URL generated when an image is purchased
 	- Client access to upload an image for process to an S3 bucket
 - Best Practices:
-	- Create presigned URLs with an identity with long term credentials 
+	- Create presigned URLs with an identity with long term credentials
 	- Avoid creating presigned URLs with roles
 
 </details>
@@ -1417,17 +1431,17 @@ EBS Optimization
 
 - It influences for objects in S3:
 	- The durability (Fault Tolerance?):
-		- It refers to long-term objects protection 
+		- It refers to long-term objects protection
 		- How it can operate through a failure with no user impact
 		- How well objects are protected from loss or any compromises
 		- It's concerned with object redundancy
-	- The availability: 
+	- The availability:
 		- It refers to system uptime
 		- How quick a system can recover in the event of a failure
 		- The storage system is operational and can deliver data upon request
-	- The "1st byte latency" 
-		- It's the amount of time that passes between: 
-		- The time a request to get an object is made and 
+	- The "1st byte latency"
+		- It's the amount of time that passes between:
+		- The time a request to get an object is made and
 		- The time its 1st byte is received
 	- The cost:
 		- Storage Size fee: per GB used with a Minimum Capacity charge
@@ -1436,7 +1450,7 @@ EBS Optimization
 		- Requests type: PUT, COPY, POST, or LIST Requests / GET, SELECT
 		- Requests type #: nbr of requests by type
 		- Minimu capacity doesn't mean that we can't upload a file less than the minimum size
-		- Minimum duration doesn't mean neither that we can't delete an object before the minimum duration 
+		- Minimum duration doesn't mean neither that we can't delete an object before the minimum duration
 		- They only mean that we'll be billed for a minimum size and a minimum period of time
 - It's setup at object level
 	- Initially: during the upload process or
@@ -1446,30 +1460,30 @@ EBS Optimization
 	- It's the default class
 	- Use cases:
 		- All purpose storage
-		- We don't have any specific requirements or 
+		- We don't have any specific requirements or
 		- We don't know the usage of the object
-- S3 IA (Infrequently Access): 
+- S3 IA (Infrequently Access):
 	- Same as S3 Standard (Designed for durability, Designed for availability, +3 AZ Replication and, 1st byte latency - rapid access)
 	- but it's for data that is accessed infrequently
-    - Storage Size fee: Lower than S3 standard
-    - But we're charged:
+	- Storage Size fee: Lower than S3 standard
+	- But we're charged:
 		- A retrieval fee
 		- Minimum capacity charge per object: billet at least for 128K / object
 		- Minimum duration charge per object: billed at least for 30 days / object
 - S3 One-Zone - IA (Infrequently Access):
-    - Lower-cost option accessed data
+	- Lower-cost option accessed data
 	- Use cases:
-		- For Cross Region Replications: 
-			- The data is stored somewhere else 
-			- A replication isn't the main location, 
+		- For Cross Region Replications:
+			- The data is stored somewhere else
+			- A replication isn't the main location,
 			- So the "standard" durability isn't needed here
 		- Output of data processes:
 			- If the data is lost, the process can be run again and the output can be reproduced
 			- This's particularly true, when the process is quick
 			- What if the process to get the output data is long?
-		- Non important data (non mission critical data) 
+		- Non important data (non mission critical data)
 	- Use cases: ?
-- S3 RRS - Reduced Redundancy Storage 
+- S3 RRS - Reduced Redundancy Storage
 	- It's obsolete (not recommended)
 	- Durability Design: 4 nines (99.99%)
 	- Durability SLA: ?
@@ -1477,9 +1491,9 @@ EBS Optimization
 	- Availability SLA: N/A
 	- AZ: >= 3
 	- Concurrent facility fault tolerance: 1
-    - "1st byte latency" SLA: milliseconds
+	- "1st byte latency" SLA: milliseconds
 	- Use cases: ?
-- S3 - Glacier: 
+- S3 - Glacier:
 	- It's a storage class for data archiving
 	- It's an archival storage on a file system or disk back ups in a traditional backup system
 	- We're charged:
@@ -1487,16 +1501,16 @@ EBS Optimization
 		- Bigger Minimum capacity charge per object
 		- longer Minimum duration charge per object
 	- Use cases: file system or disk back ups
-- S3 - Glacier Deep Archive: 
-    - It's for long-term archival
+- S3 - Glacier Deep Archive:
+	- It's for long-term archival
 	- It's like tape storage
 	- It's S3 lowest-cost storage class
-	- We're charged: 
+	- We're charged:
 		- A retrieval fee
 		- Biggest Minimum capacity charge per object
 		- longest Minimum duration charge per object
 	- Use cases: Cold backups
-- S3 - Intelligent Tiering: 
+- S3 - Intelligent Tiering:
 	- It moves objects automatically between 2 tiers:
 		- An Object that isn't accessed for 30 days is moved to IA tier
 		- If it's accessed, it's then moved back to frequent access tier
@@ -1506,12 +1520,12 @@ EBS Optimization
 	- Use cases:
 		- We don't known access patterns or it's unpredictable
 		- We don't want admin overhead
-- For more details: 
+- For more details:
 	- [Data Availability vs. Durability](https://blog.westerndigital.com/data-availability-vs-durability/)
 	- [Classes]
 		- [Blog post](https://medium.com/@davidoh0905/aws-s3-solutions-architect-exam-s3-availability-and-durability-96700c1c6d8c)
 		- [AWS documentation](https://aws.amazon.com/s3/storage-classes/)
-	- In AWS Certification exams: 
+	- In AWS Certification exams:
 		- It seems like answers should be based on ‘designed for’ durability/availability (unless the question specifies otherwise)
 
 </details>
@@ -1525,7 +1539,7 @@ EBS Optimization
 - Transition rules:
 	- They're to automate moving objects from one tier to another
 	- They could be applied on current version and/or older ones
-- Expiration rules: 
+- Expiration rules:
 	- They're to automate expiring of objects that are no longer required
 	- They could be applied on current version and/or older ones
 	- Current versions could be expired
@@ -1545,7 +1559,7 @@ EBS Optimization
 	- From Intelligent Tiering to
 		- One-Zone IA
 		- Glacier
-	- From One-Zone IA Tier to Glacier 
+	- From One-Zone IA Tier to Glacier
 - Cost:
 	- Data transfer fee when data is moved from a tier to another one
 	- Automation and Monitoring fee?
@@ -1562,7 +1576,7 @@ EBS Optimization
 	- They could be applied on the entire source bucket objects
 	- They could also be applied on a part of source bucket objects (based on prefixes and/or tags)
 	- They could be overlapping
-	- They've a priority value to resolve conflicts that occur when an object is eligible for replication under multiple rules 
+	- They've a priority value to resolve conflicts that occur when an object is eligible for replication under multiple rules
 	- A higher value indicates a higher priority
 - It requires:
 	- Versionning feature to be enabled on both buckets (src. and dest.)
@@ -1583,7 +1597,7 @@ EBS Optimization
 	- "Mark Delete" objects: it doesn't replicat deletions
 - The replication is using SSL protocol?
 - Use cases:
-    - Compliancy of data and making sure data is kept in a dedicated region (for example for GDPR compliance)
+	- Compliancy of data and making sure data is kept in a dedicated region (for example for GDPR compliance)
 	- See Scalability, Resilience and DR sections
 
 </details>
@@ -1630,10 +1644,10 @@ EBS Optimization
 		- It can include S3 elements
 		- It only works for identities in the same account as the bucket
 	- Bucket policies (resource policies)
-		- It's added a bucket level but 
+		- It's added a bucket level but
 		- It's applied to all bucket objects
-		- It can apply to anonymous accesses (public access) 
-	- Bucket or Object Access Control Lists (ACLs): 
+		- It can apply to anonymous accesses (public access)
+	- Bucket or Object Access Control Lists (ACLs):
 		- It's for also all principals
 		- It's not recommended anymore
 	- Block Public Access Bucket Setting:
@@ -1645,11 +1659,11 @@ EBS Optimization
 		- It's turned on by default
 - If more than 1 policy apply for a principal:
 	- All policies are combined
-	- least-privilege principle is applied: 
+	- least-privilege principle is applied:
 		- 1- Explicit Denies are the top priority
 		- 2- Explicit Allows are the second priority
 		- 3- Implicit Denies are the default
-- Client-side Encryption: 
+- Client-side Encryption:
 	- It's the responsibility of the client/application:
 		- Encryption/decryption process (CPU intensive process)
 		- Encryption keys
@@ -1673,7 +1687,7 @@ EBS Optimization
 		- Keys must be supplied with each PUT/GET request
 		- It also has a significant admin and processing overhead (see Client-Side Encryption)
 	- Sever-Side Encryption with S3-Managed Keys (SSE-S3 or Amazon S3 master-key):
-		- Keys are generated by S3 using AWS KMS 
+		- Keys are generated by S3 using AWS KMS
 		- KMS provides 2 versions of the key: 1 encrypted version and 1 decrypted version
 		- S3 encrypts object by using AES-256 and the key decrypted version
 		- S3 takes the key encrypted version and stores it with object
@@ -1720,8 +1734,8 @@ EBS Optimization
 <details>
 <summary>S3 Log requests</summary>
 
-- All requests to S3 bucket could be logged 
-- They could be stored in another S3 bucket in the same AWS account or in a completely different AWS account 
+- All requests to S3 bucket could be logged
+- They could be stored in another S3 bucket in the same AWS account or in a completely different AWS account
 
 </details>
 
@@ -1740,17 +1754,17 @@ EBS Optimization
 	- It allows lower latency, higher throughput
 	- It reduces load on the content servers
 	- It caches objects for a TTL (Time To Live)
-- It's for static, dynamic files, streaming (RTMP) and, interactive content 
+- It's for static, dynamic files, streaming (RTMP) and, interactive content
 - It distributes Media using HTTP or HTTPS
 - It's not included in free tier subscription
-- It comes with a default domain names: 
+- It comes with a default domain names:
 	- [randomCodes].cloudfront.net
 	- It work with http and https
-	- E.g. 1, http://d1234.cloudfront.net 
+	- E.g. 1, http://d1234.cloudfront.net
 	- E.g. 2, https://d1234.cloudfront.net
-- ARN:  
-	- Format: arn:partition:service:region:account:distribution/distributionName 
-    - E.g., arn:aws:cloudfront::191449997525:distribution/EWA2YC90MZY8E 
+- ARN:
+	- Format: arn:partition:service:region:account:distribution/distributionName
+	- E.g., arn:aws:cloudfront::191449997525:distribution/EWA2YC90MZY8E
 
 </details>
 
@@ -1759,12 +1773,12 @@ EBS Optimization
 
 - The server/service that hosts our content
 - It needs to be accessible on the internet
-- It can be an S3 Bucket: 
+- It can be an S3 Bucket:
 	- S3 AWS public endpoints will be used
 - It can be an web server (an ELB, or a Route 53):
-	- An EC2 instance: 
+	- An EC2 instance:
 	- A Corporate Data Center Server: a public IP address will be used
-- It can be an Amazon MediaStore: 
+- It can be an Amazon MediaStore:
 - It can be a corporate Data
 
 </details>
@@ -1777,14 +1791,14 @@ EBS Optimization
 - It has a DNS address
 - It can include 1 or more origins
 - It has 2 Delivery Methods:
-	- Web Distribution: 
+	- Web Distribution:
 		- To speed up distribution of static and dynamic content, for example, .html, .css, .php, and graphics files
-    	- Distribute media files using HTTP or HTTPS
-    	- Add, update, or delete objects, and submit data from web forms
-    	- Use live streaming to stream an event in real time
+		- Distribute media files using HTTP or HTTPS
+		- Add, update, or delete objects, and submit data from web forms
+		- Use live streaming to stream an event in real time
 	- RTMP Distribution (Real-Time Messaging Protocol):
-		- To speed up distribution of streaming media files using Adobe Flash Media Server's RTMP protocol. 
-		- It allows an end user to begin playing a media file before the file has finished downloading from a CloudFront edge location 
+		- To speed up distribution of streaming media files using Adobe Flash Media Server's RTMP protocol.
+		- It allows an end user to begin playing a media file before the file has finished downloading from a CloudFront edge location
 		- It requires to store the media files in an Amazon S3 bucket
 - Origin Settings:
 	- Origin Domain Name: the service/server that hosts the origin
@@ -1794,14 +1808,14 @@ EBS Optimization
 	- Viewer Protocol Policy:
 - Distribution Settings:
 	- Price Class:
-		- Only US, Canada, Europe; 
-		- US, Canada, Europe, Asia, Middle-East, Africa or; 
+		- Only US, Canada, Europe;
+		- US, Canada, Europe, Asia, Middle-East, Africa or;
 		- All Pops (Recommended choice but most expensive)
-	- WAF ACL (Web Application Firewall Access Control List): 
-		- To allow or block requests based on criteria that we specify, 
+	- WAF ACL (Web Application Firewall Access Control List):
+		- To allow or block requests based on criteria that we specify,
 		- Choose the web ACL to associate with this distribution.
-	- Default Root Object: 
-		- The object that we want CloudFront to return (E.g. index.html) 
+	- Default Root Object:
+		- The object that we want CloudFront to return (E.g. index.html)
 		- When a viewer request points to our root URL (www.example.com
 		- instead of to a specific object in our distribution (www.example.com/index.html)
 	- TTL (Time To Live):
@@ -1814,7 +1828,7 @@ EBS Optimization
 	- Restrict Viewer Access:
 		- By default, CloudFront is a publicly accessible CDN
 		- We can make it private (private CloudFront Distribution):
-			- It will then require users to access our content to use a Signed URL or a Signed cookie 
+			- It will then require users to access our content to use a Signed URL or a Signed cookie
 			- Trusted Signers: we could choose the current AWS account and/or other ones to create signed URLs or signed cookies
 
 </details>
@@ -1826,7 +1840,7 @@ EBS Optimization
 - It's not just read only?
 
 </details>
-          
+
 <details>
 <summary>Caching Process</summary>
 
@@ -1835,14 +1849,14 @@ EBS Optimization
 - If the requested data is cached in the Edge Location, it's delivered locally from it (cache hit)
 - If the requested data isn't cached:
 	- The edge location attempts to download it from a regional cache
-		- An aged (expired) content in edge location may still exist here 
-		- It's bigger (more storage) and 
+		- An aged (expired) content in edge location may still exist here
+		- It's bigger (more storage) and
 		- It servers more people (attached to multiple Pops)
-	- If the data isn't in regional cache, 
+	- If the data isn't in regional cache,
 		- The edge location and regionl cache perform an origin fetch
 		- They download the data from the origin
 		- The regional cache will be able then to serve requests from other pops
-	- As the edge location receives the data, 
+	- As the edge location receives the data,
 		- It immediately begins forwarding to the custmer
 		- It immediately begins
 		- It immediately caches it for the next visitor
@@ -1850,13 +1864,13 @@ EBS Optimization
 	- It could expire (valid for a TTL): It could be discarded and be recached
 	- It could be explicitly invalidated and removed
 
-</details> 
+</details>
 
 <details>
 <summary>Origin Access Identity (OAI)</summary>
- 
+
 - It's also called Origin Access Identifier
-- It's a virtual identity that can be associated with a distribution 
+- It's a virtual identity that can be associated with a distribution
 - It allows restriction of an S3 bucket to accept connections only from a specific CloudFront OAI
 - It works only with S3 buckets (it doesn't support any other service such as EC2 server or on premise web server)
 - How it works:
@@ -1870,9 +1884,9 @@ EBS Optimization
 		- This will grant the AOI above Read Permission on the S3 bucket above (It'll add an allow statement in the bucket policy)
 - Use cases:
 	- For better User experience: to avoid a lower level of performance by going direct to S3
-	- To avoid bypassing an application, 
+	- To avoid bypassing an application,
 		- It generates signed URLs to access restricted content using CloudFront
-		- We don't want our customers having the abily to bypass it and go directly to the underlying S3 bucket 
+		- We don't want our customers having the abily to bypass it and go directly to the underlying S3 bucket
 
 </details>
 
@@ -1896,13 +1910,13 @@ EBS Optimization
 - It has a DNS name:
 	- Format: fs-[randomCode].efs.ap-[regionName].amazonaws.com
 	- E.g., fs-963f75af.efs.ap-useast-1.amazonaws.com
-- It's region resilient: 
+- It's region resilient:
 	- Its availability isn't impacted by an AZ failure
 	- It's recommnended though to have 1 mount target by AZ
 - It integrate with multiple AWS services:
 	- AWS backup service to get data backed up
 	- AWS Data Sync that can act as a synchronization product and get data in EFS
-      
+
 </details>
 
 <details>
@@ -1911,7 +1925,7 @@ EBS Optimization
 - They're placed in subnets inside a VPC (1 mount target/AZ)
 - They have an IP address
 - Security Groups are used to control access to them
-	- The related EC2 instances' SGs could be best fit here 
+	- The related EC2 instances' SGs could be best fit here
 	- By simply allowing all inbound traffic from source with the same SG
 - It's accessed:
 	- By local EC2 instances from a local VPC
@@ -1919,7 +1933,7 @@ EBS Optimization
 	- By on-premises locatons via a VPN or Direct Connect
 - CLI EFS Utilities:
 	- It's not required since EFS is standard inside Linux OS
-	- It's recommended though since it allows the machine a tighter integration with EFS 
+	- It's recommended though since it allows the machine a tighter integration with EFS
 
 </details>
 
@@ -1929,7 +1943,7 @@ EBS Optimization
 - General Purpose:
 	- It's the default mode
 	- It's suitable for 99% of needs
-- Max I/O: 
+- Max I/O:
 	- It's designed for when a large number of instances (hundereds) need to access the file system
 
 </details>
@@ -1952,7 +1966,7 @@ EBS Optimization
 <summary>Security</summary>
 
 - Encryption at rest:
-	- It's configured when creating a file system 
+	- It's configured when creating a file system
 	- It's disabled by default
 	- It works with a AWS KMS of the same or another AWS account
 - Encryption in transit:
@@ -2031,29 +2045,29 @@ EBS Optimization
 - It can be configured for demanding availability and durability scenarios
 	- It can be deployed in a single AZ or Multi-AZ mode
 - It'sn't Serverless
-- It supports different database engines: 
-    - MySQL:
-    - MariaDB:  
-    - PostgreSQL:
-    - Oracle:
-    - Microsoft SQL Server:
+- It supports different database engines:
+	- MySQL:
+	- MariaDB:
+	- PostgreSQL:
+	- Oracle:
+	- Microsoft SQL Server:
 	- Amazon Aurora:
 		- It's AWS own relational database engine
-    	- It could be created from MySQL db (good way to migrate to Aurora)
+		- It could be created from MySQL db (good way to migrate to Aurora)
 		- It could be created from a PostgreSQL db (a good way to migrate to Aurora)
 		- Aurora Serverless is Serveless
-- It's deployed in EC2 instances, it supports: 
+- It's deployed in EC2 instances, it supports:
 	- EC2 General Purpose Family (DB.M4, DB.M5)
 	- Memory Optimized family:
 		- DB.R4 and DB.R5
 		- DB.X1e and DB.X1 for Oracle
 	- Burstable (DB.T2 and DB.T3)
 - It uses a storage similar to EBS, it supports:
-	- General Purpose SSD (gp2): 
-		- IOPS per GiB, 
+	- General Purpose SSD (gp2):
+		- IOPS per GiB,
 		- burst to 3,000 IOPS (pool architecture like EBS)
-	- Provisioned IOPS SSD (io1): 
-		- 1,000 to 80,000 IOPS (engine dependent) 
+	- Provisioned IOPS SSD (io1):
+		- 1,000 to 80,000 IOPS (engine dependent)
 		- Size and IOPS can be configured independently
 	- Autoscalling feature (disabled by default)
 - It has an endpoint, a CNAME:
@@ -2063,9 +2077,9 @@ EBS Optimization
 	- run immediately
 	- or run at maintenance time that is created when the instance is created
 - It requires a minimum of 2 subnets in a Subnet Group
-- Troubleshooting: 
-	- We want our application to check whether a request generated an error before we spend any time processing results.  
-	- The easiest way to find out if an error occurred is to look for an Error node in the response from the Amazon RDS API.  
+- Troubleshooting:
+	- We want our application to check whether a request generated an error before we spend any time processing results
+	- The easiest way to find out if an error occurred is to look for an Error node in the response from the Amazon RDS API
 
 </details>
 
@@ -2079,7 +2093,7 @@ EBS Optimization
 - It allows to configure (enable, disable, ...) some of the RDS database engines specific features
 	- E.g. 1, MySQL Memcached support (MEMCACHED)
 	- E.g. 2, Oracle Native Network Encrytion (NATIVE_NETWORK_ENCRYPTION)
-- It's currently available for MariaDB, MySQL, Oracle and, Microsoft SQL Server 
+- It's currently available for MariaDB, MySQL, Oracle and, Microsoft SQL Server
 - It's not currently available for PostgreSQL and Aurora
 
 - [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithOptionGroups.html)
@@ -2092,17 +2106,17 @@ EBS Optimization
 - It acts as a container for engine configuration parameters that are applied to one or more DB instances
 	- E.g. 1, autocommit DB parameter for MySQL 5.6 RDS instance
 	- E.g. 2, auto_increment_increment DB parameter for MySQL 5.6 RDS instance
-- A default one is created 
+- A default one is created
 	- When a db instance is created without specifying a custom DB parameter group
 	- It contains db engine defaults and Amazon RDS system defaults based on the engine, compute class and, allocated storage of the instance
 	- It's not possible to modify it
 	- To modify the DB Parameter Group of an RDS instance associated with a default Parameter Group:
 		- Create a new DB Parameter Group
 		- Modify the RDS Instance to use the new parameter group
-- If a non-default DB parameter group is updated, 
+- If a non-default DB parameter group is updated,
 	- The changes is applied to all DB instances that are associated with it
 	- When the change is applied depends on the "Apply Type" of the changed parameter:
-		- If it's a dynamic parameter, the change is applied immediately regardless of the Apply Immediately setting 
+		- If it's a dynamic parameter, the change is applied immediately regardless of the Apply Immediately setting
 		- If it's a static parameter, the parameter change takes effect after the DB instance is manually reboot
 - [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithParamGroups.html)
 
@@ -2131,7 +2145,7 @@ EBS Optimization
 	- The read-replica db becomes then its own database (master)
 	- It breaks the asynchnous replication
 	- It can be used for read and write operations
-- It can be multi-AZ 
+- It can be multi-AZ
 - It's available for all database types (MySQL, PostgreSQL, MariaDB, Oracle, Aurora) except SQL-Server
 - Database engine version upgrade is independent from master instance (it must be handled manually)
 - [Multi-AZ vs. Read-Replicas](https://aws.amazon.com/rds/details/multi-az/)
@@ -2140,7 +2154,7 @@ EBS Optimization
 
 <details>
 <summary>Consistency</summary>
- 
+
 </details>
 
 <details>
@@ -2149,26 +2163,26 @@ EBS Optimization
 - Multi-AZ mode:
 	- RDS creates 2 db instances in the same region:
 		- The primary database (production)
-		- The Standby database is created in a different AZ 
+		- The Standby database is created in a different AZ
 	- It's for resilience Only
 		- Disaster Recovery: Database failure, AZ failure
-		- DB maintenance 
+		- DB maintenance
 		- It'sn't for performance (see read replicas)
 	- Primary instance:
 		- It's the only one that is accessed with the instance CNAME
 		- It has its own storage
-	- The Standby instance: 
+	- The Standby instance:
 		- It's the exact copy of the primary database
 		- It has also its own storage
-		- The data replication from the primary db is synchronous: data is copied in real time  
+		- The data replication from the primary db is synchronous: data is copied in real time
 		- It's the source of backups (no performance impact)
 	- Failover Process:
 		- In case of a db maintenance or a failure (DB instance or AZ),
 		- RDS will try to minimize the outages
 		- It will automatically failover to the standby db
-		- Its CNAME @ won't change 
+		- Its CNAME @ won't change
 		- Its CNAME @ will point to the standby db
-		- It may be a brief outage: 
+		- It may be a brief outage:
 		- It can have some level of lag or caching that can slow down it: 2 digits seconds or ~1 or 2 minute(s)
 	- DB maintenance Process:
 		- In case of a planned db maintenance (change the db size),
@@ -2180,10 +2194,10 @@ EBS Optimization
 		- Except Aurora, RDS is not a truly fault tolerant system
 		- This is because of the brief outage that could happen during the failover process
 	- It provides us with better [RTO](https://en.wikipedia.org/wiki/Disaster_recovery#Recovery_Time_Objective)
-	- It allows to force AZ changing: actions > reboot  
-		- We can actually reboot with failover  
+	- It allows to force AZ changing: actions > reboot
+		- We can actually reboot with failover
 		- This is a way of forcing our AZ to change
-		- So we can change from one AZ to another by just rebooting with failover 
+		- So we can change from one AZ to another by just rebooting with failover
 		- It's possible for MySQL, MariaDB, PostgreSQL, Oracle, SQL Server
 - Single AZ Mode:
 	- The RDS instance is in a single AZ
@@ -2196,18 +2210,18 @@ EBS Optimization
 <summary>Disaster Recovery</summary>
 
 - Snapshot:
-	- It's a manual backup: 
+	- It's a manual backup:
 		- It's user initiated
 		- E.g., Console, CLI, Lambda function
 	- It's created automatically when a new RDS instance is created/restored
 	- It's stored in S3
-    - It's kept even after the original RDS instance is deleted
+	- It's kept even after the original RDS instance is deleted
 	- It can be copied to the same region or to a different one
 - Backups:
-	- It's an automated backup: 
+	- It's an automated backup:
 		- It occurs once a day during a backup window: it takes a full daily snapshot
 		- Log backups occur every 5 minutes (Point in time)
-	- It's taken from the Standby instance 
+	- It's taken from the Standby instance
 	- It's stored in S3
 	- It's an incremental backup:
 		- The 1st backup stores the entire used space
@@ -2221,17 +2235,17 @@ EBS Optimization
 		- Default retention period is 7 days
 	- It provides a low [RPO](https://en.wikipedia.org/wiki/Disaster_recovery#Recovery_Point_Objective)
 - Snapshot/Backups operation impacts:
-	- During the Snapshot/backup window, storage I/O may be suspended while data is being backed up 
+	- During the Snapshot/backup window, storage I/O may be suspended while data is being backed up
 	- We may experience elevated latency
 - Restoring Backups/snapshots:
 	- AWS chooses the most recent daily backup, then
-	- It applies transaction logs relevant to that day 
-	- It results a new RDS instance: 
+	- It applies transaction logs relevant to that day
+	- It results a new RDS instance:
 		- With a new DNS endpoint
 		- With a new SG
 	- It requires to perform some level of reconfiguration:
 		- At an application level, to change the DNS Name the application is pointing to
-		- At AWS level, to associate the new instance to the previous SG 
+		- At AWS level, to associate the new instance to the previous SG
 
 </details>
 
@@ -2240,10 +2254,10 @@ EBS Optimization
 
 - Network Security:
 	- It could be Public:
-		- It will be in a public subnet 
+		- It will be in a public subnet
 		- It will be assigned a public IP @
 		- It will be accessible by resources from outside the VPC it's attached to
-	- It could be Private: 
+	- It could be Private:
 		- It won't be assigned a public IP @
 		- It will be accessible only by resources inside the VPC it's attached to
 	- Its network access is controlled by Security Groups (SG)
@@ -2264,7 +2278,7 @@ EBS Optimization
 	- An Encrypted snapshot requires a new destination region KMS CMK to be copied to a new region
 	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html)
 - Encryption in Transit:
-	- Data in transIt's encrypted for asynchronous replication of read-replicas in different regions
+	- Data in transit is encrypted for asynchronous replication of read-replicas in different regions
 
 </details>
 
@@ -2280,12 +2294,12 @@ EBS Optimization
 	- Extra storage (backups/snapshots) beyond the 100% of provisioned db:
 		- We get a free storage space equal to the db size
 		- For an 100GB allocated RDS DB, 100GB of snapshot/backups are included
-- Reserved DB instance: 
-	- It let optimize Amazon RDS costs based on expected usage 
-    - We can reserve a DB instance for a 1- or 3-year term  
-    - Reserved DB instances provide with a significant discount compared to on-demand DB instance pricing
-	- Discounts for reserved DB instances are tied to instance type and AWS Region  
-	- It's available in 3 varieties: No Upfront, Partial Upfront,  All Upfront
+- Reserved DB instance:
+	- It let optimize Amazon RDS costs based on expected usage
+	- We can reserve a DB instance for a 1- or 3-year term
+	- Reserved DB instances provide with a significant discount compared to on-demand DB instance pricing
+	- Discounts for reserved DB instances are tied to instance type and AWS Region
+	- It's available in 3 varieties: No Upfront, Partial Upfront, All Upfront
 	- See EC2 Description
 - [For more details](https://aws.amazon.com/rds/mysql/pricing/)
 
@@ -2295,7 +2309,7 @@ EBS Optimization
 <summary>Use cases</summary>
 
 - Scalability: It's used for read-heavy database workloads (It doesn't scale writes)
-- Global resilience: 
+- Global resilience:
 	- Improve the ability to recover from a serious failure either within a region or internationally
 	- It provides with a better [RTO](https://en.wikipedia.org/wiki/Disaster_recovery#Recovery_Time_Objective) better than snapshot's one
 
@@ -2321,12 +2335,12 @@ EBS Optimization
 	- 2nd one with Postgre compatibility
 - It's available in regions that have at least 3 AZs (not all regions)
 - It uses a base configuration of a "DB cluster" that consists of:
-	- A single primary instance: 
+	- A single primary instance:
 		- It's also called the primary node
 		- It supports read-write workloads
-		- It performs all of the data modifications to the cluster volume 
-	- A cluster volume:  
-		- It's an all-SSD virtual database storage volume 
+		- It performs all of the data modifications to the cluster volume
+	- A cluster volume:
+		- It's an all-SSD virtual database storage volume
 		- It's shared by the primary instance and all replica instances
 		- It scales automatically
 	- 0 to 15 Replica instances:
@@ -2337,7 +2351,7 @@ EBS Optimization
 	- It's more quicker than converting a mySQL based RDS from no to multi-AZ
 	- It only needs to provision a new instance and point it at the shared storage
 	- It's not adding a new storage; there's no copy involved
-- Its location could be 
+- Its location could be
 	- Regional
 	- Gloabl
 	- Not all MySQL versions support this feature
@@ -2352,15 +2366,15 @@ EBS Optimization
 <summary>Db Features</summary>
 
 - One writer and multiple readers:
-	- It supports multiple reader instances connected to the same storage volume as a single writer instance 
+	- It supports multiple reader instances connected to the same storage volume as a single writer instance
 	- It's a good general-purpose option for most workloads
 - Parallel query:
 	- One writer and multiple readers
 	- It parallelizes some of the I/O and computation involved in processing data-intensive queries
 	- It allows queries to be executed across all nodes of a cluster at the same time
 	- It's currently available only for Aurora MySQL edition
-	- It improves the performance of analytic queries by pushing processing down to the Aurora storage layer 
-	- Use cases: 
+	- It improves the performance of analytic queries by pushing processing down to the Aurora storage layer
+	- Use cases:
 		- Hybrid transactional and analytic workloads
 		- Queries with larger data sets
 	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-mysql-parallel-query.html)
@@ -2375,10 +2389,10 @@ EBS Optimization
 <details>
 <summary>Global Database Location</summary>
 
-- It's currently available only for Aurora MySQL edition and version MySQL 5.6.10a 
+- It's currently available only for Aurora MySQL edition and version MySQL 5.6.10a
 - It consists of 1 primary cluster in a primary AWS region and 1 read-only cluster in a secondary region
 	- This implies that data is replicated 12 times (2 copies x 3 AZs x 2 Regions)
-	- Writes are done in the primary cluster 
+	- Writes are done in the primary cluster
 	- Writes are replicated to secondary AWS Regions with typical latency of less than 1 sec
 - It requires large DB instances: a Memory Optimized DB instance class (includes r and x classes)
 - It requires to be enabled when a database cluster is made
@@ -2390,16 +2404,16 @@ EBS Optimization
 <summary>Endpoints</summary>
 
 - There are several different endpoints available
-- Cluster Endpoint: 
+- Cluster Endpoint:
 	- It connects our app. to the current primary DB instance of the app's cluster
 	- It's updated automatically so that it always points to the primary instance
 	- It's for both reads and writes
-- Reader Endpoint 
+- Reader Endpoint
 	- It load balances read operations across all available Read Replicas
 	- It's for read only
 	- It offloads read queries and reduces load on the primary DB instance
-- Instance Endpoints: 
-	- It connects to a specific instance in the cluster 
+- Instance Endpoints:
+	- It connects to a specific instance in the cluster
 	- It allows to have fine-grained control over query allocation, rather than having Aurora handle connection distribution
 - Custom Endpoints:
 	- It connects explicitly to an individual database instances
@@ -2409,13 +2423,13 @@ EBS Optimization
 <details>
 <summary>Migrating a RDS MySQL to RDS Aurora</summary>
 
-- Way 1: 
-	- Create an Aurora read-replica for the primary MySQL database. 
-	- Promote the read-replica to a primary database. 
-- Way 2: 
-	- Create an Aurora read-replica for the primary MySQL database. 
-	- Create a snapshot a the Aurora read-replica. 
-	- Create a new Aurora database from the snapshot. 
+- Way 1:
+	- Create an Aurora read-replica for the primary MySQL database.
+	- Promote the read-replica to a primary database.
+- Way 2:
+	- Create an Aurora read-replica for the primary MySQL database.
+	- Create a snapshot a the Aurora read-replica.
+	- Create a new Aurora database from the snapshot.
 - [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.Migrating.RDSMySQL.Import.html)
 
 </details>
@@ -2423,10 +2437,10 @@ EBS Optimization
 <details>
 <summary>Scalability</summary>
 
-- Storage Autoscaling: 
+- Storage Autoscaling:
 	- It starts with 10 GB
 	- It scales in 10 GB increments to 64TB
-	- It scales Compute ressources up to 32vCPUs and 244GB of memory 
+	- It scales Compute ressources up to 32vCPUs and 244GB of memory
 	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Integrating.AutoScaling.html)
 
 </details>
@@ -2451,7 +2465,7 @@ EBS Optimization
 	- Tier 0 has the highest priority
 - It's capable of self healing any data problems that exists in a shared storage
 	- It scans continuously data blocks and disks for errors
-	- It replaces them automatically 
+	- It replaces them automatically
 	- It monitors disks and nodes for failures
 	- It automatically replaces/repairs the disks/nodes without the need to interrupt read/write processing from the db node
 
@@ -2464,7 +2478,7 @@ EBS Optimization
 - It lets quickly recover from a user error, without having to create another DB cluster
 - It has a maximum window of 72 hours
 - E.g., if we accidentally deleted an important record at 10am, we could use Backtrack to move the Aurora database back to its state at 9:59am
-- Pros: 
+- Pros:
 	- It doesn't create a new database (with a new DNS Name)
 	- It doesn't require to perform any reconfiguration (see the required reconfiguration for the other RDS based engines)
 - Con: It does cause an outage because it's rolling back the entire shared storage
@@ -2488,7 +2502,7 @@ EBS Optimization
 	- But there is a minimum and the level of reader instances increase/decrease is limited
 	- We're not going to get the linear alignment between the capacity that we need (the amount of resources actually used) and the capacity that is provided
 - E.g.:
-	- If we consume 10 TiB, we're billed for 10 TiB 
+	- If we consume 10 TiB, we're billed for 10 TiB
 	- If we delete 5 TiB, we're still using 10 TiB and, billed for 10 TiB
 - To reduce the high watermark, we should take a backup and make a new cluster with just that data
 - [For more details](https://aws.amazon.com/rds/aurora/pricing/)
@@ -2498,7 +2512,7 @@ EBS Optimization
 <details>
 <summary>Use cases</summary>
 
-- Eventual consistency is acceptable: 
+- Eventual consistency is acceptable:
 	- To use the cluster endpoint for writes
 	- To use the reader endpoint for all reads
 	- To avoid using specific instance endpoints
@@ -2513,9 +2527,9 @@ EBS Optimization
 <details>
 <summary>Limits</summary>
 
-- Max cluster volume:  64 TiB
+- Max cluster volume: 64 TiB
 - Max cluster Replicas #: 15
-- Max Compute ressources: 32vCPUs 
+- Max Compute ressources: 32vCPUs
 - Max Compute memory: 244GB
 - Backtrack maximum window: 72 hours
 
@@ -2598,7 +2612,7 @@ EBS Optimization
 	- It allows to pause (0 ACU) automatically a db instance after consecutive minutes of inactivity
 	- It reallocates quickly a new db instances when an activity is detected
 - E.g., When a current capacity is exceeded,
-	- It transparently uses the instance pool to provision a new larger database instance or multiple smaller database instances 
+	- It transparently uses the instance pool to provision a new larger database instance or multiple smaller database instances
 	- It transparently attachs them to the database shared storage
 	- It transparently redirects connection to the new instances
 	- It then transparently removes the small instances which are no longer needed	
@@ -2607,7 +2621,7 @@ EBS Optimization
 
 <details>
 <summary>Consistency</summary>
- 
+
 </details>
 
 <details>
@@ -2615,12 +2629,12 @@ EBS Optimization
 
 - Aurora separates computation capacity and storage
 - Storage volume (Replicas):
-	- It spreads replicas across multiple AZs 
+	- It spreads replicas across multiple AZs
 	- The data remains available even if outages affect the DB instance or the associated AZ
 
 - DB Instance Automatic multi-AZ failover:
 	- The DB instance of an Aurora Serverless DB cluster is created in a single AZ
-	- If the DB instance or the AZ fails, Aurora recreates the DB instance in a different AZ 
+	- If the DB instance or the AZ fails, Aurora recreates the DB instance in a different AZ
 	- In case of a failure, the Automatic multi-AZ failover takes longer than an Aurora Provisioned cluster
 	- Its time is currently undefined: it depends on demand and capacity availability in other AZs within the given AWS Region
 
@@ -2640,7 +2654,7 @@ EBS Optimization
 <summary>Pricing</summary>
 
 - For Shared storage:
-	- The pricing is based on high watermark system 
+	- The pricing is based on high watermark system
 	- See RDS provisioned pricing
 - For DB instances:
 	- We pay for the database resources that are used on a per second basis
@@ -2665,9 +2679,9 @@ EBS Optimization
 
 - It exists in a single AZ (See failover description)
 	- The Aurora Serverless Automatic multi-AZ failover takes longer than an Aurora Provisioned cluster (it has an ongoing costs 24/7 while it's running)
-	- There is a trade-off here between different priorities: 
+	- There is a trade-off here between different priorities:
 	- It's between a slight increase in the amount of time that failover takes vs. being able to scale back to zero capacity and then only pay for the storage
-- It can't be set to be public: 
+- It can't be set to be public:
 	- It's not a drop-in replacement for DynamoDB
 	- But we can use its Query editor (Data API)
 - Its cluster can't currently be accessed from across a VPN or an inter-region VPC peer
@@ -2685,7 +2699,7 @@ EBS Optimization
 - It's a serveless database product
 - It's a global service
 - It's partitioned regionally
-- It's a Multimodel database, 
+- It's a Multimodel database,
 	- It includes features of more than one data model
 	- It's wide-column store:
 		- It's Key Value database
@@ -2698,21 +2712,21 @@ EBS Optimization
 	- It supports different types
 	- A type of a given attribute could be different across rows
 	- It could be Nested
-- It supports Item concept: 
+- It supports Item concept:
 	- It's like a row in other dbs
 	- It's a collection of attributes
 	- It's inside a table that share the same key structure as every other item in the table
 	- It has its unique primary key: PK only or PK and SK
 	- It's a Json document
 	- It could have up to 400 KB in size
-- It supports Table concept: 
+- It supports Table concept:
 	- It's a collection of items: 0 or more items
 	- Its name must be unique within its region and AWS account
 	- It doesn't enforce a rigid schema across all of its items
 	- It does only require a primary key for the table to be defined upfront
 		- It could consist of 1 attribute: PK
 		- It could consist of a composite key: (PK, SK)
-	- Its ARN: 
+	- Its ARN:
 		- Format: arn:${Partition}:dynamodb:${Region}:${Account}:table/${TableName}
 		- E.g., arn:aws:dynamodb:us-east-1:191449997525:table/myDynamoDBTable
 - E.g. We need to store weather data that is sent by weather station every 30 mn
@@ -2749,12 +2763,12 @@ EBS Optimization
 	- It'sn't allowed to put a partial item: all attributes must be written at the same time
 	- It returns HTTP status code 200 when data it stored persistently (succesfuly)
 - Scan:
-	- It doesn't require any parameters 
+	- It doesn't require any parameters
 	- It no parameter is added, it will then list/retrieve all item in the scaned table
 	- It allow additional filters on any attribute of the table
-	- When a filter isn't on a primary key, 
-		- It read all items of a table; 
-		- It excludes items that don't match the filter; 
+	- When a filter isn't on a primary key,
+		- It read all items of a table;
+		- It excludes items that don't match the filter;
 		- It returns the remaining items
 		- It consumes the capacity of the entire table
 	- Pros: It's more flexible; It'sapplied on different PS
@@ -2779,7 +2793,7 @@ EBS Optimization
 
 - It provides an alternative representation of data in a table
 - It's useful for applications with varying query demands
-- Projected attributes: 
+- Projected attributes:
 	- Indexes can have either Keys only, All table's attributes or some attributes
 	- It allows to reduce the amount of data read when items are read from the index
 	- It can help to improve performance but...
@@ -2813,14 +2827,14 @@ EBS Optimization
 <summary>Global Tables</summary>
 
 - It's possible to create a set of multi-master table
-	- It allows to have a table in different AWS regions 
+	- It allows to have a table in different AWS regions
 	- It replicates data to all of the other replica tables
 	- Reads and Writes are possible from/to all replicas
 - It requires to enable "streams" (see streams topic below)
 - It requires the table to be empty
-- To create a global table: 
-	- Enable Streams, 
-	- Start with an empty table 
+- To create a global table:
+	- Enable Streams,
+	- Start with an empty table
 	- Add a region
 - It employs a [last writer wins conflict resolution protocol](https://dzone.com/articles/conflict-resolution-using-last-write-wins-vs-crdts)
 
@@ -2832,19 +2846,19 @@ EBS Optimization
 - Stream:
 	- It provides an ordered list of changes that occur to items within a table
 	- It's a rolling 24-hour window of changes:
-		- Every time an item is added, updated or, deleted to a table which has streams enabled 
+		- Every time an item is added, updated or, deleted to a table which has streams enabled
 		- An entry is added to that stream which details the insert, update, or delete operation
 	- The information that is written in the stream can be configured with one of 4 view types:
 		- KEY_ONLY: Whenever an item is added, updated, or deleted, the key(s) of that item are added to the stream
-		- NEW_IMAGE: 
+		- NEW_IMAGE:
 			- The entire item is added to the stream (post-change)
 			- It's great when we want to perform an action based on the new value of an item
 			- E.g., when we create a new account, we should send a confirmation email to the new email @
-		- OLD_IMAGE: 
+		- OLD_IMAGE:
 			- The entire item is added to the stream (pre-change)
 			- It's great when we want to perform an action based on the old value of an item
 			- E.g., when we update an email address, we should send an approval email to the old email @
-		- NEW-AND-OLD-IMAGES: 
+		- NEW-AND-OLD-IMAGES:
 			- Both the new and old versions of the item are added to the stream
 	- It's disabled by default
 	- It's enabled per table
@@ -2857,7 +2871,7 @@ EBS Optimization
 	- It's similar to triggers in relational database engines
 - Use cases:
 	- Stream is used by AWS for replications envolved in globa tables
-	- To implement an event driven pipeline: 
+	- To implement an event driven pipeline:
 		- Stream containing changes + Trigger + Lamda function
 		- E.g. 1, Send approval or confirmation email when it's changed or a new account is created
 		- E.g. 2, Send a notification when something happen
@@ -2903,14 +2917,14 @@ EBS Optimization
 		- A table is configured with read and write capacity units (RCU and WCU)
 		- Every operation on items consumes at least 1 RCU/WCU
 		- Partial RCU/WCU cannot be consumed
-		- WCU: 1 KB of data or less written to a table per second 
+		- WCU: 1 KB of data or less written to a table per second
 		- RCU: 4 KB of data or less read from a table per second in a stronly consistent way
 		- RCU: 8 KB of data or less read from a table per second in an eventual consistent way
 		- Atomic transactions requires x2 the RCU
 	- Auto-Scaling Provisioned:
 		- We don't have to explicitly specify the RCU and WCU
 		- We can enable auto-scaling
-		- We can define a minimum and maximum RCU and WCU and 
+		- We can define a minimum and maximum RCU and WCU and
 		- DynamoDB will automatically adjust the RCU and WCU allocated to a table based on those demands
 - Provisioned Throughput calculations:
 	- E.g. 1: A system needs to store 60 patient records of 1.5 every minute
@@ -2971,13 +2985,13 @@ EBS Optimization
 	- to give access to an IAM Identity in the same account (user, role, group) using identity policies or
 	- to give access to an IAM role in the same account that allows an external identity to assume it
 - It's NOT possible to apply ressource level permission (unlike S3)
-- Encryption At rest 
+- Encryption At rest
 	- It's enabled by default
-	- DEFAULT: 
-		- The key is owned by Amazon DynamoDB 
+	- DEFAULT:
+		- The key is owned by Amazon DynamoDB
 		- It's free
 	- KMS - Customer managed CMK:
-		- The key is stored in customers' account 
+		- The key is stored in customers' account
 		- The key is created, owned and, managed by customers
 		- AWS Key Management Service (KMS) charges apply
 	- KMS - AWS managed CMK:
@@ -3009,15 +3023,15 @@ EBS Optimization
 - On-demand:
 	- No capacity planning is required
 	- We're charged by operations (reads and writes)
-	- New applications where the workload is too complex to forecast 
-	- E.g., for a multi-tenant app. that it uses pay per use pricing: 
+	- New applications where the workload is too complex to forecast
+	- E.g., for a multi-tenant app. that it uses pay per use pricing:
 		- by using on-demand we make sure that our costs are directly aligned to the income that you're generating from the app
 		- So we make sure that wherever price that we sell our application to our customers for we have included an appropriate amount of on-demand pricing for our underlying database
 - Provisioned:
 	- We specify a read and write capacity value on a table
 	- It's cheaper than On-demande mode
 - Reads:
-	- Any costs for DynamoDB are based on strongly consistent reads 
+	- Any costs for DynamoDB are based on strongly consistent reads
 	- Eventually consistent reads are half the cost of strongly consistent reads
 
 </details>
@@ -3030,7 +3044,7 @@ EBS Optimization
 	- Keys and other attributes
 	- Json documents
 	- Complex data types
-- Serverless Applications that needs a web scale database, a serverless non relational database (not a fixed schema) + ID federation 
+- Serverless Applications that needs a web scale database, a serverless non relational database (not a fixed schema) + ID federation
 - When needing a web-scalable DBaaS product that provides integration with CloudWatch
 - When needing a lightweight, on-demand database product
 - It'sn't for relational data
@@ -3041,12 +3055,12 @@ EBS Optimization
 <summary>Limits</summary>
 
 - Item's max size: 400 KB; it includes:
-	- Attribute name binary length (UTF-8 length) 
+	- Attribute name binary length (UTF-8 length)
 	- Attribute value lengths (again binary length)
-	- E.g., an item with 2 attributes: 
-		- 1st is "shirt-color" with value "R" and 
-		- 2nd is "shirt-size" with value "M" 
-		- Item Total Size is 23 bytes 
+	- E.g., an item with 2 attributes:
+		- 1st is "shirt-color" with value "R" and
+		- 2nd is "shirt-size" with value "M"
+		- Item Total Size is 23 bytes
 - Table's hard max LSI #: 5
 - Table's default max GSI #: 20 (could be increased by a support ticket)
 - [For more details](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html)
@@ -3074,9 +3088,9 @@ EBS Optimization
 	- When a DynamoDB item is read, it's returned to the application and store inside DAX
 	- When it's read again, it's returned from DAX (without using DynamoDB): cache hit
 - It runs inside a VPC
-- It uses a cluster architecture with 1 or more nodes 
+- It uses a cluster architecture with 1 or more nodes
 - DAX client:
-	- It's used by applications 
+	- It's used by applications
 	- It's generally installed on the same compute resources as the application itself
 - It maintains 2 distinct caches:
 	- Item cache:
@@ -3092,7 +3106,7 @@ EBS Optimization
 	- Read attensive applications and we don't want to allocate its DynamoDB with a high RCU level
 	- Online stores during busy sale periods or popular products
 	- Applications that require eventual consistent read
-- Antipatterns: 
+- Antipatterns:
 	- Applications that requires strongly consistent reads
 	- Application that don't require microseconds reads: optimizing our app. access pattern may be needed
 	- Write intensive Applications
@@ -3125,14 +3139,14 @@ EBS Optimization
 <summary>Description</summary>
 
 - An Elastic Load Balancer (ELB) is a AWS load balancer(LB) provided as a service
-- It's highly available and scalable  
+- It's highly available and scalable
 - It's designed to help balance the network load across multiple web servers
 - It's typically used for internet facing application
 - It can also be an internal load balancer
 - It has a DNS record: it allows access at the external side
 - It's can be configured which protocol and port it will listen to
 
-</details> 
+</details>
 
 <details>
 <summary>Architecture</summary>
@@ -3161,7 +3175,7 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Health Check</summary> 
+<summary>Health Check</summary>
 
 - It can be configured to check the health of any attached services
 - If a problem is detected, incoming connections won't be routed to instances until it returns to health
@@ -3172,19 +3186,19 @@ EBS Optimization
 <summary>X-Forwarded-For header</summary>
 
 - It let the web server get the actual public customer IP @ (X-Forwarded-For header)
-- The LB is passing its own internal IP address to the web server (EC2 instance) 
-- The EC2 instance is logging the internal LB IP @ as end-users IP @ 
+- The LB is passing its own internal IP address to the web server (EC2 instance)
+- The EC2 instance is logging the internal LB IP @ as end-users IP @
 - It could be annoying because we might want to know end-users actual IP @
 
 </details>
 
 <details>
-<summary>Sticky Session</summary> 
+<summary>Sticky Session</summary>
 
-- It allows to bind a user's session to a specific EC2 instance 
+- It allows to bind a user's session to a specific EC2 instance
 - In other words, the LB is going to stick a user's session to a particular EC2 instance
 - It sends a user's requests to the same EC2 instance during a session
-- Available with CLB and 
+- Available with CLB and
 - Used with Stateful servers: when a specific instance is caching a user session data
 
 </details>
@@ -3199,16 +3213,16 @@ EBS Optimization
 		- It means that every single app. that we deploy into our environment needs its own CLB
 		- For 10 websites hosted with their own DNS name and SSL certificate, we need 10 CLB
 	- It can offload SSL connections: receives HTTPS and forward it to backend as HTTP
-- It supports some HTTP/HTTPS feature: 
+- It supports some HTTP/HTTPS feature:
 	- It'sn't application aware (not a layer 7 device) but...
 	- It supports some HTTP/HTTPS features: "X-Forwarded" and "Sticky sessions"
 	- It supports health checks for HTTP/HTTPS (see health checks)
 - Listener Configuration allows
 	- To configure which protocols and ports to listen to
-	- To configure which protocols and ports to use to communicate with backend instances 
+	- To configure which protocols and ports to use to communicate with backend instances
 - It can be associated with Auto Scalling groups
 - DNS A Record is used to connect to the CLB
-- Health checks: 
+- Health checks:
 	- It can be TCP, HTTP, HTTPS and, SSL based on ports 1-65,535
 	- HTTP/S checks: a HTTP/S path can be tested
 	- Ping Protocol (E.g., HTTP); Ping Port (E.g., 80); Ping Path (E.g., /index.html; /index.php)
@@ -3229,7 +3243,7 @@ EBS Optimization
 - It's a OSI model layer 7 device:
 	- It understand HTTP/HTTPS
 	- It can LB based on this protocol layer
-	- It's Application aware 
+	- It's Application aware
 	- It sees inside the application (even sees the html) and then makes advanced rooting
 - It's now the recommended as the default LB for VPCs
 - It support IPv4 and IPv6
@@ -3241,19 +3255,19 @@ EBS Optimization
 	- Target Type: Instance, IP, Lambda Function
 	- Protocl and Port
 - It's almost always cheaper that CLB
-- Contant Rules: 
+- Contant Rules:
 	- It can direct certain traffic to specific target groups:
 	- Host-based rules: Route traffic based on the host used
-		- E.g., 
+		- E.g.,
 		- It can direct traffic of "cats.com" to CAT target group (this target group would contain instance with a specific app. for cats)
 		- It can direct traffic of "dogs.com" to DOG target group (this target group would contain instance with a specific app. for dogs)
 	- Path-based rules: Route traffic based on URL path
-		- E.g., 
+		- E.g.,
 		- It can direct traffic of "pets.com/cats" (/cats/*) to CAT target group (this target group would contain instance with a specific app. for cats)
 		- It can direct traffic of "pets.com/dogs" (/dogs/*) to DOG target group (this target group would contain instance with a specific app. for dogs)
 	- Default rules: used when no rules applies
 		- E.g., "pets.com"
-- Health checks: 
+- Health checks:
 	- It can be HTTP or HTTPS
 	- Ping Protocol (E.g., HTTP); Ping Port (Traffic port or Override Port); Ping Path (E.g., /index.html; /index.php)
 	- Response Timeout; Interval; Unhealthy threshold; Health treshold; Success Code (E.g., 200)
@@ -3307,9 +3321,9 @@ EBS Optimization
 
 - Gateway Timeout - Error 504:
 	- If an application stops responding the ELB responds with a 504 error
-	- It means that the application is having issues but it's not the LB 
-	- It could either be at the web server layer or the db layer that's having issues 
-    - We need to identify where the application is failing and scale it up or out where possible
+	- It means that the application is having issues but it's not the LB
+	- It could either be at the web server layer or the db layer that's having issues
+	- We need to identify where the application is failing and scale it up or out where possible
 
 </details>
 
@@ -3327,24 +3341,24 @@ EBS Optimization
 		- The internal LB will forward it towards a specific app. server
 		- The frontend web server won't care wich app. server it's talking to
 - Internet facing LB (Scheme)
-	- It's generally presented at the front of an application stack 
-		- It sits between an app. and its users/customers 
+	- It's generally presented at the front of an application stack
+		- It sits between an app. and its users/customers
 		- It abstracts away from our underlying infrastructure
-		- A customer doesn't need to care how many EC2 instances we have providing our app. 
+		- A customer doesn't need to care how many EC2 instances we have providing our app.
 - CLB:
 	- If we don't have access to VPC: So we need to deploy it into EC2 classic situations (legacy method of configuring EC2 instances)
-	- Apps. with Round-Robin Load Balancing: 
-		- They don't really care about how traffic is routed 
+	- Apps. with Round-Robin Load Balancing:
+		- They don't really care about how traffic is routed
 		- They're depending on region/language/currency (same across all web servers)
 - ALB:
 	- It's the default choice
 	- If we need to use containers or microservices
-	- A multilanguage web app: 
+	- A multilanguage web app:
 		- E.g., French and English
 		- If language is switched from English to French, the ALB sees that
 		- It loadbalances across all the French web servers
 	- A Multi-Currency website:
-		- Same idea as the previous use case 
+		- Same idea as the previous use case
 		- E.g., $ and €
 		- If USD is selected as a currency, the ALB sees that and loadbalances across the USD servers
 - NLB:
@@ -3357,7 +3371,7 @@ EBS Optimization
 <details>
 <summary>Limits</summary>
 
-- SSL certificate #: 
+- SSL certificate #:
 	- 1 per CLB
 	- ALB: it uses SNI (see SNI limit)
 	- per NLB
@@ -3391,32 +3405,32 @@ EBS Optimization
 <summary>Description</summary>
 
 - It scales in and out automatically
-- It uses "Launch Templates" or "Launch Configurations" to define the "What" instance to launch 
+- It uses "Launch Templates" or "Launch Configurations" to define the "What" instance to launch
 - It defines "How" these instances will perform
 	- How they can scale: adding new instances (scaling out), removing instances (scaling in)
 	- Under which circumstances do we want these instances to scale out/in
 - It uses some Configuration values:
 	- Minimum Size: the minim number of instances to create (1 by default)
 	- Desired Capacity:
-		- It's the # that the auto scaling group will attempt to aim for 
-		- E.g., 
-			- If we have currently 1 EC2 instance and the desired capacity is 2, then 
-			- the auto scaling group will attempt to create a new EC2 instance 
+		- It's the # that the auto scaling group will attempt to aim for
+		- E.g.,
+			- If we have currently 1 EC2 instance and the desired capacity is 2, then
+			- the auto scaling group will attempt to create a new EC2 instance
 			- to bring the number of running instances to the desired capacity
-	- Maximum Capacity: 
+	- Maximum Capacity:
 		- The maximum # of EC2 instances the group will ever grow to
 		- Even when every instance is completely overloaded, it won't grow beyond the maximum capacity
 		- It's as a cost control value
-		- We don't want to set it too low: it can impact the performance of our application 
+		- We don't want to set it too low: it can impact the performance of our application
 		- We don't want to set it too high: it could massively increase costs
 	- Cooldowns:
 		- It's to ensure rapid in/out events don't occur
-		- It's avoiding experience significant costs (there's a minimum billing for EC2 instances) 
-		- It puts like a pause timer between 2 consecutive scaling events 
+		- It's avoiding experience significant costs (there's a minimum billing for EC2 instances)
+		- It puts like a pause timer between 2 consecutive scaling events
 		- If a scaling event happens, the following scaling events can occur for the cooldowns period
 		- 300 s is the default value
 - It uses certain monitoring metrics
-	- to increase/decrease the desired capacity 
+	- to increase/decrease the desired capacity
 	- It either terminates instances when scaling in
 	- or it creates new instances when scaling out (using the launch configuration/template)
 	- in order to match its capacity
@@ -3440,11 +3454,11 @@ EBS Optimization
 - It's the 1st way to provision scaleable infrastructure
 - Its typical configurations include:
 	- AMI to use for EC2 launch
-	- Instance type, storage, Key pair, IAM role, User data, Purchase options, 
+	- Instance type, storage, Key pair, IAM role, User data, Purchase options,
 	- Network configuration, Security Groups
 - It can NOT be used to launch en EC2 instance
-- It's an immutable object: 
-	- It can't be edited after creation: 
+- It's an immutable object:
+	- It can't be edited after creation:
 	- Modification requires to create a Launch configuration
 
 </details>
@@ -3459,8 +3473,8 @@ EBS Optimization
 		- We can create a base template
 		- Then we can enherit its settings and create new templates based on that base template
 - It can be used to launch en EC2 instance
-- It's an immutable object: 
-	- It can't be edited after creation: 
+- It's an immutable object:
+	- It can't be edited after creation:
 	- Modification requires to create a new version or a new Launch Template
 - Scaling Groups asks for
 	- Launch Template version: To select Default, Latest or, a specific version #
@@ -3477,8 +3491,8 @@ EBS Optimization
 - Scheduled Action:
 	- It automates the scaling in/out based on day/time and recurrence
 	- Input: Start Day/Time; Recurrence (every week; every day; every 5 mn); Max, Min and Desired Capacity
-	- E.g.: 
-		- A website is busy at a certain point in the day or a certain periods during the week, 
+	- E.g.:
+		- A website is busy at a certain point in the day or a certain periods during the week,
 		- "Schedule Action" will let us to automatically scale out and adjust the desired capacity based on the load that we expect during this period
 		- "Schedule Action" will also let us to automatically scale in after this period
 - Scaling policy:
@@ -3490,8 +3504,8 @@ EBS Optimization
 		- E.g., if AVG CPU utilization of all the instances < 40% => Remove n instance(s)
 	- Step scaling policy:
 		- It allows to scale in/out differently based on measure ranges (E.g., CPU utilization)
-		- Inputs: Alarm; Steps: measure range, Action; Cooldown 
-		- E.g.,: 
+		- Inputs: Alarm; Steps: measure range, Action; Cooldown
+		- E.g.,:
 		- Step 1: if 20% < AVG CPU utilization of all the instances > 30% => Add 1 instance and wait 300s
 		- Step 2: if 30% < AVG CPU utilization of all the instances > 40% => Add 2 instance and wait 300s
 		- Step 3: if 40% < AVG CPU utilization of all the instances > 50% => Add 4 instance and wait 300s
@@ -3548,8 +3562,8 @@ EBS Optimization
 
 - For new projects, it's recommended to use Launch Templates because they add significantly more functionaly
 - Include a buffer in the Health check grass period
-- High Availability, elastically scalling and self healing architecture: 
-	- Elasticity: Launch Template + Auto Scaling Group + Scaling Policy 
+- High Availability, elastically scalling and self healing architecture:
+	- Elasticity: Launch Template + Auto Scaling Group + Scaling Policy
 	- Self Healing Architecture: Auto Scaling Group + ELB + ELB Health Check
 
 </details>
@@ -3565,9 +3579,9 @@ EBS Optimization
 - It's a virtual network solution to connect a VPC to a non-AWS network such as on-premises networks
 - It allows to access any remote VPC networks from on premises networks and vice versa
 - It provides a fully encrypted transit path across the internet from our VPC to onpremise location
-- Its tunnels operate over IPv4 
+- Its tunnels operate over IPv4
 - It's a highly available solution
-- It can be configured to use either static or Border Gateway (BGW) routing 
+- It can be configured to use either static or Border Gateway (BGW) routing
 - It
 </details>
 
@@ -3635,13 +3649,13 @@ EBS Optimization
 
 - Partially HA Architecture (in AWS side only):
 	- Use 1 VPN: it's HA by design
-	- Use 2 VPN connections 
+	- Use 2 VPN connections
 	- Use 1 CGWs
 	- Create 2 tunnels
 - Fully HA Architecture (fully mush):
 	- In both sides: AWS and Customer side
 	- Use 1 VPN: it's HA by design
-	- Use 2 VPN connections 
+	- Use 2 VPN connections
 	- Use 2 CGWs
 	- Create 4 tunnels
 	- [For more details](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNConnections.html)
@@ -3651,7 +3665,7 @@ EBS Optimization
 <details>
 <summary>Security</summary>
 
-- Encryption in transit: 
+- Encryption in transit:
 	- It provides a fully encrypted transit path across the internet from a VPC to an on-premise location
 
 </details>
@@ -3663,16 +3677,16 @@ EBS Optimization
 <details>
 <summary>Pricing</summary>
 
-- There's a per hour cost for running an active VPN connection + 
-- a data charge for any outgoing data 
+- There's a per hour cost for running an active VPN connection +
+- a data charge for any outgoing data
 
 </details>
 
 <details>
 <summary>Use cases</summary>
 
-- Pros: 
-	- It's quick to set up: only few minutes are required 
+- Pros:
+	- It's quick to set up: only few minutes are required
 	- It's cheap and economical particularly with low amounts of data
 	- It provides encryption end to end
 	- Flexibility to change location
@@ -3731,7 +3745,7 @@ EBS Optimization
 	- It doesn't contend with customer's existing internet connections
 - It provides access to public and private AWS services from a customer business premises
 - It requires:
-	- To have equipement located at one DX location or 
+	- To have equipement located at one DX location or
 	- To have an arrangement with a DX partner
 	- To have higher cost routers because it requires to use BGP protocol
 
@@ -3782,8 +3796,8 @@ EBS Optimization
 
 - It's NOT highly available because it's a single physical connection
 - Solution:
-	- To provision an additional DX or 
-	- To use a VPN connection as a backup 
+	- To provision an additional DX or
+	- To use a VPN connection as a backup
 
 </details>
 
@@ -3792,11 +3806,11 @@ EBS Optimization
 
 - Encryption in Transit:
 	- It's NOT encrypted for private and public VIFs
-	- To use an encryption at application level (HTTPS) or 
+	- To use an encryption at application level (HTTPS) or
 	- To run a VPN connection over the top of a Public VIF running on a Direct Connect connection:
-		- A public VIF would grant access to public AWS services 
+		- A public VIF would grant access to public AWS services
 		- A public VIF could be used with VGW:
-			- VGW's endpoints are public space services 
+			- VGW's endpoints are public space services
 			- We could then create an IP set VPN over the top of that public VIF to the endpoints of this VGW
 
 </details>
@@ -3808,7 +3822,7 @@ EBS Optimization
 <details>
 <summary>Pricing</summary>
 
-- Initial Set up cost + 
+- Initial Set up cost +
 - Data transfer charge (cheaper than data transfer with a VPN)
 
 </details>
@@ -3825,11 +3839,11 @@ EBS Optimization
 - Cons:
 	- Longer to set up (days, weeks, months) but while we're waiting, we could use 1st a VPN
 	- More Expensive to set up
-	- HA connection is more expensive (2 DXs) 
+	- HA connection is more expensive (2 DXs)
 	- It requires higher end hardware (because of BGP)
 	- There is no flexibility to change locations
 - Use Cases:
-	- Situations where we need speed and performance consistency 
+	- Situations where we need speed and performance consistency
 		- Applications that are very latency sensitive
 		- E.g., IP telephony or scientific applications that use real time telemetry
 		- E.g., Application for trading activities or financial analysis
@@ -3860,7 +3874,7 @@ EBS Optimization
 - It's a secure data transfer server in and out of AWS
 - It solves challenges of large-scale data transfer: cost, long transfer times, and security concerns
 - It doesn't need VPN or DX connection
-- It requires 
+- It requires
 	- To log an in or out job in AWS: An empty or full device is received
 	- To perform a data copy in or out to/from the device
 	- To ship the device back to AWS
@@ -3877,14 +3891,14 @@ EBS Optimization
 
 - It can be used for in or out jobs
 - It includes Storage only
-- It comes in: 
-	- 50 TB (42 TB of usable capacity) available only in the US regions (what about Canada?) 
+- It comes in:
+	- 50 TB (42 TB of usable capacity) available only in the US regions (what about Canada?)
 	- 80 TB (72 TB of usable capacity) available worldwide
 - It runs either 1 Gbps using RJ45 1GBase-TX or 10 Gbps using a [LR/SR SFP (a fiber)](https://en.wikipedia.org/wiki/Small_form-factor_pluggable_transceiver)
 - It provides Data encryption using KMS
 - Large jobs or multiple locations can use multiple Snowballs
 - End-to-end process time is low for the amount of data: Weeks
-- It provides AWS S3 adapter: 
+- It provides AWS S3 adapter:
 	- It's a tool to install on the device
 	- It allows to configure the device like an AWS CLI, use it as an S3 endpoint and, transfer data directly
 
@@ -3900,10 +3914,10 @@ EBS Optimization
 	- Edge Storage Optimized: 80 TB, 24 vCPU and, 32 GiB RAM
 	- Edge Compute Optimized: 100 TB + 7.68 TB NVMe, 52 vCPUs and, 208 GiB RAM
 	- Edge compute Optimized with GPU: as above with a GPU equivalent to P3 EC2 instance
-- It runs either: 
-	- 10 Gbps using RJ45 
+- It runs either:
+	- 10 Gbps using RJ45
 	- 10/25 GBase using a [LR/SR SFP (a fiber)](https://en.wikipedia.org/wiki/Small_form-factor_pluggable_transceiver)
-    - 45/50/100 Gbps using a QSFP+ (a fast fiber): requires a hardware on site to take advantage of it
+	- 45/50/100 Gbps using a QSFP+ (a fast fiber): requires a hardware on site to take advantage of it
 - It provides AWS S3 adapter (see Snowball)
 - It provides additionally a file interface:
 	- It allows to essentially present storage through AWS NFS
@@ -3928,7 +3942,7 @@ EBS Optimization
 <details>
 <summary>Use cases</summary>
 
-- We have a large amount of data and a limited internet bandwidth: 
+- We have a large amount of data and a limited internet bandwidth:
 	- Cost requirements: No economical to use the Internet (transfer costs)
 	- Time requirements: if transferring data over the internet would take longer than required time (prohibitive)
 	- E.g., Migrate database in premise to AWS cloud
@@ -3940,10 +3954,10 @@ EBS Optimization
 	- It can be used for local IoT
 	- It can be used for data processing prior to ingestion into AWS
 	- When usd as temporary storage tier for large locale datasets
-	- When used to support local workloads in remote or offline locations (see exemple below) 
-    - E.g. of a major airline: 
-		- It uses a Snowball Edges in its aircrafs to store and compute (lambda functions) all data 
-		- got while it's doing lot of testing of its aircrafts 
+	- When used to support local workloads in remote or offline locations (see exemple below)
+	- E.g. of a major airline:
+		- It uses a Snowball Edges in its aircrafs to store and compute (lambda functions) all data
+		- got while it's doing lot of testing of its aircrafts
 - Snowmobile use cases:
 	- Economical range: 10 PB+ is required in a single location
 	- When it's used in a single location
@@ -3960,12 +3974,12 @@ EBS Optimization
 - It's a software appliance to connect on-premise servers to S3:
 	- It's installed and run on an on-premise
 	- It's available for download as a VM image
-	- It can be run on VMWare ESXi or Microsoft Hyper-V 2008 R2, Hyper-V 2012/2016 
+	- It can be run on VMWare ESXi or Microsoft Hyper-V 2008 R2, Hyper-V 2012/2016
 	- It can also be run on the hardware appliance???
 	- It could also be run on an EC2 instance
 - It allows to migrate a storage platform (or part of it) into AWS
-- It allows to use it as extension to an on premises storage platform 
-- It's created via AWS management console 
+- It allows to use it as extension to an on premises storage platform
+- It's created via AWS management console
 - It can also be used within a VPC in a similar way
 - It comes with 3 types:
 	- File Gateway (NFS & SMB)
@@ -3988,9 +4002,9 @@ EBS Optimization
 	- They're the type of shares that are used for Windows file servers
 - It stores files as objects in S3 buckets
 	- Files uploaded in these shares are directly stored in S3
-	- Files are accessed through a NFS mount point 
-	- File Ownership, permissions, and timestamps are durably stored in S3 in the corresponding S3 object user-metadata. 
-	- Once files are stored in S3, they can be managed as native S3 files 
+	- Files are accessed through a NFS mount point
+	- File Ownership, permissions, and timestamps are durably stored in S3 in the corresponding S3 object user-metadata.
+	- Once files are stored in S3, they can be managed as native S3 files
 - It allows to migrate existing file servers into S3 on a gradual basis
 - It allows to benefit from unlimited space available in S3 and use it as an extension of on-premise storage
 
@@ -4003,19 +4017,19 @@ EBS Optimization
 - It uses [iSCSI protocol (Internet Small Computer Systems Interface)](https://en.wikipedia.org/wiki/ISCSI) to access these volumes
 	- We can't access the files individually without mounting the entire volume
 - It asynchronously backes up data written to such volumes as point in time volume snapshot
-	- It stores these volumes in the cloud as an Amazon EBS snapshot 
+	- It stores these volumes in the cloud as an Amazon EBS snapshot
 	- It stores them incrementally (backups that capture only changed blocks)
-	- It compresses snapshot storage to to minimize storage charges (see S3) 
-- Stored Volumes: 
+	- It compresses snapshot storage to to minimize storage charges (see S3)
+- Stored Volumes:
 	- It allows to keep our primary data on-premise while it's backed in S3 in a form of EBS snapshot
-    - It allows on-premise applications a low-latency access to theirs datasets while they're backed up in AWS 
+	- It allows on-premise applications a low-latency access to theirs datasets while they're backed up in AWS
 	- EBS snapshot size currently is between 1GB to 16TB (it may change)
 	- ![Architecture](https://docs.aws.amazon.com/storagegateway/latest/userguide/images/aws-storage-gateway-stored-diagram.png)
-- Cached Volumes: 
+- Cached Volumes:
 	- It allows to keep on-premise the most frequently used dataset in our storage getaway
 	- It minimises the need to scale our on-premise storage infrastructure
-	- While It's still providing our apps with the low-latency access to their frequently access data 
-    - We can create storage volumes of up to 32 TB and attach then as a device from our on-premise app. servers
+	- While It's still providing our apps with the low-latency access to their frequently access data
+	- We can create storage volumes of up to 32 TB and attach then as a device from our on-premise app. servers
 	- ![Architecture](https://docs.aws.amazon.com/storagegateway/latest/userguide/images/aws-storage-gateway-cached-diagram.png)
 - [For more details](https://docs.aws.amazon.com/storagegateway/latest/userguide/StorageGatewayConcepts.html#file-gateway-concepts)
 
@@ -4024,11 +4038,11 @@ EBS Optimization
 <details>
 <summary>Tape Gateway (VTL)</summary>
 
-- It stands for Virtual Tape Library: 
-- It's used typically for backup and recovery purposes 
-- It's a way of getting rid of tapes 
-- It lets leverage existing tape based backup application infrastructure to store data on virtual tape cartridges that we create on our tape gateway 
-- Each tape Gateway is reconfigured with a media change and tape drives which are available on our existing client backup applications as a iSCSI devices 
+- It stands for Virtual Tape Library:
+- It's used typically for backup and recovery purposes
+- It's a way of getting rid of tapes
+- It lets leverage existing tape based backup application infrastructure to store data on virtual tape cartridges that we create on our tape gateway
+- Each tape Gateway is reconfigured with a media change and tape drives which are available on our existing client backup applications as a iSCSI devices
 - ![Architecture](https://campus.barracuda.com/resources/attachments/image/78809691/1/AWSGateway.png)
 - [For more details](https://campus.barracuda.com/product/backup/doc/78809691/aws-storage-gateway-vtl/)
 
@@ -4061,7 +4075,7 @@ EBS Optimization
 - It provides a "Schema Conversion Tool" (AWS SCT) to transform between different db engines as part of a migration
 - It allows to avoid db migration overhead and outage during the migration process:
 	- The usual migration requires:
-		- Stop all input and output on the existing db 
+		- Stop all input and output on the existing db
 		- Perform a full backup of that db
 		- Store the backup somewhere else
 		- Do a restore, and
@@ -4082,7 +4096,7 @@ EBS Optimization
 <details>
 <summary>Schema Conversion Tool (AWS SCT)</summary>
 
-- It's to transform between different db engines as part of a migration 
+- It's to transform between different db engines as part of a migration
 
 </details>
 
@@ -4116,11 +4130,11 @@ EBS Optimization
 <summary>Description</summary>
 
 - It's an AWS Web IDentity Federation service
-	- It allows to sign up and sign in to an apps 
-	- It acts as an identity broker between our application and a Web I.D. 
-	- It uses Token Service (STS) to provide temporary credentials which map to an IAM role  
-    - It allow to synchronize our users data for multiple devices
-- IDentity Federation (IDF): 
+	- It allows to sign up and sign in to an apps
+	- It acts as an identity broker between our application and a Web I.D.
+	- It uses Token Service (STS) to provide temporary credentials which map to an IAM role
+	- It allow to synchronize our users data for multiple devices
+- IDentity Federation (IDF):
 	It's an architecture where identities of an external identity provider (IDP) are recongnized
 - IDentity Provider (IDP):
 	- It has an identity internally for customers
@@ -4131,7 +4145,7 @@ EBS Optimization
 	- Twitter
 	- Canadien banks
 	- Microsoft Active Directory
-- Single Sign-On (SSO): 
+- Single Sign-On (SSO):
 	- It's where the credentials of an external identity are used to allow access to a local system like AWS
 	- [For more details](https://en.wikipedia.org/wiki/Single_sign-on)
 	- E.g. Service Canada website asks to sign in with a canadian bank for authentification purposes
@@ -4139,11 +4153,11 @@ EBS Optimization
 	- Cross-account roles: a
 		- A remote account (IDP) is allowed to assume a role and access our account's resources
 		- E.g. AWS IAM cross-account roles is a kind of IDF:
-		- We create a role in a 1st AWS account and 
+		- We create a role in a 1st AWS account and
 		- We'll trust a 2nd account to be able to assume that role and perform actions in the 1st account
 	- SAML 2.0 IDF (Security Assertion Markup Language):
 		- It's a standard often used in on-premise systems with an Active Directory Federation Server (ADFS)
-		- E.g. 1, Microsoft Active Directory, 
+		- E.g. 1, Microsoft Active Directory,
 		- E.g. 2, AWS-hosted directory service: is configured to allow Active Directory users to log in to the AWS console
 		- [For more details about SAML 2.0](https://en.wikipedia.org/wiki/SAML_2.0)
 		- ![SAML 2.0 IDF inside AWS](https://docs.amazonaws.cn/en_us/IAM/latest/UserGuide/images/saml-based-sso-to-console.diagram.png)
@@ -4157,7 +4171,7 @@ EBS Optimization
 	- The IDP returns a proof of successfull loggin:
 		- a SAML assertion in case of SAML 2.0 IDF (Microsoft Active DIrectory or AWS-hosted directory service)
 		- a Token in case of Web Identity Federation (Google, Facebook, Twitter)
-	- The proof is exchanged with AWS credentials (STSTemp Credentials) 
+	- The proof is exchanged with AWS credentials (STSTemp Credentials)
 	- These credentials are used to access AWS Services
 
 </details>
@@ -4180,8 +4194,8 @@ EBS Optimization
 - It generates a Jason Web Token (JWT) for successful authentication:
 	- It's not possible to access AWS Service (S3) directly using an external IDP (E.g., Google login)
 	- There is an identity exchange (JWT)
-- It uses STS to provide temporary AWS credentials to access AWS services 
-- Use cases: 
+- It uses STS to provide temporary AWS credentials to access AWS services
+- Use cases:
 	- To Use it as an IDP: Users' usernames and passwords are stored with Incognito itself
 	- To use it as an identity broker for a 3rd party IDP
 
@@ -4190,8 +4204,8 @@ EBS Optimization
 <details>
 <summary>Cognito identity pool</summary>
 
-- It's about the authorization of access to AWS resources 
-- It's the actual granting someone access to an AWS resource 
+- It's about the authorization of access to AWS resources
+- It's the actual granting someone access to an AWS resource
 
 </details>
 
@@ -4201,9 +4215,9 @@ EBS Optimization
 - It maps a user identity with their different devices they signed in from
 - It pushes updates and synchronizes user data across multiple devices
 	- It uses AWS SNS to send notifications whenever there is a change with a user identity
-- It allows to provide a seamless user experience for applications  
+- It allows to provide a seamless user experience for applications
 - E.g., a user is using an application on different devices (Phone, Tabet)
-	- They change a username/email address on one the mobile phone 
+	- They change a username/email address on one the mobile phone
 	- Those changes will be replicated out to theirs other devices (tablet)
 
 </details>
@@ -4256,50 +4270,202 @@ EBS Optimization
 
 ## Application Integration - Simple Notification Service (SNS)
 
-- It is a web service that makes it easy to set up, operate, and send notifications from the cloud 
-- It provides developers with a highly scalable, flexible, and cost-effective capability to publish messages from an application and immediately deliver them to subscribers or other application
-- It allows to push notification to mobile devices: 
-	- Apple, Google, Fire OS, and Windows devices,
-	- Android devices in China with Baidu Cloud Push
-- It allow also to deliver notifications by text message (SMS) or email to SQS queue, or to any HTTP endpoint 
-- It allows to group multiple recipients using topics
-- To prevent published messages from being lost, they're stored redundantly across multiple AZ
-- SNS Topic: 
-	- It is an "access point" for allowing recipients to dynamically subscribe for identical copies of the same notification 
-	- It can support deliveries to multiple endpoint types
-	- Example 1: We could group together iOS, Android and SMS recipients
-	- When we publish once to a topic, SNS delivers appropriately formatted copies of our message to each subscriber
-	- Example 2: Billing Alarm top, Performance Alarm topic, Health Alarm topic
-- SNS Subscriber:
-	- A topic could contain several subscribers
-	- A protocol is associated with a subscriber (SMS, email, email Json, HTTP, HTTPS, SQS) 
+<details>
+<summary>Description</summary>
+
+- It's a publisher-subscriber based service
+- It coordinates and manages the sending and delivery of messages
+- It's a **regional** service
+- It's a **public** AWS service: 
+	- It has a public endpoint
+	- It could be accessed from a VPC with either an Internet Gateway + a NAT Gateway or a VPC endpoint
+	- It could be accessed from any other location with a public Internet connection (on-premise locations)
+- Its based entity is a **Topic**:
+	- A **publisher** sends a message to a topic
+	- The message is delivered to all **Subscribers** of the topic
+
+</details>
+
+<details>
+<summary>Architecture</summary>
+
+- It's basic architecture is:
+	- A **publisher** sends a message to a topic
+	- By default, the message is delivered to all **Subscribers** of the topic
+	- ![basic architecture](https://d2908q01vomqb2.cloudfront.net/1b6453892473a467d07372d45eb05abc2031647a/2017/11/20/introducing_sns_message_filtering_image_1.png)
+
+</details>
+
+<details>
+<summary>Topic</summary>
+
+- It's the base entity of SNS
+- It's created inside a region
+- Its message max size is 256 KB
+
+</details>
+
+<details>
+<summary>Publisher</summary>
+
+- It's an entity that publishes/sends messages to a topic
+- It could be different entities
+- E.g. 1, CloudWatch can publish alarm notifications
+- E.g. 2, CloudFormation can publish event updates when a stack is created, updated or, deleted
+- E.g. 3, Custom applications can push mobile notifications to theirs customers
+- E.g. 4, A user who's using the CLI tool or the console
+- Publishing **Playload**:
+	- It allows to customize a playload based on subscriber endpoints protocol
+	- Identical playload for all delivery protocols:
+		- It's the default option
+		- It's allows to send the same payload to **all** endpoints subscribed to a topic, regardless of their delivery protocol
+	- Custom payload for each delivery protocol
+		- It allows to define different payloads to be sent to endpoints subscribed to the topic, based on their delivery protocol
+		- E.g., Define a message for HTTP/HTTPS endpoints, a different one for Lambda endpoints and a default payload for all other protocols
+
+</details>
+
+<details>
+<summary>Subscriber</summary>
+
+- It's an entity that a message in a topic is delivered to
+- It could be:
+	- An HTTP or HTTPS endpoints:
+		- E.g. API endpoints
+	- **Email** endpoints:
+		- It delivers the message as a raw email
+			- E.g., It delivers notifications by text message (SMS) or email to SQS queue, or to any HTTP endpoint
+	- **Email-Json** endpoints:
+		- It delivers the message as a Json version
+	- **Amazon SQS**:
+		- It delivers the message in an SQS queue
+	- **Lambda Function**:
+		- It delivers the message to a Lambda function that is invoked
+		- It's for a serverless architecture
+		- It requires a processing time under 15 minutes
+	- **SMS endpoint**:
+		- It delivers the message as a text message
+		- E.g., an notification platform that has engineers subscribed
+		- Example 1: We could group together iOS, Android and SMS recipients
+		- When we publish once to a topic, SNS delivers appropriately formatted copies of our message to each subscriber
+		- Example 2: Billing Alarm top, Performance Alarm topic, Health Alarm topic
+		- A protocol is associated with a subscriber (SMS, email, email Json, HTTP, HTTPS, SQS)
+	- **Platform application endpoint**
+		- It delivers the message as a **push notification**  to subscribed mobile platforms
+- **Subscription filter policy**:
+	- It allows to filters messages that a subscriber receives
+	- It means that the filter logic is done on the topic
+	- By default, a message is delivered to all **Subscribers** of the topic (see the basic architecture above)
+	- It allows to avoid subscribers to receive irrelevant messages
+	- It allows to reuse 1 topic for different functions
+	- ![Message Filtering Architecture](https://d2908q01vomqb2.cloudfront.net/1b6453892473a467d07372d45eb05abc2031647a/2017/11/20/introducing_sns_message_filtering_image_3.png)
+	- [For more details](https://aws.amazon.com/blogs/compute/simplify-pubsub-messaging-with-amazon-sns-message-filtering/)
+	
+</details>
+
+<details>
+<summary>Scalability</summary>
+
+- It's a fully managed service
+- It can scale to any required load level
+
+</details>
+
+<details>
+<summary>Consistency</summary>
+</details>
+
+<details>
+<summary>Resilience</summary>
+
+- It's highly reliable product
+- It's resilient across all AZs in a region
+- Its messages are stored redundantly across multiple AZs
+- **Delivery retry policy**
+	- It defines how SNS retries failed deliveries to HTTP/S endpoints
+	- The settings are: 
+		- Number of retries (3 by default),
+		- Retries without delay (0),
+		- Minimum delay (20 s), 
+		- Maximum delay (20 s),
+		- Minimum delay retries,
+		- Maximum delay retries
+		- Maximum receive rate
+		- Retry-backoff function (Linear)
+		- Override subscription policy (False)
+
+</details>
+
+<details>
+<summary>Security</summary>
+
+- **Access Policy**:
+	- It's a **ressource policy** on a topic
+	- It defines who can publish and subscribe to a topic
+	- Publish access policy:
+		- By default, only the topic owner can publish or subscribe to a topic
+		- It's possible to give access to **Everyone**, **Specific AWS accounts**
+	- Suscrib access policy:
+		- By default, only the topic owner can publish or subscribe to a topic
+		- It's possible to give access to **Everyone**, **Specific AWS accounts**, **Requesters with certain endpoints**
+- Encryptions:
+	- **Encryption at Rest** by using [AWS KMS](#operations---key-management-service-kms)
+	- **Encryption in Transit** by using SSL/TLS?
+
+</details>
+
+<details>
+<summary>Monitoring</summary>
+</details>
+
+<details>
+<summary>Pricing</summary>
+</details>
+
+<details>
+<summary>Use cases</summary>
+
+- Fanout architecture (see SQS use case description)
+
+</details>
+
+<details>
+<summary>Limits</summary>
+
+- A topic message max size: 256 KB
+
+</details>
+ 
+<details>
+<summary>Best practices</summary>
+</details>
 
 ---
 
 ## Application Integration - Simple Queue Service (SQS)
- 
-- A web service that allowing asynchronous processing. 
-- It gives access to a message queue that can be used to store messages while waiting for a computer to process them. 
-- It is allowing to decouple the components of an application so they run independently from each other. 
-- It is a distributed queue system. It is a fail-safe queue.  
-- Message Size limits: 
+
+- A web service that allowing asynchronous processing.
+- It gives access to a message queue that can be used to store messages while waiting for a computer to process them.
+- It's allowing to decouple the components of an application so they run independently from each other.
+- It's a distributed queue system. It's a fail-safe queue.
+- Message Size limits:
 	- Up to 256 KB of text in any format is store directly in SQS
-	- Between 256 KB up to 2 GB is supported but the messages are stored in S3 by Amazon SQS Extended Client Library for Java. 
+	- Between 256 KB up to 2 GB is supported but the messages are stored in S3 by Amazon SQS Extended Client Library for Java.
 - Message Retention is defined in term of seconds:
 	- By default, a message is retained for 4 days
 	- The minimum is 1 minute (60 s)
-	- The maximum is 14 days (1,209,600‬ s).  
+	- The maximum is 14 days (1,209,600‬ s).
 - The messages are retrieved programmatically by using Amazon SQS API
-- Use cases: 
+- Use cases:
 	- It resolves issues that arise if the producer (caller) is producing work faster than the consumer can process it
-	- It resolves issues that arise if the producer or consumer are intermittently connected to the network. 
+	- It resolves issues that arise if the producer or consumer are intermittently connected to the network.
 - The 1st AWS service!
 - SQS and EC2 Auto scaling Groups:
 	- We can set up an auto scaling group and have a trigger as to how many messages are in the queue
-	- If # of messages goes over the defined threshold, it triggers an auto scaling event. 
-- SQS Types: 
+	- If # of messages goes over the defined threshold, it triggers an auto scaling event.
+- SQS Types:
 	- Standard Queue:
-		- It is the default queue type
+		- It's the default queue type
 		- It lets us have a nearly-unlimited number of transactions per second
 		- It guarantees that a message is delivered at least once
 		- This means that occasionally a message might be delivered multiple times
@@ -4314,19 +4480,19 @@ EBS Optimization
 		- Message Groups: allow multiple ordered message groups within a single queue
 		- TPS (Throughput Per Second) Limit: 300 transaction per second
 		- It has all capabilities of standard Queue.
-- Visibility Time Out: 
-	- It is the amount of time that a message is invisible in the queue after it is picked up by a consumer
+- Visibility Time Out:
+	- It's the amount of time that a message is invisible in the queue after It's picked up by a consumer
 	- In other words, when an EC2 instance picks up a message, it makes the message invisible for other EC2 instances
 	- If the consumer doesn't delete the message within that time, the message will become visible again for other consumers
 	- This could result in the same message being delivered twice
 	- Visibility timeout is maximum 12 hours
 	- Short polling vs. Long polling:
-		- It is a way to retrieve messages from AWS SQS queue
+		- It's a way to retrieve messages from AWS SQS queue
 		- Short polling:
-			- It is the default way to retrieve message from SQS queues
+			- It's the default way to retrieve message from SQS queues
 			- When a consumer sends a ReceivedMessage request, a response is returned immediately
-			- Even if the message queue being polled is empty. 
-        Long polling:
+			- Even if the message queue being polled is empty
+		- Long polling:
 			- When a consumer sends a ReceivedMessage request, a response isn't returned until
 				- a message arrives in the queue
 				- or the long poll connection times out
@@ -4334,15 +4500,33 @@ EBS Optimization
 				- Empty responses: when there are no messages available for a ReceivedMessage request
 				- False empty responses: when messages are available but aren't included in a response
 
+<details>
+<summary>Use casess</summary>
+
+- Fanout architecture:
+	- It allows to send a message to an SNS topic and fan it out to multiple queues for further processing
+		- E.g., an app. like YouTube:
+		- When a video is uploaded, a message is sent to a topic 
+		- The message indicates the uploaded of a raw media file and its location on S3
+		- An identical copy of the message will be delivered to multiple queues subscribing to that topic
+		- Behind each queue, there's a worker fleet that polls a message from that queue
+		- Each worker fleet has multiple EC2 instances to convert the raw media file into a bit rate specific to a queue
+	- 
+
+</details>
+
+
+
+
 ---
 
 ## Application Integration - Elastic Transcder
 
-- It is a media transcoder in the cloud
+- It's a media transcoder in the cloud
 - It converts media files from their original source format into different formats that will play on smartphones, tablets, PCs, etc
 - It provides transcoding presets for popular output formats: we don't need to guess about which settings work best on particular devices
 - It also operates in a serverless fashion: we're not allocating the underlying infastructure that is used to transcode these files
-- Pay based on transcoded minutes and the resolution at which we transcode. 
+- Pay based on transcoded minutes and the resolution at which we transcode.
 
 ---
 
@@ -4357,19 +4541,19 @@ EBS Optimization
 ## Analytics - Kinesis
 
 - Kinesis:
-	- It is a platform on AWS to send our streaming data to
-		- It is data that is generated continuously by thousand of data sources
+	- It's a platform on AWS to send our streaming data to
+		- It's data that is generated continuously by thousand of data sources
 		- They typically send in the data records simultaneously and in small sizes
-		- Data size order: order of Kilobytes (small). 
-        - E.g.: 
+		- Data size order: order of Kilobytes (small)
+		- E.g.:
 		- Purchase from online stores (amazon.com, for example): order is data piece
 		- Stock prices
-		- Gaming data as the Social network data, Geospatial data (Uber), IOT sensors data 
-	- It makes it easy to load and analyze streaming data. 
-	- It provides the ability for us to build our own custom applications. 
+		- Gaming data as the Social network data, Geospatial data (Uber), IOT sensors data
+	- It makes it easy to load and analyze streaming data.
+	- It provides the ability for us to build our own custom applications.
 	- There're 3 Kinesis types
 - Kinesis Stream:
-	- It is a place to store that data
+	- It's a place to store that data
 	- It stores the data for 24 hours (by default) and up to 7 days
 	- Data is contained in Shards:
 		- We might have a shard for different purposes
@@ -4379,7 +4563,7 @@ EBS Optimization
 		- Writes: Up to 1,000 records /s
 		- Maximum Total Writes rate: up to 1MB/s. This is including partition keys
 	- Kinesis Stream data capacity:
-		- It is a function of stream's shards #
+		- It's a function of stream's shards #
 		- Its total capacity is the sum of shards capacities
 	- Data consumers:EC2 instances that analyze the data inside those shards
 	- Once the data is analyzed and something is done with it, the data can then be stored in different places
@@ -4392,7 +4576,7 @@ EBS Optimization
 - Kinesis Analytics:
 	- It works with Kinesis Streams and with Kinesis Firehose
 	- It can analyze the data on the fly inside either service
-	- It stores this data either on S3,  Redshift, or Elastic Search Cluster
+	- It stores this data either on S3, Redshift, or Elastic Search Cluster
 
 ---
 
@@ -4407,7 +4591,7 @@ EBS Optimization
 	- Data is stored in columns (as opposite of RDS that stores data in rows)
 	- Aggregation queries are fast
 	- Advanced data compression (see below)
-- It could be provisioned on 
+- It could be provisioned on
 	- Ad hoc basis for a particular task or
 	- Only used when we require a warehousing functionality
 - It can load/unload data from/to S3
@@ -4421,7 +4605,7 @@ EBS Optimization
 <summary>Architecture</summary>
 
 - It uses a cluster architecture
-- It could be configured as a Single Node or Multi-Node: 
+- It could be configured as a Single Node or Multi-Node:
 - ![Data Warehouse System Architecture](https://docs.aws.amazon.com/redshift/latest/dg/images/02-NodeRelationships.png)
 - [More details](https://docs.aws.amazon.com/redshift/latest/dg/c_high_level_system_architecture.html)
 
@@ -4431,11 +4615,11 @@ EBS Optimization
 <summary>Multi-Node</summary>
 
 - Leader Node:
-	- It manages client connections 
+	- It manages client connections
 	- It receives queries
 	- It distributes queries across nodes
 	- It splits queries into individual components
-	- It allocates a component to a particular slice of a node 
+	- It allocates a component to a particular slice of a node
 - Multiple compute nodes:
 		- They has slices of data
 		- They perform distributed queries on their sliced data
@@ -4446,11 +4630,11 @@ EBS Optimization
 <summary>Compression</summary>
 
 - It's a Columnar data store
-- It compresses data much more than in row-based data stores because similar data is stored sequentially on disk 
+- It compresses data much more than in row-based data stores because similar data is stored sequentially on disk
 - It employs multiple compression techniques
 - When loading data into an empty table:
-	- It samples data and 
-	- It selects the most appropriate compression scheme 
+	- It samples data and
+	- It selects the most appropriate compression scheme
 - It uses less space since it doesn't require indexes or materialized views
 
 </details>
@@ -4458,9 +4642,9 @@ EBS Optimization
 <details>
 <summary>Scalability</summary>
 
-- Massively Parallel Processing (MPP): 
-	- It distributes data and query load across all nodes 
-	- It makes it easy to add nodes to a data warehouse 
+- Massively Parallel Processing (MPP):
+	- It distributes data and query load across all nodes
+	- It makes it easy to add nodes to a data warehouse
 
 </details>
 
@@ -4475,10 +4659,10 @@ EBS Optimization
 <summary>Resilience</summary>
 
 - It's only available in 1 AZ
-- It can restore snapshots to new AZs in the event of an outage 
+- It can restore snapshots to new AZs in the event of an outage
 - It always attempts to maintain at least 3 copies of data:
 	- The original data
-	- a Replica on the compute nodes 
+	- a Replica on the compute nodes
 	- a Backup in Amazon S3
 
 </details>
@@ -4486,7 +4670,7 @@ EBS Optimization
 <details>
 <summary>Disaster Recovery</summary>
 
-- A backup is enabled by default with a 1 day retention period 
+- A backup is enabled by default with a 1 day retention period
 - A backup maximum retention period is 35 days
 - Snapshots can be asynchronously replicated to S3 in another region for disaster recovery
 
@@ -4496,10 +4680,10 @@ EBS Optimization
 <summary>Security</summary>
 
 - Encrypted in transit using SSL
-- Encrypted at rest: 
-	- It uses AES-256 
-	- It takes care of key management 
-	- It manages customer's own keys through KMS 
+- Encrypted at rest:
+	- It uses AES-256
+	- It takes care of key management
+	- It manages customer's own keys through KMS
 
 </details>
 
@@ -4511,9 +4695,9 @@ EBS Optimization
 <summary>Pricing</summary>
 
 - Compute Node + Backup + Data Transfer
-- Compute Node Hours: 
+- Compute Node Hours:
 	- Total number of hours run across all compute nodes for the billing period
-		- We're billed for 1 unit per node per hour 
+		- We're billed for 1 unit per node per hour
 		- E.g., a 3-node data warehouse cluster running persistently for an entire month would incur 2,160 instance hours (3 x 24 x 30)
 - Leader node isn't charged
 - Data transfer:
@@ -4535,14 +4719,14 @@ EBS Optimization
 	- It's used for a large scale analysis
 	- It's used to perform analytics and actual modification on data
 	- It's for Big Data: It's uses semistructured or unstructured data
-	- It's used for for on-demand EC2 billing: 
+	- It's used for for on-demand EC2 billing:
 		- Its clusters are EC2s instance
 		- They can be spun up and terminated for short term or ad-hoc tasks,
 		- It utilizes on-demand billing
 - RedShift:
 	- It's used as an end state repository and as a single location for data from different sources
 	- It's used for summarization, aggregations (analytical queries) on all of our data
-	- E.g. a large organization like Amazon.com: 
+	- E.g. a large organization like Amazon.com:
 		- It might have hundreds or thousands of isolated databases around the organization
 		- It might be different engines, types of databases
 		- From amazon.com, Amazon Prime, Audio book purchases, ...
@@ -4554,7 +4738,7 @@ EBS Optimization
 <summary>Limits</summary>
 
 - Single Node: 160Gb
-- Max Compute Nodes #: 128 
+- Max Compute Nodes #: 128
 
 </details>
 
@@ -4574,11 +4758,11 @@ EBS Optimization
 		- E.g. 1, External things of an EC2 instance: network usage, CPU usage
 		- E.g. 2, DynamoDB writes and reads
 		- E.g. 3, EBS volume writes and reads
-	- Some other metrics aren't captured by default:  
+	- Some other metrics aren't captured by default:
 		- Internal to an AWS resource such as internal metrics of EC2
 		- On-premise or custom metrics
-		- CloudWatch agent or CloudWatch API allow to publish these metrics (see below) 
-		- E.g. 1, Memory usage of an individual process in an EC2 instance 
+		- CloudWatch agent or CloudWatch API allow to publish these metrics (see below)
+		- E.g. 1, Memory usage of an individual process in an EC2 instance
 		- E.g. 2, Overall memory utilization in an EC2 instance
 	- The capture frequency depends on AWS products:
 		- every less than every 60 seconds
@@ -4589,7 +4773,7 @@ EBS Optimization
 		- A namespace is a container of metrics
 		- E.g. AWS/EC2 namespace
 - It can be configured with alarms:
-	- An alarm can trigger notification through SNS 
+	- An alarm can trigger notification through SNS
 - It can present data in a dashboard (Global or Regional)
 - For more details:
 	- [How it works](https://www.journaldev.com/27259/amazon-cloudwatch)
@@ -4609,7 +4793,7 @@ EBS Optimization
 <summary>Data Retention</summary>
 
 - Its retains datapoint for a certain period of time depending on how it's old:
-	- It aggregates data the older it is
+	- It aggregates data the older It's
 	- The older data gets, the less granularity there is
 	- Generally, detailed data only matters in the short term. Over long term, we're looking for trends
 - It retains for 3 hours datapoints with a period of less than 60 seconds:
@@ -4641,7 +4825,7 @@ EBS Optimization
 		- EC2
 - Its states are:
 	- Insufficient:
-		- It's the state alarms start in 
+		- It's the state alarms start in
 		- There isn't enough data to judge the state
 	- Alarm:
 		- The alarm threshold has been breached
@@ -4655,7 +4839,7 @@ EBS Optimization
 
 - It allows to publish metrics into CloudWatch agent
 - It allows to publish an AWS service internal metric that isn't capture by default
-	- E.g., memory usage of an individual process in an EC2 instance 
+	- E.g., memory usage of an individual process in an EC2 instance
 - It sits internally on EC2 instances and injects metrics into CloudWatch
 
 </details>
@@ -4671,23 +4855,23 @@ EBS Optimization
 	- Route 53
 	- VPC Flow Logs
 	- Custom applications
-- It's data is based on **Log Event** (It isn't datapoints and metrics):
+- It's data is based on **Log Event** (It'sn't datapoints and metrics):
 	- It's a timestanp and raw message
 	- YYYYMMDDHHMMSS	RAW-MESSAGE
-- A **Log Stream** is a group of log events with the same source: 
-	- A log stream is a sequence of log events that share the same source 
-	- E.g., 
+- A **Log Stream** is a group of log events with the same source:
+	- A log stream is a sequence of log events that share the same source
+	- E.g.,
 - A **Log Group** is a container for log streams:
 	- It defines groups of log streams that share the same retention, monitoring, and access control settings
 	- It controls retention, monitoring, access control and, metric filters (see below)
 	- Its name is usually prefixed, e.g., for AWS Lambda: aws/lambda/myLambdaFuncitonName/
 	- Multiple operations are available at this level:
-		- Export settings: to S3 
+		- Export settings: to S3
 		- Stream settings: to AWS Lambda, to AWS Elastic Search
 		- Expiration settings (change the retention period) by default it doesn't expire
-		- Metric filter setting: Add a new one; 
-- E.g., 
-	- We could have a separate log stream for the Apache access logs from 3 hosts, 
+		- Metric filter setting: Add a new one;
+- E.g.,
+	- We could have a separate log stream for the Apache access logs from 3 hosts,
 	- We could group them into a single log group called MyWebsite.com/Apache/access_log
 - It allows to analyze logs at Log Group level:
 	- by creating Filter Patterns
@@ -4733,9 +4917,9 @@ EBS Optimization
 	- It's essentially a JSON document that details a specific action on that account
 	- It's recorded for 90 days in **Event history** that allows to browse through events; Search them; Interact with them, etc
 - We can identify...
-	- which users and accounts called AWS, 
-	- which IP address the calls were made from,  
-    - When the calls occurred 
+	- which users and accounts called AWS,
+	- which IP address the calls were made from,
+	- When the calls occurred
 
 </details>
 
@@ -4750,11 +4934,11 @@ EBS Optimization
 <summary>Trail</summary>
 
 - It allows to define advanced options inside CloudTrails:
-	- To retain CloudTrail events for than 90 days by storing them in S3 and CloudWatch logs 
-	- To create event metrics, 
-	- To trigger alerts, 
-	- To run advanced queries in Amazon Athena, 
-	- To create event workflows, 
+	- To retain CloudTrail events for than 90 days by storing them in S3 and CloudWatch logs
+	- To create event metrics,
+	- To trigger alerts,
+	- To run advanced queries in Amazon Athena,
+	- To create event workflows,
 	- To create a trail for an organization by logging in with the master account for AWS Organization
 - It's a regional object
 - It delivers log files in S3:
@@ -4772,7 +4956,7 @@ EBS Optimization
 		- S3: Select all events related to all or specific buckets
 		- Lambda Function: Select all events related to all or specific lambda functions
 	- Options to select Insights Events
-	- Storage Location: 
+	- Storage Location:
 		- S3 bucket + Log file prefix
 		- Encrypt log files with SSE-KMS + KMS key
 		- Enable log file validation: to determine whether a log file was delete, modified or, unchanged after it's delivered
@@ -4845,7 +5029,7 @@ EBS Optimization
 
 - It allows to capture metadata about the traffic flowing in and out of a VPC networking interface:
 - It can be placed on:
-	- a specific network interface (ENI), 
+	- a specific network interface (ENI),
 	- a subnet: it means Flow Logs monitors every ENI inside that subnet
 	- an entire VPC: it means Flow Logs monitors every ENI inside that VPC
 - It's NOT real time
@@ -4854,20 +5038,20 @@ EBS Optimization
 	- Account ID
 	- Interface ID
 	- Source and destination IP addresses
-    - Source and destination ports
-    - Protocol
-    - Bytes
-    - Start and end
-    - Log Status: ALLOW or REJECT
+	- Source and destination ports
+	- Protocol
+	- Bytes
+	- Start and end
+	- Log Status: ALLOW or REJECT
 	account-id, interface-id, srcaddr, dstaddr, srcport, dstport, protocol, packets, bytes, start, end, action, log-status
 - Creation Inputs:
 	- Filter: All, Accepted or, Rejected traffic
-	- Destination: 
+	- Destination:
 		- S3 bucket
 		- CloudWatch logs: log group + AMI Role
 	- Log Record format:
 		- Custom format
-		- AWS default format: 
+		- AWS default format:
 		${version} ${account-id} ${interface-id} ${srcaddr} ${dstaddr} ${srcport} ${dstport} ${protocol} ${packets} ${bytes} ${start} ${end} ${action} ${log-status}
 
 </details>
@@ -4894,7 +5078,7 @@ EBS Optimization
 <details>
 <summary>Best practices</summary>
 
-- Monitor All traffic (Accepted and Rejected traffic) 
+- Monitor All traffic (Accepted and Rejected traffic)
 
 </details>
 
@@ -4914,7 +5098,7 @@ EBS Optimization
 	- Event Source allows to filter and match against certain events within an account
 		- Event by Service: is based on a supported service
 		- Event Pattern: is for services that aren't directly supported (CloudTrail is required)
-		- Schedule: invokes a Target based on time: by fixed rate (every 2 mn) or [Cron expression](https://en.wikipedia.org/wiki/Cron) 
+		- Schedule: invokes a Target based on time: by fixed rate (every 2 mn) or [Cron expression](https://en.wikipedia.org/wiki/Cron)
 	- Target:
 		- It's invoked when an event matches the Event Pattern or when schedule is triggered
 		- It could be a Lambda Function or any supported service or api
@@ -4923,7 +5107,7 @@ EBS Optimization
 	- A CloudWatch events is a real time service
 	- CloudTrail is an auditing tool and it's not a real-time product
 - E.g. of Events:
-	- An Instance stopping, 
+	- An Instance stopping,
 	- A security group being changed,
 	- A CloudTrail trail being switched off,
 	- A new user being added
@@ -4960,7 +5144,7 @@ EBS Optimization
 		- Input: ciphertext + New CMK
 		- Output: a new ciphertext (at no point do we see the plaintext) that includes a link to the new CMK
 		- Action: AWS will use the link to the old CMK included in the ciphertext to reencrypt it
-- 
+-
 
 </details>
 
@@ -4993,7 +5177,7 @@ EBS Optimization
 		- It's used by AWS on a shared basis across many accounts
 		- It's used for AWS level encryption and decryption
 		- It's NOT available (hiden)
-- It's created in a region 
+- It's created in a region
 	- It never leaves its region
 	- E.g. an encrypted S3 object in us-east-1:
 		- If we want to move this object to us-east-2, a new region
@@ -5014,21 +5198,21 @@ EBS Optimization
 	- A Cipher version, **Encrypted Data Encryption Key** (An encrypted version)
 	- ![Data Key operation](https://docs.aws.amazon.com/kms/latest/developerguide/images/generate-data-key.png)
 - AWS KMS cannot use a data key to encrypt data
-	- It could be done by a customer outside of KMS 
+	- It could be done by a customer outside of KMS
 	- It could be done by using OpenSSL or a cryptographic library like the AWS Encryption SDK
 - The encryption operation is done as follow:
 	- Data is encrypted by using the Plaintext data key
 		- ![Data encryption with plaintext data key](https://docs.aws.amazon.com/kms/latest/developerguide/images/encrypt-with-data-key.png)
-	- The plaintext data key should be discarded (removed from memory) as soon as possible 
-	- Encrypted Data can be safely stored with the encrypted data key: it is available to decrypt the data
+	- The plaintext data key should be discarded (removed from memory) as soon as possible
+	- Encrypted Data can be safely stored with the encrypted data key: It's available to decrypt the data
 - The decryption operation is done as follow:
 	- Decrypt the encrypted data key: AWS KMS Decrypt operation will uses the related CMK to decrypt it and returns the plaintext data key
-	- Use the plaintext data key to decrypt our data 
+	- Use the plaintext data key to decrypt our data
 	- Remove the plaintext data key from memory as soon as possible
 	- ![Data decryption operation with an encrypted data key](https://docs.aws.amazon.com/kms/latest/developerguide/images/decrypt.png)
 - **Envelope Encryption**
-	- When we encrypt our data, our data is protected, but we have to protect our encryption key 
-	- One strategy is to encrypt it 
+	- When we encrypt our data, our data is protected, but we have to protect our encryption key
+	- One strategy is to encrypt it
 	- Envelope encryption is the practice of encrypting plaintext data with a data key, and then encrypting the data key under another key
 	- E.g., This is how S3 functions to encrypt objects
 	- ![Envelope Encryption](https://docs.aws.amazon.com/kms/latest/developerguide/images/key-hierarchy-master.png)
@@ -5064,12 +5248,12 @@ EBS Optimization
 <details>
 <summary>Role separation</summary>
 
-- KMS has the concept of two types of uses on a key: 
+- KMS has the concept of two types of uses on a key:
 	- We have the ability to interact and manage a key
 	- But we also have a separate set of permissions, which allow to perform cryptographic operations using that key
 	- E.g., So we can reecrypt a data without having access to its plaintext
 - It allows an identity to be given administrator rights to an AWS Service such as S3, but not allow them to interact with this AWS Service data
-- [For more details](https://en.wikipedia.org/wiki/Separation_of_duties): 
+- [For more details](https://en.wikipedia.org/wiki/Separation_of_duties):
 
 </details>
 
@@ -5106,18 +5290,18 @@ EBS Optimization
 	- CloudFromation is very close to infrastructure
 	- CloudFromation is flexible but there is a lot of admin overhead
 - It manages the infrastructure for any provided code
-	- It supports Java, DotNet, Node.js, PHP, Ruby, Python, Go, 
+	- It supports Java, DotNet, Node.js, PHP, Ruby, Python, Go,
 	- It supports Docker, Apache, IIS, Nginx and, Tomcat based applications
 - It provides automated provisioning, monitoring, auto scaling, load balancing and, updating
 - It's an **application container**
 	- It contains 0 or more **envronments**
-	- It contains 0 or more **Application versions** 
+	- It contains 0 or more **Application versions**
 		- They're added to a container
 		- They package a **source bundle** (a zip or a wire file depending on the the platform used to create it)
 		- They're deployed to an environment
 	- It doesn't contain a database because its environments are transitory
 
-- E.g., We can upload our application code and Beanstalk will create all required AWS infrastructure for us. 
+- E.g., We can upload our application code and Beanstalk will create all required AWS infrastructure for us.
 
 </details>
 
@@ -5128,9 +5312,9 @@ EBS Optimization
 - An application container has multiple environments
 	- 1 or more Web Server environments
 	- 1 worker environment
-- An environment has: 
-	- 1 LB, 
-	- 1 Auto Scaling Group across multiple AZs 
+- An environment has:
+	- 1 LB,
+	- 1 Auto Scaling Group across multiple AZs
 	- 1 or more Instances that run a **Host Manager (HM)**
 - The database is outside of these environments which are transitory	
 - ![](https://blog.shikisoft.com/assets/images/post_imgs/eb-deployments/eb-blue-green-success.png)
@@ -5162,7 +5346,7 @@ EBS Optimization
 <summary>Deployment</summary>
 
 - **Deployment Options**:
-	- **All at once**: 
+	- **All at once**:
 		- An updated application version is deployed to all instances
 		- It's NOT recommended for production deployments
 		- Pros: It's quick and simple
@@ -5171,10 +5355,10 @@ EBS Optimization
 		- It splits instances into batches
 		- It deploys on existing batches one at a time
 	- **Rolling with additional Batch** (immutable)
-		- It's as above but 
-		- It provisions a new batch of instances, 
-		- It deploys on them and tests them 
-		- It removes the old batch if there's no problem 
+		- It's as above but
+		- It provisions a new batch of instances,
+		- It deploys on them and tests them
+		- It removes the old batch if there's no problem
 		- Pros: it prevent outages: if there's any problem, its stops the deployment
 		- Cons: It's slightly more expensive
 	- **Blue/Green**:
@@ -5183,7 +5367,7 @@ EBS Optimization
 		- Pros: It's the safest option
 		- Cons: It's the most expensive because we do need to maintain 2 environments
 
-</details> 
+</details>
 
 <details>
 <summary>Host Manager (HM)</summary>
@@ -5226,7 +5410,7 @@ EBS Optimization
 - It's a deployment platform
 - It allows to manage large sets of infrastructure
 - It takes away from the low-level configuration of CloudFormation
-- It's not as ar as Elastic Beanstalk: 
+- It's not as ar as Elastic Beanstalk:
 	- It's designed for infrastructure engineer
 	- It's NOT designed for developers
 - It lets create a stack of resources with layers
@@ -5239,7 +5423,7 @@ EBS Optimization
 <summary>Architecture</summary>
 
 - It's based on **Chef**
-- Chef uses **Recipes** 
+- Chef uses **Recipes**
 - A Recipe uses **cookbooks**
 - A Cookbook requires a **repository**
 - ![OpsWorks Stacks](https://secureservercdn.net/160.153.137.15/3d9.249.myftpupload.com/wp-content/uploads/2016/12/OpsWorks-Stacks.png)
@@ -5254,7 +5438,7 @@ EBS Optimization
 
 - It's the base entity of OpsWorks (as in AWS CloudFormation)
 - It's an entity that is configured and build on using other configuration components (see below)
-	- It represents an isolated collection of infrastructure as for CloudFormation but 
+	- It represents an isolated collection of infrastructure as for CloudFormation but
 	- It's NOT created from a template
 - When we're controlling permissions and giving people permissions to interact with OpsWorks, we generally doing it on a per stack basis
 - It can be used per application or per platform
@@ -5284,7 +5468,7 @@ EBS Optimization
 - It's at layer level that **Recipes** are applied (associated) and configure what to install on instances in that layer
 - It includes different settings such as
 	- Auto healing settings
-	- We can define the exact network configuration of any instance that is added to a layer 
+	- We can define the exact network configuration of any instance that is added to a layer
 	- We can control the storage of any instance that is added to a layer
 	- We can add additional mount points to instances that get added
 	- We can configure CloudWatch log exports on a layer by layer basis
