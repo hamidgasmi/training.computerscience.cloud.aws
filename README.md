@@ -1664,7 +1664,7 @@ EBS Optimization
 		- 1- Explicit Denies are the top priority
 		- 2- Explicit Allows are the second priority
 		- 3- Implicit Denies are the default
-	- ![S3 Authorization process](https://dmhnzl5mp9mj6.cloudfront.net/security_awsblog/images/AuthZDiagram.png)
+	- ![S3 Authorization process](https://awscertifiedsolutionsarchitectassociatedocs.s3.amazonaws.com/AuthZDiagram.png)
 - Client-side Encryption:
 	- It's the responsibility of the client/application:
 		- Encryption/decryption process (CPU intensive process)
