@@ -125,8 +125,11 @@
 - ARN:
 	- Format: arn:${Partition}:ec2:${Region}:${Account}:instance/${InstanceId}
 	- E.g., arn:aws:ec2::191449997525:instance/1234j8r3kdj
-- Use cases:
-	- Monolothic application that require a traditional OS to work
+
+</details>
+
+<details>
+<summary>Architecture</summary>
 
 </details>
 
@@ -166,25 +169,31 @@
 - [For more details](https://aws.amazon.com/ec2/instance-types/)
 
 </details>
-<details>
-<summary>Instance Metadata</summary>
 
-- It's available at: http://169.254.169.254/latest/meta-data/metadataName from within the EC2 instance itself
-- To get the list of all available metadata: #curl http://169.254.169.254/latest/meta-data/
-- E.g., ami-id, instance-id, instance-type, local-ipv4, mac, public-ipv4, security-groups
+<details>
+<summary>Virtualization</summary>
+
+- Xen-based hypervisor: The Xen Project is a Linux Foundation Collaborative Project
+- The Nitro Hypervisor that is based on core KVM technology
+- Bare metal instances: With virtualization (High Memory Instance)
+- [For more details](http://www.brendangregg.com/blog/2017-11-29/aws-ec2-virtualization-2017.html)
+
+</details>
+
+<details>
+<summary>Instance Metadata & User Data</summary>
+
+- Instance Metadata:
+	- It's available at: http://169.254.169.254/latest/meta-data/metadataName from within the EC2 instance itself
+	- To get the list of all available metadata: #curl http://169.254.169.254/latest/meta-data/
+	- E.g., ami-id, instance-id, instance-type, local-ipv4, mac, public-ipv4, security-groups
+- User Data:
+	- It's available at: http://169.254.169.254/latest/user-data/ from within the EC2 instance
+	- To get the list of all available user data: #curl http://169.254.169.254/latest/user-data/
 - [For more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html)
 
 </details>
-<details>
-<summary>User Data</summary>
 
-- It's available at: http://169.254.169.254/latest/user-data/ from within the EC2 instance
-- To get the list of all available metadata: #curl http://169.254.169.254/latest/user-data/
-- [For more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html)
-
-
-</details>
-<details>
 <summary>Bootstrap</summary>
 
 - It's the process of providing "build" directives to an EC2 instance
@@ -202,45 +211,114 @@
 	- Creating an IAM User
 
 </details>
-<details>
-<summary>Security: Instance Role</summary>
 
-- It's a type of IAM Role that could be assumed by EC2 instance or application
-- An application that is running within EC2,
-	- It'sn't a valid AWS identity
-	- It can't therefore assume AWS Role directly
-- They need to use an intermediary called instance profile:
-	- It's a container for the role that is associated with an EC2 instance
-	- It allows applications running on EC2 to assume a role and
-	- It allows application to access to temporary security credentials available in the instance metadata
-	- It's attached to an EC2 instance at launch process or after
-	- Its name is similar to the IAM role's one It's associated to
-	- It's created automatically when using the AWS console UI
-	- Or It's created manually when using the CLI or Cloud Formation
-- EC2 AWS CLI Credential Order:
-	- (1) Command Line Options:
-		- aws [command] —profile [profile name]
-		- This approach uses longer term credentials stored locally on the instance
-		- It's NOT RECOMMENDED for production environments
-	- (2) Environment Variables:
-		- You can store values in the environment variables: AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY, AWS_SESSION_TOKEN
-		- It's recommended for temporary use in non-production environments
-	- (3) AWS CLI credentials file:
-		- aws configure
-		- This command creates a credentials file
-		- Linux, macOS, Unix: it's stored at ~/.aws/credentials
-		- Windows, it's store at: C:\Users\USERNAME\.aws\credentials
-		- It can contain the credentials for the default profile and any named profiles
-		- This approach uses longer term credentials stored locally on the instance
-		- It's NOT RECOMMENDED for producuon environments.
-	- (4) Container Credentials:
-		- IAM Roles associated with AWS Elastic Container Service (ECS) Task Definitions
-		- Temporary credentials are available to the Task's containers
-		- This is recommended for ECS environments
-	- (5) Instance Profile Credentials
-		- IAM Roles associated with Amazon Elastic Compute Cloud (EC2) instances via Instance Profiles
-		- Temporary credentials are available to the Instance
-		- This is recommended for EC2 environments
+<details>
+<summary>Performance</summary>
+
+- EBS Optimization: 
+	- It's about the performance of restoring a volume from a Snapshot
+	- When we restore a volume from a snapshot, it doesn't immediately copy all that data to EBS
+	- Data is copied as It's requested
+	- So, we get the max performance of a the EBS volume, only when all that data has been copied across in the background
+	- Solution: to perform a read of every part of that volume in advance before It's moved into production
+	- To ensure that our restored volume always functions at peak capacity in production, we can force the immediate initialization of the entire volume using dd or fio
+	- For more details:
+		- [EBS restoring volume](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-restoring-volume.html)
+		- [EBS initialize](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-initialize.html)
+- Enhanced Networking - SR-IOV:
+	- It stands for Single Root I/O volume
+	- Opposite to the traditional network virtualization that is using Multi-Root I/O Volume (MR-IOV) where a software-based hypervisor is managing virtual controllers of virtual machines to access one physical network card (slow)
+	- SR-IOV allows virtual devices (controllers) to be implemented in hardware (virtual functions)
+	- In other words, it allows a single physical network card to appear as multiple physical devices
+	- Each instance be given one of these (fake) physical devices
+	- This results in faster transfer rates, lower CPU usage, and lower consistent latency
+	- EC2 delivers this via the Elastic Network Adapter (ENA) or Intel 82599 Virtual Function (VF) interface
+	- [Fore more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/enhanced-networking.html)
+- Enhanced Networking - Placement Groups: 
+	- It's a good way to increase Performance or Reliability
+	- Clustered Placement Group:
+		- Instances grouped within a single AZ
+		- It's good to increase performance
+		- It's recommended for application that need low network latency, high network throughput (or both)
+		- Only certain instances can be launched in to a clustered group
+	- Spread Placement Group:
+		- It's good to increase availability
+		- Instances are each individual placed on distinct underlying hardware (separate racks)
+		- It's possible to have spread placement groups inside different AZ within one region
+		- So if a rack does go through and fail, It's only going to affect 1 instance
+	- Partition Placement Group:
+		- It's good to increase availability for large infrastructure platforms where we want to have some visibility of where those instances are from a partition perspective
+		- Similar to spread placement group except there are multiple EC2 instances within a partition
+		- Each partition within a placement group has its own hardware (own set of racks)
+		- Each rack has its own network and power source
+		- It allows to isolate the impact of hardware failure within our application
+		- If needed, we can even make it automated, if we give that information to our applications itself, it can have visibility over its infrastructure placement
+		- Multiple EC2 instances HDFS, HBase, and Cassandra
+- Dedicated Hosts:
+	- Physical server dedicated for our use for a given type and size (Type and Size are inputs)
+	- The number of instances that run on the host is fixed - depending on the type and size (see print screen below)
+	- It can help reduce cost by allowing us to use our existing server-bound software licenses
+	- It can be purchased On-Demand (hourly)
+	- Could be purchased as a reservation for up to 70% off On-Demand price
+
+</details>
+
+<details>
+<summary>Scalability</summary>
+</details>
+
+<details>
+<summary>Consistency</summary>
+</details>
+
+<details>
+<summary>Resilience</summary>
+</details>
+
+<details>
+<summary>Disaster Recovery</summary>
+</details>
+
+<details>
+<summary>Security</summary>
+
+- Instance Role:
+	- It's a type of IAM Role that could be assumed by EC2 instance or application
+	- An application that is running within EC2,
+		- It'sn't a valid AWS identity
+		- It can't therefore assume AWS Role directly
+	- They need to use an intermediary called instance profile:
+		- It's a container for the role that is associated with an EC2 instance
+		- It allows applications running on EC2 to assume a role and
+		- It allows application to access to temporary security credentials available in the instance metadata
+		- It's attached to an EC2 instance at launch process or after
+		- Its name is similar to the IAM role's one It's associated to
+		- It's created automatically when using the AWS console UI
+		- Or It's created manually when using the CLI or Cloud Formation
+	- EC2 AWS CLI Credential Order:
+		- (1) Command Line Options:
+			- aws [command] —profile [profile name]
+			- This approach uses longer term credentials stored locally on the instance
+			- It's NOT RECOMMENDED for production environments
+		- (2) Environment Variables:
+			- You can store values in the environment variables: AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY, AWS_SESSION_TOKEN
+			- It's recommended for temporary use in non-production environments
+		- (3) AWS CLI credentials file:
+			- aws configure
+			- This command creates a credentials file
+			- Linux, macOS, Unix: it's stored at ~/.aws/credentials
+			- Windows, it's store at: C:\Users\USERNAME\.aws\credentials
+			- It can contain the credentials for the default profile and any named profiles
+			- This approach uses longer term credentials stored locally on the instance
+			- It's NOT RECOMMENDED for producuon environments.
+		- (4) Container Credentials:
+			- IAM Roles associated with AWS Elastic Container Service (ECS) Task Definitions
+			- Temporary credentials are available to the Task's containers
+			- This is recommended for ECS environments
+		- (5) Instance Profile Credentials
+			- IAM Roles associated with Amazon Elastic Compute Cloud (EC2) instances via Instance Profiles
+			- Temporary credentials are available to the Instance
+			- This is recommended for EC2 environments
 - Encryption:
 	- Volume encryption uses EC2 host hardware to encrypt data at rest and in transit between EBS and EC2 instance
 	- Encryption generates a Data Encryption Key (DEK) from a Customer Master Key (CMK) in each region
@@ -265,86 +343,9 @@
 		- Only OS encryption will ensure that from an operating system perspective, the file's encrypted
 		- We're able to use both, though
 - For more details:
-	- [User Guide](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html)
-	- [...](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html)
+	- [IAM Role For EC2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html)
+	- [ID roles use switch role ec2 instance profiles](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html)
 	- [CLI Order of things](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
-
-</details>
-
-<details>
-<summary>Performance</summary>
-
-EBS Optimization
-
-- Performance of restoring a volume from a Snapshot:
-	- When we restore a volume from a snapshot, it doesn't immediately copy all that data to EBS
-	- Data is copied as It's requested
-	- So, we get the max performance of a the EBS volume, only when all that data has been copied across in the background
-	- Solution: to perform a read of every part of that volume in advance before It's moved into production
-	- To ensure that our restored volume always functions at peak capacity in production, we can force the immediate initialization of the entire volume using dd or fio
-	- For more details:
-		- [EBS restoring volume](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-restoring-volume.html)
-		- [EBS initialize](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-initialize.html)
-- Enhanced Networking - SR-IOV:
-	- It stands for Single Root I/O volume
-	- Opposite to the traditional network virtualization that is using Multi-Root I/O Volume (MR-IOV) where a software-based hypervisor is managing virtual controllers of virtual machines to access one physical network card (slow)
-	- SR-IOV allows virtual devices (controllers) to be implemented in hardware (virtual functions)
-	- In other words, it allows a single physical network card to appear as multiple physical devices
-	- Each instance be given one of these (fake) physical devices
-	- This results in faster transfer rates, lower CPU usage, and lower consistent latency
-	- EC2 delivers this via the Elastic Network Adapter (ENA) or Intel 82599 Virtual Function (VF) interface
-	- [Fore more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/enhanced-networking.html)
-- Enhanced Networking - Placement Groups: Good to increase Performance or Reliability
-	- Clustered Placement Group:
-		- Instances grouped within a single AZ
-		- It's good to increase performance
-		- It's recommended for application that need low network latency, high network throughput (or both)
-		- Only certain instances can be launched in to a clustered group
-		- Best practices:
-			- We should always try to launch all of the instances that go inside a placement group at the same time
-			- AWS recommends homogenous instances within cluster placement groups
-			- We might get a capacity issue when we ask to launch additional instances in an existing placement group
-	- Spread Placement Group:
-		- It's good to increase availability
-		- Instances are each individual placed on distinct underlying hardware (separate racks)
-		- It's possible to have spread placement groups inside different AZ within one region
-		- We can launch up to 7 instances into this placement group
-		- So if a rack does go through and fail, It's only going to affect 1 instance
-		- It's recommended for applications that have a small # of critical instances that should be kept separate from each other: email servers, Domain controllers, file servers
-	- Partition Placement Group:
-		- It's good to increase availability for large infrastructure platforms where we want to have some visibility of where those instances are from a partition perspective
-		- Similar to spread placement group except there are multiple EC2 instances within a partition
-		- Each partition within a placement group has its own hardware (own set of racks)
-		- Each rack has its own network and power source
-		- A partition PL supports a maximum of 7 partitions per Availability Zone
-		- It allows to isolate the impact of hardware failure within our application
-		- We can use this to split those instances across all of those 7 partitions (we get visibility of that)
-		- If needed, we can even make it automated, if we give that information to our applications itself, it can have visibility over its infrastructure placement
-		- Multiple EC2 instances HDFS, HBase, and Cassandra
-
-</details>
-
-<details>
-<summary>Dedicated Hosts</summary>
-
-- Physical server dedicated for our use for a given type and size (Type and Size are inputs)
-- The number of instances that run on the host is fixed - depending on the type and size (see print screen below)
-- It can help reduce cost by allowing us to use our existing server-bound software licenses
-- It can be purchased On-Demand (hourly)
-- Could be purchased as a reservation for up to 70% off On-Demand price
-- Use Cases:
-	- Regulatory requirements that may not support multi-tenant virtualization
-	- Licensing which doesn't support multi-tenancy or cloud deployments
-	- We can control instance placement
-
-</details>
-<details>
-<summary>Virtualization</summary>
-
-- Xen-based hypervisor: The Xen Project is a Linux Foundation Collaborative Project
-- The Nitro Hypervisor that is based on core KVM technology
-- Bare metal instances: With virtualization (High Memory Instance)
-- [For more details](http://www.brendangregg.com/blog/2017-11-29/aws-ec2-virtualization-2017.html)
 
 </details>
 
@@ -397,31 +398,54 @@ EBS Optimization
 <details>
 <summary>Use cases</summary>
 
-- On Demand:
-	- Application with short term, spiky, or unpredictable workloads that can't be interrupted
-	- Application being developed or tested on Amazon EC2 for the 1st time
-- Spot:
-	- Good for stateless parts of application (servers)
-	- Good for workloads that can tolerate failures
-	- Applications that have flexible start and end times
-	- Applications that are only feasible at very low compute prices
-	- Users with urgent computing needs for large amounts of additional capacity
-	- Spot instances tend to be useful for dev/test workloads, or perhaps for adding extra computing power to large-scale data analytics projects
-	- Antipattern: spot isn't suitable for long-running workloads and require stability and can't tolerate interruptions
-- Spot Fleet:
-- Reserved:
-	- Long-running, understood, and consistent workloads
-	- Applications that require reserved capacity
-	- Users able to make upfront payments to reduce their total computing
+- EC2 instance: 
+	- Monolothic application that require a traditional OS to work
+- Princing models:
+	- On Demand:
+		- Application with short term, spiky, or unpredictable workloads that can't be interrupted
+		- Application being developed or tested on Amazon EC2 for the 1st time
+	- Spot:
+		- Good for stateless parts of application (servers)
+		- Good for workloads that can tolerate failures
+		- Applications that have flexible start and end times
+		- Applications that are only feasible at very low compute prices
+		- Users with urgent computing needs for large amounts of additional capacity
+		- Spot instances tend to be useful for dev/test workloads, or perhaps for adding extra computing power to large-scale data analytics projects
+		- Antipattern: spot isn't suitable for long-running workloads and require stability and can't tolerate interruptions
+	- Spot Fleet:
+	- Reserved:
+		- Long-running, understood, and consistent workloads
+		- Applications that require reserved capacity
+		- Users able to make upfront payments to reduce their total computing
+- Placement Groups:
+	- Spread Placement Group:
+		- Applications that have a small # of critical instances that should be kept separate from each other: email servers, Domain controllers, file servers
+	- Partition Placement Group:
+		- Multiple EC2 instances HDFS, HBase, and Cassandra
+- Dedicated Hosts:
+	- Regulatory requirements that may not support multi-tenant virtualization
+	- Licensing which doesn't support multi-tenancy or cloud deployments
+	- We can control instance placement
 
 </details>
 
 <details>
 <summary>Limits</summary>
+
+- Spread Placement Group max instance #: 7
+- Partition Placement Group max instance #: 7 partitions per AZ
+
 </details>
 
 <details>
 <summary>Best practices</summary>
+
+- Clustered Placement Group:
+	- We should always try to launch all of the instances that go inside a placement group at the same time
+	- AWS recommends homogenous instances within cluster placement groups
+	- We might get a capacity issue when we ask to launch additional instances in an existing placement group
+
+
 </details>
 
 ---
@@ -533,7 +557,6 @@ EBS Optimization
 - Public DNS name resolution:
 	- From outside EC2 instance VPC, it's resolved to the EC2 instance Public IP
 	- From inside EC2 instance VPC, it's resolved to the EC2 instance Private IP
-- Best Practice: Always enable VPC DNS hostnames and, VPC DNS resolution
 
 </details>
 
@@ -571,8 +594,6 @@ EBS Optimization
 	 	- It's public
 	 	- There is as many default subnets as AZs of the region where the default VPC is created in
 	- Custom Subnet: It's a subnet created by a customer in a costum VPC
-- Limits:
-	- Subnet max/min netmask: /16 ... /28 (same as VPC netmask limit)
 - Associations:	
 	- Subnet & VPC:
 	 	- A subnet is attached to 1 VPC
@@ -603,16 +624,15 @@ EBS Optimization
 <details>
 <summary>Route table (RT)</summary>
 
-- Description:
-	- It controls what the VPC router does with subnet Outbound traffic	
-	- It's a collection of Routes:
-	 	- They're used when traffic from a subnet arrives at the VPC router
-	 	- They contain a destination and a target
-		- Traffic is forwarded to the target if its destination matches the route's destination
-	 	- Default Routes (0.0.0.0/0 IPv4 and ::/0 IPv6) could be added
-	- A route Target can be:
-	 	- An IP @ or
-	 	- An AWS networking object: Egress-Only G., IGW, NAT G., Network Interface, Peering Connection, Transit G., Virtual Private G.,...
+- It controls what the VPC router does with subnet Outbound traffic	
+- It's a collection of Routes:
+ 	- They're used when traffic from a subnet arrives at the VPC router
+ 	- They contain a destination and a target
+	- Traffic is forwarded to the target if its destination matches the route's destination
+ 	- Default Routes (0.0.0.0/0 IPv4 and ::/0 IPv6) could be added
+- A route Target can be:
+ 	- An IP @ or
+ 	- An AWS networking object: Egress-Only G., IGW, NAT G., Network Interface, Peering Connection, Transit G., Virtual Private G.,...
 - Location: -
 - Types:
 	- Local Route:
@@ -649,13 +669,7 @@ EBS Optimization
 		- When multiple routes' destination with same prefix maches with traffic destination and longest prefix match cannot be applied (Rule #1):
 			- Static is prefered over the dynamic ones
 	 		- A matched /24 destination static route will be always chosen first before a matched /24 destination propagated route
-	- [More details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html#route-tables-priority)
-- Limits:
-- Best Practice:
-	- It's recommended not to update the main route table
-	- It's particularly recommended not to add the route to the Internet Gateway in the main route table:
-	- Since by default, all VPC's Subnets are associated "implicitly" to the main route table
-	- All existing and future subnets could be public by default (if Public IP is enabled)		
+	- [More details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html#route-tables-priority)	
 - Associations:
 	- A RT could be associated with multiple subnets
 	- A subnet must be associated with 1 and only 1 route table (main or custom)
@@ -686,29 +700,28 @@ EBS Optimization
 <details>
 <summary>NACL - Network Access Control Lists</summary>
 
-- Description
-	- It's a security feature that operates at Layer 4 of the OSI model (Transport Layer: TCP/UDP and below)
-	- It impacts traffic crossing the boundary of a subnet
-	- It doesn't impact traffic local to a subnet: Communications between 2 instances inside a subnet aren't impacted
-	- It acts FIRST before Security Groups: if an IP is denied, it won't reach security group
-	- It's stateless
-	- It includes Rules:
-		- There're 2 sets of rules: Inbound and Outbound rules
-		- They're explicitly allow or deny traffic based on: traffic Type (protocol), Ports (or range), Source (or Destination)
-		- Their Source (or Destination) could only be IP/CIDR
-		- Their Source (or Destination) can't be an AWS objects (NACL is Layer 4 feature)
-		- Each rule has a Rule #
-		- They're processed in number of order, "Rule #": Lowest first
-		- When a match is found, that action is taken and processing stops
-		- The "*" rule is an implicit deny: It's processed last
-	- Its rules include Ephemeral Ports:
-		- When a client initiates communications with a server, it uses a well-known port # on that server: e.g., TCP/443
-		- The response is from that well-known port to an ephemeral port on the client
-		- The client decides the ephemeral port (e.g., TCP/22000): they're be thousands!
-		- Because NACL are stateless and ephemeral ports are thousands, to manage the overhead of NACL rules is very high
-		- A single Communication involves 4 individual sets of rules:
-		- We should think to "allow" traffic for every "ephemeral" ports on Client Inbound and Outbound rules and,
-		- We should think to "allow" traffic for every "ephemeral" ports on Destination Inbound and Outbound rules as well
+- It's a security feature that operates at Layer 4 of the OSI model (Transport Layer: TCP/UDP and below)
+- It impacts traffic crossing the boundary of a subnet
+- It doesn't impact traffic local to a subnet: Communications between 2 instances inside a subnet aren't impacted
+- It acts FIRST before Security Groups: if an IP is denied, it won't reach security group
+- It's stateless
+- It includes Rules:
+	- There're 2 sets of rules: Inbound and Outbound rules
+	- They're explicitly allow or deny traffic based on: traffic Type (protocol), Ports (or range), Source (or Destination)
+	- Their Source (or Destination) could only be IP/CIDR
+	- Their Source (or Destination) can't be an AWS objects (NACL is Layer 4 feature)
+	- Each rule has a Rule #
+	- They're processed in number of order, "Rule #": Lowest first
+	- When a match is found, that action is taken and processing stops
+	- The "*" rule is an implicit deny: It's processed last
+- Its rules include Ephemeral Ports:
+	- When a client initiates communications with a server, it uses a well-known port # on that server: e.g., TCP/443
+	- The response is from that well-known port to an ephemeral port on the client
+	- The client decides the ephemeral port (e.g., TCP/22000): they're be thousands!
+	- Because NACL are stateless and ephemeral ports are thousands, to manage the overhead of NACL rules is very high
+	- A single Communication involves 4 individual sets of rules:
+	- We should think to "allow" traffic for every "ephemeral" ports on Client Inbound and Outbound rules and,
+	- We should think to "allow" traffic for every "ephemeral" ports on Destination Inbound and Outbound rules as well
 - Location: It'sn't specific to any AZ
 - Type:
 	- Default NACL:
@@ -719,15 +732,6 @@ EBS Optimization
 		- It's created by users
 		- It should be associated "explicitly" to a subnet
 		- It blocks ALL traffic, by default: it only includes "*" rule only
-- Best Practice:
-	- Inbound and Outbound Rules # should use an increment of 100:
-		- 100 for the 1st IPv4 rule, 101 for the 1st IPv6 rule
-		- 200 for the 2nd IPv4 rule, 201 for the 2nd IPv6 rule
-	- Ensure that you place the DENY rules earlier in the table than the ALLOW rules that open the wide range of ephemeral ports
-- Use cases:
-	- Because of NACL management overhead (4 sets of rules for each communication),
-	- They tend not to be used all that much generally in production usage (Security Groups are preferred)
-	- They're used when we have an explicit deny that we would like to add (E.g., an IP @ we were attacked from)
 - Associations:	
 	- It could be associated with multiples subnets
 	- A subnet has to be associated with 1 NACL
@@ -737,31 +741,30 @@ EBS Optimization
 <details>
 <summary>SG - Security Group</summary>
 
-- Description
-	- It's a Software firewall that surrounds AWS products
-	- It a Layer 5 firewall (session layer) in OSI model
-	- It acts at the instance level, not the subnet level
-	- It could be attached/detached from an EC2 instance at anytime
-	- It's Stateful:
-		- The response to an allowed inbound (or outbound) request, will be allowed to flow out (or in), regardless of outbound (or inbound) rules
-		- If we send a request from our instance and It's allowed by the corresponding SG rule, its response is then allowed to flow in regardless of inbound rules
-		- [More details (see Tracking)](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#security-group-connection-tracking])
-		- [Comparison between Security Group and ACL (stateless)](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Security.html#VPC_Security_Comparison])
-	- SG Rules include: Inbound and Outbound rule sets:
-		- Type: TCP
-		- Protocol: e.g., HTTP, SSH
-		- Port Ranges: e.g., Port 22 (SSH), Port 53 (UDP), Port 3060 (MySQL), Port 80 (http), Port 443 (https)...
-		- Source/Destination: Since It's a Layer 5 Firewall, it supports:
-		- IP addresses, CIDRs (Layer 4 info)
-		- a Security Group (Layer 5 info)
-		- It can auto-reference itself in an Inbound rules' Source:
-		- It allows traffic from itself
-		- All resources in the same SG are allowed to communicate to each other
-	- Implicit Deny: Explicit Allow > Implicit Deny
-		- There is no explicit denies
-		- All rules are analyzed
-		- If a rule matches, the request is allowed
-		- If there is no match, the request is implicitly denied
+- It's a Software firewall that surrounds AWS products
+- It a Layer 5 firewall (session layer) in OSI model
+- It acts at the instance level, not the subnet level
+- It could be attached/detached from an EC2 instance at anytime
+- It's Stateful:
+	- The response to an allowed inbound (or outbound) request, will be allowed to flow out (or in), regardless of outbound (or inbound) rules
+	- If we send a request from our instance and It's allowed by the corresponding SG rule, its response is then allowed to flow in regardless of inbound rules
+	- [More details (see Tracking)](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#security-group-connection-tracking])
+	- [Comparison between Security Group and ACL (stateless)](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Security.html#VPC_Security_Comparison])
+- SG Rules include: Inbound and Outbound rule sets:
+	- Type: TCP
+	- Protocol: e.g., HTTP, SSH
+	- Port Ranges: e.g., Port 22 (SSH), Port 53 (UDP), Port 3060 (MySQL), Port 80 (http), Port 443 (https)...
+	- Source/Destination: Since It's a Layer 5 Firewall, it supports:
+	- IP addresses, CIDRs (Layer 4 info)
+	- a Security Group (Layer 5 info)
+	- It can auto-reference itself in an Inbound rules' Source:
+	- It allows traffic from itself
+	- All resources in the same SG are allowed to communicate to each other
+- Implicit Deny: Explicit Allow > Implicit Deny
+	- There is no explicit denies
+	- All rules are analyzed
+	- If a rule matches, the request is allowed
+	- If there is no match, the request is implicitly denied
 - Types:
 	- Default SG in a default VPC:
 		- It's created at the same time as a VPC
@@ -806,15 +809,6 @@ EBS Optimization
 	- Then the bastion host basically just forwards the connection through SSH/ADP to private instances
 	- All what we need to do is harden our bastion host as strongly as possible because It's exposed to the public
 	- Then, we don't have to worry about hardening our private instances in our private subnet
-- Best Practice:
-	- Bastion hosts must be kept updated, and security hardened and, audited regularly
-	- Multifactor authentication, ID federation, and/or IP blocks
-	- It's recommended to add tags to be able to differentiate from other regular EC2 instances
-	- Create a specific SG for bastion hosts:
-		- Since bastion hosts require specific rules, we could make them in a unique SG
-		- The SG could then be shared with bastion hosts only
-		- It will allow to reduce bastion hosts creation overhead
-	- SSH forwarding: it allows to connect to the private instance through the bastion host without leaving SSH keys within the bastion host
 - For more details:
 	- [SSH forwarding](https://aws.amazon.com/blogs/security/securely-connect-to-linux-instances-running-in-a-private-amazon-vpc/)
 	- [A new way to securely connect to instances without having to use a bastion or open SSH ports](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html)
@@ -854,10 +848,6 @@ EBS Optimization
 	- It requires a Public Subnet and a Public Elastic IP
 	- It understands and allow session traffic (layer 5)
 	- It's scalable but isn't highly available by design (Redundant): if an AZ fails, all underlying NAT Gateway will fail
-	- Best Practice:
-		- We need 1 NAT Gateway by AZ
-		- We need a Single Route table for each AZ (each NAT Gateway)
-		- Each NAT Gateway should be then associates with all private subnets of the related AZ
 	- Performance:
 		- Initially 5GB of bandwidth
 		- It can scale to 45GB
@@ -874,9 +864,6 @@ EBS Optimization
 	- Disadvantage:
 		- It's a single point of failure
 		- If the instance is terminated, the route status: blackhole
-	- Use cases: there is only one use case
-		- When cost saving is absolutely required and, a NAT and bastion hosts are needed
-		- We could then combine bastion host and NAT in the same machine
 	- For more details:
 		- [NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html)
 		- [NAT Gateway vs. NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-comparison.html)
@@ -903,19 +890,6 @@ EBS Optimization
 - Data transit:
 	- It's encrypted
 	- It uses AWS global-backbone for VPC peering cross-region: low latency and higher performance than public internet
-- Limits:
-	- VPC CIDR blocks can't overlap
-	- Transitive Peering is NOT Possible:
-		- A VPC can't talk to another VPC through a 3rd VPC
-		- A Direct peering is required between 2 VPCs so that they can talk to each other
-	- Cross-Region:
-		- An SG can't be referenced from another region
-		- IPv6 support isn't available cross-region
-- Use cases:
-	- To make a service that is running in a single VPC accessible to other VPCs
-	- To connect our VPC to a vendor VPC or a partner VPC to access an application
-	- To give access to our VPCs for security audit
-	- We have a requirement to split an application up into multiple isolated network to limit the blast raduis in the event of network based attacks
 
 </details>
 
@@ -949,13 +923,8 @@ EBS Optimization
 		- It provides multiple DNS names: 1 per selected subnet + 1 general DNS name (not specific for an AZ)
 		- It replaces the default service public DNS when "Private DNS Names" feature is enabled
 		- [For more details about AWS Services endpoint](https://docs.aws.amazon.com/general/latest/gr/rande.html)
-
 - Limits:
 	- Gateway endpoints are used via route
-- Use cases:
-	- An entire VPC is private without an Internet Gateway
-	- A specific private instance needs to access public services
-	- To access resources restricted to specific VPCs or endpoints (private S3 buckets)
 - [For more details about Interface endpoints](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-endpoints.html)
 
 </details>
@@ -991,11 +960,6 @@ EBS Optimization
 	- The OS is configured with the public IPv6
 - DNS Name:
 	- It'sn't allocated to IPv6 addresses
-- Limits:
-	- It'sn't currently supported across every AWS product
-	- It'sn't currently supported with every feature
-	- It'sn't currently supported by VPNs, customer gateways, and VPC endpoints
-	- [For more details]()
 
 </details>
 
@@ -1013,32 +977,86 @@ EBS Optimization
 </details>
 
 <details>
-<summary>Flow Logs</summary>
+<summary>Use cases</summary>
 
-</details>
-
-<details>
-<summary>Load Balancers</summary>
+- NACL:
+	- Because of its management overhead (4 sets of rules for each communication),
+	- They tend not to be used all that much generally in production usage (Security Groups are preferred)
+	- They're used when we have an explicit deny that we would like to add (E.g., an IP @ we were attacked from)
+- NAT Instance:
+	- There is only one use case
+	- When cost saving is absolutely required and, a NAT and bastion hosts are needed
+	- We could then combine bastion host and NAT in the same machine
+- VPC Peering:
+	- To make a service that is running in a single VPC accessible to other VPCs
+	- To connect our VPC to a vendor VPC or a partner VPC to access an application
+	- To give access to our VPCs for security audit
+	- We have a requirement to split an application up into multiple isolated network to limit the blast raduis in the event of network based attacks
+- VPC EndPoint:
+	- An entire VPC is private without an Internet Gateway
+	- A specific private instance needs to access public services
+	- To access resources restricted to specific VPCs or endpoints (private S3 buckets)
 
 </details>
 
 <details>
 <summary>Limits</summary>
 
+- VPC max/min netmask: /16 ... /28
+- Subnet max/min netmask: /16 ... /28
+- VPC Peering:
+	- VPC CIDR blocks can't overlap
+	- Transitive Peering is NOT Possible:
+		- A VPC can't talk to another VPC through a 3rd VPC
+		- A Direct peering is required between 2 VPCs so that they can talk to each other
+	- Cross-Region:
+		- An SG can't be referenced from another region
+		- IPv6 support isn't available cross-region
+- IPv6:
+	- It'sn't currently supported across every AWS product
+	- It'sn't currently supported with every feature
+	- It'sn't currently supported by VPNs, customer gateways, and VPC endpoints
+	- [For more details]()
 
 </details>
 
 <details>
-<summary>Conventions</summary>
+<summary>Best practices</summary>
 
-- Subnet Name: sn-[public/private]-[AZ]: sn-public-a; sn-private-a
-- Subnet range:
-	- In some cases, humans do need to understand the networking structure that we use inside a VPC
-	- So, we could match a subnet's CIDR to its AZ and its application tear:
-	- E.g., for a VPC 10.0.0.0/16 with Subnets: /24 + 2 AZs + 3 tiers:
-		- For AZ1: (Tier 1, 10.0.11.0); (Tier 2: 10.0.21.0); (Tier 3: 10.0.31.0)
-		- For AZ2: (Tier 1, 10.0.12.0); (Tier 2: 10.0.22.0); (Tier 3: 10.0.32.0)
-- Peering Connection name: pc-[Requester VPC name]-[Accepter VPC name]. E.g., pc-VPC1-VPC2
+- DNS: Always enable VPC DNS hostnames and, VPC DNS resolution
+- RT:
+	- It's recommended not to update the main route table
+	- It's particularly recommended not to add the route to the Internet Gateway in the main route table:
+	- Since by default, all VPC's Subnets are associated "implicitly" to the main route table
+	- All existing and future subnets could be public by default (if Public IP is enabled)
+- NACLs:
+	- Inbound and Outbound Rules # should use an increment of 100:
+		- 100 for the 1st IPv4 rule, 101 for the 1st IPv6 rule
+		- 200 for the 2nd IPv4 rule, 201 for the 2nd IPv6 rule
+	- Ensure that you place the DENY rules earlier in the table than the ALLOW rules that open the wide range of ephemeral ports
+- Bastion Host - JumpBox:
+	- It must be kept updated, its security hardened and, audited regularly
+	- Multifactor authentication, ID federation, and/or IP blocks
+	- It's recommended to add tags to be able to differentiate from other regular EC2 instances
+	- Create a specific SG for bastion hosts:
+		- Since bastion hosts require specific rules, we could make them in a unique SG
+		- The SG could then be shared with bastion hosts only
+		- It will allow to reduce bastion hosts creation overhead
+	- Use SSH forwarding: it allows to connect to the private instance through the bastion host without leaving SSH keys within the bastion host
+- NAT Gateway:
+	- For an HA architecture
+	- We need 1 NAT Gateway by AZ
+	- We need a Single Route table for each AZ (each NAT Gateway)
+	- Each NAT Gateway should be then associates with all private subnets of the related AZ
+- Create conventions:
+	- Subnet Name: sn-[public/private]-[AZ]: sn-public-a; sn-private-a
+	- Peering Connection name: pc-[Requester VPC name]-[Accepter VPC name]. E.g., pc-VPC1-VPC2
+	- Subnet range:
+		- In some cases, humans do need to understand the networking structure that we use inside a VPC
+		- We could match a subnet's CIDR to its AZ and its application tear
+		- E.g., for a VPC 10.0.0.0/16 with Subnets: /24 + 2 AZs + 3 tiers:
+		- AZ1: (Tier 1, 10.0.11.0); (Tier 2: 10.0.21.0); (Tier 3: 10.0.31.0)
+		- AZ2: (Tier 1, 10.0.12.0); (Tier 2: 10.0.22.0); (Tier 3: 10.0.32.0)
 
 </details>
 
@@ -3088,8 +3106,9 @@ EBS Optimization
 		- 1st is "shirt-color" with value "R" and
 		- 2nd is "shirt-size" with value "M"
 		- Item Total Size is 23 bytes
-- Table's hard max LSI #: 5
-- Table's default max GSI #: 20 (could be increased by a support ticket)
+- Tables' hard max LSI #: 5
+- Tables' default max GSI #: 20 (could be increased by a support ticket)
+- Partitions max WCU: 1,000 WCU
 - [For more details](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html)
 
 </details>
