@@ -3,6 +3,7 @@
 - [Infrastructure](#infrastructure)
 - [Security: Identity and Access Control (IAM)](#security-identity-and-Access-control-iam)
 - [Compute - Elastic Cloud Computing (EC2))](#compute---elastic-cloud-computing-ec2)
+- [Serverless Compute - Lambda](serverless-compute---lambda)
 - [Networking - Virtual Private Cloud (VPC)](#networking---virtual-private-cloud-vpc)
 - [Networking - Route 53](#networking---route-53)
 - [Storage - Simple Storage Service (S3))](#storage---simple-storage-service-s3)
@@ -505,6 +506,27 @@
 - When a lambda function is executed, it's downloaded to a fresh runtime environment 
 - Limit: 128 MB to 3008 MB 
 
+</details>
+
+<details>
+<summary>Triggers</summary>
+
+- API Gateway: api application-services 
+- AWS IoT
+- Alexa Skills Kit 
+- Alexa Smart Home
+- Application Load Balancer
+- CloudFront
+- CloudWatch Events
+- CloudWatch Logs
+- CodeCommit
+- Cognito Sync Trigge: authentication aws identity mobile-services sync 
+- DynamoDB
+- Kinesis
+- S3
+- SNS
+- SQS
+ 
 </details>
 
 <details>
