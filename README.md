@@ -1307,6 +1307,7 @@ EBS Optimization
 - ARN:
 	- Format: arn:partition:service:region:account:
 	- E.g., arn:aws:cloudfront::191449997525:?
+- [S3 FAQ](https://aws.amazon.com/s3/faqs/)
 
 </details>
 
@@ -1663,6 +1664,7 @@ EBS Optimization
 		- 1- Explicit Denies are the top priority
 		- 2- Explicit Allows are the second priority
 		- 3- Implicit Denies are the default
+	- ![S3 Authorization process](https://dmhnzl5mp9mj6.cloudfront.net/security_awsblog/images/AuthZDiagram.png)
 - Client-side Encryption:
 	- It's the responsibility of the client/application:
 		- Encryption/decryption process (CPU intensive process)
@@ -1720,6 +1722,41 @@ EBS Optimization
 </details>
 
 <details>
+<summary>Monitoring</summary>
+
+- S3 Log requests:
+	- All requests to S3 bucket could be logged
+	- They could be stored in another S3 bucket in the same AWS account or in a completely different AWS account
+
+</details>
+
+<details>
+<summary>Pricing</summary>
+</details>
+
+<details>
+<summary>Use cases</summary>
+
+- Use IAM policies if:
+	- We need to control access to AWS services other than S3: 
+		- IAM policies will be easier to manage since you can centrally manage all of your permissions in IAM, instead of spreading them between IAM and S3
+    - You have numerous S3 buckets each with different permissions requirements: 
+		- IAM policies will be easier to manage since you don’t have to define a large number of S3 bucket policies and can instead rely on fewer, more detailed IAM policies
+    - You prefer to keep access control policies in the IAM environment
+- Use S3 bucket policies if:
+	- You want a simple way to grant cross-account access to your S3 environment, without using IAM roles
+    - Your IAM policies bump up against the size limit (up to 2 kb for users, 5 kb for groups, and 10 kb for roles) 
+	- S3 supports bucket policies of up 20 kb
+    - You prefer to keep access control policies in the S3 environment
+- S3 ACL:
+	- It's NOT recommended
+	- It's a legacy access control mechanism that predates IAM
+	- If it's already used and is sufficient, there is no reason to change
+- [Controlling Access to S3 Resources](https://aws.amazon.com/blogs/security/iam-policies-and-bucket-policies-and-acls-oh-my-controlling-access-to-s3-resources/)
+
+</details>
+
+<details>
 <summary>Limits</summary>
 
 - Unlimited storage
@@ -1730,16 +1767,6 @@ EBS Optimization
 - Hard limit of 7 days for presigned URL (expiration)
 
 </details>
-
-<details>
-<summary>S3 Log requests</summary>
-
-- All requests to S3 bucket could be logged
-- They could be stored in another S3 bucket in the same AWS account or in a completely different AWS account
-
-</details>
-
-- [S3 FAQ](https://aws.amazon.com/s3/faqs/)
 
 ---
 
