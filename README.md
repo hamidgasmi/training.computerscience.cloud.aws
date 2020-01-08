@@ -227,7 +227,10 @@
 		- [EBS initialize](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-initialize.html)
 - Enhanced Networking - SR-IOV:
 	- It stands for Single Root I/O volume
-	- Opposite to the traditional network virtualization that is using Multi-Root I/O Volume (MR-IOV) where a software-based hypervisor is managing virtual controllers of virtual machines to access one physical network card (slow)
+	- Opposite to the traditional network virtualization
+		- Which is using Multi-Root I/O Volume (MR-IOV) 
+		- A software-based hypervisor is managing virtual controllers of virtual machines to access one physical network card 
+		- It's slow
 	- SR-IOV allows virtual devices (controllers) to be implemented in hardware (virtual functions)
 	- In other words, it allows a single physical network card to appear as multiple physical devices
 	- Each instance be given one of these (fake) physical devices
@@ -273,6 +276,10 @@
 
 <details>
 <summary>Resilience</summary>
+
+- See Spread Placement Group
+- See Partition Placement Group
+
 </details>
 
 <details>
@@ -319,6 +326,8 @@
 			- IAM Roles associated with Amazon Elastic Compute Cloud (EC2) instances via Instance Profiles
 			- Temporary credentials are available to the Instance
 			- This is recommended for EC2 environments
+- See Security Group in VPC section
+- See NACL in VPC section
 - Encryption:
 	- Volume encryption uses EC2 host hardware to encrypt data at rest and in transit between EBS and EC2 instance
 	- Encryption generates a Data Encryption Key (DEK) from a Customer Master Key (CMK) in each region
@@ -445,6 +454,142 @@
 	- AWS recommends homogenous instances within cluster placement groups
 	- We might get a capacity issue when we ask to launch additional instances in an existing placement group
 
+
+</details>
+
+---
+
+## Serverless Compute - Lambda
+
+<details>
+<summary>Description</summary>
+
+- It's a Function as a Service (FaaS):
+	- It care of provisioning and managing the servers where to run the code
+    - It's an abstraction layer where AWS manages everything:
+		- Data centers, hardware, Assembly code/Protocols, OS, Application layer/AWS APIs, scaling
+    	- All we need to worry about is our code
+		- It scales automatically: 2 requests => 2 independent functions are triggered
+- It supports Event-Driven architecture:
+	- It runs our code in response to events: this includes schedule time 
+    - These events could be changes to data in S3 bucket, or a DynamoDB table, etc
+    - These events are called triggers 
+- It runs in response to HTTP requests using AWS API Gateway or API calls made using the AWS SDKs 
+- It's stateless by design: each run is clean
+- It supports different languages:  Node.js, Java, Python, C#, PowerShell, Ruby
+- It can consumes:
+	- Internet API endpoints or Other Services 
+	- Other Lambda functions (a Lambda Function can trigger other Lambda functions)
+- It could be allowed to access a VPC:  
+	- It allows access to private resources
+	- It's slightly slow to start 
+	- It an IP address
+	- It inherits any of the networking configuration inside the VPC (custom DNS, custom routing)
+	- [For more details](https://docs.aws.amazon.com/lambda/latest/dg/configuration-vpc.html)
+
+</details>
+
+<details>
+<summary>Architecture</summary>
+
+- ![How it works](https://d2908q01vomqb2.cloudfront.net/22d200f8670dbdb3e253a90eee5098477c95c23d/2018/01/21/AR_Diagram_010418.png)
+
+</details>
+
+<details>
+<summary>Runtime environment</summary>
+
+- It's a temporary environment where the code is running 
+- It's used by Lambda function to store some files:
+	- E.g., Libraries when Lambda includes additional libraries
+- When a lambda function is executed, it's downloaded to a fresh runtime environment 
+- Limit: 128 MB to 3008 MB 
+
+</details>
+
+<details>
+<summary>Scalability</summary>
+
+- It scales automatically: 2 requests => 2 independent functions are triggered
+- **Reserved concurrency**:
+	- Concurrency is subject to a Regional limit that is shared by all functions in a Region (see limit section)
+	- When a function has reserved concurrency, no other function can use that concurrency 
+	- It ensures that it can scale to, but not exceed, a specified number of concurrent invocations 
+	- It ensures to not lose requests due to other functions consuming all of the available concurrency 
+	- [For more details](https://docs.aws.amazon.com/lambda/latest/dg/configuration-concurrency.html)
+
+</details>
+
+<details>
+<summary>Consistency</summary>
+</details>
+
+<details>
+<summary>Resilience</summary>
+
+- It's HA
+- It runs in multiple AZs to ensure that it's available to process events in case of a service interruption in a single AZ 
+- [For more details](https://docs.aws.amazon.com/lambda/latest/dg/security-resilience.html)
+</details>
+
+<details>
+<summary>Disaster Recovery</summary>
+</details>
+
+<details>
+<summary>Security</summary>
+
+- Execution role: 
+	- It's the role that Lambda assumes to access AWS services
+	- It gets temporary security credentials via STS 
+	- It's basic permission is to CloudWatch
+
+</details>
+
+<details>
+<summary>Monitoring/Auditing/Debugging</summary>
+
+- AWS X-Ray:
+	- It collects data about events that a function processes, 
+	- It identifies the cause of errors in an serverless applications 
+	- It lets trace requests to an application's API, function invocations, and downstream calls
+- CloudWatch
+	- 1 Log Group per Lambda Function
+	- 1 Log Stream per period of time
+
+</details>
+
+<details>
+<summary>Pricing</summary>
+
+- Number of Requests: 
+	- 1st 1 million requests are free 
+	- $0.20 per 1 million requests
+- Duration and Memory: 
+	- It's calculated from the time our code begins executing until it returns or terminates
+    - It's rounded up to the nearest 100ms
+    - It depends on the amount of memory we allocate to our function
+	- We're charged $0.00001667 for every GB-second used. 
+
+</details>
+
+<details>
+<summary>Use cases</summary>
+</details>
+
+<details>
+<summary>Limits</summary>
+
+- Function timeout: 900 s (15 minutes)
+- Function memory allocation: 128 MB to 3,008 MB, in 64 MB increments
+- Max concurrent executions: 1,000 per Region shared by all functions in a Region (default limit: it can be increased)
+
+</details>
+
+<details>
+<summary>Best practices</summary>
+
+- If a Lambda function is configured to connect to a VPC, specify subnets in multiple AZs to ensure high availability
 
 </details>
 
