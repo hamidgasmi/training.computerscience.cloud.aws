@@ -1,4 +1,5 @@
 # AWS:
+
 ## Table of Contents
 - [Infrastructure](#infrastructure)
 - [Security: Identity and Access Control (IAM)](#security-identity-and-Access-control-iam)
@@ -196,6 +197,7 @@
 
 </details>
 
+<details>
 <summary>Bootstrap</summary>
 
 - It's the process of providing "build" directives to an EC2 instance
@@ -623,39 +625,89 @@
 <details>
 <summary>Description</summary>
     
-It is a managed container engine. 
-It allows Docker containers to be deployed and managed within AWS environments. 
-It can use infrastructure clusters based on EC2 or Fargate where AS manages the backing infrastructure. 
-A cluster in ECS is a container. 
-A task: 
-	It  is a copy of our application. 
-    Task definition could be used to create one or more running copies of a given application. 
-    A task role is how we can give the application the permissions to interact with other AWS resources. 
-    We can specify the amount of resources to give to a particular task 
-- 2 Modes:
+- It's a managed container engine
+- It allows Docker containers to be deployed and managed within AWS environments
+- An **ECS container instance**:
+	- It's an EC2 instance 
+	- It runs the ECS Container Agent
+- A **Cluster** 
+	- It's a container
+	- It's a logical collection of ECS resources (either ECS EC2 instances or ECS Fargate infrastructure)
+- A **Task Definition**:
+	- It Defines an application
+	- It's similar to a Dockerfile but for running containers in ECS 
+	- It can contain multiple containers
+	- It's used by ECS **Placement Engine** to create 1 or more running copies of a given application (Tasks)
+- A **Container Definition**: 
+	- Inside a task definition, it defines the individual containers a task uses 
+	- It controls the CPU and memory each container has, in addition to port mappings for the container 
+- A **Task** is a copy of an application
+	- It's a single running copy of any containers
+	- It's defined by a task definition
+	- It's one working copy of an application (e.g., DB and web containers)
+	- It's usually made of 1 or two containers that work together
+	- E.g., an nginx container with a php-fpm container 
+	- We can ask ECS to start or stop a task
+- A **Service**: 
+	- It allows task definitions to be scaled by adding additional tasks 
+	- It defines minimum and maximum values
+- A **Registry**
+	- It's a storage for container images
+	- It's used to download image to create containers
+	- E.g., Amazon Elastic Container Registry or [Dockerhub](https://hub.docker.com/)
+- 2 Modes: ECS can use infrastructure clusters based on EC2 or Fargate:
 	- ECS with **EC2 Mode**:
-		- Architecture: It's NOT serverless
-		- Resources: Cluster + VPC + Subnet + Auto Scaling group with a Linux/Windows AMI
-		- Task: **EC2 Task**
-	- ECS with **Fargate mode**:
-		- Architecture: It's serverless
-		- Resources: Cluster + VPC (optional) + Subnets (optional)
-		- Task: **Fargate Task**
+	- ECS with **Fargate mode**
 
 </details>
 
 <details>
-<summary>ECS with EC2 Mode Architecture</summary>
+<summary>Architecture</summary>
+
+- ECS: Scheduling and Orchestration, Cluster Manager, Placement Engine 
+- EC2 Instance: OS + Docker Agent + ACS Agent
+- ![Architecture](https://www.allthingsdistributed.com/images/ecs1.png)
+- ![ECS EC2 vs. ECS Fargate](https://datacenternotes.files.wordpress.com/2018/10/fargate-1.png)
+
 </details>
 
 <details>
-<summary>ECS with Fargate mode Architecture</summary>
+<summary>EC2 Mode</summary>
 
+- It's NOT serverless
+- It resources are: Cluster + VPC + Subnet + Auto Scaling group with a Linux/Windows AMI
+- Task: **EC2 Task**
+- The container instance is owned and managed customers
 
-</details>	
+</details>
+
+<details>
+<summary>Fargate Mode</summary>
+
+- It's serverless
+- It's a managed service: AWS manages the backing infrastructure
+- Its resources are: Cluster + VPC (optional) + Subnets (optional)
+- Task: **Fargate Task**
+- Tasks are auto placed: AWS Fargate manages the task execution
+- There's not any EC2 instances to manage anymore but behind the scene, it uses also EC2 instances
+- Each task comes with a dedicated ENI, a private IP @ 
+- All containers of the same task can communicate with each other via localhost 
+- Inbound and outbound task communication goes through the ENI 
+- A public IP @ can be enabled as well.
+
+</details>
 
 <details>
 <summary>Scalability</summary>
+
+- EC2 Mode by Auto Scaling Group
+	- There's not obvious metric to scale a cluster
+	- There's not integration to scale when the task placement fails because of insufficient capacity
+    - Auto-scaling group and ECS are not aware of each other: It makes task deployments very hard during cluster scale in or rolling updates via CloudFormation
+    - We have to scale down without killing running tasks which is an even more significant challenge for long lived tasks
+- Fargate mode: Scale out and in automatically:
+- [For more details](https://cloudonaut.io/ecs-vs-fargate-whats-the-difference/)
+
 </details>
 
 <details>
@@ -664,6 +716,13 @@ A task:
 
 <details>
 <summary>Resilience</summary>
+
+- EC2 Mode: 
+	- It's not resilient by design
+	- It's the responsability of customer to design it HA architecture (2 or 3 AZs)
+- Fargate mode:
+	- 
+
 </details>
 
 <details>
@@ -673,7 +732,7 @@ A task:
 <details>
 <summary>Security</summary>
 
-- Task Role
+- A **Task Role** gives a task (an application) the permissions to interact with other AWS resources 
 
 </details>
 
@@ -683,6 +742,10 @@ A task:
 
 <details>
 <summary>Pricing</summary>
+
+- EC2 Mode: ECS is free of charge. We only pay for the EC2 instances
+- Fargate mode: We pay for running tasks
+
 </details>
 
 <details>
