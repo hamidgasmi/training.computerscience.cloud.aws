@@ -3,7 +3,8 @@
 - [Infrastructure](#infrastructure)
 - [Security: Identity and Access Control (IAM)](#security-identity-and-Access-control-iam)
 - [Compute - Elastic Cloud Computing (EC2))](#compute---elastic-cloud-computing-ec2)
-- [Serverless Compute - Lambda](serverless-compute---lambda)
+- [Serverless Compute - Lambda](#serverless-compute---lambda)
+- [Containerized Compute - Elastic Container Service (ECS)](#containerized-compute---elastic-container-service-ecs)
 - [Networking - Virtual Private Cloud (VPC)](#networking---virtual-private-cloud-vpc)
 - [Networking - Route 53](#networking---route-53)
 - [Storage - Simple Storage Service (S3))](#storage---simple-storage-service-s3)
@@ -526,7 +527,7 @@
 - S3
 - SNS
 - SQS
- 
+
 </details>
 
 <details>
@@ -614,6 +615,88 @@
 - If a Lambda function is configured to connect to a VPC, specify subnets in multiple AZs to ensure high availability
 
 </details>
+
+---
+
+## Containerized Compute - Elastic Container Service (ECS)
+
+<details>
+<summary>Description</summary>
+    
+It is a managed container engine. 
+It allows Docker containers to be deployed and managed within AWS environments. 
+It can use infrastructure clusters based on EC2 or Fargate where AS manages the backing infrastructure. 
+A cluster in ECS is a container. 
+A task: 
+	It  is a copy of our application. 
+    Task definition could be used to create one or more running copies of a given application. 
+    A task role is how we can give the application the permissions to interact with other AWS resources. 
+    We can specify the amount of resources to give to a particular task 
+- 2 Modes:
+	- ECS with **EC2 Mode**:
+		- Architecture: It's NOT serverless
+		- Resources: Cluster + VPC + Subnet + Auto Scaling group with a Linux/Windows AMI
+		- Task: **EC2 Task**
+	- ECS with **Fargate mode**:
+		- Architecture: It's serverless
+		- Resources: Cluster + VPC (optional) + Subnets (optional)
+		- Task: **Fargate Task**
+
+</details>
+
+<details>
+<summary>ECS with EC2 Mode Architecture</summary>
+</details>
+
+<details>
+<summary>ECS with Fargate mode Architecture</summary>
+
+
+</details>	
+
+<details>
+<summary>Scalability</summary>
+</details>
+
+<details>
+<summary>Consistency</summary>
+</details>
+
+<details>
+<summary>Resilience</summary>
+</details>
+
+<details>
+<summary>Disaster Recovery</summary>
+</details>
+
+<details>
+<summary>Security</summary>
+
+- Task Role
+
+</details>
+
+<details>
+<summary>Monitoring</summary>
+</details>
+
+<details>
+<summary>Pricing</summary>
+</details>
+
+<details>
+<summary>Use cases</summary>
+</details>
+
+<details>
+<summary>Limits</summary>
+</details>
+
+<details>
+<summary>Best practices</summary>
+</details>
+
 
 ---
 
