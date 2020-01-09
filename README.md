@@ -217,6 +217,99 @@
 </details>
 
 <details>
+<summary>Elastic Network Interface (ENI)</summary>
+
+- It's a logical networking component in a VPC that represents a virtual network card 
+- It's attached to 1 Subnet (and 1 VPC, consequently)
+- It can be associated with a max of 5 Security Groups
+- Each EC2 instance is created with a **Primary ENI** device (**eth0**):
+- Additional ENI devices (eth1 ...) could be added to an EC2 instance, if supported
+- [Elastic Network Interfaces](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-eni.html?icmpid=docs_ec2_console)
+
+</details>
+
+<details>
+<summary>Private IP</summary>
+
+- It's associated to an ENI device
+- **Primary private IP** @:
+	- It's associated with the primary ENI device (eth0)
+	- It's created during the instance launch process
+	- It's **static**: it remains unchanged during instance lifetime
+		- It remains unchanged when an instance is in stopped state
+		- It remains unchanged when an stopped instance is restarted
+	- It's known by the instance OS: it's displayed by ifconfig command
+- **Secondary private IPs**:
+	- They're assigned when supported by the instance type the ENI is attached to
+	- **Are They known by the instance OS? Are they displayed by ipconfig**
+- They're within the IP range of the subnet their instance is associated with
+
+</details>
+
+<details>
+<summary>Public IP</summary>
+
+- It could be associated to an EC2 instance
+- It isn't configured on an instance itself
+- A [NAT](https://en.wikipedia.org/wiki/Network_address_translation) is done to translate between the private and the public addresses
+	- See Internet Gateway in [VPC description](#networking---virtual-private-cloud-vpc)
+	- It's unknown by the instance OS
+	- It isn't displayed by ipconfig command
+- It's **dynamic**:
+	- It's released when an instance is stopped
+	- It's released when an Elastic API is allocated to an instance (**To check**)
+	- There's not any public IP attached to a stopped instance
+	- It's changed when a stopped instance starts
+	- because the EC2 instance moves to a new physical EC2 host
+
+</details>
+
+<details>
+<summary>Elastic IP (EIP)</summary>
+
+- It's **Static**
+- It's **Public**
+- It's picked from AWS Elastic IP pool (it's NOT AZ specific) 
+- It replaces the normal public IP when it's allocated to a public instance:
+    - It changes the instance public DNS name
+	- It remains unchanged even if the instance is stopped 
+- When it's disassociated from an EC2 public instance, a new public IPv4 and public DNS are released and associated with the EC2 instance
+- It can be moved to a new instances 
+- It's charged (because they're in short supply)
+
+</details>
+
+<details>
+<summary>Private DNS</summary>
+
+- It only works inside its internal network (VPC)
+- It's based on the primary Private IP
+	- Format: **ip-0-0-0-0.ec2.internal**
+	- E.g., an EC2 instance which private IPv4 is 172.31.9.16, the private DNS will be ip-172-31-9-16.ec2.internal 
+- It remains unchanged during instance stop/start
+- It's released when the instance is terminated
+
+</details>
+
+<details>
+<summary>Public DNS</summary>
+
+- Resolution:
+	- It's resolved to the public address externally
+	- It's resolved to the the private address internally (in its VPC)
+	- When it's pinged inside the EC2 instance VPC, the private IP is returned
+	- When it's pinged outside of EC2 instance VPC (E.g., Internet), the public IP is returned
+- It's based on the Public IP (Public IP or Elastic IP):
+	- Format: **ec2-0-0-0-0.compute-1.amazonaws.com** 
+	- E.g., an EC2 instance with a public IPv4 54.164.90.18, its public DNS is: ec2-54-164-90-18.compute-1.amazonaws.com. 
+- It's **dynamic**:
+	- It's released when an instance is stopped
+	- There's not any public DNS attached to a stopped instance
+	- It's changed when a stopped instance starts 
+
+</details>
+
+<details>
 <summary>Performance</summary>
 
 - EBS Optimization: 
@@ -293,7 +386,7 @@
 <details>
 <summary>Security</summary>
 
-- Instance Role:
+- **Instance Role**:
 	- It's a type of IAM Role that could be assumed by EC2 instance or application
 	- An application that is running within EC2,
 		- It'sn't a valid AWS identity
@@ -330,8 +423,12 @@
 			- IAM Roles associated with Amazon Elastic Compute Cloud (EC2) instances via Instance Profiles
 			- Temporary credentials are available to the Instance
 			- This is recommended for EC2 environments
-- See Security Group in VPC section
-- See NACL in VPC section
+- **Security Group** (SG):
+	- It acts at the instance level, not the subnet level 
+	- See [VPC description](#networking---virtual-private-cloud-vpc)
+- **Network Access Control List** (NACL):
+	- It acts at the subnet level 
+	- See [VPC description](#networking---virtual-private-cloud-vpc)
 - Encryption:
 	- Volume encryption uses EC2 host hardware to encrypt data at rest and in transit between EBS and EC2 instance
 	- Encryption generates a Data Encryption Key (DEK) from a Customer Master Key (CMK) in each region
@@ -445,6 +542,7 @@
 <details>
 <summary>Limits</summary>
 
+- EC2 Instance (ENI) max SG association: 5
 - Spread Placement Group max instance #: 7
 - Partition Placement Group max instance #: 7 partitions per AZ
 
@@ -667,7 +765,7 @@
 - ECS: Scheduling and Orchestration, Cluster Manager, Placement Engine 
 - EC2 Instance: OS + Docker Agent + ACS Agent
 - ![Architecture](https://www.allthingsdistributed.com/images/ecs1.png)
-- ![ECS EC2 vs. ECS Fargate](https://datacenternotes.files.wordpress.com/2018/10/fargate-1.png)
+- ![ECS EC2 vs. ECS Fargate](https://d2908q01vomqb2.cloudfront.net/1b6453892473a467d07372d45eb05abc2031647a/2017/11/29/fargate-1.png)
 
 </details>
 
