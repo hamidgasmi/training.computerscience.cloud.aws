@@ -656,7 +656,7 @@
 - EC2 AMI:
 	- AMI baking (or AMI pre-baking): 
 	- Base installation: 
-	- Immutable architecture:
+	- **Immutable architecture**:
 		- It's a technique where servers (EC2 here) are never modified after they're created
 		- E.g., if a web app. failed for unknown reasons, 
 		- Rather than connecting to it, performing diagnostics, fixing it and hopefully getting it back into a working state,
