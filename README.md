@@ -125,6 +125,9 @@
 - It's a IaaS (Infrastructure as a Service) AWS Service
 - It takes 2mn to obtain and boot new server instances
 - It allows to quickly scale capacity both up and down as your computing requirement changes
+- It has 1 or more **storage volumes**
+	- It has a **Root Volume** is attached to an instance during the launch process
+	- Additional volume could be attached to an instance after it's launched
 - ARN:
 	- Format: arn:${Partition}:ec2:${Region}:${Account}:instance/${InstanceId}
 	- E.g., arn:aws:ec2::191449997525:instance/1234j8r3kdj
@@ -133,6 +136,8 @@
 
 <details>
 <summary>Architecture</summary>
+
+- ![Storage](https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/images/architecture_storage_windows.png)
 
 </details>
 
@@ -217,7 +222,138 @@
 </details>
 
 <details>
-<summary>Elastic Network Interface (ENI)</summary>
+<summary>Storage: Elastic Block Storage (EBS) Volume</summary>
+
+- It's a virtual hard disk in the cloud
+- It provides persistent block storage volumes for use with EC2 instances 
+- It's located in the same AZ as the EC2 instance it's attached to
+- It's automatically replicated within its AZ to protect from component failure
+- It supports a maximum throughput of 1,750 MiB/s per-instance
+- It supports a maximum IOPS: 80,000 per instance 
+- **General Purpose** (**gp2**): 
+	- It's SSD based storage
+	- 3 IOPS/GiB (100 IOPS - 16,000 IOPS)
+	- Bursts up to 3,000 IOPS (credit based)
+	- 1 GiB - 16 TiB size
+	- Max throughput p/vol of 250 MiB/s
+	- It's the default for most workloads 
+- **Provisioned IOPS** (**io1**):
+	- It's SSD based storage
+	- Volume Size of 4 GiB- 16TiB 
+	- up to 64,000 IOPS per volume
+	- Max throughput p/vol Of 1,000 MiB/s
+	- It's used for applications that require sustained IOPS performance
+	- E.g., Large database workloads
+- **Throughput Optimized** (**st1**):
+	- It's HDD based storage
+	- It has a Low storage cost
+	- It can't be a boot volume
+	- volume Size of 500GiB - 16TiB
+	- Per-volume max throughput of 500 MiB/s
+	- IOPS 500
+	- It's used for frequently accessed, throughput-intensive workloads
+	- E.g., streaming, big data 
+- **Cold HDD** (**sc1**): 
+	- It's HDD based storage
+	- It has the lowest storage cost
+	- Infrequently accessed data
+	- Cannot be a boot volume
+	- Volume size of 500 GiB - 16TiB 
+	- Per-volume max throuqhput of 250 MiB/s and 
+	- IOPS 250
+- It could be created at the same time as an instance is created 
+- It could be created from scratch (type, size, AZ, encryption, tags, ...) 
+- It could be created (restored) from a snapshot 
+	- It could be created in any AZ within the snapshot region 
+	- If a snapshot isn't encrypted, we could choose weather or not to create an encrypted volume 
+	- If a snapshot is encrypted, we can only create an encrypted volume 
+- More details:
+	- [I/O characteristics](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-io-characteristics.html) 
+	- [EBS Types](https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/EBSVolumeTypes.html)
+
+</details>
+
+<details>
+<summary>Storage: Instance Store (Ephemeral) Volume</summary>
+
+- It's located within the EC2 instance's host 
+- It's included as part of its instance's usage cost 
+- Its data is lost when:  
+	- The underlying disk drive fails
+	- The instance stops
+	- The instance terminates
+- There're EC2 instances that include: 
+	- Instance store volumes only: to create it: 
+		- Choose an AMI from Community AMIs > Select "Root Device Type" 
+		- Filter: "Instance Store" > choose a machine 
+	- A mix of Instance store volumes and EBS, to create it:
+		- Choose an instance which "Instance Storage (GB)" is different from "EBS Only"
+	- EBS volume only, to create it:
+		- Choose an instance which "Instance Storage (GB)" is "EBS Only"
+- [For more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/InstanceStorage.html)
+
+</details>
+
+<details>
+<summary>Storage: Snapshot</summary>
+
+- It's an **Incremental backup**
+	- At point in time T, a snapshot contains only changes made since T - 1
+	- The 1st snapshot contains the initial state of a disk (long)
+	- The following snapshots contain only the changes made since the previous snapshot
+- It doesn't have the limitation of incremental backup:
+	- A restore could be not possible if an intermediate backup (Backup i) is lost
+	- To restore a backup at time "t", all backups from 1 to t will be used
+- It's stored in S3:
+	- It doesn't have a storage limitation 
+- It's **crash consistent**:
+	- It's **consistent to their point-in-time**
+	- It's done transparently from the OS and any applications that are inside the instance
+	- It could potentially contain data in an inconsistent state: data that isn't persisted is lost
+- It could be created from a volume: 
+	- If a volume is encrypted, the snapshot will be encrypted 
+    - If a volume isn't encrypted, the snapshot won't be encrypted
+- It could be created from another snapshot: 
+	- It could be done by using "Copy Snapshot" feature 
+	- It could be done from one region to a new region 
+	- If the source snapshot isn't encrypted, the target snapshot could be encrypted 
+	- If the source snapshot is encrypted, the target snapshot will be encrypted 
+- **Snapshot Lifecycle Policy**: 
+	- It's possible to run a policy periodically: 
+	- Number of snapshots retained
+- ![Incremental snapshot](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/images/snapshot_1a.png)
+- For more details
+	- [AWS Docs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSSnapshots.html)
+	- [Crash Consistent vs. Application consistent](https://n2ws.com/blog/ebs-snapshot/ebs-snapshots-crash-consistent-vs-application-consistent)
+
+</details>
+
+<details>
+<summary>Amazon Machine Image (AMI)</summary>
+    
+- It is stored in S3 
+- **Instance Store-backed AMI**:
+	- It's for instance store backed instance
+	- It creates an instance with an instance store backed root volume
+	- It's created from a template which includes bootstrapping code
+- **EBS-backed AMI** 
+	- It's for EBS-backed instance
+	- It creates an instance with an EBS backed root volume
+	- It references: 
+		- Snapshots: they're created from volumes 
+	- Permission: who can use it to create a new instance: 
+    	- It's by default private for the account it is created in 
+    	- It could be shared with specific AWS accounts (no encryption) 
+    	- It could be public (no encryption)
+    - **Block device mapping**: 
+		- It stores a link between the snapshots and how they're mapped to the new instance 
+		- When an instance is launched, AWS will use Block device mapping to create new volumes and, it will know how to map them to the instance so they're accessible to the guest OS
+- [For more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ComponentsAMIs.html#storage-for-the-root-device)
+
+</details>
+
+<details>
+<summary>Network: Elastic Network Interface (ENI)</summary>
 
 - It's a logical networking component in a VPC that represents a virtual network card 
 - It's attached to 1 Subnet (and 1 VPC, consequently)
@@ -229,7 +365,7 @@
 </details>
 
 <details>
-<summary>Private IP</summary>
+<summary>Network: Private IP</summary>
 
 - It's associated to an ENI device
 - **Primary private IP** @:
@@ -247,7 +383,7 @@
 </details>
 
 <details>
-<summary>Public IP</summary>
+<summary>Network: Public IP</summary>
 
 - It could be associated to an EC2 instance
 - It isn't configured on an instance itself
@@ -265,7 +401,7 @@
 </details>
 
 <details>
-<summary>Elastic IP (EIP)</summary>
+<summary>Network: Elastic IP (EIP)</summary>
 
 - It's **Static**
 - It's **Public**
@@ -280,7 +416,7 @@
 </details>
 
 <details>
-<summary>Private DNS</summary>
+<summary>Network: Private DNS</summary>
 
 - It only works inside its internal network (VPC)
 - It's based on the primary Private IP
@@ -292,7 +428,7 @@
 </details>
 
 <details>
-<summary>Public DNS</summary>
+<summary>Network: Public DNS</summary>
 
 - Resolution:
 	- It's resolved to the public address externally
@@ -381,6 +517,9 @@
 
 <details>
 <summary>Disaster Recovery</summary>
+
+- See EBS Snapshot Lifecycle Policy
+
 </details>
 
 <details>
@@ -429,6 +568,10 @@
 - **Network Access Control List** (NACL):
 	- It acts at the subnet level 
 	- See [VPC description](#networking---virtual-private-cloud-vpc)
+- **Snapshot Permission**:
+	- It's by default private for the account it is created in 
+    - It could be shared with specific AWS accounts if it's not encrypted
+	- It could be public if it's not encrypted
 - Encryption:
 	- Volume encryption uses EC2 host hardware to encrypt data at rest and in transit between EBS and EC2 instance
 	- Encryption generates a Data Encryption Key (DEK) from a Customer Master Key (CMK) in each region
@@ -510,6 +653,28 @@
 
 - EC2 instance: 
 	- Monolothic application that require a traditional OS to work
+- EC2 AMI:
+	- AMI baking (or AMI pre-baking): 
+	- Base installation: 
+	- Immutable architecture:
+		- It's a technique where servers (EC2 here) are never modified after they're created
+		- E.g., if a web app. failed for unknown reasons, 
+		- Rather than connecting to it, performing diagnostics, fixing it and hopefully getting it back into a working state,
+		- We could just stop the instance and
+		- Launch a brand new one from its known working AMI and optionally
+		- Investigate offline the failed instance if necessary or terminate it
+	- Scaling and High-availability: see EC2 auto-scaling
+- EC2 storge:
+	- General Purpose (gp2) is the default for most workloads
+	- Provisioned IOPS (io1):
+		- Applications that require sustained IOPS performance
+		- Large database workloads 
+	- Throughput Optimized (st1):
+		- Frequently accessed, 
+		- Throughput-intensive workloads 
+		- E.g., Streaming, big data 
+	- Cold HDD (sc1): 
+		- Infrequently accessed data
 - Princing models:
 	- On Demand:
 		- Application with short term, spiky, or unpredictable workloads that can't be interrupted
@@ -542,6 +707,8 @@
 <details>
 <summary>Limits</summary>
 
+- EC2 EBS max throughput: 1,750 MiB/s per-instance
+- EC2 EBS max IOPS: 80,000 per instance (instance store volume if more is needed)
 - EC2 Instance (ENI) max SG association: 5
 - Spread Placement Group max instance #: 7
 - Partition Placement Group max instance #: 7 partitions per AZ
@@ -551,6 +718,13 @@
 <details>
 <summary>Best practices</summary>
 
+- To create **application-consistent** Snapshot, it's recommended:
+	- To stop the EC2 instance or to Freeze applications running on it
+	- To start the snapshot only when
+		- The application running on the instance are running on backup mode 
+		- The application running on the instance are "flushed" any in memory cache to disk 
+	- To unfreeze (release the "Freeze" operation), as soon as the snapshot starts (snapshot is consistent to its point-in-time)
+	- ![Application-Consistent Snapshot Flow](https://rg6051loyag2io6oe11p1rcg-wpengine.netdna-ssl.com/wp-content/uploads/2013/08/snapshot_scripts.png)
 - Clustered Placement Group:
 	- We should always try to launch all of the instances that go inside a placement group at the same time
 	- AWS recommends homogenous instances within cluster placement groups
@@ -819,7 +993,6 @@
 	- It's not resilient by design
 	- It's the responsability of customer to design it HA architecture (2 or 3 AZs)
 - Fargate mode:
-	- 
 
 </details>
 
