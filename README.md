@@ -225,8 +225,8 @@
 <summary>Storage: Elastic Block Storage (EBS) Volume</summary>
 
 - It's a virtual hard disk in the cloud
-- It provides persistent block storage volumes for use with EC2 instances 
-- It's located in the same AZ as the EC2 instance it's attached to
+- It's a persistent block storage volume for EC2 instances
+- It's located outside of the EC2 Host hardware but in the same AZ as the EC2 instance it's attached to
 - It's automatically replicated within its AZ to protect from component failure
 - It supports a maximum throughput of 1,750 MiB/s per-instance
 - It supports a maximum IOPS: 80,000 per instance 
@@ -276,12 +276,15 @@
 <details>
 <summary>Storage: Instance Store (Ephemeral) Volume</summary>
 
-- It's located within the EC2 instance's host 
-- It's included as part of its instance's usage cost 
-- Its data is lost when:  
-	- The underlying disk drive fails
-	- The instance stops
-	- The instance terminates
+- It's a non persistent storage
+	- It's based on [Non-Volatil Memory Express NVMe](https://blogs.cisco.com/datacenter/nvme-for-absolute-beginners)
+	- It has the highest Throughtput and IOPS (data is accessed simultaneously because of its thousands of queues and commands in each queue)
+	- Its data is lost when:  
+		- The underlying disk drive fails
+		- The underlying EC2 host fails
+		- The instance stops or terminates
+- It's located within the the EC2 Host hardware
+- It's included as part of its instance's usage cost
 - There're EC2 instances that include: 
 	- Instance store volumes only: to create it: 
 		- Choose an AMI from Community AMIs > Select "Root Device Type" 
@@ -512,6 +515,7 @@
 
 - See Spread Placement Group
 - See Partition Placement Group
+- EBS is automatically replicated within its AZ to protect from component failure
 
 </details>
 
@@ -572,29 +576,31 @@
 	- It's by default private for the account it is created in 
     - It could be shared with specific AWS accounts if it's not encrypted
 	- It could be public if it's not encrypted
-- Encryption:
-	- Volume encryption uses EC2 host hardware to encrypt data at rest and in transit between EBS and EC2 instance
-	- Encryption generates a Data Encryption Key (DEK) from a Customer Master Key (CMK) in each region
-	- When a volume is encrypted (or an instance is created), each volume is encrypted by a unique DEK
-	- Snapshot, AMI and volumes created from these AMI or snapshots will use the same DEK
-	- AWS KMS encryption is supported by most instance types (any of the current modern instance generation, especially those that use the nitro platform)
-	- There are some older generation instances which don't support it!
-	- EC2 instance and OS see plaintext data as normal (no any encryption):
-		- There is no performance impact
-		- Encrypted DEKs stored with EBS volume are decrypted by KMS using a CMK
-		- These decrypted DEKs (plaintext DEKs):
-			- They're given to EC2 Host which stores them in its memory
-			- It uses them to decrypt data into EC2 instance or encrypt data from EC2 instance to EBS
-			- When the instance is stopped/rebooted, the Host erases these plaintext DEKs
-		- So, AWS KMS isn't encrypting neither It's decrypting data
-	- When an encrypted EBS snapshot is copied into another region:
+- **AMI Permission**:
+	- Same as Snapshot permission
+- **Encryption in Transit**:
+	- It's done by EC2 host hardware to encrypt data in transit between an EC2 instance and its EBS storages
+- **Encryption At Rest**:
+	- It's done by EC2 host hardware to encrypt/decypt EC2 volumes:
+	- It uses [AWS KMS](#operations---key-management-service-kms) CMK to generates a **Data Encryption Key** (**DEK**) in each region
+		- AWS KMS encryption/decryption is supported by most instance types (Especially those that use the Nitro Platform)
+		- AWS KMS isn't encrypting neither It's decrypting EBS data
+	- It stores the DEK with each EC2 EBS volume
+	- It uses the same DEK to encrypt any EC2 volume, snapshots, AMIs
+	- It doesn't impact EC2 performance:
+		- EC2 instance and OS see plaintext data
+		- EC2 host hardware:
+			- It uses AWS KMS to decrypt EC2 DEK by using the related AWS KMS CMK
+			- It stores the plaintext DEK in its memory
+			- It uses the plaintext DEK to encrypt (decrypt) data from (into) EC2 instance to (from) an EBS volume
+			- It erases the plaintext DEK when the instance is stopped/rebooted
+	- Encryption from an OS perspective:
+		- It requires to to use an OS level encryption available on most OS (Microsoft Windows, Linux)
+		- It ensures that data is encrypted from from the OS perspective
+		- It's possible to use OS encryption + EC2 volume encryption at rest
+	- Snapshot: when an encrypted EBS snapshot is copied into another region:
 		- A new CMK should be created in the destination region
 		- The new snapshot will be encrypted
-	- Encryption from an OS perspective:
-		- AWS KMS isn't enough for that
-		- We need to use an OS level encryption available on most OS (Microsoft Windows, Linux)
-		- Only OS encryption will ensure that from an operating system perspective, the file's encrypted
-		- We're able to use both, though
 - For more details:
 	- [IAM Role For EC2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html)
 	- [ID roles use switch role ec2 instance profiles](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html)
@@ -660,10 +666,9 @@
 		- It's a technique where servers (EC2 here) are never modified after they're created
 		- E.g., if a web app. failed for unknown reasons, 
 		- Rather than connecting to it, performing diagnostics, fixing it and hopefully getting it back into a working state,
-		- We could just stop the instance and
-		- Launch a brand new one from its known working AMI and optionally
-		- Investigate offline the failed instance if necessary or terminate it
-	- Scaling and High-availability: see EC2 auto-scaling
+		- We could just stop it and launch a brand new one from its known working AMI and
+		- Optionally investigate offline the failed instance if necessary or terminate it
+	- Scaling and High-availability: see [Auto scaling Groups](#hybrid-and-scaling---auto-scaling-groups)
 - EC2 storge:
 	- General Purpose (gp2) is the default for most workloads
 	- Provisioned IOPS (io1):
