@@ -144,36 +144,68 @@
 <details>
 <summary>Families, Types and, Sizes</summary>
 
-- EC2 instances are grouped into families
-- Each family is designed for a specific broad type workload
+- Each EC2 family is designed for a specific broad type workload
 - A type determines a certain set of features
 - A Size decides the level of workload a machine can cope with
-- Families:
-	- General Purpose:
-		- A1: Arm-based machine
-		- T2, T3: Low-cost instance types; occasional traffic bursts (Credits)
-		- M4:
-		- M5, M5a, M5n: general workloads; 100% of resources at all times (24/7)
-	- Compute Optimized:
-		- C5, C5n, C4: Provides more capable CPU
-	- Memory Optimized:
-		- R5, R5a, R5n, R4: Optimize large amounts of fast memory
-		- X1e, X1: Optimize large amounts of fast memory
-		- High Memory, z1d
-	- Storage Optimized:
-		- I3, I3en: Deliver fast I/O
-		- D2, H1
-	- Accelerated Computing:
-		- P3, P2: Deliver GPU
-		- G4, G3: Deliver GPU
-		- F1: delivers FPGA
-- Instance name: Type + Generation # + [a] + [d] + [n] + ".Size"
-	- Type letter + Generation #: see item above (families)
-	- "a" if uses AMD CPUs
-	- "d" if It's NVMe storage +
-	- "n" if It's Higher speed networking +
+- Instance name: **Type + Generation number + [a] + [d] + [n] + ".[Size or Metal]"**
+	- Type letter + Generation #: see item below (families)
+	- "a" it's for AMD CPUs
+	- "d" it's for NVMe storage +
+	- "n" it's for Higher speed networking +
 	- ".Size": "nano", "micro", "small", "medium", "large", "xlarge", "nxlarge" (n > 2) and, "large"
-	- E.g.,: t2.micro, t2.2xlarge, t3a.nano, m5ad.4xlarhe
+	- ".metal" it's for bare metal instances 
+	- E.g.,: t2.micro, t2.2xlarge, t3a.nano, m5ad.4xlarge, i3.metal, u-6tb1.metal
+- **General Purpose** Family:
+	- A1: Arm-based machine
+		- Scale-out workloads, web servers
+	- T2, T3: 
+		- It's Low-cost instance types
+		- It uses Credits 
+		- It's for occasional traffic bursts (non for 24/7 workloads) 
+		- It's for general and occasional workloads
+		- E.g., test Web Servers, small DBs
+	- M4:
+	- M5, M5a, M5n: 
+		- They're for general workloads: 100% of resources at all times (24/7) 
+		- E.g., Application Servers
+- **Compute Optimized** Family:
+		- C5, C5n, C4: 
+			- They provides more capable CPU
+			- E.g., CPU intensive Apps/DBs
+- **Memory Optimized** Family:
+		- R5, R5a, R5n, R4: 
+			- Optimize large amounts of fast memory
+			- E.g., Memory Intensive Apps, memory intensive DBs
+		- X1e, X1: 
+			- Optimize large amounts of fast memory
+			- E.g., SAP HANA, Apache Spark
+		- High Memory (u-6tb1.metal, ..., u-24tb1.metal)
+		- z1d: 
+			- High compute capacity and a high memory footprint
+			- E.g., Ideal for electronic design automation, EDA
+			- E.g., Certain relational DB workloads with high per-core licensing costs
+- **Storage Optimized** Family:
+		- I3, I3en: 
+			- They Deliver fast I/O
+			- E.g., NoSQL DBs, Data Warehousing
+		- D2:
+			- Dense Storage
+			- E.g., Fileservers, Data Warehousing, Hadoop
+		- H1:
+		- High Disk Throughput 
+		- E.g., MapReduce-based workloads, 
+		- E.g., Distributed file systems such as HDFS and MapR-FS
+- **Accelerated Computing** Family:
+		- P3, P2: 
+			- They deliver GPU 
+			- They're for General Purpose GPU
+			- E.g., Machine Learning, Bitcoin Mining
+		- G4, G3: 
+			- They deliver GPU 
+			- E.g., Video Encoding, 3D Application Streaming
+		- F1: 
+			- It delivers FPGA
+			- E.g., Genomics research, financial analytics, real time video processing, big data
 - [For more details](https://aws.amazon.com/ec2/instance-types/)
 
 </details>
@@ -334,7 +366,8 @@
 <details>
 <summary>Amazon Machine Image (AMI)</summary>
     
-- It is stored in S3 
+- It's stored in S3
+- It contains base OS and any "baked" components
 - **Instance Store-backed AMI**:
 	- It's for instance store backed instance
 	- It creates an instance with an instance store backed root volume
@@ -342,15 +375,15 @@
 - **EBS-backed AMI** 
 	- It's for EBS-backed instance
 	- It creates an instance with an EBS backed root volume
-	- It references: 
-		- Snapshots: they're created from volumes 
-	- Permission: who can use it to create a new instance: 
+	- It references 1 or more Snapshots
+	- It contains **Block device mapping**: 
+		- It links its snapshots to how they're mapped to the new instance
+		- It's used when an instance is created to map its volumes to the instance
+	- It contains permission: who can use it to create a new instance: 
     	- It's by default private for the account it is created in 
     	- It could be shared with specific AWS accounts (no encryption) 
     	- It could be public (no encryption)
-    - **Block device mapping**: 
-		- It stores a link between the snapshots and how they're mapped to the new instance 
-		- When an instance is launched, AWS will use Block device mapping to create new volumes and, it will know how to map them to the instance so they're accessible to the guest OS
+    - ![Using an AMI](https://docs.amazonaws.cn/en_us/AWSEC2/latest/UserGuide/images/ami_lifecycle.png)
 - [For more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ComponentsAMIs.html#storage-for-the-root-device)
 
 </details>
@@ -503,11 +536,52 @@
 </details>
 
 <details>
-<summary>Scalability</summary>
+<summary>Operations</summary>
+
+- ![EC2 State Diagram](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/images/instance_lifecycle.png)
+- EBS backed-instance **Pending**: 
+	- A new instance is launched in a host within the selected AZ (Subnet) 
+	- EBS and/or Instance store volumes are created and attached to the instance 
+	- A default ENI (eth0) is attached to the instance:  
+		- A private IP within the EC2 subnet IP range is created
+		- A private DSN name is associated with the instance 
+	- A public IP is created and mapped to the instance eth0, if applicable (a public subnet + public IP sitting is enabled) 
+	- Bootstrap script is run 
+- EBS backed-instance **Stopping**: 
+	- It performs a normal shutdown and transition to a stopped state 
+	- All EBS volumes are kept 
+	- All Instance store volumes are detached from the instance (their data is lost) 
+	- Plaintext DEK is discarded from EC2 Host hardware, if applicable 
+	- Private DNS, IPv4 & IPv6 are unchanged
+	- Public DNS, IPv4 & IPv6 are released from the instance, if applicable (in case of public Subnet) 
+	- Charges related to the instance (instance and instance store volumes) is suspended 
+	- Charge related to EBS storage remains 
+- EBS backed-instance **Stopped**:
+	- Attach/detach EBS volumes
+	- Create an AMI
+	- Create a Snapshot
+	- Scale down/up: Change the kernel, ram disk, instance type
+- EBS backed-instance **Starting** (from stopped):
+	- An instance is launched in a new the host and in the intial AZ 
+	- EBS volumes are attached to the new instance
+	- Encrypted EBS volumes DEK is decrypted by KMS, if applicable
+	- The plaintext DEK is stored in EC2 host hardware, if applicable
+	- Bootstrap script is run? 
+	- Instance store volumes are back to their initial states when the instance was 1st started (or impacted by bootstrapping) 
+	- Private DNS, IPv4 & IPv6 are unchanged
+	- New Public DNS, IPv4 & IPv6  are attached to the instance, if applicable (in case of public Subnet). 
+ - EBS backed-instance **Rebooted**:
+	- The EC2's plaintext DEK is discarded
+	- "Starting" action are run?
+ - EBS backed-instance **Terminating**:
+	- Private IPv4 & IPv6 are released from the instance 
+	- Public IPv4 & IPv6 are released from the instance
+- [For more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.html)
+
 </details>
 
 <details>
-<summary>Consistency</summary>
+<summary>Scalability</summary>
 </details>
 
 <details>
@@ -734,7 +808,6 @@
 	- We should always try to launch all of the instances that go inside a placement group at the same time
 	- AWS recommends homogenous instances within cluster placement groups
 	- We might get a capacity issue when we ask to launch additional instances in an existing placement group
-
 
 </details>
 
