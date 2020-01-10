@@ -484,6 +484,17 @@
 <details>
 <summary>Performance</summary>
 
+- EBS-Optimized vs. non-EBS-Optimized instances:
+	- Legacy non-EBS-optimized instances:
+		- It used a shared networking path for data and storage communications
+		- It resulted in lower performance for storage and normal networking
+	- EBS-optimized mode:
+		- It was historically optional
+		- It's the default now
+		- It adds optimizations and dedicated communication paths for storage and traditional data networking 
+		- It allows consistent utilization of both 
+		- It's one required feature to support higher performance storage 
+	- ![EBS-Optimized vs. non-EBS-Optimized instances](https://blog.turbonomic.com/hs-fs/hubfs/Imported_Blog_Media/Screen-Shot-2018-05-24-at-11_46_41-AM-1024x477-4.png?width=1024&height=477&name=Screen-Shot-2018-05-24-at-11_46_41-AM-1024x477-4.png)
 - EBS Optimization: 
 	- It's about the performance of restoring a volume from a Snapshot
 	- When we restore a volume from a snapshot, it doesn't immediately copy all that data to EBS
