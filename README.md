@@ -598,9 +598,15 @@
 <details>
 <summary>Resilience</summary>
 
-- See Spread Placement Group
-- See Partition Placement Group
-- EBS is automatically replicated within its AZ to protect from component failure
+- An instance is located in a subnet which is located in an individual AZ
+	- It uses EBS storage that is also located in the instance AZ
+	- If its AZ fails, the instance fails
+	- It's NOT resilient by design across an AZ
+- EBS is automatically replicated within its AZ, though
+- Solution to improve EC2 resiliency:
+	- See Spread Placement Group
+	- See Partition Placement Group
+	- See Auto Scalling Group with 1 desired instance; 1 min instance; 1 max instance
 
 </details>
 
