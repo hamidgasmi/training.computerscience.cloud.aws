@@ -1,5 +1,11 @@
 # AWS:
 
+These repository is created from Linux Academy and A Cloud Guru courses: "AWS certified solutions architect - Associate Level"
+It includes
+	- AWS Services description (see the table of contents, below)
+	- AWS Cli commands (see aws_cli.sh file): in progress
+	- Anki flashcards export file
+	 
 ## Table of Contents
 - [Infrastructure](#infrastructure)
 - [Security: Identity and Access Control (IAM)](#security-identity-and-Access-control-iam)
