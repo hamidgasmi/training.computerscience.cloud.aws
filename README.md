@@ -3,8 +3,8 @@
 - These repository is created from Linux Academy course, [AWS certified solutions architect - Associate Level](https://linuxacademy.com/cp/modules/view/id/341)
 - It includes
 	- AWS Services description (see the table of contents, below): in progress
-	- AWS CLI commands (see aws_cli.sh file): in progress
-	- Anki flashcards export file: in progress
+	- [AWS CLI commands](https://github.com/hamidgasmi/training.computerscience.cloud.aws/blob/master/aws_cli.sh): it's still a work in progress
+	- [Anki flashcards](https://github.com/hamidgasmi/training.computerscience.cloud.aws/blob/master/aws-csaa_ankiflashcard.apkg) export file: 281 cards
 
 ## Table of Contents
 - [Infrastructure](#infrastructure)
