@@ -3,6 +3,8 @@
 - This repository is created from Linux Academy course, [AWS certified solutions architect - Associate Level](https://linuxacademy.com/cp/modules/view/id/341) and my readings of different websites such as AWS docs.
 - It includes
 	- AWS Services description (see the table of contents, below): in progress
+		- It describes AWS services from the architect role perspective
+		- There's particularly a section for the following topics: Scalability, Consistency, Resilience, Disaster Recovery, Security which includes Encryption, Pricing, Use cases, Limits and, Best practices
 	- [AWS CLI commands](https://github.com/hamidgasmi/training.computerscience.cloud.aws/blob/master/aws_cli.sh): it's still a work in progress
 	- [Anki flashcards](https://github.com/hamidgasmi/training.computerscience.cloud.aws/blob/master/aws-csaa_ankiflashcard.apkg) export file: 281 cards
 
