@@ -1,0 +1,3 @@
+- Compare DynamoDB, DynamoDB DAX and, ElastiCache from performance perspective (and pricing)
+- Compare S3, EBS, EFS, Storage Gateway from performance perspective
+- Add S3 

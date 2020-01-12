@@ -3782,6 +3782,7 @@
 - Serverless Applications that needs a web scale database, a serverless non relational database (not a fixed schema) + ID federation
 - When needing a web-scalable DBaaS product that provides integration with CloudWatch
 - When needing a lightweight, on-demand database product
+- For storing session data thanks to its single millisecond latency
 - It'sn't for relational data
 
 </details>
@@ -3820,8 +3821,8 @@
 - It's an in-memory cache
 - It's designed specifically for DynamoDB (it's the prefered solution with DynamoDB)
 - It delivers results in microseconds (~400 us):
-	- Rather than in the single-digit milliseconds available from DynamoDB (~5ms)
-	- When a DynamoDB item is read, it's returned to the application and store inside DAX
+	- Rather than in the single-digit milliseconds available from DynamoDB (~5 ms)
+	- When a DynamoDB item is read, it's returned to the application and stored inside DAX
 	- When it's read again, it's returned from DAX (without using DynamoDB): cache hit
 - It runs inside a VPC
 - It uses a cluster architecture with 1 or more nodes
@@ -3835,38 +3836,72 @@
 	- Query cache:
 		- It stores results of Query and Scan operations
 		- It caches based on the parameters specified
-- Consistency: It provides eventual consistency read
-- Resilience: It's HA (multi-AZs)
-- Use cases:
-	- Application that require microseconds response for reads
-	- Read attensive applications and we don't want to allocate its DynamoDB with a high RCU level
-	- Online stores during busy sale periods or popular products
-	- Applications that require eventual consistent read
-- Antipatterns:
-	- Applications that requires strongly consistent reads
-	- Application that don't require microseconds reads: optimizing our app. access pattern may be needed
-	- Write intensive Applications
-	- Legacy applications that already use a different caching solution: they won't get any benefit from DAX without significant retouling (refactoring)
-	- Existing applications that aren't compatible with DAX
 
 </details>
 
 <details>
-<summary>ElasticCache</summary>
+<summary>ElastiCache</summary>
 
-- It's a managed in-memory data store
-- It's a key value store
-- It supports the Redis or Memcached engines
+- It's a managed **In-Memory Key/Value store**
+- It supports the **Redis** or **Memcached** engines
 - It was historically used with DynamoDB
 - It's designed to operate with other products (outside of DynamoDB)
-- Use cases:
+- Latency: sub-millisecond
+
+</details>
+
+<details>
+<summary>Session management</summary>
+
+- Client-side cookies
+- Sticky Session on a CLB
+- Distributed Session Management: In-Memory Key/Value store (ElastiCache)
+- [More details](https://aws.amazon.com/caching/session-management/)
+- [Session Management Diagram](https://d1.awsstatic.com/product-marketing/caching-session-management-diagram-v2.c6856e6de83c4222dbc4853d9ff873f5542a86d8.PNG)
+
+</details>
+
+<details>
+<summary>Consistency</summary>
+
+- DAX provides eventual consistency read
+- ElastiCache for Redis ?
+- ElastiCache for Memcached ?
+
+</details>
+
+<details>
+<summary>Resilience</summary>
+
+- DAX is HA (multi-AZs)
+- ElastiCache for Redis supports replication (read replicas)
+- ElastiCache for Memcached doesn't support replication
+
+</details>
+
+<details>
+<summary>Use Cases</summary>
+
+- Session management:
+
+- DAX:
+	- Application that require microseconds response for reads
+	- Read attensive applications and we don't want to allocate its DynamoDB with a high RCU level
+	- Online stores during busy sale periods or popular products
+	- Applications that require eventual consistent read
+	- Antipatterns:
+		- Applications that requires strongly consistent reads
+		- Application that don't require microseconds reads: optimizing our app. access pattern may be needed
+		- Write intensive Applications
+		- Legacy applications that already use a different caching solution: they won't get any benefit from DAX without significant retouling (refactoring)
+		- Existing applications that aren't compatible with DAX
+- ElastiCache:
 	- Offloading database reads by caching responses, improving application speed and reducing costs
 	- It stores user session state: allowing for stateless compute instances (used for fault-tolerant architectures)
 	- It's generally used with key value databases
 	- But it can be used with SQL database engines
 
 </details>
-
 ---
 
 ## Hybrid and Scaling - Elastic Load Balancing
@@ -3931,11 +3966,24 @@
 <details>
 <summary>Sticky Session</summary>
 
+- It's also known as **Session Affinity**
+- It's available with CLB, only
 - It allows to bind a user's session to a specific EC2 instance
-- In other words, the LB is going to stick a user's session to a particular EC2 instance
+- In other words, the CLB is going to stick a user's session to a particular EC2 instance
 - It sends a user's requests to the same EC2 instance during a session
-- Available with CLB and
-- Used with Stateful servers: when a specific instance is caching a user session data
+- It makes web servers **stateful**
+- Pros:
+	- Sessions are stored within a web server:
+		- It eliminates network latency: retrieval of sticky sessions is generally fast
+		- It's cost effective: we're using an instance as both a web server and a caching solution
+- Cons:
+	- Resiliency: in the event of a failure, it's likely to lose the sessions that are stored on the failed node
+	- Scalability: in the event of scale-out scenario (number of web servers increase): 
+		- It's possible that the traffic may be unequally spread across the web servers as active sessions may exist on particular servers
+		- It can hender the scalability of an application
+- For more details
+	- [ELB sticky sessions](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-sticky-sessions.html)
+	- [Session management](https://aws.amazon.com/caching/session-management/)
 
 </details>
 
