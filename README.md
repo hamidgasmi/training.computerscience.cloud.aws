@@ -3857,7 +3857,7 @@
 - Sticky Session on a CLB
 - Distributed Session Management: In-Memory Key/Value store (ElastiCache)
 - [More details](https://aws.amazon.com/caching/session-management/)
-- [Session Management Diagram](https://d1.awsstatic.com/product-marketing/caching-session-management-diagram-v2.c6856e6de83c4222dbc4853d9ff873f5542a86d8.PNG)
+- ![Session Management Diagram](https://d1.awsstatic.com/product-marketing/caching-session-management-diagram-v2.c6856e6de83c4222dbc4853d9ff873f5542a86d8.PNG)
 
 </details>
 
@@ -3882,8 +3882,7 @@
 <details>
 <summary>Use Cases</summary>
 
-- Session management:
-
+- Session management
 - DAX:
 	- Application that require microseconds response for reads
 	- Read attensive applications and we don't want to allocate its DynamoDB with a high RCU level
@@ -3902,6 +3901,7 @@
 	- But it can be used with SQL database engines
 
 </details>
+
 ---
 
 ## Hybrid and Scaling - Elastic Load Balancing
