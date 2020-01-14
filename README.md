@@ -2728,14 +2728,19 @@
 <details>
 <summary>Resilience</summary>
 
-- It's region resilient: Its availability isn't impacted by an AZ failure
-	- It's recommnended though to have 1 mount target by AZ
+- Data is stored redundantly across multiple AZs
+	- It's region resilient: Its availability isn't impacted by an AZ failure
+- Mounted Targets aren't HA by design: It's recommended to have 1 mount target by AZ
 
 </details>
 
 <details>
 <summary>Security</summary>
 
+- Security Group:
+	- It's associated with mounted targets
+	- Protocol: NFS; Port: 2049; Source: Instance Security Group
+	- [For more details](https://docs.aws.amazon.com/efs/latest/ug/accessing-fs-create-security-groups.html#create-security-groups-console)
 - Encryption at rest:
 	- It's configured when creating a file system
 	- It's disabled by default
