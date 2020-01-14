@@ -1,6 +1,6 @@
 # AWS:
 
-- This repository is created from Linux Academy course, [AWS certified solutions architect - Associate Level](https://linuxacademy.com/cp/modules/view/id/341) and my readings of different websites such as AWS docs.
+- This repository is created from Linux Academy course, [AWS certified solutions architect - Associate Level](https://linuxacademy.com/cp/modules/view/id/341) and my readings of different websites such as AWS docs
 - It includes
 	- AWS Services description (see the table of contents, below):
 		- It describes AWS services from the architect role perspective
@@ -17,7 +17,7 @@
 - [Containerized Compute - Elastic Container Service (ECS)](#containerized-compute---elastic-container-service-ecs)
 - [Networking - Virtual Private Cloud (VPC)](#networking---virtual-private-cloud-vpc)
 - [Networking - Route 53](#networking---route-53)
-- [Storage - Simple Storage Service (S3))](#storage---simple-storage-service-s3)
+- [Storage - Simple Storage Service (S3)](#storage---simple-storage-service-s3)
 - [Networking - CloudFront](#networking---cloudfront)
 - [Storage - Elastic File System (EFS)](#storage---elastic-file-system-efs)
 - [Database - SQL - Relational Database Service (RDS)](#database---sql---relational-database-service-rds)
@@ -165,57 +165,57 @@
 	- "d" it's for NVMe storage +
 	- "n" it's for Higher speed networking +
 	- ".Size": "nano", "micro", "small", "medium", "large", "xlarge", "nxlarge" (n > 2) and, "large"
-	- ".metal" it's for bare metal instances 
+	- ".metal" it's for bare metal instances
 	- E.g.,: t2.micro, t2.2xlarge, t3a.nano, m5ad.4xlarge, i3.metal, u-6tb1.metal
 - **General Purpose** Family:
 	- A1: Arm-based machine
 		- Scale-out workloads, web servers
-	- T2, T3: 
+	- T2, T3:
 		- It's Low-cost instance types
-		- It uses Credits 
-		- It's for occasional traffic bursts (non for 24/7 workloads) 
+		- It uses Credits
+		- It's for occasional traffic bursts (non for 24/7 workloads)
 		- It's for general and occasional workloads
 		- E.g., test Web Servers, small DBs
 	- M4:
-	- M5, M5a, M5n: 
-		- They're for general workloads: 100% of resources at all times (24/7) 
+	- M5, M5a, M5n:
+		- They're for general workloads: 100% of resources at all times (24/7)
 		- E.g., Application Servers
 - **Compute Optimized** Family:
-		- C5, C5n, C4: 
+		- C5, C5n, C4:
 			- They provides more capable CPU
 			- E.g., CPU intensive Apps/DBs
 - **Memory Optimized** Family:
-		- R5, R5a, R5n, R4: 
+		- R5, R5a, R5n, R4:
 			- Optimize large amounts of fast memory
 			- E.g., Memory Intensive Apps, memory intensive DBs
-		- X1e, X1: 
+		- X1e, X1:
 			- Optimize large amounts of fast memory
 			- E.g., SAP HANA, Apache Spark
 		- High Memory (u-6tb1.metal, ..., u-24tb1.metal)
-		- z1d: 
+		- z1d:
 			- High compute capacity and a high memory footprint
 			- E.g., Ideal for electronic design automation, EDA
 			- E.g., Certain relational DB workloads with high per-core licensing costs
 - **Storage Optimized** Family:
-		- I3, I3en: 
+		- I3, I3en:
 			- They Deliver fast I/O
 			- E.g., NoSQL DBs, Data Warehousing
 		- D2:
 			- Dense Storage
 			- E.g., Fileservers, Data Warehousing, Hadoop
 		- H1:
-		- High Disk Throughput 
-		- E.g., MapReduce-based workloads, 
+		- High Disk Throughput
+		- E.g., MapReduce-based workloads,
 		- E.g., Distributed file systems such as HDFS and MapR-FS
 - **Accelerated Computing** Family:
-		- P3, P2: 
-			- They deliver GPU 
+		- P3, P2:
+			- They deliver GPU
 			- They're for General Purpose GPU
 			- E.g., Machine Learning, Bitcoin Mining
-		- G4, G3: 
-			- They deliver GPU 
+		- G4, G3:
+			- They deliver GPU
 			- E.g., Video Encoding, 3D Application Streaming
-		- F1: 
+		- F1:
 			- It delivers FPGA
 			- E.g., Genomics research, financial analytics, real time video processing, big data
 - [For more details](https://aws.amazon.com/ec2/instance-types/)
@@ -273,17 +273,17 @@
 - It's located outside of the EC2 Host hardware but in the same AZ as the EC2 instance it's attached to
 - It's automatically replicated within its AZ to protect from component failure
 - It supports a maximum throughput of 1,750 MiB/s per-instance
-- It supports a maximum IOPS: 80,000 per instance 
-- **General Purpose** (**gp2**): 
+- It supports a maximum IOPS: 80,000 per instance
+- **General Purpose** (**gp2**):
 	- It's SSD based storage
 	- 3 IOPS/GiB (100 IOPS - 16,000 IOPS)
 	- Bursts up to 3,000 IOPS (credit based)
 	- 1 GiB - 16 TiB size
 	- Max throughput p/vol of 250 MiB/s
-	- It's the default for most workloads 
+	- It's the default for most workloads
 - **Provisioned IOPS** (**io1**):
 	- It's SSD based storage
-	- Volume Size of 4 GiB- 16TiB 
+	- Volume Size of 4 GiB- 16TiB
 	- up to 64,000 IOPS per volume
 	- Max throughput p/vol Of 1,000 MiB/s
 	- It's used for applications that require sustained IOPS performance
@@ -296,23 +296,23 @@
 	- Per-volume max throughput of 500 MiB/s
 	- IOPS 500
 	- It's used for frequently accessed, throughput-intensive workloads
-	- E.g., streaming, big data 
-- **Cold HDD** (**sc1**): 
+	- E.g., streaming, big data
+- **Cold HDD** (**sc1**):
 	- It's HDD based storage
 	- It has the lowest storage cost
 	- Infrequently accessed data
 	- Cannot be a boot volume
-	- Volume size of 500 GiB - 16TiB 
-	- Per-volume max throuqhput of 250 MiB/s and 
+	- Volume size of 500 GiB - 16TiB
+	- Per-volume max throuqhput of 250 MiB/s and
 	- IOPS 250
-- It could be created at the same time as an instance is created 
-- It could be created from scratch (type, size, AZ, encryption, tags, ...) 
-- It could be created (restored) from a snapshot 
-	- It could be created in any AZ within the snapshot region 
-	- If a snapshot isn't encrypted, we could choose weather or not to create an encrypted volume 
-	- If a snapshot is encrypted, we can only create an encrypted volume 
+- It could be created at the same time as an instance is created
+- It could be created from scratch (type, size, AZ, encryption, tags, ...)
+- It could be created (restored) from a snapshot
+	- It could be created in any AZ within the snapshot region
+	- If a snapshot isn't encrypted, we could choose weather or not to create an encrypted volume
+	- If a snapshot is encrypted, we can only create an encrypted volume
 - More details:
-	- [I/O characteristics](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-io-characteristics.html) 
+	- [I/O characteristics](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-io-characteristics.html)
 	- [EBS Types](https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/EBSVolumeTypes.html)
 
 </details>
@@ -323,16 +323,16 @@
 - It's a non persistent storage
 	- It's based on [Non-Volatil Memory Express NVMe](https://blogs.cisco.com/datacenter/nvme-for-absolute-beginners)
 	- It has the highest Throughtput and IOPS (data is accessed simultaneously because of its thousands of queues and commands in each queue)
-	- Its data is lost when:  
+	- Its data is lost when:
 		- The underlying disk drive fails
 		- The underlying EC2 host fails
 		- The instance stops or terminates
 - It's located within the the EC2 Host hardware
 - It's included as part of its instance's usage cost
-- There're EC2 instances that include: 
-	- Instance store volumes only: to create it: 
-		- Choose an AMI from Community AMIs > Select "Root Device Type" 
-		- Filter: "Instance Store" > choose a machine 
+- There're EC2 instances that include:
+	- Instance store volumes only: to create it:
+		- Choose an AMI from Community AMIs > Select "Root Device Type"
+		- Filter: "Instance Store" > choose a machine
 	- A mix of Instance store volumes and EBS, to create it:
 		- Choose an instance which "Instance Storage (GB)" is different from "EBS Only"
 	- EBS volume only, to create it:
@@ -352,21 +352,21 @@
 	- A restore could be not possible if an intermediate backup (Backup i) is lost
 	- To restore a backup at time "t", all backups from 1 to t will be used
 - It's stored in S3:
-	- It doesn't have a storage limitation 
+	- It doesn't have a storage limitation
 - It's **crash consistent**:
 	- It's **consistent to their point-in-time**
 	- It's done transparently from the OS and any applications that are inside the instance
 	- It could potentially contain data in an inconsistent state: data that isn't persisted is lost
-- It could be created from a volume: 
-	- If a volume is encrypted, the snapshot will be encrypted 
-    - If a volume isn't encrypted, the snapshot won't be encrypted
-- It could be created from another snapshot: 
-	- It could be done by using "Copy Snapshot" feature 
-	- It could be done from one region to a new region 
-	- If the source snapshot isn't encrypted, the target snapshot could be encrypted 
-	- If the source snapshot is encrypted, the target snapshot will be encrypted 
-- **Snapshot Lifecycle Policy**: 
-	- It's possible to run a policy periodically: 
+- It could be created from a volume:
+	- If a volume is encrypted, the snapshot will be encrypted
+	- If a volume isn't encrypted, the snapshot won't be encrypted
+- It could be created from another snapshot:
+	- It could be done by using "Copy Snapshot" feature
+	- It could be done from one region to a new region
+	- If the source snapshot isn't encrypted, the target snapshot could be encrypted
+	- If the source snapshot is encrypted, the target snapshot will be encrypted
+- **Snapshot Lifecycle Policy**:
+	- It's possible to run a policy periodically:
 	- Number of snapshots retained
 - ![Incremental snapshot](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/images/snapshot_1a.png)
 - For more details
@@ -377,25 +377,25 @@
 
 <details>
 <summary>Amazon Machine Image (AMI)</summary>
-    
+
 - It's stored in S3
 - It contains base OS and any "baked" components
 - **Instance Store-backed AMI**:
 	- It's for instance store backed instance
 	- It creates an instance with an instance store backed root volume
 	- It's created from a template which includes bootstrapping code
-- **EBS-backed AMI** 
+- **EBS-backed AMI**
 	- It's for EBS-backed instance
 	- It creates an instance with an EBS backed root volume
 	- It references 1 or more Snapshots
-	- It contains **Block device mapping**: 
+	- It contains **Block device mapping**:
 		- It links its snapshots to how they're mapped to the new instance
 		- It's used when an instance is created to map its volumes to the instance
-	- It contains permission: who can use it to create a new instance: 
-    	- It's by default private for the account it is created in 
-    	- It could be shared with specific AWS accounts (no encryption) 
-    	- It could be public (no encryption)
-    - ![Using an AMI](https://docs.amazonaws.cn/en_us/AWSEC2/latest/UserGuide/images/ami_lifecycle.png)
+	- It contains permission: who can use it to create a new instance:
+		- It's by default private for the account it is created in
+		- It could be shared with specific AWS accounts (no encryption)
+		- It could be public (no encryption)
+- ![Using an AMI](https://docs.amazonaws.cn/en_us/AWSEC2/latest/UserGuide/images/ami_lifecycle.png)
 - [For more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ComponentsAMIs.html#storage-for-the-root-device)
 
 </details>
@@ -403,7 +403,7 @@
 <details>
 <summary>Network: Elastic Network Interface (ENI)</summary>
 
-- It's a logical networking component in a VPC that represents a virtual network card 
+- It's a logical networking component in a VPC that represents a virtual network card
 - It's attached to 1 Subnet (and 1 VPC, consequently)
 - It can be associated with a max of 5 Security Groups
 - Each EC2 instance is created with a **Primary ENI** device (**eth0**):
@@ -453,12 +453,12 @@
 
 - It's **Static**
 - It's **Public**
-- It's picked from AWS Elastic IP pool (it's NOT AZ specific) 
+- It's picked from AWS Elastic IP pool (it's NOT AZ specific)
 - It replaces the normal public IP when it's allocated to a public instance:
-    - It changes the instance public DNS name
-	- It remains unchanged even if the instance is stopped 
+	- It changes the instance public DNS name
+	- It remains unchanged even if the instance is stopped
 - When it's disassociated from an EC2 public instance, a new public IPv4 and public DNS are released and associated with the EC2 instance
-- It can be moved to a new instances 
+- It can be moved to a new instances
 - It's charged (because they're in short supply)
 
 </details>
@@ -469,7 +469,7 @@
 - It only works inside its internal network (VPC)
 - It's based on the primary Private IP
 	- Format: **ip-0-0-0-0.ec2.internal**
-	- E.g., an EC2 instance which private IPv4 is 172.31.9.16, the private DNS will be ip-172-31-9-16.ec2.internal 
+	- E.g., an EC2 instance which private IPv4 is 172.31.9.16, the private DNS will be ip-172-31-9-16.ec2.internal
 - It remains unchanged during instance stop/start
 - It's released when the instance is terminated
 
@@ -484,12 +484,12 @@
 	- When it's pinged inside the EC2 instance VPC, the private IP is returned
 	- When it's pinged outside of EC2 instance VPC (E.g., Internet), the public IP is returned
 - It's based on the Public IP (Public IP or Elastic IP):
-	- Format: **ec2-0-0-0-0.compute-1.amazonaws.com** 
-	- E.g., an EC2 instance with a public IPv4 54.164.90.18, its public DNS is: ec2-54-164-90-18.compute-1.amazonaws.com. 
+	- Format: **ec2-0-0-0-0.compute-1.amazonaws.com**
+	- E.g., an EC2 instance with a public IPv4 54.164.90.18, its public DNS is: ec2-54-164-90-18.compute-1.amazonaws.com
 - It's **dynamic**:
 	- It's released when an instance is stopped
 	- There's not any public DNS attached to a stopped instance
-	- It's changed when a stopped instance starts 
+	- It's changed when a stopped instance starts
 
 </details>
 
@@ -503,11 +503,11 @@
 	- EBS-optimized mode:
 		- It was historically optional
 		- It's the default now
-		- It adds optimizations and dedicated communication paths for storage and traditional data networking 
-		- It allows consistent utilization of both 
-		- It's one required feature to support higher performance storage 
+		- It adds optimizations and dedicated communication paths for storage and traditional data networking
+		- It allows consistent utilization of both
+		- It's one required feature to support higher performance storage
 	- ![EBS-Optimized vs. non-EBS-Optimized instances](https://blog.turbonomic.com/hs-fs/hubfs/Imported_Blog_Media/Screen-Shot-2018-05-24-at-11_46_41-AM-1024x477-4.png?width=1024&height=477&name=Screen-Shot-2018-05-24-at-11_46_41-AM-1024x477-4.png)
-- EBS Optimization: 
+- EBS Optimization:
 	- It's about the performance of restoring a volume from a Snapshot
 	- When we restore a volume from a snapshot, it doesn't immediately copy all that data to EBS
 	- Data is copied as It's requested
@@ -520,8 +520,8 @@
 - Enhanced Networking - SR-IOV:
 	- It stands for Single Root I/O volume
 	- Opposite to the traditional network virtualization
-		- Which is using Multi-Root I/O Volume (MR-IOV) 
-		- A software-based hypervisor is managing virtual controllers of virtual machines to access one physical network card 
+		- Which is using Multi-Root I/O Volume (MR-IOV)
+		- A software-based hypervisor is managing virtual controllers of virtual machines to access one physical network card
 		- It's slow
 	- SR-IOV allows virtual devices (controllers) to be implemented in hardware (virtual functions)
 	- In other words, it allows a single physical network card to appear as multiple physical devices
@@ -529,7 +529,7 @@
 	- This results in faster transfer rates, lower CPU usage, and lower consistent latency
 	- EC2 delivers this via the Elastic Network Adapter (ENA) or Intel 82599 Virtual Function (VF) interface
 	- [Fore more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/enhanced-networking.html)
-- Enhanced Networking - Placement Groups: 
+- Enhanced Networking - Placement Groups:
 	- It's a good way to increase Performance or Reliability
 	- Clustered Placement Group:
 		- Instances grouped within a single AZ
@@ -562,42 +562,42 @@
 <summary>Operations</summary>
 
 - ![EC2 State Diagram](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/images/instance_lifecycle.png)
-- EBS backed-instance **Pending**: 
-	- A new instance is launched in a host within the selected AZ (Subnet) 
-	- EBS and/or Instance store volumes are created and attached to the instance 
-	- A default ENI (eth0) is attached to the instance:  
+- EBS backed-instance **Pending**:
+	- A new instance is launched in a host within the selected AZ (Subnet)
+	- EBS and/or Instance store volumes are created and attached to the instance
+	- A default ENI (eth0) is attached to the instance:
 		- A private IP within the EC2 subnet IP range is created
-		- A private DSN name is associated with the instance 
-	- A public IP is created and mapped to the instance eth0, if applicable (a public subnet + public IP sitting is enabled) 
-	- Bootstrap script is run 
-- EBS backed-instance **Stopping**: 
-	- It performs a normal shutdown and transition to a stopped state 
-	- All EBS volumes are kept 
-	- All Instance store volumes are detached from the instance (their data is lost) 
-	- Plaintext DEK is discarded from EC2 Host hardware, if applicable 
+		- A private DSN name is associated with the instance
+	- A public IP is created and mapped to the instance eth0, if applicable (a public subnet + public IP sitting is enabled)
+	- Bootstrap script is run
+- EBS backed-instance **Stopping**:
+	- It performs a normal shutdown and transition to a stopped state
+	- All EBS volumes are kept
+	- All Instance store volumes are detached from the instance (their data is lost)
+	- Plaintext DEK is discarded from EC2 Host hardware, if applicable
 	- Private DNS, IPv4 & IPv6 are unchanged
-	- Public DNS, IPv4 & IPv6 are released from the instance, if applicable (in case of public Subnet) 
-	- Charges related to the instance (instance and instance store volumes) is suspended 
-	- Charge related to EBS storage remains 
+	- Public DNS, IPv4 & IPv6 are released from the instance, if applicable (in case of public Subnet)
+	- Charges related to the instance (instance and instance store volumes) is suspended
+	- Charge related to EBS storage remains
 - EBS backed-instance **Stopped**:
 	- Attach/detach EBS volumes
 	- Create an AMI
 	- Create a Snapshot
 	- Scale down/up: Change the kernel, ram disk, instance type
 - EBS backed-instance **Starting** (from stopped):
-	- An instance is launched in a new the host and in the intial AZ 
+	- An instance is launched in a new the host and in the intial AZ
 	- EBS volumes are attached to the new instance
 	- Encrypted EBS volumes DEK is decrypted by KMS, if applicable
 	- The plaintext DEK is stored in EC2 host hardware, if applicable
-	- Bootstrap script is run? 
-	- Instance store volumes are back to their initial states when the instance was 1st started (or impacted by bootstrapping) 
+	- Bootstrap script is run?
+	- Instance store volumes are back to their initial states when the instance was 1st started (or impacted by bootstrapping)
 	- Private DNS, IPv4 & IPv6 are unchanged
-	- New Public DNS, IPv4 & IPv6  are attached to the instance, if applicable (in case of public Subnet). 
+	- New Public DNS, IPv4 & IPv6 are attached to the instance, if applicable (in case of public Subnet)
  - EBS backed-instance **Rebooted**:
 	- The EC2's plaintext DEK is discarded
 	- "Starting" action are run?
  - EBS backed-instance **Terminating**:
-	- Private IPv4 & IPv6 are released from the instance 
+	- Private IPv4 & IPv6 are released from the instance
 	- Public IPv4 & IPv6 are released from the instance
 - [For more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.html)
 
@@ -660,7 +660,7 @@
 			- Windows, it's store at: C:\Users\USERNAME\.aws\credentials
 			- It can contain the credentials for the default profile and any named profiles
 			- This approach uses longer term credentials stored locally on the instance
-			- It's NOT RECOMMENDED for producuon environments.
+			- It's NOT RECOMMENDED for producuon environments
 		- (4) Container Credentials:
 			- IAM Roles associated with AWS Elastic Container Service (ECS) Task Definitions
 			- Temporary credentials are available to the Task's containers
@@ -670,14 +670,14 @@
 			- Temporary credentials are available to the Instance
 			- This is recommended for EC2 environments
 - **Security Group** (SG):
-	- It acts at the instance level, not the subnet level 
+	- It acts at the instance level, not the subnet level
 	- See [VPC description](#networking---virtual-private-cloud-vpc)
 - **Network Access Control List** (NACL):
-	- It acts at the subnet level 
+	- It acts at the subnet level
 	- See [VPC description](#networking---virtual-private-cloud-vpc)
 - **Snapshot Permission**:
-	- It's by default private for the account it is created in 
-    - It could be shared with specific AWS accounts if it's not encrypted
+	- It's by default private for the account it is created in
+	- It could be shared with specific AWS accounts if it's not encrypted
 	- It could be public if it's not encrypted
 - **AMI Permission**:
 	- Same as Snapshot permission
@@ -760,14 +760,14 @@
 <details>
 <summary>Use cases</summary>
 
-- EC2 instance: 
+- EC2 instance:
 	- Monolothic application that require a traditional OS to work
 - EC2 AMI:
-	- AMI baking (or AMI pre-baking): 
-	- Base installation: 
+	- AMI baking (or AMI pre-baking):
+	- Base installation:
 	- **Immutable architecture**:
 		- It's a technique where servers (EC2 here) are never modified after they're created
-		- E.g., if a web app. failed for unknown reasons, 
+		- E.g., if a web app. failed for unknown reasons,
 		- Rather than connecting to it, performing diagnostics, fixing it and hopefully getting it back into a working state,
 		- We could just stop it and launch a brand new one from its known working AMI and
 		- Optionally investigate offline the failed instance if necessary or terminate it
@@ -776,12 +776,12 @@
 	- General Purpose (gp2) is the default for most workloads
 	- Provisioned IOPS (io1):
 		- Applications that require sustained IOPS performance
-		- Large database workloads 
+		- Large database workloads
 	- Throughput Optimized (st1):
-		- Frequently accessed, 
-		- Throughput-intensive workloads 
-		- E.g., Streaming, big data 
-	- Cold HDD (sc1): 
+		- Frequently accessed,
+		- Throughput-intensive workloads
+		- E.g., Streaming, big data
+	- Cold HDD (sc1):
 		- Infrequently accessed data
 - Princing models:
 	- On Demand:
@@ -829,8 +829,8 @@
 - To create **application-consistent** Snapshot, it's recommended:
 	- To stop the EC2 instance or to Freeze applications running on it
 	- To start the snapshot only when
-		- The application running on the instance are running on backup mode 
-		- The application running on the instance are "flushed" any in memory cache to disk 
+		- The application running on the instance are running on backup mode
+		- The application running on the instance are "flushed" any in memory cache to disk
 	- To unfreeze (release the "Freeze" operation), as soon as the snapshot starts (snapshot is consistent to its point-in-time)
 	- ![Application-Consistent Snapshot Flow](https://rg6051loyag2io6oe11p1rcg-wpengine.netdna-ssl.com/wp-content/uploads/2013/08/snapshot_scripts.png)
 - Clustered Placement Group:
@@ -849,23 +849,23 @@
 
 - It's a Function as a Service (FaaS):
 	- It care of provisioning and managing the servers where to run the code
-    - It's an abstraction layer where AWS manages everything:
+	- It's an abstraction layer where AWS manages everything:
 		- Data centers, hardware, Assembly code/Protocols, OS, Application layer/AWS APIs, scaling
-    	- All we need to worry about is our code
+		- All we need to worry about is our code
 		- It scales automatically: 2 requests => 2 independent functions are triggered
 - It supports Event-Driven architecture:
-	- It runs our code in response to events: this includes schedule time 
-    - These events could be changes to data in S3 bucket, or a DynamoDB table, etc
-    - These events are called triggers 
-- It runs in response to HTTP requests using AWS API Gateway or API calls made using the AWS SDKs 
+	- It runs our code in response to events: this includes schedule time
+	- These events could be changes to data in S3 bucket, or a DynamoDB table, etc
+	- These events are called triggers
+- It runs in response to HTTP requests using AWS API Gateway or API calls made using the AWS SDKs
 - It's stateless by design: each run is clean
-- It supports different languages:  Node.js, Java, Python, C#, PowerShell, Ruby
+- It supports different languages: Node.js, Java, Python, C#, PowerShell, Ruby
 - It can consumes:
-	- Internet API endpoints or Other Services 
+	- Internet API endpoints or Other Services
 	- Other Lambda functions (a Lambda Function can trigger other Lambda functions)
-- It could be allowed to access a VPC:  
+- It could be allowed to access a VPC:
 	- It allows access to private resources
-	- It's slightly slow to start 
+	- It's slightly slow to start
 	- It an IP address
 	- It inherits any of the networking configuration inside the VPC (custom DNS, custom routing)
 	- [For more details](https://docs.aws.amazon.com/lambda/latest/dg/configuration-vpc.html)
@@ -882,27 +882,27 @@
 <details>
 <summary>Runtime environment</summary>
 
-- It's a temporary environment where the code is running 
+- It's a temporary environment where the code is running
 - It's used by Lambda function to store some files:
 	- E.g., Libraries when Lambda includes additional libraries
-- When a lambda function is executed, it's downloaded to a fresh runtime environment 
-- Limit: 128 MB to 3008 MB 
+- When a lambda function is executed, it's downloaded to a fresh runtime environment
+- Limit: 128 MB to 3008 MB
 
 </details>
 
 <details>
 <summary>Triggers</summary>
 
-- API Gateway: api application-services 
+- API Gateway: api application-services
 - AWS IoT
-- Alexa Skills Kit 
+- Alexa Skills Kit
 - Alexa Smart Home
 - Application Load Balancer
 - CloudFront
 - CloudWatch Events
 - CloudWatch Logs
 - CodeCommit
-- Cognito Sync Trigge: authentication aws identity mobile-services sync 
+- Cognito Sync Trigge: authentication aws identity mobile-services sync
 - DynamoDB
 - Kinesis
 - S3
@@ -917,9 +917,9 @@
 - It scales automatically: 2 requests => 2 independent functions are triggered
 - **Reserved concurrency**:
 	- Concurrency is subject to a Regional limit that is shared by all functions in a Region (see limit section)
-	- When a function has reserved concurrency, no other function can use that concurrency 
-	- It ensures that it can scale to, but not exceed, a specified number of concurrent invocations 
-	- It ensures to not lose requests due to other functions consuming all of the available concurrency 
+	- When a function has reserved concurrency, no other function can use that concurrency
+	- It ensures that it can scale to, but not exceed, a specified number of concurrent invocations
+	- It ensures to not lose requests due to other functions consuming all of the available concurrency
 	- [For more details](https://docs.aws.amazon.com/lambda/latest/dg/configuration-concurrency.html)
 
 </details>
@@ -932,7 +932,7 @@
 <summary>Resilience</summary>
 
 - It's HA
-- It runs in multiple AZs to ensure that it's available to process events in case of a service interruption in a single AZ 
+- It runs in multiple AZs to ensure that it's available to process events in case of a service interruption in a single AZ
 - [For more details](https://docs.aws.amazon.com/lambda/latest/dg/security-resilience.html)
 </details>
 
@@ -943,9 +943,9 @@
 <details>
 <summary>Security</summary>
 
-- Execution role: 
+- Execution role:
 	- It's the role that Lambda assumes to access AWS services
-	- It gets temporary security credentials via STS 
+	- It gets temporary security credentials via STS
 	- It's basic permission is to CloudWatch
 
 </details>
@@ -954,8 +954,8 @@
 <summary>Monitoring/Auditing/Debugging</summary>
 
 - AWS X-Ray:
-	- It collects data about events that a function processes, 
-	- It identifies the cause of errors in an serverless applications 
+	- It collects data about events that a function processes,
+	- It identifies the cause of errors in an serverless applications
 	- It lets trace requests to an application's API, function invocations, and downstream calls
 - CloudWatch
 	- 1 Log Group per Lambda Function
@@ -966,14 +966,14 @@
 <details>
 <summary>Pricing</summary>
 
-- Number of Requests: 
-	- 1st 1 million requests are free 
+- Number of Requests:
+	- 1st 1 million requests are free
 	- $0.20 per 1 million requests
-- Duration and Memory: 
+- Duration and Memory:
 	- It's calculated from the time our code begins executing until it returns or terminates
-    - It's rounded up to the nearest 100ms
-    - It depends on the amount of memory we allocate to our function
-	- We're charged $0.00001667 for every GB-second used. 
+	- It's rounded up to the nearest 100ms
+	- It depends on the amount of memory we allocate to our function
+	- We're charged $0.00001667 for every GB-second used
 
 </details>
 
@@ -1003,32 +1003,32 @@
 
 <details>
 <summary>Description</summary>
-    
+
 - It's a managed container engine
 - It allows Docker containers to be deployed and managed within AWS environments
 - An **ECS container instance**:
-	- It's an EC2 instance 
+	- It's an EC2 instance
 	- It runs the ECS Container Agent
-- A **Cluster** 
+- A **Cluster**
 	- It's a container
 	- It's a logical collection of ECS resources (either ECS EC2 instances or ECS Fargate infrastructure)
 - A **Task Definition**:
 	- It Defines an application
-	- It's similar to a Dockerfile but for running containers in ECS 
+	- It's similar to a Dockerfile but for running containers in ECS
 	- It can contain multiple containers
 	- It's used by ECS **Placement Engine** to create 1 or more running copies of a given application (Tasks)
-- A **Container Definition**: 
-	- Inside a task definition, it defines the individual containers a task uses 
-	- It controls the CPU and memory each container has, in addition to port mappings for the container 
+- A **Container Definition**:
+	- Inside a task definition, it defines the individual containers a task uses
+	- It controls the CPU and memory each container has, in addition to port mappings for the container
 - A **Task** is a copy of an application
 	- It's a single running copy of any containers
 	- It's defined by a task definition
 	- It's one working copy of an application (e.g., DB and web containers)
 	- It's usually made of 1 or two containers that work together
-	- E.g., an nginx container with a php-fpm container 
+	- E.g., an nginx container with a php-fpm container
 	- We can ask ECS to start or stop a task
-- A **Service**: 
-	- It allows task definitions to be scaled by adding additional tasks 
+- A **Service**:
+	- It allows task definitions to be scaled by adding additional tasks
 	- It defines minimum and maximum values
 - A **Registry**
 	- It's a storage for container images
@@ -1043,7 +1043,7 @@
 <details>
 <summary>Architecture</summary>
 
-- ECS: Scheduling and Orchestration, Cluster Manager, Placement Engine 
+- ECS: Scheduling and Orchestration, Cluster Manager, Placement Engine
 - EC2 Instance: OS + Docker Agent + ACS Agent
 - ![Architecture](https://www.allthingsdistributed.com/images/ecs1.png)
 - ![ECS EC2 vs. ECS Fargate](https://d2908q01vomqb2.cloudfront.net/1b6453892473a467d07372d45eb05abc2031647a/2017/11/29/fargate-1.png)
@@ -1069,10 +1069,10 @@
 - Task: **Fargate Task**
 - Tasks are auto placed: AWS Fargate manages the task execution
 - There's not any EC2 instances to manage anymore but behind the scene, it uses also EC2 instances
-- Each task comes with a dedicated ENI, a private IP @ 
-- All containers of the same task can communicate with each other via localhost 
-- Inbound and outbound task communication goes through the ENI 
-- A public IP @ can be enabled as well.
+- Each task comes with a dedicated ENI, a private IP @
+- All containers of the same task can communicate with each other via localhost
+- Inbound and outbound task communication goes through the ENI
+- A public IP @ can be enabled as well
 
 </details>
 
@@ -1082,8 +1082,8 @@
 - EC2 Mode by Auto Scaling Group
 	- There's not obvious metric to scale a cluster
 	- There's not integration to scale when the task placement fails because of insufficient capacity
-    - Auto-scaling group and ECS are not aware of each other: It makes task deployments very hard during cluster scale in or rolling updates via CloudFormation
-    - We have to scale down without killing running tasks which is an even more significant challenge for long lived tasks
+	- Auto-scaling group and ECS are not aware of each other: It makes task deployments very hard during cluster scale in or rolling updates via CloudFormation
+	- We have to scale down without killing running tasks which is an even more significant challenge for long lived tasks
 - Fargate mode: Scale out and in automatically:
 - [For more details](https://cloudonaut.io/ecs-vs-fargate-whats-the-difference/)
 
@@ -1096,7 +1096,7 @@
 <details>
 <summary>Resilience</summary>
 
-- EC2 Mode: 
+- EC2 Mode:
 	- It's not resilient by design
 	- It's the responsability of customer to design it HA architecture (2 or 3 AZs)
 - Fargate mode:
@@ -1110,7 +1110,7 @@
 <details>
 <summary>Security</summary>
 
-- A **Task Role** gives a task (an application) the permissions to interact with other AWS resources 
+- A **Task Role** gives a task (an application) the permissions to interact with other AWS resources
 
 </details>
 
@@ -1263,7 +1263,7 @@
 	- It can't be created outside of the CIDR of the VPC It's attached to
 - 5 Reserved IPs:
 	- Subnet's Network IP address: e.g., 10.0.0.0
-	- Subnet's Router IP address ("+1"): Example: 10.0.0.1.
+	- Subnet's Router IP address ("+1"): Example: 10.0.0.1
 	- Subnet's DNS IP address ("+2"): E.g., 10.0.0.2
 	 	- For VPCs with multiple CIDR blocks, the IP address of the DNS server is located in the primary CIDR
 	 	- [For more details](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_DHCP_Options.html#AmazonDNS)
@@ -1323,7 +1323,7 @@
  	- Default Routes (0.0.0.0/0 IPv4 and ::/0 IPv6) could be added
 - A route Target can be:
  	- An IP @ or
- 	- An AWS networking object: Egress-Only G., IGW, NAT G., Network Interface, Peering Connection, Transit G., Virtual Private G.,...
+ 	- An AWS networking object: Egress-Only G., IGW, NAT G., Network Interface, Peering Connection, Transit G., Virtual Private G.,
 - Location: -
 - Types:
 	- Local Route:
@@ -1352,8 +1352,8 @@
 - Routing Priority:
 	- Rule #1: Most Specific Route is always chosen:
 	 	- It's when multiple routes' destination maches with traffic destination
-	 	- A matched /32 destination route (a single IP address) will be always chosen first...
-		- A matched /24 destination route will be chosen before a matched /16 destination route...
+	 	- A matched /32 destination route (a single IP address) will be always chosen first
+		- A matched /24 destination route will be chosen before a matched /16 destination route
 		- The default route matches with all traffic destination but will be chosen last
 	- Rule #2:
 		- Static routes take priority over the propagated routes
@@ -1444,7 +1444,7 @@
 - SG Rules include: Inbound and Outbound rule sets:
 	- Type: TCP
 	- Protocol: e.g., HTTP, SSH
-	- Port Ranges: e.g., Port 22 (SSH), Port 53 (UDP), Port 3060 (MySQL), Port 80 (http), Port 443 (https)...
+	- Port Ranges: e.g., Port 22 (SSH), Port 53 (UDP), Port 3060 (MySQL), Port 80 (http), Port 443 (https)
 	- Source/Destination: Since It's a Layer 5 Firewall, it supports:
 	- IP addresses, CIDRs (Layer 4 info)
 	- a Security Group (Layer 5 info)
@@ -1512,8 +1512,8 @@
 - It provides Dynamic NAT (Network Address Translation):
 	- It's a variation of Static NAT (see Internet Gateway, above)
 	- It allows many private IP addresses to get outgoing internet access using a smaller number of public IPs (generally one)
-	- 1 public IP <-> many private IPs.
-- Its purpose is to let EC2 instances in private subnets to go out and download software.
+	- 1 public IP <-> many private IPs
+- Its purpose is to let EC2 instances in private subnets to go out and download software
 - Its benefits:
 	- Security reasons: the concept of least privilege (if a resource doesn't need internet access, than we shouldn't give them access)
 	- We're running out IP addresses: so we can't allocate a specific IP address for each instance
@@ -1842,7 +1842,7 @@
 		- If we are adding a domain to Gmail or Office 365,
 		- They'll probably ask to add a text record to the domain with some random text that they're aware of
 		- They can then perform a resolution on that text record against the text of that "TXT record"
-		- If it matches, it guarantees that we own that domain.
+		- If it matches, it guarantees that we own that domain
 		- It can be used in spam filtering
 	- VPC DNS Resolver ?
 
@@ -1867,7 +1867,7 @@
 	- Each endpoint check corresponds actually to multiple healthchecks that are done by Health Checkers (a global health check system)
 	- Endpoint Check aggregates the data from the health checkers and determines whether the endpoint is healthy:
 		- If more than 18% of health checkers report that an endpoint is healthy, Route 53 considers it healthy
-		- If 18% of health checkers or fewer report that an endpoint is healthy, Route 53 considers it unhealthy.
+		- If 18% of health checkers or fewer report that an endpoint is healthy, Route 53 considers it unhealthy
 	- Health Checkers evaluation is based on the Response time which depends on the type of health check:
 		- For HTTP/S healthchecks: 4s to establish a TCP connection with the endpoint + an HTTP status code of 2xx or 3xx within 2 seconds after connecting
 		- For a TCP healthchecks: 10s to establish a TCP connection with the endpoint
@@ -1890,7 +1890,7 @@
 	- It summarizes the health of all these individual components
 	- E.g., We have a front-end tier, a logic tier and, a database tier,
 	- Each tier has a healthcheck
-	- Whe can then create a calculated healthcheck that will check the status of these individual checks to report the whole system healthy.
+	- Whe can then create a calculated healthcheck that will check the status of these individual checks to report the whole system healthy
 - CloudWatch alrams health checks:
 	- They monitor CloudWatch alarms
 	- e.g., we may want to consider something unhealthy if a DynamoDB table is experiencing performance issues
@@ -2447,16 +2447,16 @@
 <summary>Use cases</summary>
 
 - Use IAM policies if:
-	- We need to control access to AWS services other than S3: 
+	- We need to control access to AWS services other than S3:
 		- IAM policies will be easier to manage since you can centrally manage all of your permissions in IAM, instead of spreading them between IAM and S3
-    - You have numerous S3 buckets each with different permissions requirements: 
+	- You have numerous S3 buckets each with different permissions requirements:
 		- IAM policies will be easier to manage since you don’t have to define a large number of S3 bucket policies and can instead rely on fewer, more detailed IAM policies
-    - You prefer to keep access control policies in the IAM environment
+	- You prefer to keep access control policies in the IAM environment
 - Use S3 bucket policies if:
 	- You want a simple way to grant cross-account access to your S3 environment, without using IAM roles
-    - Your IAM policies bump up against the size limit (up to 2 kb for users, 5 kb for groups, and 10 kb for roles) 
+	- Your IAM policies bump up against the size limit (up to 2 kb for users, 5 kb for groups, and 10 kb for roles)
 	- S3 supports bucket policies of up 20 kb
-    - You prefer to keep access control policies in the S3 environment
+	- You prefer to keep access control policies in the S3 environment
 - S3 ACL:
 	- It's NOT recommended
 	- It's a legacy access control mechanism that predates IAM
@@ -2533,7 +2533,7 @@
 		- Add, update, or delete objects, and submit data from web forms
 		- Use live streaming to stream an event in real time
 	- RTMP Distribution (Real-Time Messaging Protocol):
-		- To speed up distribution of streaming media files using Adobe Flash Media Server's RTMP protocol.
+		- To speed up distribution of streaming media files using Adobe Flash Media Server's RTMP protocol
 		- It allows an end user to begin playing a media file before the file has finished downloading from a CloudFront edge location
 		- It requires to store the media files in an Amazon S3 bucket
 - Origin Settings:
@@ -2549,7 +2549,7 @@
 		- All Pops (Recommended choice but most expensive)
 	- WAF ACL (Web Application Firewall Access Control List):
 		- To allow or block requests based on criteria that we specify,
-		- Choose the web ACL to associate with this distribution.
+		- Choose the web ACL to associate with this distribution
 	- Default Root Object:
 		- The object that we want CloudFront to return (E.g. index.html)
 		- When a viewer request points to our root URL (www.example.com
@@ -2639,16 +2639,14 @@
 - It's delivered as a service
 - It can be mounted on multiple Linux instances at the same time
 	- It's accessed via "mount targets"
-	- It's currently only supported in Linux
+	- It's currently accessible from Linux EC2 or Linux on-premise
 	- It's elastic:
 		- An initial size isn't required
 		- It grows and shrinks automatically, as files are added and removed
+- It Uses S3: Standard and IA
 - It has a DNS name:
 	- Format: fs-[randomCode].efs.ap-[regionName].amazonaws.com
 	- E.g., fs-963f75af.efs.ap-useast-1.amazonaws.com
-- It's region resilient:
-	- Its availability isn't impacted by an AZ failure
-	- It's recommnended though to have 1 mount target by AZ
 - It integrate with multiple AWS services:
 	- AWS backup service to get data backed up
 	- AWS Data Sync that can act as a synchronization product and get data in EFS
@@ -2685,16 +2683,53 @@
 </details>
 
 <details>
-<summary>Throughput modes</summary>
+<summary>Scalability</summary>
 
-- Bursting Throughput mode:
+- It's **Elastic**:
+	- An initial size isn't required
+	- It grows and shrinks automatically, as files are added and removed
+- **Permitted throughput**:
+	- It's the maximum throughput we can drive a file system at any given point
+	- It's either the **baseline throughput** or the **burst throughput**
+- **Bursting Throughput mode**:
 	- It's the default
-	- The size of the file system is linked to its performance:
-	- 100 MiB/s base burst
-	- 100 MiB/s per 1 TB size
-	- Earning 50 MiB/s per Tib of storage		
-- Provisioned mode (or the Throughput mode):
-	- It allows control over throughput independently of file system size
+	- Its pattern is:
+		- Spiky: driving high levels of throughput for short periods of time, and 
+		- Low levels of throughput the rest of the time
+	- Its **baseline throughput** is determined by the size of the file system that is stored in the standard storage class
+		- A file system can drive throughput continuously at its baseline rate
+		- E.g.1, a 10 GiB file system baseline aggregate throughput: 0.5 MiB/s
+		- E.g., a 512 GiB file system baseline aggregate throughput: 25 MiB/s
+	- Its **burst throughput** is also determined by the file system size as follow:
+		- Minimum burst throughput: 100 MiB/s regardless of the file system size
+		- Burst Throughput: 100 MiB/s/TiB
+		- Burst Throughput duration: it's determined by its size
+		- E.g., a 10-TiB file system can burst to 1 GiB/s (10 x 100 MiB/s/TiB) of throughput for 12 hours per day or drive 500 MiB/s continuously
+	- It uses a credit system to determine when file systems can burst:
+		- A file system earns credits over time
+		- An inactive file system earns burst credits
+		- A file system that is driving throughput below its baseline rate earns burst credits
+		- A file system uses credits whenever it reads or writes data
+		- The baseline rate is 50 MiB/s per TiB of storage (equivalently, 50 KiB/s per GiB of storage)
+		- Earning 50 MiB/s per Tib of storage????
+	- E.g.
+- **Provisioned mode** (or the **Throughput mode**):
+	- It allows to provision the throughput independent of the amount of data stored
+- For more details:
+	- [How do EFS burst credits work](https://aws.amazon.com/premiumsupport/knowledge-center/efs-burst-credits/)
+	- [Amazon EFS Performance](https://docs.aws.amazon.com/efs/latest/ug/performance.html#bursting)
+
+</details>
+
+<details>
+<summary>Consistency</summary>
+</details>
+
+<details>
+<summary>Resilience</summary>
+
+- It's region resilient: Its availability isn't impacted by an AZ failure
+	- It's recommnended though to have 1 mount target by AZ
 
 </details>
 
@@ -2748,7 +2783,10 @@
 <details>
 <summary>Limits</summary>
 
-- 1 Mount Target / AZ
+- Max VPC #: 1 per file system (use VPC Peering connection to give access to ressources in other VPCs)
+- Max AZ #: 1 Mount Target
+- Max SG #: 5 per Mount Target
+- Max EFS volume #: 1,000 per AWS account (Default)
 
 </details>
 
@@ -3160,12 +3198,12 @@
 <summary>Migrating a RDS MySQL to RDS Aurora</summary>
 
 - Way 1:
-	- Create an Aurora read-replica for the primary MySQL database.
-	- Promote the read-replica to a primary database.
+	- Create an Aurora read-replica for the primary MySQL database
+	- Promote the read-replica to a primary database
 - Way 2:
-	- Create an Aurora read-replica for the primary MySQL database.
-	- Create a snapshot a the Aurora read-replica.
-	- Create a new Aurora database from the snapshot.
+	- Create an Aurora read-replica for the primary MySQL database
+	- Create a snapshot a the Aurora read-replica
+	- Create a new Aurora database from the snapshot
 - [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.Migrating.RDSMySQL.Import.html)
 
 </details>
@@ -3532,7 +3570,7 @@
 - Projected attributes:
 	- Indexes can have either Keys only, All table's attributes or some attributes
 	- It allows to reduce the amount of data read when items are read from the index
-	- It can help to improve performance but...
+	- It can help to improve performance but
 	- It can cause a huge performance penalty if non-projected attributes are read from it (they're fetched from its table)
 - Local Secondary Index (LSI):
 	- It must be created at the same time as creating a table
@@ -3979,7 +4017,7 @@
 		- It's cost effective: we're using an instance as both a web server and a caching solution
 - Cons:
 	- Resiliency: in the event of a failure, it's likely to lose the sessions that are stored on the failed node
-	- Scalability: in the event of scale-out scenario (number of web servers increase): 
+	- Scalability: in the event of scale-out scenario (number of web servers increase):
 		- It's possible that the traffic may be unequally spread across the web servers as active sessions may exist on particular servers
 		- It can hender the scalability of an application
 - For more details
@@ -3999,7 +4037,7 @@
 		- For 10 websites hosted with their own DNS name and SSL certificate, we need 10 CLB
 	- It can offload SSL connections: receives HTTPS and forward it to backend as HTTP
 - It supports some HTTP/HTTPS feature:
-	- It'sn't application aware (not a layer 7 device) but...
+	- It'sn't application aware (not a layer 7 device) but
 	- It supports some HTTP/HTTPS features: "X-Forwarded" and "Sticky sessions"
 	- It supports health checks for HTTP/HTTPS (see health checks)
 - Listener Configuration allows
@@ -4129,7 +4167,7 @@
 	- It's generally presented at the front of an application stack
 		- It sits between an app. and its users/customers
 		- It abstracts away from our underlying infrastructure
-		- A customer doesn't need to care how many EC2 instances we have providing our app.
+		- A customer doesn't need to care how many EC2 instances we have providing our app
 - CLB:
 	- If we don't have access to VPC: So we need to deploy it into EC2 classic situations (legacy method of configuring EC2 instances)
 	- Apps. with Round-Robin Load Balancing:
@@ -4223,7 +4261,7 @@
 	- It's done by associating it with the ELB's Target Groups
 	- This allow to automate scaling and elasticity
 	- This enhances High Availability and fault tolerance
-	- When it's associates with an ELB, automatically...
+	- When it's associates with an ELB, automatically
 		- The ELB associates itself with any instance inside the auto scalling group (scaling out)
 		- The ELB disassociates itself with any instance inside the auto scalling group (scaling in)
 
@@ -4788,7 +4826,7 @@
 - It stores files as objects in S3 buckets
 	- Files uploaded in these shares are directly stored in S3
 	- Files are accessed through a NFS mount point
-	- File Ownership, permissions, and timestamps are durably stored in S3 in the corresponding S3 object user-metadata.
+	- File Ownership, permissions, and timestamps are durably stored in S3 in the corresponding S3 object user-metadata
 	- Once files are stored in S3, they can be managed as native S3 files
 - It allows to migrate existing file servers into S3 on a gradual basis
 - It allows to benefit from unlimited space available in S3 and use it as an extension of on-premise storage
@@ -4916,7 +4954,7 @@
 
 - It's an AWS Web IDentity Federation service
 	- It allows to sign up and sign in to an apps
-	- It acts as an identity broker between our application and a Web I.D.
+	- It acts as an identity broker between our application and a Web I.D
 	- It uses Token Service (STS) to provide temporary credentials which map to an IAM role
 	- It allow to synchronize our users data for multiple devices
 - IDentity Federation (IDF):
@@ -5061,7 +5099,7 @@
 - It's a publisher-subscriber based service
 - It coordinates and manages the sending and delivery of messages
 - It's a **regional** service
-- It's a **public** AWS service: 
+- It's a **public** AWS service:
 	- It has a public endpoint
 	- It could be accessed from a VPC with either an Internet Gateway + a NAT Gateway or a VPC endpoint
 	- It could be accessed from any other location with a public Internet connection (on-premise locations)
@@ -5136,7 +5174,7 @@
 		- Example 2: Billing Alarm top, Performance Alarm topic, Health Alarm topic
 		- A protocol is associated with a subscriber (SMS, email, email Json, HTTP, HTTPS, SQS)
 	- **Platform application endpoint**
-		- It delivers the message as a **push notification**  to subscribed mobile platforms
+		- It delivers the message as a **push notification** to subscribed mobile platforms
 - **Subscription filter policy**:
 	- It allows to filters messages that a subscriber receives
 	- It means that the filter logic is done on the topic
@@ -5168,10 +5206,10 @@
 - Its messages are stored redundantly across multiple AZs
 - **Delivery retry policy**
 	- It defines how SNS retries failed deliveries to HTTP/S endpoints
-	- The settings are: 
+	- The settings are:
 		- Number of retries (3 by default),
 		- Retries without delay (0),
-		- Minimum delay (20 s), 
+		- Minimum delay (20 s),
 		- Maximum delay (20 s),
 		- Minimum delay retries,
 		- Maximum delay retries
@@ -5220,7 +5258,7 @@
 - A topic message max size: 256 KB
 
 </details>
- 
+
 <details>
 <summary>Best practices</summary>
 </details>
@@ -5237,7 +5275,7 @@
 - It allows asynchronous processing:
 - It allows to decouple components of an application so they run independently from each other
 - It's a **regional** service
-- It's a **public** AWS service: 
+- It's a **public** AWS service:
 	- It has a public endpoint (URL)
 	- It could be accessed from a VPC with either an Internet Gateway + a NAT Gateway or a VPC endpoint
 	- It could be accessed from any other location with a public Internet connection (on-premise locations)
@@ -5254,7 +5292,7 @@
 	- It's retained for a **retention period**
 		- By default, it's retained for 4 days
 		- The minimum is 1 minute (60 s)
-		- The maximum is 14 days (1,209,600‬ s).
+		- The maximum is 14 days (1,209,600‬ s)
 	- It's deleted from the queue when it's processed by the worker that polled it
 		- It requeres the queue URL and the message ***ReceiptHandle***
 	
@@ -5291,7 +5329,7 @@
 		- the number of requested messages arrive in the queue
 		- or the long poll connection times out
 	- It's more efficient
-		- It eliminates the number of 
+		- It eliminates the number of
 			- Empty responses: it's when a queue is empty
 			- False empty responses: it's when messages are available but aren't included in a response (Messages are not visible or delayed))
 		- It helps to reduce the cost of using Amazon SQS
@@ -5311,7 +5349,7 @@
 - **Standard Queue**:
 	- It's the default queue type
 	- It's highly-distributed and scalable to nearly unlimited message throughput (transactions per second)
-	- It guarantees that messages are delivered at least once: 
+	- It guarantees that messages are delivered at least once:
 		- This means that a message could be delivered more than once
 	- It provides **best-effort** ordering:
 		- It ensures that messages are generally delivered in the same order as they're sent
@@ -5319,10 +5357,10 @@
 		- This means that occasionally messages might be delivered out of order
 - **FIFO Queue**:
 	- "First in, First Out" queue
-	- It guarantees that messages are delivered once and once only 
+	- It guarantees that messages are delivered once and once only
 	- It guarantees that the order the messages are added to the queue will be the order they're delivered
 	- Its throughput is limited:
-		- 3,000 messages per second with batching 
+		- 3,000 messages per second with batching
 		- ~300 messages per second without batching
 	- A message remains available until a consumer processes and deletes it
 	- Message Groups: allow multiple ordered message groups within a single queue
@@ -5383,12 +5421,12 @@
 	- When a producer (caller) is producing work faster than its consumer can process it
 	- When a producer or consumer are intermittently connected to the network
 - ***Workers Pool Architecture***:
-	- It allows to decouple components of an application: 
+	- It allows to decouple components of an application:
 		- They run independently from each other
 		- They scale independently from each other
 		- They fail independently from each other
-	- E.g., an app. like YouTube 
-		- People are uploading videos to this app. 
+	- E.g., an app. like YouTube
+		- People are uploading videos to this app
 		- The videos need to have some form of processing performed on them
 	- A frontend tier allows the user to upload the videos
 		- It's of EC2 instances which are under a ELB and an Auto Scaling Group
@@ -5401,17 +5439,17 @@
 		- This workers pool is scalled out by the auto scaling group based on the number of messages in the queue
 		- The workers keep polling the queue above and process a message (video path to S3) as soon as it's received
 		- The workers put the result in S3
-	- This architecture means that the more video uploads we get (more customers), the more messages in the queue and the more instances inside this worker pool 
-		- It auto scales based on demand and 
+	- This architecture means that the more video uploads we get (more customers), the more messages in the queue and the more instances inside this worker pool
+		- It auto scales based on demand and
 		- Overtime it reaches an equilibrium where video processing is occurring in a timely way
-	- This architecture also means is that the frontend and backend are decoupled from each other 
+	- This architecture also means is that the frontend and backend are decoupled from each other
 		- They work independently from each other
 		- They scale independently from each other
 		- They fail independently from each other
 - ***Fanout architecture***
  	- It allows to send a message to an SNS topic and fan it out to multiple queues for further processing
 	- E.g., an app. like YouTube:
-		- People are uploading raw media files to this app. 
+		- People are uploading raw media files to this app
 		- The raw media files are converted into different bit rate
 	- A frontend tier allows the user to upload the videos
 		- It stores these videos on S3 via a PUT API call
@@ -5427,13 +5465,13 @@
 <details>
 <summary>Limits</summary>
 
-- SQS message max size: 256 KB 
+- SQS message max size: 256 KB
 - SQS Extended Client Library size limit: Between 256 KB up to 2 GB
 - Message retention maximum: 14 days (1,209,600‬ s)
 - Message retention manimum: 1 mn (60‬ s)
 - Poll APP Max message #: 10
 - FIFO Queue TPS (Throughput Per Second):
-	- 3,000 messages per second with batching 
+	- 3,000 messages per second with batching
 	- ~300 messages per second without batching
 - Visibility timeout maximum: 12 hours
 
@@ -5456,7 +5494,7 @@
 - It converts media files from their original source format into different formats that will play on smartphones, tablets, PCs, etc
 - It provides transcoding presets for popular output formats: we don't need to guess about which settings work best on particular devices
 - It also operates in a serverless fashion: we're not allocating the underlying infastructure that is used to transcode these files
-- Pay based on transcoded minutes and the resolution at which we transcode.
+- Pay based on transcoded minutes and the resolution at which we transcode
 
 ---
 
@@ -5479,8 +5517,8 @@
 		- Purchase from online stores (amazon.com, for example): order is data piece
 		- Stock prices
 		- Gaming data as the Social network data, Geospatial data (Uber), IOT sensors data
-	- It makes it easy to load and analyze streaming data.
-	- It provides the ability for us to build our own custom applications.
+	- It makes it easy to load and analyze streaming data
+	- It provides the ability for us to build our own custom applications
 	- There're 3 Kinesis types
 - Kinesis Stream:
 	- It's a place to store that data
@@ -5659,7 +5697,7 @@
 	- E.g. a large organization like Amazon.com:
 		- It might have hundreds or thousands of isolated databases around the organization
 		- It might be different engines, types of databases
-		- From amazon.com, Amazon Prime, Audio book purchases, ...
+		- From amazon.com, Amazon Prime, Audio book purchases, 
 		- RedShift might be the right solution to store all this data to perform some analytical style queries
 
 </details>
@@ -5698,7 +5736,7 @@
 		- every less than every 60 seconds
 		- Every 1 minute
 		- Every 5 minutes: it's the default for EC2 instances
-		- ...
+		- ... etc
 	- They're grouped into namespaces:
 		- A namespace is a container of metrics
 		- E.g. AWS/EC2 namespace
@@ -5846,7 +5884,7 @@
 	- It's a recorded action taken by users, roles or, aws services
 	- It's essentially a JSON document that details a specific action on that account
 	- It's recorded for 90 days in **Event history** that allows to browse through events; Search them; Interact with them, etc
-- We can identify...
+- We can identify
 	- which users and accounts called AWS,
 	- which IP address the calls were made from,
 	- When the calls occurred
@@ -6074,7 +6112,6 @@
 		- Input: ciphertext + New CMK
 		- Output: a new ciphertext (at no point do we see the plaintext) that includes a link to the new CMK
 		- Action: AWS will use the link to the old CMK included in the ciphertext to reencrypt it
--
 
 </details>
 
@@ -6084,7 +6121,7 @@
 - There're 3 types of CMK:
 	- **Customer Managed Key**:
 		- A customer can View it
-		- A customer can Manage it: Enable it, disable it, configure rotation, etc.
+		- A customer can Manage it: Enable it, disable it, configure rotation, etc
 		- It's Dedicated to a customer Account
 		- It's allowed by certain services
 		- It allows an automatic key rotation: every year (optional: disabled by default)
@@ -6231,7 +6268,7 @@
 		- They're deployed to an environment
 	- It doesn't contain a database because its environments are transitory
 
-- E.g., We can upload our application code and Beanstalk will create all required AWS infrastructure for us.
+- E.g., We can upload our application code and Beanstalk will create all required AWS infrastructure for us
 
 </details>
 
@@ -6379,7 +6416,7 @@
 	- Chef 12 stack:
 		- It's capable of managing Linux and Windows based OS
 	- Sample stack
-		- Node.js app.
+		- Node.js app
 		- It's capable of managing Linux and Windows based OS
 - It includes 1 or more **Layers**
 - [For more details](https://docs.aws.amazon.com/opsworks/latest/userguide/welcome_classic.html)
