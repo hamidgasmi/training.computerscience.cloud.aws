@@ -1,3 +1,15 @@
 - Compare DynamoDB, DynamoDB DAX and, ElastiCache from performance perspective (and pricing)
 - Compare S3, EBS, EFS, Storage Gateway from performance perspective
-- Add S3 
+- Add S3 Performance, Price, Valid S3 URLs
+    - https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html#access-bucket-intro
+    - https://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html#example-bucket-policies-use-case-4
+    - CORS: https://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html#example-scenarios-cors
+    - Loggin: https://docs.aws.amazon.com/AmazonS3/latest/dev/enable-logging-console.html
+    - https://docs.aws.amazon.com/AmazonS3/latest/dev/cloudtrail-logging.html#cloudtrail-logging-%20s3-info
+    - PutObject API: https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutObject.html
+    - Object metadata: https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html#object-metadata
+- Compare Strong consistency vs. read-After Write consistency vs. Eventual consistency vs. Open-after-close consistency
+- Storage Gateway:
+    - https://docs.aws.amazon.com/storagegateway/latest/userguide/WhatIsStorageGateway.html
+    - https://d1.awsstatic.com/whitepapers/aws-storage-gateway-file-gateway-for-hybrid-architectures.pdf
+    

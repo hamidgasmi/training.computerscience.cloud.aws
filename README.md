@@ -6,7 +6,7 @@
 		- It describes AWS services from the architect role perspective
 		- There's particularly a section for the following topics: Scalability, Consistency, Resilience, Disaster Recovery, Security which includes Encryption, Pricing, Use cases, Limits and, Best practices
 	- [AWS CLI commands](https://github.com/hamidgasmi/training.computerscience.cloud.aws/blob/master/aws_cli.sh): it's still a work in progress
-	- [Anki flashcards](https://github.com/hamidgasmi/training.computerscience.cloud.aws/blob/master/aws-csaa_ankiflashcard.apkg) exported file: 289 cards
+	- [Anki flashcards](https://github.com/hamidgasmi/training.computerscience.cloud.aws/blob/master/aws-csaa_ankiflashcard.apkg) exported file: 294 cards
 		- [Install Anki](https://apps.ankiweb.net/)
 
 ## Table of Contents
@@ -2068,14 +2068,20 @@
 	- It can redirect requests for an object to another object in the same bucket or to an external URL
 - CloudFront can also be added as a CDN for global users
 - SSL can be added for custom domains
-- CORS:
-	- Cross-Origin Resource Sharing
-	- It's a way a web server can relax the [same-origin policy](https://en.wikipedia.org/wiki/Same-origin_policy)
-	- It allows a web server running in one domain to reference resources in another
-	- This particularly helpful: each S3 bucket (and even AWS product) has its own domain name
-	- [For more details](https://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html)
 
 </details>
+
+<details>
+<summary>Cross-Origin Resource Sharing (CORS)</summary>
+
+- It's a way a web server can relax the [same-origin policy](https://en.wikipedia.org/wiki/Same-origin_policy)
+- It allows a web server running in one domain to reference resources in another
+- This particularly helpful: each S3 bucket (and even AWS product) has its own domain name
+- [For more details](https://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html)
+- [Use case Scenarios](https://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html#example-scenarios-cors)
+
+</details>
+
 
 <details>
 <summary>Versioning</summary>
@@ -2323,6 +2329,7 @@
 <summary>Consistency</summary>
 
 - Read after write consistency for PUTS of new objects: a new object is ready to read as soon as It's uploaded
+	- Caveat: If a HEAD or GET request to an object key name is made before creating the object (to check if the object exists), S3 provides eventual consistency for read-after-write
 - Eventual Consistency for overwrite PUTS and DELETE: update and deletes may need some time to propagate
 
 </details>
@@ -2427,15 +2434,26 @@
 - For more details:
 	- [Controlling Access to S3 Resources](https://aws.amazon.com/blogs/security/iam-policies-and-bucket-policies-and-acls-oh-my-controlling-access-to-s3-resources/)
 	- [How to prevent uploads of unencryted object to S3](https://aws.amazon.com/blogs/security/how-to-prevent-uploads-of-unencrypted-objects-to-amazon-s3/)
+	- [How to Restrict Amazon S3 Bucket Access to a Specific IAM Role](https://aws.amazon.com/blogs/security/how-to-restrict-amazon-s3-bucket-access-to-a-specific-iam-role/)
 
 </details>
 
 <details>
 <summary>Monitoring</summary>
 
-- S3 Log requests:
-	- All requests to S3 bucket could be logged
-	- They could be stored in another S3 bucket in the same AWS account or in a completely different AWS account
+- **Server access logging**:
+	- It provides detailed records for the requests that are made to a bucket
+	- It's disabled by default
+	- It stores logging requests in a specific S3 bucket in the same AWS account or in a completely different AWS account
+	- It requires to allow 
+		- Principal: AWS root account (arn:aws:iam::000000000000:root)
+		- Action: "S3:PutObject"
+		- Resource: log buckets
+	- [Enabling Logging Using the Console](https://docs.aws.amazon.com/AmazonS3/latest/dev/enable-logging-console.html)
+	- [Server access logging overview](https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerLogs.html#server-access-logging-overview)
+- **Object-level logging**:
+	- It records object-level API activity by using [CloudTrail](#logging-and-monitoring---cloudtrail) data events
+	- It's disabled by default
 
 </details>
 
@@ -2650,6 +2668,7 @@
 - It integrate with multiple AWS services:
 	- AWS backup service to get data backed up
 	- AWS Data Sync that can act as a synchronization product and get data in EFS
+- [For more details](https://docs.aws.amazon.com/efs/latest/ug/how-it-works.html)
 
 </details>
 
@@ -2740,6 +2759,7 @@
 <summary>Consistency</summary>
 
 - Read-after-write consistency
+- [For more details](https://docs.aws.amazon.com/efs/latest/ug/how-it-works.html#consistency)
 
 </details>
 
