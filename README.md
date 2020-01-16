@@ -6,7 +6,7 @@
 		- It describes AWS services from the architect role perspective
 		- There's particularly a section for the following topics: Scalability, Consistency, Resilience, Disaster Recovery, Security which includes Encryption, Pricing, Use cases, Limits and, Best practices
 	- [AWS CLI commands](https://github.com/hamidgasmi/training.computerscience.cloud.aws/blob/master/aws_cli.sh): it's still a work in progress
-	- [Anki flashcards](https://github.com/hamidgasmi/training.computerscience.cloud.aws/blob/master/aws-csaa_ankiflashcard.apkg) exported file: 294 cards
+	- [Anki flashcards](https://github.com/hamidgasmi/training.computerscience.cloud.aws/blob/master/aws-csaa_ankiflashcard.apkg) exported file: 294cd cards
 		- [Install Anki](https://apps.ankiweb.net/)
 
 ## Table of Contents
@@ -2009,14 +2009,34 @@
 - A folder could be created within a bucket:
 	- It's not an actual object
 	- It's added as a prefix into the underlying objects' key
-- It's a universal namespace:
-	- A bucket name must be unique globally
-	- Its URL format is: https://region.amazonaws.com/bucketname
-	- E.g., https://selfservedweb.s3.amazonaws.com/Web_Scalability_for_StartupEngineers.pdf
-- ARN:
-	- Format: arn:partition:service:region:account:
-	- E.g., arn:aws:cloudfront::191449997525:?
 - [S3 FAQ](https://aws.amazon.com/s3/faqs/)
+
+</details>
+
+<details>
+<summary>Bucket Name, URL, ARN</summary>
+
+- It's a **Universal Namespace**:
+	- It must be unique globally
+	- It must use DNS Name-like rules:
+		- It can't have capital letters
+		- It can't have a "-"
+	- It can't be IP address-like
+	- It must be from 3 to 63 characters long
+- **URL**:
+	- **Virtual Hosted Style Access**: 
+		- Format: https://bucket-name.s3.*Region.*amazonaws.com/key-name (the region is optional)
+		- E.g. 1, https://selfservedweb.s3.us-east-1.amazonaws.com/Web_Scalability_for_StartupEngineers.pdf
+		- E.g. 2, https://selfservedweb.s3.amazonaws.com/Web_Scalability_for_StartupEngineers.pdf
+	- **Path-Style Access**: 
+		- Format: http://s3.*Region.*amazonaws.com/bucket-name/key-name (the region is optional)
+		- It will be [deprecated](https://aws.amazon.com/blogs/aws/amazon-s3-path-deprecation-plan-the-rest-of-the-story/) from september 2020
+		- E.g. 1, https://s3.us-east-1.amazonaws.com/selfservedweb/Web_Scalability_for_StartupEngineers.pdf
+		- E.g. 2, https://s3.amazonaws.com/selfservedweb/Web_Scalability_for_StartupEngineers.pdf
+	- [For more details](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html#access-bucket-intro)
+- **ARN**:
+	- Format: arn:partition:s3::bucketname:
+	- E.g., arn:aws:s3:::selfservedweb
 
 </details>
 
@@ -2492,6 +2512,14 @@
 - Hard limit of 5 GB / PUT
 - Hard limit of 3500 PUTs / second
 - Hard limit of 7 days for presigned URL (expiration)
+- Min and Max bucket name length: 3 to 63
+
+</details>
+
+<details>
+<summary>Best practices</summary>
+
+- [Best Practices Design Patterns: Optimizing Amazon S3 Performance](https://docs.aws.amazon.com/AmazonS3/latest/dev/optimizing-performance.html)
 
 </details>
 
