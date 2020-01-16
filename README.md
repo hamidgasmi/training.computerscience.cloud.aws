@@ -2672,6 +2672,21 @@
 </details>
 
 <details>
+<summary>Storage Classes</summary>
+
+- Standard:
+- Infrequent Access (IA)
+
+</details>
+
+<details>
+<summary>Lifecycle management</summary>
+
+- It's used to move files between classes based on access patterns
+
+</details>
+
+<details>
 <summary>Performance modes</summary>
 
 - General Purpose:
@@ -2723,6 +2738,9 @@
 
 <details>
 <summary>Consistency</summary>
+
+- Read-after-write consistency
+
 </details>
 
 <details>
@@ -2731,6 +2749,15 @@
 - Data is stored redundantly across multiple AZs
 	- It's region resilient: Its availability isn't impacted by an AZ failure
 - Mounted Targets aren't HA by design: It's recommended to have 1 mount target by AZ
+
+</details>
+
+<details>
+<summary>Disaster Recovery</summary>
+
+- [AWS Backup Service](https://docs.aws.amazon.com/efs/latest/ug/awsbackup.html)
+- The EFS-to-EFS backup solution
+- [For more details](https://docs.aws.amazon.com/efs/latest/ug/efs-backup-solutions.html)
 
 </details>
 
@@ -2751,19 +2778,19 @@
 </details>
 
 <details>
-<summary>Storage Classes</summary>
+<summary>Monitoring</summary>
 
-- Standard:
-- Infrequent Access (IA)
+- CloudWatch's **PercentIOLimit**:
+	- It help to determin which performance mode to choose
+	- If it hits 100% for extended periods of time, consider using Max I/O mode
+- 
 
 </details>
 
 <details>
-<summary>Lifecycle management</summary>
-
-- It's used to move files between classes based on access patterns
-
+<summary>Pricing</summary>
 </details>
+
 
 <details>
 <summary>Use cases</summary>
@@ -2788,10 +2815,13 @@
 <details>
 <summary>Limits</summary>
 
-- Max VPC #: 1 per file system (use VPC Peering connection to give access to ressources in other VPCs)
-- Max AZ #: 1 Mount Target
-- Max SG #: 5 per Mount Target
-- Max EFS volume #: 1,000 per AWS account (Default)
+- Max VPC # / EFS volume: 1 (use VPC Peering connection to give access to ressources in other VPCs)
+- Max EFS Mount Target # / AZ: 1
+- Max SG # / Mount Target: 5
+- Max EFS volume # / AWS Account: 1,000 (Default: it could be increased)
+- Max I/O EFS in General Purpose Performance Mode: 7,000 operations/s (it's calculated for all clients connected to a single file system)
+- Max throughput per EFS Client (EC2 Instance): 250 MBps
+- [For more details](https://docs.aws.amazon.com/efs/latest/ug/limits.html)
 
 </details>
 
