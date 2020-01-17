@@ -12,4 +12,5 @@
 - Storage Gateway:
     - https://docs.aws.amazon.com/storagegateway/latest/userguide/WhatIsStorageGateway.html
     - https://d1.awsstatic.com/whitepapers/aws-storage-gateway-file-gateway-for-hybrid-architectures.pdf
-    
+- https://www.gliffy.com/blog/aws-simple-icons-explained-the-compute-set
+- Listen to breakout sessions aws reinvent

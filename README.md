@@ -2102,7 +2102,6 @@
 
 </details>
 
-
 <details>
 <summary>Versioning</summary>
 
@@ -2136,6 +2135,38 @@
 </details>
 
 <details>
+<summary>Cross-Region Replication (CRR)</summary>
+
+- It's an S3 feature that can be enabled on S3 buckets
+- It allows a one-way replication of data from a source bucket to a destination bucket in another region
+- It's a set of rules:
+	- They could be applied on the entire source bucket objects
+	- They could also be applied on a part of source bucket objects (based on prefixes and/or tags)
+	- They could be overlapping
+	- They've a priority value to resolve conflicts that occur when an object is eligible for replication under multiple rules
+	- A higher value indicates a higher priority
+- It requires:
+	- Versionning feature to be enabled on both buckets (src. and dest.)
+	- to allocate an IAM role with permissions to let S3 replicates objects
+- By default, replicated objects keep their:
+	- Storage class
+	- Object name (key)
+	- Owner
+	- Object permission
+- Override is possible for:
+	- Storage class,
+	- Storage ownership (select a different aws account)
+	- Object permission at the destination bucket
+- Exclusion, the following are excluded from Replication:
+	- System actions (lifecycle events aren't replicated)
+	- SSE-C encrypted objects - only SSE-S3 an KMS (if enabled) encrypted objects are supported
+	- Any existing objects from before replication is enabled (replication isn't retroactive)
+	- "Mark Delete" objects: it doesn't replicat deletions
+- The replication is using SSL protocol?
+
+</details>
+
+<details>
 <summary>Presigned URL</summary>
 
 - It's created by an identity to let someone else (a bearer) access to a private object on a temporary basis
@@ -2151,14 +2182,6 @@
 	- The presigned URL has expired (7 days max)
 	- The creator permissions have changed
 	- The URL was created using a role and its temporary credentials have expired (36-hour max)
-- Use cases:
-	- Stock images website:
-		- Media stored privately on S3
-		- Presigned URL generated when an image is purchased
-	- Client access to upload an image for process to an S3 bucket
-- Best Practices:
-	- Create presigned URLs with an identity with long term credentials
-	- Avoid creating presigned URLs with roles
 
 </details>
 
@@ -2296,45 +2319,6 @@
 		- One-Zone IA
 		- Glacier
 	- From One-Zone IA Tier to Glacier
-- Cost:
-	- Data transfer fee when data is moved from a tier to another one
-	- Automation and Monitoring fee?
-- Use cases: Reduce admin overhead
-
-</details>
-
-<details>
-<summary>Cross-Region Replication (CRR)</summary>
-
-- It's an S3 feature that can be enabled on S3 buckets
-- It allows a one-way replication of data from a source bucket to a destination bucket in another region
-- It's a set of rules:
-	- They could be applied on the entire source bucket objects
-	- They could also be applied on a part of source bucket objects (based on prefixes and/or tags)
-	- They could be overlapping
-	- They've a priority value to resolve conflicts that occur when an object is eligible for replication under multiple rules
-	- A higher value indicates a higher priority
-- It requires:
-	- Versionning feature to be enabled on both buckets (src. and dest.)
-	- to allocate an IAM role with permissions to let S3 replicates objects
-- By default, replicated objects keep their:
-	- Storage class
-	- Object name (key)
-	- Owner
-	- Object permission
-- Override is possible for:
-	- Storage class,
-	- Storage ownership (select a different aws account)
-	- Object permission at the destination bucket
-- Exclusion, the following are excluded from Replication:
-	- System actions (lifecycle events aren't replicated)
-	- SSE-C encrypted objects - only SSE-S3 an KMS (if enabled) encrypted objects are supported
-	- Any existing objects from before replication is enabled (replication isn't retroactive)
-	- "Mark Delete" objects: it doesn't replicat deletions
-- The replication is using SSL protocol?
-- Use cases:
-	- Compliancy of data and making sure data is kept in a dedicated region (for example for GDPR compliance)
-	- See Scalability, Resilience and DR sections
 
 </details>
 
@@ -2342,6 +2326,13 @@
 <summary>Scalability</summary>
 
 - CRR minimizes latency for global applications by creating Performance Replicas
+- Use CloudFront with S3 to distribute content with low latency and a high data transfer rate
+- Use ElastiCache with S3 for Frequently Accessed Content 
+- Use **S3 Transfer Acceleration** if you want fast data transport over long distances between a client and an S3 bucket
+- Horizontal Scaling and Request Parallelization for High Throughput 
+- For more details:
+	- [Performance Design Patterns for Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/dev/optimizing-performance-design-patterns.html)
+	- [Performance Guidelines for Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/dev/optimizing-performance-guidelines.html)
 
 </details>
 
@@ -2479,27 +2470,43 @@
 
 <details>
 <summary>Pricing</summary>
+
+- Lifecycle management:
+	- Data transfer fee when data is moved from a tier to another one
+	- Automation and Monitoring fee?
+
 </details>
 
 <details>
 <summary>Use cases</summary>
 
-- Use IAM policies if:
-	- We need to control access to AWS services other than S3:
-		- IAM policies will be easier to manage since you can centrally manage all of your permissions in IAM, instead of spreading them between IAM and S3
-	- You have numerous S3 buckets each with different permissions requirements:
-		- IAM policies will be easier to manage since you don’t have to define a large number of S3 bucket policies and can instead rely on fewer, more detailed IAM policies
-	- You prefer to keep access control policies in the IAM environment
-- Use S3 bucket policies if:
-	- You want a simple way to grant cross-account access to your S3 environment, without using IAM roles
-	- Your IAM policies bump up against the size limit (up to 2 kb for users, 5 kb for groups, and 10 kb for roles)
-	- S3 supports bucket policies of up 20 kb
-	- You prefer to keep access control policies in the S3 environment
-- S3 ACL:
-	- It's NOT recommended
-	- It's a legacy access control mechanism that predates IAM
-	- If it's already used and is sufficient, there is no reason to change
-- [Controlling Access to S3 Resources](https://aws.amazon.com/blogs/security/iam-policies-and-bucket-policies-and-acls-oh-my-controlling-access-to-s3-resources/)
+- CRR:
+	- Compliancy of data and making sure data is kept in a dedicated region (for example for GDPR compliance)
+	- See Scalability, Resilience and DR sections
+- Lifecycle management:
+	- Reduce admin overhead
+- Presigned URLs:
+	- Stock images website:
+		- Media stored privately on S3
+		- Presigned URL generated when an image is purchased
+	- Client access to upload an image for process to an S3 bucket
+- Security:
+	- Use IAM policies if:
+		- We need to control access to AWS services other than S3:
+			- IAM policies will be easier to manage since you can centrally manage all of your permissions in IAM, instead of spreading them between IAM and S3
+		- You have numerous S3 buckets each with different permissions requirements:
+			- IAM policies will be easier to manage since you don’t have to define a large number of S3 bucket policies and can instead rely on fewer, more detailed IAM policies
+		- You prefer to keep access control policies in the IAM environment
+	- Use S3 bucket policies if:
+		- You want a simple way to grant cross-account access to your S3 environment, without using IAM roles
+		- Your IAM policies bump up against the size limit (up to 2 kb for users, 5 kb for groups, and 10 kb for roles)
+		- S3 supports bucket policies of up 20 kb
+		- You prefer to keep access control policies in the S3 environment
+	- S3 ACL:
+		- It's NOT recommended
+		- It's a legacy access control mechanism that predates IAM
+		- If it's already used and is sufficient, there is no reason to change
+	- [Controlling Access to S3 Resources](https://aws.amazon.com/blogs/security/iam-policies-and-bucket-policies-and-acls-oh-my-controlling-access-to-s3-resources/)
 
 </details>
 
@@ -2519,6 +2526,9 @@
 <details>
 <summary>Best practices</summary>
 
+- Presigned URLs:
+	- Create presigned URLs with an identity with long term credentials
+	- Avoid creating presigned URLs with roles
 - [Best Practices Design Patterns: Optimizing Amazon S3 Performance](https://docs.aws.amazon.com/AmazonS3/latest/dev/optimizing-performance.html)
 
 </details>
