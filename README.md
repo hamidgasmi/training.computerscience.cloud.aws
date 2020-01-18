@@ -12,6 +12,7 @@
 ## Table of Contents
 - [Infrastructure](#infrastructure)
 - [Security: Identity and Access Control (IAM)](#security-identity-and-Access-control-iam)
+- [AWS Organization](#aws-Organization)
 - [Compute - Elastic Cloud Computing (EC2)](#compute---elastic-cloud-computing-ec2)
 - [Serverless Compute - Lambda](#serverless-compute---lambda)
 - [Containerized Compute - Elastic Container Service (ECS)](#containerized-compute---elastic-container-service-ecs)
