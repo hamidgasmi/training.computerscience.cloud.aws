@@ -2839,11 +2839,7 @@ S3 Request #/s Hard: 3500 PUTs/second.
 <details>
 <summary>Performance modes</summary>
 
-- General Purpose:
-	- It's the default mode
-	- It's suitable for 99% of needs
-- Max I/O:
-	- It's designed for when a large number of instances (hundereds) need to access the file system
+
 
 </details>
 
@@ -2853,36 +2849,44 @@ S3 Request #/s Hard: 3500 PUTs/second.
 - It's **Elastic**:
 	- An initial size isn't required
 	- It grows and shrinks automatically, as files are added and removed
-- **Permitted throughput**:
-	- It's the maximum throughput we can drive a file system at any given point
-	- It's either the **baseline throughput** or the **burst throughput**
-- **Bursting Throughput mode**:
-	- It's the default
-	- Its pattern is:
-		- Spiky: driving high levels of throughput for short periods of time, and 
-		- Low levels of throughput the rest of the time
-	- Its **baseline throughput** is determined by the size of the file system that is stored in the standard storage class
-		- A file system can drive throughput continuously at its baseline rate
-		- E.g.1, a 10 GiB file system baseline aggregate throughput: 0.5 MiB/s
-		- E.g., a 512 GiB file system baseline aggregate throughput: 25 MiB/s
-	- Its **burst throughput** is also determined by the file system size as follow:
-		- Minimum burst throughput: 100 MiB/s regardless of the file system size
-		- Burst Throughput: 100 MiB/s/TiB
-		- Burst Throughput duration: it's determined by its size
-		- E.g., a 10-TiB file system can burst to 1 GiB/s (10 x 100 MiB/s/TiB) of throughput for 12 hours per day or drive 500 MiB/s continuously
-	- It uses a credit system to determine when file systems can burst:
-		- A file system earns credits over time
-		- An inactive file system earns burst credits
-		- A file system that is driving throughput below its baseline rate earns burst credits
-		- A file system uses credits whenever it reads or writes data
-		- The baseline rate is 50 MiB/s per TiB of storage (equivalently, 50 KiB/s per GiB of storage)
-		- Earning 50 MiB/s per Tib of storage????
-	- E.g.
-- **Provisioned mode** (or the **Throughput mode**):
-	- It allows to provision the throughput independent of the amount of data stored
-- For more details:
-	- [How do EFS burst credits work](https://aws.amazon.com/premiumsupport/knowledge-center/efs-burst-credits/)
-	- [Amazon EFS Performance](https://docs.aws.amazon.com/efs/latest/ug/performance.html#bursting)
+- Performance modes:
+	- **General Purpose**:
+		- It's the default mode
+		- It's suitable for 99% of needs
+	- **Max I/O**:
+		- It's designed for when a large number of instances (hundereds, thousands) need to access the file system
+	- [For more details](https://aws.amazon.com/premiumsupport/knowledge-center/linux-efs-performance-modes/)
+- Throughput modes:
+	- **Permitted throughput**:
+		- It's the maximum throughput we can drive a file system at any given point
+		- It's either the **baseline throughput** or the **burst throughput**
+	- **Bursting Throughput mode**:
+		- It's the default
+		- It's Spiky: driving high levels of throughput for short periods of time, and 
+		- It's low levels of throughput the rest of the time
+		- Its **baseline throughput** is determined by the size of the file system that is stored in the standard storage class
+			- A file system can drive throughput continuously at its baseline rate
+			- E.g.1, a 10 GiB file system baseline aggregate throughput: 0.5 MiB/s
+			- E.g., a 512 GiB file system baseline aggregate throughput: 25 MiB/s
+		- Its **burst throughput** is also determined by the file system size as follow:
+			- Minimum burst throughput: 100 MiB/s regardless of the file system size
+			- Burst Throughput: 100 MiB/s/TiB
+			- Burst Throughput duration: it's determined by its size
+			- E.g., a 10-TiB file system can burst to 1 GiB/s (10 x 100 MiB/s/TiB) of throughput for 12 hours per day or drive 500 MiB/s continuously
+		- It uses a credit system to determine when file systems can burst:
+			- A file system earns credits over time
+			- An inactive file system earns burst credits
+			- A file system that is driving throughput below its baseline rate earns burst credits
+			- A file system uses credits whenever it reads or writes data
+			- The baseline rate is 50 MiB/s per TiB of storage (equivalently, 50 KiB/s per GiB of storage)
+			- Earning 50 MiB/s per Tib of storage????
+		- E.g.
+	- **Provisioned mode** (or the **Throughput mode**):
+		- It allows to provision the throughput independent of the amount of data stored
+	- For more details:
+		- [How do EFS burst credits work](https://aws.amazon.com/premiumsupport/knowledge-center/efs-burst-credits/)
+		- [Amazon EFS Bursting Performance](https://docs.aws.amazon.com/efs/latest/ug/performance.html#bursting)
+- [Performance](https://docs.aws.amazon.com/efs/latest/ug/performance.html)
 
 </details>
 
@@ -2933,8 +2937,12 @@ S3 Request #/s Hard: 3500 PUTs/second.
 
 - CloudWatch's **PercentIOLimit**:
 	- It help to determin which performance mode to choose
-	- If it hits 100% for extended periods of time, consider using Max I/O mode
-- 
+	- If a General Purpose mode EFS volume hits 100% for extended periods of time, consider using Max I/O mode
+- CloudWatch's **BurstCreditBalance**:
+	- It help to determin which throughput mode to choose
+	- If we experience performance issues with an EFS volume in Bursting Throughput mode: 
+		- Check the BurstCreditBalance CloudWatch metric 
+		- If its value is either zero or steadily decreasing, Provisioned Throughput could be a solution 
 
 </details>
 
@@ -2967,11 +2975,15 @@ S3 Request #/s Hard: 3500 PUTs/second.
 <summary>Limits</summary>
 
 - Max VPC # / EFS volume: 1 (use VPC Peering connection to give access to ressources in other VPCs)
+- Max EFS Mount Target # / VPC: 400
 - Max EFS Mount Target # / AZ: 1
 - Max SG # / Mount Target: 5
 - Max EFS volume # / AWS Account: 1,000 (Default: it could be increased)
-- Max I/O EFS in General Purpose Performance Mode: 7,000 operations/s (it's calculated for all clients connected to a single file system)
+- Max provisioned throughput per EFS Volume for all connected clients: 1 GBps (Default)
+- Max bursting throughput per EFS Volume for all connected clients: 1 or 3 GBps (depending on the region) (Default)
 - Max throughput per EFS Client (EC2 Instance): 250 MBps
+- Max I/O EFS in Max I/O Mode: Unlimited
+- Max I/O EFS in General Purpose Performance Mode: 7,000 operations/s (it's calculated for all clients connected to a single file system)
 - [For more details](https://docs.aws.amazon.com/efs/latest/ug/limits.html)
 
 </details>
