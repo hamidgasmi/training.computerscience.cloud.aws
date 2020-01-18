@@ -48,6 +48,8 @@
 - [Deployment: Elastic BeansTalk](#deployment---elastic-beanstalk)
 - [Deployment: OpsWorks](#deployment---opsworks)
 
+---
+
 ## Infrastructure
 
 <details>
@@ -124,6 +126,50 @@
 - For more details:
 	- [Assume Role](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html)
 
+</details>
+
+
+<details>
+<summary>Limits</summary>
+
+- IAM Users # / AWS account: 5,000 
+- IAM MFA # / AWS account: 5,000 (Same as above: Users # / account) 
+- IAM MFA # / User: 1 
+- IAM Access keys # / User: 2 (regardless the status of the access keys: Active or Inactive)
+- IAM Groups # / User: 10
+- IAM Role credential expiration: 36 hours
+- IAM Managed policies # / User: 10 
+- IAM Managed policies # / Role: 10 
+- IAM Inline policies # / Identity: Unlimited 
+- IAM Inline policies Total Size / User: 2,048 characters (white space aren't counted)
+- IAM Inline policies Total Size / Group: 5,120 characters 
+- IAM Inline policies Total Size / Role: 10,240 characters 
+
+</details>
+
+<details>
+<summary>Best practices</summary>
+</details>
+
+---
+
+## AWS Organization:
+
+<details>
+<summary>Limits</summary>
+
+- Organization Max Account #: 2 (Default limit) 
+	- It could be increased: 
+	- Support > Support Center > Create a Case > Service Limit Increase >  
+	- Enter "Organization" in "Limit Type" field 
+	- Select "Number of Accounts" in "Limit" field 
+	- Enter a value in "New limit value" field 
+	- Enter a description in "Use case description" 
+
+</details>
+
+<details>
+<summary>Best practices</summary>
 </details>
 
 ---
@@ -815,11 +861,11 @@
 <details>
 <summary>Limits</summary>
 
-- EC2 EBS max throughput: 1,750 MiB/s per-instance
-- EC2 EBS max IOPS: 80,000 per instance (instance store volume if more is needed)
-- EC2 Instance (ENI) max SG association: 5
-- Spread Placement Group max instance #: 7
-- Partition Placement Group max instance #: 7 partitions per AZ
+- EBS max throughput / instance: 1,750 MiB/s
+- EBS max IOPS / instance: 80,000 (instance store volume if more is needed)
+- Max SG # / Instance (ENI): 5
+- Max instance # / Spread Placement Group: 7 (SPG is located in a single AZ)
+- Max Instance # / Partition Placement Group: 7 partitions per AZ
 
 </details>
 
@@ -1534,7 +1580,7 @@
 		- In this case, the packet Destination IP is updated
 		- It's updated 1st by the Internet Gateway with the NAT Gateway EIP
 		- Then, It's updated by the NAT Gateway with the EC2 Private IP
-- NAT Gateway:
+- **NAT Gateway**:
 	- 1 NAT Gateway inside an AZ
 	- It requires a Public Subnet and a Public Elastic IP
 	- It understands and allow session traffic (layer 5)
@@ -1544,7 +1590,7 @@
 		- It can scale to 45GB
 		- For more bandwidth, we can distribute the workload by splitting our resources into multiple subnets inside an AZ
 		- Then specify for each subnet to go to a separate gateway
-- NAT Instance:
+- **NAT Instance**:
 	- It's a single EC2 instance
 	- It could be created from a specific AMI
 	- it requires to Disable EC2 Source/Destination Checks:
@@ -1557,6 +1603,7 @@
 		- If the instance is terminated, the route status: blackhole
 	- For more details:
 		- [NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html)
+		- [NAT Gateway](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html#nat-gateway-working-with)
 		- [NAT Gateway vs. NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-comparison.html)
 
 </details>
@@ -1693,8 +1740,11 @@
 <details>
 <summary>Limits</summary>
 
+- VPCs # / region: 
+	- Default: 5
+	- Non default: 100
+	- More: Support ticket
 - VPC max/min netmask: /16 ... /28
-- Subnet max/min netmask: /16 ... /28
 - VPC Peering:
 	- VPC CIDR blocks can't overlap
 	- Transitive Peering is NOT Possible:
@@ -1703,11 +1753,37 @@
 	- Cross-Region:
 		- An SG can't be referenced from another region
 		- IPv6 support isn't available cross-region
+- Subnet max/min netmask: /16 ... /28
+- Subnets # / VPC: 200
+- NAT Gateway Bandwidth: 5 Gbps - 45 Gbps (For more, distribute the workload by splitting resources into multiple subnets, and creating a NAT gateway in each subnet) 
+- NAT Gateway # / AZ: 5
+- IPv4 CIDR blocks / VPC: 5
+- IPv6 CIDR blocks / VPC: 1 
 - IPv6:
 	- It'sn't currently supported across every AWS product
 	- It'sn't currently supported with every feature
 	- It'sn't currently supported by VPNs, customer gateways, and VPC endpoints
-	- [For more details]()
+- For more details
+	- [VPC Limits](https://docs.aws.amazon.com/vpc/latest/userguide/amazon-vpc-limits.html)
+
+ 
+ 
+
+
+	
+
+ 
+
+
+	
+
+This primary CIDR and all secondary CIDR blocks count toward this limit. 
+Maximum: 50.  
+
+VPC 
+	
+
+
 
 </details>
 
@@ -2513,13 +2589,29 @@
 <details>
 <summary>Limits</summary>
 
-- Unlimited storage
-- Unlimited object #
-- Default limit of 100 buckets / AWS account
-- Hard limit of 5 GB / PUT
-- Hard limit of 3500 PUTs / second
-- Hard limit of 7 days for presigned URL (expiration)
-- Min and Max bucket name length: 3 to 63
+- Object # / Bucket: Unlimited
+- Bucket Capacity: Unlimited
+- Bucket Name:
+	- Length: 3 to 63
+	- Unique globally
+	- No uppercase
+	- No underscores
+	- It must start with a lowercase letter or a number
+	- It can't be formatted as an IP address (1.1.1.1)
+- Bucket # / AWS Account: 
+	- 100: Default limit
+	- 1,000: non default
+	- More: Support Ticket
+- Object max size: 5 TB
+- Multipart upload max size supported: 5 TB (Object max size)
+- Put max size supported: 5 GB (Hard)
+- PUT # / second: 3,500
+- Get # / second: 5,500
+- Parallel request, Prefix usage: No limit?
+- Presigned URL expiration: 7 days 
+
+
+S3 Request #/s Hard: 3500 PUTs/second. 
 
 </details>
 
@@ -4977,6 +5069,29 @@
 
 </details>
 
+<details>
+<summary>Limits</summary>
+
+- Table Name:
+	- Length: 3 characters to 255 characters long
+	- Allowed characters: A-Z, a-z, 0-9, _ (underscore), - (hyphen, . (dot)
+- Attribute Name Length: 1 character to 64 KB long 
+	- Exceptions: 1 to 255 characters long for:
+		- Secondary index partition key names 
+		- Secondary index sort key names 
+		- ... See details
+- Attribute Values: 
+	- String Max item size: 400 KB
+	- Binary max item size: 400 KB
+	- Number prcision: 38 digits (it can be positive, negative, or zero) 
+	- If precision is important, we should pass numbers to DynamoDB using strings that you convert from a number type 
+- [For more details](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html)
+</details>
+
+<details>
+<summary>Best practices</summary>
+</details>
+ 
 ---
 
 ## Hybrid and Scaling - Data Migration - DB Migration Service (DMS)
