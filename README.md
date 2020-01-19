@@ -321,46 +321,62 @@
 - It's automatically replicated within its AZ to protect from component failure
 - It supports a maximum throughput of 1,750 MiB/s per-instance
 - It supports a maximum IOPS: 80,000 per instance
+- HDD-backed volume:
+	- Large IO size
+	- Dominant Performance attribute: Throughput
 - **General Purpose** (**gp2**):
-	- It's SSD based storage
-	- 3 IOPS/GiB (100 IOPS - 16,000 IOPS)
-	- Bursts up to 3,000 IOPS (credit based)
-	- 1 GiB - 16 TiB size
-	- Max throughput p/vol of 250 MiB/s
-	- It's the default for most workloads
+	- It's SSD based storage (Small IO size)
+	- Its performance dominant attribute: IOPS
+	- IOPS / volume: 100 IOPS - 16,000
+	- IOPS Scalability: 3 IOPS / GiB
+	- Max Bursts IOPS / volume: 3,000 (credit based)
+	- Max Throughput / volume: 250 MiB/s
+	- Size: 1 GiB - 16 TiB
+	- Use case patterns: It's the default for most workloads
 - **Provisioned IOPS** (**io1**):
-	- It's SSD based storage
-	- Volume Size of 4 GiB- 16TiB
-	- up to 64,000 IOPS per volume
-	- Max throughput p/vol Of 1,000 MiB/s
-	- It's used for applications that require sustained IOPS performance
-	- E.g., Large database workloads
+	- It's SSD based storage (Small IO size)
+	- Its performance dominant attribute: IOPS
+	- Max IOPS / volume: up to 64,000
+	- Max Throughput / volume: 1,000 MiB/s
+	- Size: 4 GiB- 16 TiB
+	- Use case patterns: applications that require sustained IOPS performance with small IOPS size
 - **Throughput Optimized** (**st1**):
-	- It's HDD based storage
+	- It's HDD based storage (Large IO size)
+	- Its performance dominant attribute: Throughput
+	- Max Throughput / volume: 500 MiB/s
+	- Max IOPS / volume: 500 
+	- Size: 500 GiB - 16 TiB
 	- It has a Low storage cost
-	- It can't be a boot volume
-	- volume Size of 500GiB - 16TiB
-	- Per-volume max throughput of 500 MiB/s
-	- IOPS 500
-	- It's used for frequently accessed, throughput-intensive workloads
-	- E.g., streaming, big data
+	- Use case patterns: It's used for frequently accessed, throughput-intensive workloads; it can't be a boot volume
 - **Cold HDD** (**sc1**):
-	- It's HDD based storage
+	- It's HDD based storage (Large IO size)
+	- Its performance dominant attribute: Throughput
+	- Max Throughput / volume: 250 MiB/s
+	- Max IOPS / volume: 250 
+	- Size of 500 GiB - 16 TiB
 	- It has the lowest storage cost
-	- Infrequently accessed data
-	- Cannot be a boot volume
-	- Volume size of 500 GiB - 16TiB
-	- Per-volume max throuqhput of 250 MiB/s and
-	- IOPS 250
+	- Use case patterns: Infrequently accessed data, Cannot be a boot volume (See use case)
 - It could be created at the same time as an instance is created
 - It could be created from scratch (type, size, AZ, encryption, tags, ...)
 - It could be created (restored) from a snapshot
 	- It could be created in any AZ within the snapshot region
 	- If a snapshot isn't encrypted, we could choose weather or not to create an encrypted volume
 	- If a snapshot is encrypted, we can only create an encrypted volume
+- **EBS-Optimized** vs. non-EBS-Optimized instances:
+	- Legacy non-EBS-optimized instances:
+		- It used a shared networking path for data and storage communications
+		- It resulted in lower performance for storage and normal networking
+	- EBS-optimized mode:
+		- It was historically optional
+		- It's the default now
+		- It adds optimizations and dedicated communication paths for storage and traditional data networking
+		- It allows consistent utilization of both
+		- It's one required feature to support higher performance storage
+	- ![EBS-Optimized vs. non-EBS-Optimized instances](https://blog.turbonomic.com/hs-fs/hubfs/Imported_Blog_Media/Screen-Shot-2018-05-24-at-11_46_41-AM-1024x477-4.png?width=1024&height=477&name=Screen-Shot-2018-05-24-at-11_46_41-AM-1024x477-4.png)
 - More details:
 	- [I/O characteristics](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-io-characteristics.html)
 	- [EBS Types](https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/EBSVolumeTypes.html)
+	- [EBS-Optimized mode](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-optimized.html)
 
 </details>
 
@@ -395,6 +411,7 @@
 	- At point in time T, a snapshot contains only changes made since T - 1
 	- The 1st snapshot contains the initial state of a disk (long)
 	- The following snapshots contain only the changes made since the previous snapshot
+	- ![Incremental snapshot](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/images/snapshot_1a.png)
 - It doesn't have the limitation of incremental backup:
 	- A restore could be not possible if an intermediate backup (Backup i) is lost
 	- To restore a backup at time "t", all backups from 1 to t will be used
@@ -404,6 +421,7 @@
 	- It's **consistent to their point-in-time**
 	- It's done transparently from the OS and any applications that are inside the instance
 	- It could potentially contain data in an inconsistent state: data that isn't persisted is lost
+	- [Crash Consistent vs. Application consistent](https://n2ws.com/blog/ebs-snapshot/ebs-snapshots-crash-consistent-vs-application-consistent)
 - It could be created from a volume:
 	- If a volume is encrypted, the snapshot will be encrypted
 	- If a volume isn't encrypted, the snapshot won't be encrypted
@@ -413,12 +431,11 @@
 	- If the source snapshot isn't encrypted, the target snapshot could be encrypted
 	- If the source snapshot is encrypted, the target snapshot will be encrypted
 - **Snapshot Lifecycle Policy**:
-	- It's possible to run a policy periodically:
-	- Number of snapshots retained
-- ![Incremental snapshot](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/images/snapshot_1a.png)
-- For more details
-	- [AWS Docs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSSnapshots.html)
-	- [Crash Consistent vs. Application consistent](https://n2ws.com/blog/ebs-snapshot/ebs-snapshots-crash-consistent-vs-application-consistent)
+	- It allows to automate snapshot creation 
+	- It's run periodically
+	- It requires to be attached to an IAM role
+	- [Automating the Amazon EBS Snapshot Lifecycle](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/snapshot-lifecycle.html)
+- [For more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSSnapshots.html)
 
 </details>
 
@@ -541,19 +558,54 @@
 </details>
 
 <details>
+<summary>Operations</summary>
+
+- ![EC2 State Diagram](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/images/instance_lifecycle.png)
+- EBS backed-instance **Pending**:
+	- A new instance is launched in a host within the selected AZ (Subnet)
+	- EBS and/or Instance store volumes are created and attached to the instance
+	- A default ENI (eth0) is attached to the instance:
+		- A private IP within the EC2 subnet IP range is created
+		- A private DSN name is associated with the instance
+	- A public IP is created and mapped to the instance eth0, if applicable (a public subnet + public IP sitting is enabled)
+	- Bootstrap script is run
+- EBS backed-instance **Stopping**:
+	- It performs a normal shutdown and transition to a stopped state
+	- All EBS volumes are kept
+	- All Instance store volumes are detached from the instance (their data is lost)
+	- Plaintext DEK is discarded from EC2 Host hardware, if applicable
+	- Private DNS, IPv4 & IPv6 are unchanged
+	- Public DNS, IPv4 & IPv6 are released from the instance, if applicable (in case of public Subnet)
+	- Charges related to the instance (instance and instance store volumes) is suspended
+	- Charge related to EBS storage remains
+- EBS backed-instance **Stopped**:
+	- Attach/detach EBS volumes
+	- Create an AMI
+	- Create a Snapshot
+	- Scale down/up: Change the kernel, ram disk, instance type
+- EBS backed-instance **Starting** (from stopped):
+	- An instance is launched in a new the host and in the intial AZ
+	- EBS volumes are attached to the new instance
+	- Encrypted EBS volumes DEK is decrypted by KMS, if applicable
+	- The plaintext DEK is stored in EC2 host hardware, if applicable
+	- Bootstrap script is run?
+	- Instance store volumes are back to their initial states when the instance was 1st started (or impacted by bootstrapping)
+	- Private DNS, IPv4 & IPv6 are unchanged
+	- New Public DNS, IPv4 & IPv6 are attached to the instance, if applicable (in case of public Subnet)
+- EBS backed-instance **Rebooted**:
+	- The EC2's plaintext DEK is discarded
+	- "Starting" action are run?
+- EBS backed-instance **Terminating**:
+	- Private IPv4 & IPv6 are released from the instance
+	- Public IPv4 & IPv6 are released from the instance
+- [For more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.html)
+
+</details>
+
+<details>
 <summary>Performance</summary>
 
-- EBS-Optimized vs. non-EBS-Optimized instances:
-	- Legacy non-EBS-optimized instances:
-		- It used a shared networking path for data and storage communications
-		- It resulted in lower performance for storage and normal networking
-	- EBS-optimized mode:
-		- It was historically optional
-		- It's the default now
-		- It adds optimizations and dedicated communication paths for storage and traditional data networking
-		- It allows consistent utilization of both
-		- It's one required feature to support higher performance storage
-	- ![EBS-Optimized vs. non-EBS-Optimized instances](https://blog.turbonomic.com/hs-fs/hubfs/Imported_Blog_Media/Screen-Shot-2018-05-24-at-11_46_41-AM-1024x477-4.png?width=1024&height=477&name=Screen-Shot-2018-05-24-at-11_46_41-AM-1024x477-4.png)
+- Use EBS-Optimized Instances (See EBS)
 - EBS Optimization:
 	- It's about the performance of restoring a volume from a Snapshot
 	- When we restore a volume from a snapshot, it doesn't immediately copy all that data to EBS
@@ -602,51 +654,7 @@
 	- It can help reduce cost by allowing us to use our existing server-bound software licenses
 	- It can be purchased On-Demand (hourly)
 	- Could be purchased as a reservation for up to 70% off On-Demand price
-
-</details>
-
-<details>
-<summary>Operations</summary>
-
-- ![EC2 State Diagram](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/images/instance_lifecycle.png)
-- EBS backed-instance **Pending**:
-	- A new instance is launched in a host within the selected AZ (Subnet)
-	- EBS and/or Instance store volumes are created and attached to the instance
-	- A default ENI (eth0) is attached to the instance:
-		- A private IP within the EC2 subnet IP range is created
-		- A private DSN name is associated with the instance
-	- A public IP is created and mapped to the instance eth0, if applicable (a public subnet + public IP sitting is enabled)
-	- Bootstrap script is run
-- EBS backed-instance **Stopping**:
-	- It performs a normal shutdown and transition to a stopped state
-	- All EBS volumes are kept
-	- All Instance store volumes are detached from the instance (their data is lost)
-	- Plaintext DEK is discarded from EC2 Host hardware, if applicable
-	- Private DNS, IPv4 & IPv6 are unchanged
-	- Public DNS, IPv4 & IPv6 are released from the instance, if applicable (in case of public Subnet)
-	- Charges related to the instance (instance and instance store volumes) is suspended
-	- Charge related to EBS storage remains
-- EBS backed-instance **Stopped**:
-	- Attach/detach EBS volumes
-	- Create an AMI
-	- Create a Snapshot
-	- Scale down/up: Change the kernel, ram disk, instance type
-- EBS backed-instance **Starting** (from stopped):
-	- An instance is launched in a new the host and in the intial AZ
-	- EBS volumes are attached to the new instance
-	- Encrypted EBS volumes DEK is decrypted by KMS, if applicable
-	- The plaintext DEK is stored in EC2 host hardware, if applicable
-	- Bootstrap script is run?
-	- Instance store volumes are back to their initial states when the instance was 1st started (or impacted by bootstrapping)
-	- Private DNS, IPv4 & IPv6 are unchanged
-	- New Public DNS, IPv4 & IPv6 are attached to the instance, if applicable (in case of public Subnet)
- - EBS backed-instance **Rebooted**:
-	- The EC2's plaintext DEK is discarded
-	- "Starting" action are run?
- - EBS backed-instance **Terminating**:
-	- Private IPv4 & IPv6 are released from the instance
-	- Public IPv4 & IPv6 are released from the instance
-- [For more details](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.html)
+- [Amazon EBS Volume Performance on Linux Instances ](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSPerformance.html)
 
 </details>
 
@@ -745,7 +753,7 @@
 			- It uses the plaintext DEK to encrypt (decrypt) data from (into) EC2 instance to (from) an EBS volume
 			- It erases the plaintext DEK when the instance is stopped/rebooted
 	- Encryption from an OS perspective:
-		- It requires to to use an OS level encryption available on most OS (Microsoft Windows, Linux)
+		- It requires to use an OS level encryption available on most OS (Microsoft Windows, Linux)
 		- It ensures that data is encrypted from from the OS perspective
 		- It's possible to use OS encryption + EC2 volume encryption at rest
 	- Snapshot: when an encrypted EBS snapshot is copied into another region:
@@ -755,6 +763,17 @@
 	- [IAM Role For EC2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html)
 	- [ID roles use switch role ec2 instance profiles](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html)
 	- [CLI Order of things](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
+	- [Amazon EBS Encryption](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html)
+
+</details>
+
+<details>
+<summary>Monitoring</summary>
+
+- VolumeReadBytes:
+- VolumeWriteOps:
+- VolumeThroughputPercentage:
+- [Monitoring the Status of Your Volumes](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-volume-status.html#using_cloudwatch_ebs)
 
 </details>
 
@@ -821,15 +840,27 @@
 	- Scaling and High-availability: see [Auto scaling Groups](#hybrid-and-scaling---auto-scaling-groups)
 - EC2 storge:
 	- General Purpose (gp2) is the default for most workloads
+		- Recommended for most workloads
+		- System boot volumes
+		- Virtual desktops
+		- Low-latency interactive apps
+		- Development and test environments
 	- Provisioned IOPS (io1):
+		- Critical applications that require sustained IOPS performance, or more than 16,000 IOPS or 250 MiB/s of throughput per volume
+		- Large database workloads: MongoDB, Cassandra
 		- Applications that require sustained IOPS performance
-		- Large database workloads
 	- Throughput Optimized (st1):
 		- Frequently accessed,
 		- Throughput-intensive workloads
-		- E.g., Streaming, big data
+		- Streaming workloads requiring consistent, fast throughput at a low price
+		- Big data, 
+		- Data warehouses
+		- Log processing
+		- It cannot be a boot volume
 	- Cold HDD (sc1):
-		- Infrequently accessed data
+		- Throughput-oriented storage for large volumes of data that is infrequently accessed
+		- Scenarios where the lowest storage cost is important
+		- It cannot be a boot volume
 - Princing models:
 	- On Demand:
 		- Application with short term, spiky, or unpredictable workloads that can't be interrupted
@@ -867,6 +898,8 @@
 - Max SG # / Instance (ENI): 5
 - Max instance # / Spread Placement Group: 7 (SPG is located in a single AZ)
 - Max Instance # / Partition Placement Group: 7 partitions per AZ
+- Encryption is NOT supported by all Instance types
+- Add/remove an instance store volume after an instance is created: Not possible
 
 </details>
 
@@ -4499,7 +4532,7 @@ S3 Request #/s Hard: 3500 PUTs/second.
 	- Modification requires to create a new version or a new Launch Template
 - Scaling Groups asks for
 	- Launch Template version: To select Default, Latest or, a specific version #
-	- Fleet conposition: whether to adhere to "Launch Template" instances or Combine purshase options and instances
+	- Fleet composition: whether to adhere to "Launch Template" instances or Combine purshase options and instances
 
 </details>
 
@@ -4509,6 +4542,13 @@ S3 Request #/s Hard: 3500 PUTs/second.
 - Auto Scaling group allows to automate the scaling in/out
 	- It modifies the default "Desired Capacity" entered when the Auto-Scaling Group is created
 	- It then create/remove instances based on the new "Desired Capacity"
+	- **Protect From Scale in** instance Protection: 
+		- Newly launched instances will be protected from scale in by default 
+		- Auto Scaling will not select protected instances for termination during scale in
+- Scale in:
+	- It selects the AZ with the most instances with at least 1 instance isn't protected from scale in
+	- It selects the AZ with the instances that use the oldest launch configuration, if there is more than 1 AZ with this number of instances, it s  
+	- [Controlling Which Auto Scaling Instances Terminate During Scale In](https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-instance-termination.html) 
 - Scheduled Action:
 	- It automates the scaling in/out based on day/time and recurrence
 	- Input: Start Day/Time; Recurrence (every week; every day; every 5 mn); Max, Min and Desired Capacity
@@ -4520,12 +4560,12 @@ S3 Request #/s Hard: 3500 PUTs/second.
 	- It automates the scaling in/out based on measure that's monitored (E.g., CPU utilization)
 	- Simple scaling policy:
 		- It allows us to define a rule based on an alarm that we create
-		- Inputs: Alarm; Action; Cooldowns
+		- Inputs: Alarm; Action; Cooldown (Health Check Grace Period)
 		- E.g., if AVG CPU utilization of all the instances > 50% (Alarm) => Add n instance(s) (Action) and wait 300 s (Cooldowns)
 		- E.g., if AVG CPU utilization of all the instances < 40% => Remove n instance(s)
 	- Step scaling policy:
 		- It allows to scale in/out differently based on measure ranges (E.g., CPU utilization)
-		- Inputs: Alarm; Steps: measure range, Action; Cooldown
+		- Inputs: Alarm; Steps: measure range, Action; Cooldown (Health Check Grace Period)
 		- E.g.,:
 		- Step 1: if 20% < AVG CPU utilization of all the instances > 30% => Add 1 instance and wait 300s
 		- Step 2: if 30% < AVG CPU utilization of all the instances > 40% => Add 2 instance and wait 300s
@@ -4582,7 +4622,7 @@ S3 Request #/s Hard: 3500 PUTs/second.
 <summary>Best practices</summary>
 
 - For new projects, it's recommended to use Launch Templates because they add significantly more functionaly
-- Include a buffer in the Health check grass period
+- Include a buffer in the Health check grace period
 - High Availability, elastically scalling and self healing architecture:
 	- Elasticity: Launch Template + Auto Scaling Group + Scaling Policy
 	- Self Healing Architecture: Auto Scaling Group + ELB + ELB Health Check
@@ -5040,7 +5080,7 @@ S3 Request #/s Hard: 3500 PUTs/second.
 - It asynchronously backes up data written to such volumes as point in time volume snapshot
 	- It stores these volumes in the cloud as an Amazon EBS snapshot
 	- It stores them incrementally (backups that capture only changed blocks)
-	- It compresses snapshot storage to to minimize storage charges (see S3)
+	- It compresses snapshot storage to minimize storage charges (see S3)
 - Stored Volumes:
 	- It allows to keep our primary data on-premise while it's backed in S3 in a form of EBS snapshot
 	- It allows on-premise applications a low-latency access to theirs datasets while they're backed up in AWS
@@ -5901,7 +5941,7 @@ S3 Request #/s Hard: 3500 PUTs/second.
 - Athena:
 	- It's used for doing OLTP-type queries on data that's in S3
 	- It doesn't require to maintain a database infrastructure
-	- It doesn't require to to load the data into Athena first
+	- It doesn't require to load the data into Athena first
 	- It can query it directly from S3
 	- It's used for serverless querying
 - EMR:

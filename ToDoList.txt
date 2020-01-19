@@ -1,5 +1,6 @@
 - Compare DynamoDB, DynamoDB DAX and, ElastiCache from performance perspective (and pricing)
 - Compare S3, EBS, EFS, Storage Gateway from performance perspective
+- EBS Volume, Snapshots: Operations (vs. Encryption), size could be changed
 - Add S3 Performance, Price, Valid S3 URLs
     - https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html#access-bucket-intro
     - https://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html#example-bucket-policies-use-case-4
