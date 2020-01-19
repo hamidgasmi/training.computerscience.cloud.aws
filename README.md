@@ -2004,98 +2004,131 @@ VPC
 - CloudWatch alrams health checks:
 	- They monitor CloudWatch alarms
 	- e.g., we may want to consider something unhealthy if a DynamoDB table is experiencing performance issues
-- Best Practice:
+
 </details>
 
 <details>
-<summary>Routing Policies</summary>
-- Simple Routing policy:
-	- It's a single record with multiple values a hosted zone (Error for a new 2nd record with the same type and domain name)
-	- It can contain multiple values (IP addresses) or
-	- It can also contain a single AWS resource as an alias type record (1 LB, 1 S3 Bucket Endpoint, 1 VPC Endpoint...)
-	- It returns to a DNS query all the values in a random order (the client can select the appropriate one)
-	- It doesn't support Health check isn't possible
-	- Pros:
-		- Simple as a starting point for our DNS architecture: Good when we're not aware of how our traffic patterns are
-		- Simple with a somewhat even spread of requests (TTL is very important here to avoid the issue below)
-	- Cons:
-		- No performance control (It'sn't a LB architecture): if a big organization caches an IP @, all its users will query a single IP
-		- No healthcheck: if a resource behind an IP @ fail, it will continue sending requests to it
-- Failover Routing policy:
-	- It enhances "Simple Routing" policy
-	- It's a single Primary record + a single Secondary record with the same name
-	- It (primary and second records) can contain multiple values (IP addresses) or a single AWS resource as an alias type record
-	- They support healthcheck (calculated healthchecks if primary record contains multiple values?)
-	- Queries will resolve to the primary unless It's unhealthy:
-	- Queries will resolve to the secondary if the primary is unhealthy
-	- The secondary records cold provide emergency resources during failures:
-		- E.g., an S3 static website that presents a maintenance page
-		- with usefull information: Failure status, contact details
-	- It can be conbined with other routing policies to allow multiple primary and secondary reconrds
+<summary>Simple Routing Policy</summary>
 
-- Multivalue Answer Routing policy:
-	- It's multiple records with the same name
-	- Its records can contain 1 value only (IP address or AWS product)
-	- it supports healthcheck
-	- It responds to DNS queries with up to 8 random healthy records
-- Weighted Routing:
-	- It's multiple records with the same name
-	- Its records have a weight and a unique Set ID
-	- It allows to split traffic based on different weights assigned
-	- It can be used to control the amount of traffic that reaches specific resources:
-		- To test new software/products/ AB Testing?
-		- When resources are being added or removed from a configuration that doesn't use a LB
-		- No performance or loading control (It'sn't a LB architecture)
-	- We can attach a health check to a record so that Route 53 can omit the record as long as the associated EC2 instance isn't healthy
-	- E.g., we can set 10% of our traffic to go to US-EAST-1 and 90% to go to EU-WEST-1
-	- The weight is a value. It'sn't a %
-	- So, if we add to address with the following weights: 20 and 30 => the corresponding % will be: 40% and 60%
-- Latency-based Routing policy:
-	- It's multiple records with the same name: they're considered part of the same latency-based set (if the name is different, they're not)
-	- Its records are allocated to a unique region and have a unique Set ID
-	- It consults a latency database (DNS Resolver location - Policy Region - Latency) when a request occurs from a resolver server
-	- It returns the record set with the lowest network latency to the resolver server (end-user)
-	- The latency calculation is NOT made between customer's resolver server location and our resource location!
-	- It'sn't related to geography but to network condition instead
-	- We can attach a health check to a record
-- Geolocation Routing policy:
-	- It's multiple records with the same name
-	- It lets to choose the resources that server traffic based on the geographic region from which queries originate
-	- Its records are configured for:
-		- a Country: the lowest abstration level
-		- a Continent:
-		- Default: the highest abstration level (while planete)
-	- Its IP matching process is:
-		- A record set is used for queries originated from its region
-		- When multiple regions match a query region, the record set with the lowest abstraction level is returned
-		- If this process fails, the default record set is returned (if it exists)
-		- If no record set is configured for the originating query region, the default record set is returned (if it exists)
-		- If matching record set health check fails, It's then excluded in this process
-		- If there is no record matching and there is no default record, then "No answer" is returned
-	- E.g. 1, a website like Netflix: its content is based on their customer' country
-	- E.g. 2, we might want all queries from Europe (/US) to be routed to a fleet of EC2 instances:
-		- They're specifically configured for our European (US) customers
-		- They may have the local language (English, Spanish, Chinese) of our European (US) customers
-		- They may display all prices in Euros ($)
-		- We could set US record set as a default, canadien customers will be then redirected to the US EC2 fleet
-- Geoproximity Routing (Traffic Flow Only):
-	- To use Geoproximity routing, It's required to use Route 53 traffic flow
-	- Traffic flow is: ?
-	- Geoproximity Routing lets Route 53 routes traffic to our resources based on the geographic location of our users and our resources
-	- We can also optionally choose to route more or less traffic to a given resource by specifying a value, known as a bias
-	- A bias expands or shrinks the size of the geographic region from which traffic is routed to a resource
+- It's a single record with multiple values a hosted zone (Error for a new 2nd record with the same type and domain name)
+- It can contain multiple values (IP addresses) or
+- It can also contain a single AWS resource as an alias type record (1 LB, 1 S3 Bucket Endpoint, 1 VPC Endpoint...)
+- It returns to a DNS query all the values in a random order (the client can select the appropriate one)
+- It doesn't support Health check isn't possible
+- Pros:
+	- Simple as a starting point for our DNS architecture: Good when we're not aware of how our traffic patterns are
+	- Simple with a somewhat even spread of requests (TTL is very important here to avoid the issue below)
+- Cons:
+	- No performance control (It'sn't a LB architecture): if a big organization caches an IP @, all its users will query a single IP
+	- No healthcheck: if a resource behind an IP @ fail, it will continue sending requests to it
+
+</details>
+
+<details>
+<summary>Failover Routing Policy</summary>
+
+- It enhances "Simple Routing" policy
+- It's a single Primary record + a single Secondary record with the same name
+- Its records (primary and secondary):
+	- They can contain multiple values (IP addresses) or a single AWS resource as an alias type record
+	- They support healthcheck (calculated healthchecks if primary record contains multiple values?)
+- It resolves queries to the primary unless It's unhealthy
+- It resolves queries to the secondary if the primary is unhealthy
+- Its secondary records cold provide emergency resources during failures:
+	- E.g., an S3 static website that presents a maintenance page
+	- with usefull information: Failure status, contact details
+- It can be conbined with other routing policies to allow multiple primary and secondary records
+
+</details>
+
+<details>
+<summary>Multivalue Answer Routing Policy</summary>
+
+- It's multiple records with the same name
+- Its records can contain 1 value only (IP address or AWS product)
+- It supports healthcheck
+- It responds to DNS queries with up to 8 random healthy records
+
+</details>
+
+<details>
+<summary>Weighted Routing Policy</summary>
+
+- It's multiple records with the same name
+- Its records have a weight and a unique Set ID
+- It allows to split traffic based on different weights assigned
+- It can be used to control the amount of traffic that reaches specific resources:
+	- To test new software/products/ AB Testing
+	- When resources are being added or removed from a configuration that doesn't use an ELB
+	- No performance or loading control (It'sn't a LB architecture)
+- It could be attached with a health check to a record: It can then omit the record as long as the associated EC2 instance is unhealthy
+- Its weight is a value: 
+	- It'sn't a %
+	- If we add to address with the following weights: 20 and 30 => the corresponding % will be: 40% and 60%
+- E.g., we can set 10% of our traffic to go to US-EAST-1 and 90% to go to EU-WEST-1
+
+</details>
+
+<details>
+<summary>Latency-based Routing Policy</summary>
+
+- It's multiple records with the same name: they're considered part of the same latency-based set (if the name is different, they're not)
+- Its records are allocated to a unique region and have a unique Set ID
+- It consults a latency database (DNS Resolver location - Policy Region - Latency) when a request occurs from a resolver server
+- It returns the record set with the lowest network latency to the resolver server (end-user)
+- Its latency calculation is NOT made between customer's resolver server location and our resource location!
+- It'sn't related to geography but to network condition instead
+- Its records can be attach with a health check
+
+</details>
+
+<details>
+<summary>Geolocation Routing Policy</summary>
+
+- It's multiple records with the same name
+- It lets to choose the resources that server traffic based on the geographic region from which queries originate
+- Its records are configured for:
+	- a Country: the lowest abstration level
+	- a Continent:
+	- Default: the highest abstration level (while planete)
+- Its IP matching process is:
+	- A record set is used for queries originated from its region
+	- When multiple regions match a query region, the record set with the lowest abstraction level is returned
+	- If this process fails, the default record set is returned (if it exists)
+	- If no record set is configured for the originating query region, the default record set is returned (if it exists)
+	- If matching record set health check fails, It's then excluded in this process
+	- If there is no record matching and there is no default record, then "No answer" is returned
+- E.g. 1, a website like Netflix: its content is based on their customer' country
+- E.g. 2, we might want all queries from Europe (/US) to be routed to a fleet of EC2 instances:
+	- They're specifically configured for our European (US) customers
+	- They may have the local language (English, Spanish, Chinese) of our European (US) customers
+	- They may display all prices in Euros ($)
+	- We could set US record set as a default, canadien customers will be then redirected to the US EC2 fleet
+
+</details>
+
+<details>
+<summary>Geoproximity Routing Policy (Traffic Flow Only)</summary>
+
+- To use Geoproximity routing, It's required to use Route 53 traffic flow
+- Traffic flow is: ?
+- Geoproximity Routing lets Route 53 routes traffic to our resources based on the geographic location of our users and our resources
+- We can also optionally choose to route more or less traffic to a given resource by specifying a value, known as a bias
+- A bias expands or shrinks the size of the geographic region from which traffic is routed to a resource
 
 </details>
 
 <details>
 <summary>Limits</summary>
+
 </details>
 
 <details>
-<summary>Conventions</summary>
+<summary>Best practices</summary>
 
-- Healthcheck name: same as the corresponding domain name
-- Failover Routing recommendation: TTL <= 60 to let client respond quickly to changes in health status
+- Conventions:
+	- Healthcheck name: same as the corresponding domain name
+	- Failover Routing recommendation: TTL <= 60 to let client respond quickly to changes in health status
 
 </details>
 
@@ -2866,13 +2899,6 @@ S3 Request #/s Hard: 3500 PUTs/second.
 <summary>Lifecycle management</summary>
 
 - It's used to move files between classes based on access patterns
-
-</details>
-
-<details>
-<summary>Performance modes</summary>
-
-
 
 </details>
 
