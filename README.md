@@ -1184,6 +1184,19 @@
 
 <details>
 <summary>Use cases</summary>
+
+- Migration: From On-premise monolith application to Cloud Serverless application
+	- Traditional APIs can be migrated to API Gateway in a monolithic form
+	- Then gradually they can be moved to a microservices architecture
+	- Finally, once components have been fully broken up to micro-services, a serverless and FaaS based architecture is possible
+	- v1: Monolith application in AWS:
+		- API Gateway can access some AWS services directly using prixy mode
+		- E.g. EC2 instances
+	- v2: Microservices:
+		- API Gateway + Amazon Fargate + Amazon Aurora
+	- v3: Serverless:
+		- API Gateway + AWS Lambda + Amazon DynamoDB
+
 </details>
 
 <details>
