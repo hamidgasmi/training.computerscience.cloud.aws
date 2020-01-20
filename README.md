@@ -1101,6 +1101,8 @@
 
 ![API Gateway architecture](https://docs.aws.amazon.com/apigateway/latest/developerguide/images/Product-Page-Diagram_Amazon-API-Gateway-How-Works.png)
 
+![API Gateway architecture](https://d2908q01vomqb2.cloudfront.net/1b6453892473a467d07372d45eb05abc2031647a/2018/06/13/regional-with-private-int.png)
+
 </details>
 
 <details>
@@ -1114,6 +1116,14 @@
 	- Set security
 	- Choose target (EC2, Lambda, DynamoDB)
 	- Set request and Response transformations
+
+</details>
+
+<details>
+<summary>Integration</summary>
+
+- VPC Link to integrate on-premises backend solutions through DirectConnect and private VPC
+	- [Introducing API Gateway private endpoints](https://aws.amazon.com/blogs/compute/introducing-amazon-api-gateway-private-endpoints/)
 
 </details>
 
@@ -1136,6 +1146,7 @@
 	- It allows to improve APIs latency
 	- It requires to be enabled
 	- It requires to specify a TTL (time-to-live) period in seconds
+	- [Enable Amazon API Gateway Caching](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-caching.html#enable-api-gateway-caching)
         
 </details>
 
@@ -1154,22 +1165,57 @@
 <details>
 <summary>Security</summary>
 
-- It throttles requests to prevent attacks:  
-	- Attackers could try and flood our API to try cost us lots of money or to try and take it down
-	- but we can actually just throttle requests to stop people from doing that
+- It throttles requests to prevent attacks:
+	- It sets a limit on a steady-state rate and a burst of request submissions against all APIs in an account
+	- It's using the [token bucket](https://en.wikipedia.org/wiki/Token_bucket) algorithm where the token counts for a request
+	- The steady-state rate:
+		- The number of requests per second and API Gateway can handle
+		- It's set to 10,000 by default
+	- The **burst**: 
+		- It's the maximum bucket size across all APIs within an AWS account
+		- It's the number of concurrent request submissions that API Gateway can fulfill at any moment without returning 429 Too Many Requests error reponse
+		- By defaut it's set to 5,000
+	- It fails the **limit-exceeding** requests and returns **429 Too Many Requests** error to the client, when request submissions exceed the steady-state rate and bust limits
+	- E.g. 1, If a caller sends 10,000 req. in a 1 second period evenly (10 req/ms), API Gateway processes all req. without dropping any
+	- E.g. 2, If a caller sends 10,000 req. in the 1st ms, API Gateway serves 5,000 of those req. and throttles the rest in the 1-second period
+	- E.g. 3, If a caller sends 5,000 req. in the 1st ms and then evenly spreads another 5,000 req. through the remaining 999 ms (~5 req/ms), API Gateway processes all 10,000 req. in the 1-second period without returning 429 error error responses
+	- E.g. 4, If a caller sends 5,000 req. in the 1 ms and waits until the 101st ms to send another 5,000 requests, 
+		- API Gateway processes 6,000 req. and throttles the rest in the 1-second period 
+		- This is because at the rate of 10,000 rps, API Gateway has served 1,000 requests after the first 100 ms and thus emptied the bucket by the same amount.
+		- Of the next spike of 5,000 requests, 1,000 fill the bucket and are queued to be processed.
+		- The other 4,000 exceed the bucket capacity and are discarded
+	- E.g. 5, If a caller sends 5,000 req. in the 1st ms, sends 1,000 requests at the 101st ms, and then evenly spreads another 4,000 req through the remaining 899 milliseconds, 
+		- API Gateway processes all 10,000 requests in the 1-second period without throttling
+	- [Token Bucket Burst](https://docs.aws.amazon.com/apigateway/latest/developerguide/images/tokenBucketBurst.png)
+	- [Throttle API Requests for Better Throughput](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-request-throttling.html)
+	- [Amazon API Gateway Usage Plans Now Support Method Level Throttling](https://aws.amazon.com/about-aws/whats-new/2018/07/api-gateway-usage-plans-support-method-level-throttling/)
+- It's provided by default with "**Distributed Denial-of-Service**" (**DDoS**) attacks
+- IAM Roles and Policies
+- Resource Policy:
+	- [How Amazon API Gateway Resource Policies Affect Authorization Workflow](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-authorization-flow.html)
+	- [AWS Condition Keys that can be used in API Gateway Resource Policies](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-resource-policies-aws-condition-keys.html)
 - It supports AWS Certificate Manager: free SSL/TLS certificates 
 - **CORS** (**Cross-Origin Resource Sharing**):
 	- It's a way to relax **same-origin policy**
 	- It allows different AWS components to talk to each other (They've different domain names: S3, CloudFront, API Gateway domain names)
 	- [Enable CORS for an API Gateway REST API Resource](https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-cors.html)
-
+- Lambda authorizers
+- Amazon Cognito user pools
+- Client-side SSL certificates
+- Usage plans
+- [Controlling Access to API Gateway APIs](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-controlling-access-to-apis.html)
 </details>
 
 <details>
 <summary>Monitoring</summary>
 
 - Cloud-Watch to log all requests for monitoring
-- Track and control usage by API key
+- **Access Loggin**:
+	- It's to log who has accessed an API and how the called accessed it
+	- [For more details](https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-logging.html)
+- AWS CloudTrail:
+	- It provides a record of action taken by an AWS user, role, or an AWS service in API Gateway
+	- [For more details](https://docs.aws.amazon.com/apigateway/latest/developerguide/cloudtrail.html)
 
 </details>
 
@@ -1201,6 +1247,10 @@
 
 <details>
 <summary>Limits</summary>
+
+- Throttle steady-state request rate: 10,000 rps (default)
+- The burst size: 5,000 requests across all APIs within an AWS account (default)
+
 </details>
 
 <details>
