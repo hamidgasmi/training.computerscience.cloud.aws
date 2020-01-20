@@ -1079,6 +1079,134 @@
 
 ---
 
+
+## Serverless Compute - API Gateway
+
+<details>
+<summary>Description</summary>
+
+- It's a fully managed Web API service
+- It supports: **Rest API** and **WebSocket API**
+    - Expose HTTPS endpoints to define a RESTful API
+	- Serverless-ly connect services like Lambda & DynamoDB
+- It could access directly some services without the need for any intermediate compute
+- It allows to maintain multiple versions of our API (Unit, Acceptance, Production APIs for example)
+- E.g., it allows access to data stored in DynamoDB with a Lambda function
+
+</details>
+
+<details>
+<summary>Architecture</summary>
+
+![API Gateway architecture](https://docs.aws.amazon.com/apigateway/latest/developerguide/images/Product-Page-Diagram_Amazon-API-Gateway-How-Works.png)
+
+</details>
+
+<details>
+<summary>Configuration</summary>
+
+- Protocol: Rest API, WebSocket API.  
+- Define an API (container): 
+- Define **Resources** and **nested Resources** (URL paths): 
+- For each Resource:
+	- Select supported HTTP methods
+	- Set security
+	- Choose target (EC2, Lambda, DynamoDB)
+	- Set request and Response transformations
+
+</details>
+
+<details>
+<summary>Deployment</summary>
+
+- It Uses API Gateway domain, by default
+- It can use custom domain
+- It supports AWS Certificate Manager: free SSL/TLS certificates
+
+</details>
+
+<details>
+<summary>Scalability</summary>
+
+- It scales effortlessly
+- **API Gateway Caching**:
+	- It caches endpoints' responses (E.g., DynamoDB endpoint)
+	- It allows to reduce the # of calls made to an endpoint (reduce costs)
+	- It allows to improve APIs latency
+	- It requires to be enabled
+	- It requires to specify a TTL (time-to-live) period in seconds
+        
+</details>
+
+<details>
+<summary>Consistency</summary>
+</details>
+
+<details>
+<summary>Resilience</summary>
+</details>
+
+<details>
+<summary>Disaster Recovery</summary>
+</details>
+
+<details>
+<summary>Security</summary>
+
+- It throttles requests to prevent attacks:  
+	- Attackers could try and flood our API to try cost us lots of money or to try and take it down
+	- but we can actually just throttle requests to stop people from doing that
+- It supports AWS Certificate Manager: free SSL/TLS certificates 
+- **CORS** (**Cross-Origin Resource Sharing**):
+	- It's a way to relax **same-origin policy**
+	- It allows different AWS components to talk to each other (They've different domain names: S3, CloudFront, API Gateway domain names)
+	- [Enable CORS for an API Gateway REST API Resource](https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-cors.html)
+
+</details>
+
+<details>
+<summary>Monitoring</summary>
+
+- Cloud-Watch to log all requests for monitoring
+- Track and control usage by API key
+
+</details>
+
+<details>
+<summary>Pricing</summary>
+
+- API calls # +
+- Data transferred Size +
+- Caching required to improve performance
+
+</details>
+
+<details>
+<summary>Use cases</summary>
+</details>
+
+<details>
+<summary>Limits</summary>
+</details>
+
+<details>
+<summary>Best practices</summary>
+</details>
+
+<details>
+<summary>Foundation</summary>
+
+- Web-API and Rest
+- Web Socket protocol 
+- [Same-Origin policy](https://en.wikipedia.org/wiki/Same-origin_policy)
+- CORS
+- SSL/TLS certificates
+- Micro-Services architecture
+
+</details>
+
+---
+
 ## Containerized Compute - Elastic Container Service (ECS)
 
 <details>
@@ -1799,26 +1927,7 @@
 	- It'sn't currently supported by VPNs, customer gateways, and VPC endpoints
 - For more details
 	- [VPC Limits](https://docs.aws.amazon.com/vpc/latest/userguide/amazon-vpc-limits.html)
-
  
- 
-
-
-	
-
- 
-
-
-	
-
-This primary CIDR and all secondary CIDR blocks count toward this limit. 
-Maximum: 50.  
-
-VPC 
-	
-
-
-
 </details>
 
 <details>
@@ -2115,6 +2224,28 @@ VPC
 - Geoproximity Routing lets Route 53 routes traffic to our resources based on the geographic location of our users and our resources
 - We can also optionally choose to route more or less traffic to a given resource by specifying a value, known as a bias
 - A bias expands or shrinks the size of the geographic region from which traffic is routed to a resource
+
+</details>
+
+<details>
+<summary>Monitoring</summary>
+
+- Endpoint Check (see above)
+- CloudWatch alrams health checks (see above)
+- Calculated healthcheck (see above)
+
+</details>
+
+<details>
+<summary>Pricing</summary>
+</details>
+
+<details>
+<summary>Use cases</summary>
+
+- Split-view:
+	- We have 2 versions of an application. The internal version may contain additional information or features for administration
+	- We have a new version of an applicaiton. We would like to test it without distrupting the public version
 
 </details>
 
