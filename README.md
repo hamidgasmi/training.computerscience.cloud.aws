@@ -15,6 +15,7 @@
 - [AWS Organization](#aws-Organization)
 - [Compute - Elastic Cloud Computing (EC2)](#compute---elastic-cloud-computing-ec2)
 - [Serverless Compute - Lambda](#serverless-compute---lambda)
+- [Serverless Compute - API Gateway](#serverless-compute---api-gateway)
 - [Containerized Compute - Elastic Container Service (ECS)](#containerized-compute---elastic-container-service-ecs)
 - [Networking - Virtual Private Cloud (VPC)](#networking---virtual-private-cloud-vpc)
 - [Networking - Route 53](#networking---route-53)
