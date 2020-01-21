@@ -4102,18 +4102,33 @@ S3 Request #/s Hard: 3500 PUTs/second.
 <details>
 <summary>Scalability</summary>
 
-- It supports 2 **Read/Write capacity modes**
+- **Read/Write Capacity modes**:
 	- It controls how a table capacity is managed
 	- It controls how we're charged from read/write throughputs
 - **On-Demand** mode:
 	- The request rate is only limited by the DynamoDB throughput default table limits
 	- It automatically scales to handle performance demands and bills are per-request charge
 - **Provisioned** mode:
-	- It's configured with static read capacity units (RCU) and write capacity units (WCU)
-	- Every operation on ITEMS consumes at least 1 RCU or WCU  (no partial RCU/WCU)
+	- A table is configured with static read and write capacity units (RCU and WCU)
+	- Every operation on items consumes at least 1 RCU or WCU  (- Partial RCU/WCU cannot be consumed)
+	- WCU: **1 KB per s** of data or less written to a table
+	- RCU: **4 KB per s** of data or less read from a table in a stronly consistent way
+	- RCU: **8 KB per s** of data or less read from a table in an eventual consistent way
+	- Atomic transactions requires x2 the RCU
 	- For a given PK value, a DynamoDB table can't exceed the maximum performance that's allocated to the partition (not the table)
 	- For 1 single PK value, we can only ever get the maximum performance that's allocated to the partition (not to the table)
 	- So when we're allocating performance for a DynamoDB table, we're actually doing is allocating it to its partitions (not to the table)
+	- **Provisioned Throughput calculations**:
+		- E.g. 1: A system needs to store 60 patient records of 1.5 every minute
+			- Assumption: 1 record written per second = 1 WCU of a maximum of 1 KB item (AWS provides a buffer to smooth this out)
+			- Each write has a size of 1.5 KB = 2 WCU
+			- Total WCU: 2
+		- E.g. 2: A weather application reads data from a Dynamo DB table, Each Item in the table is 7 KB in size. How many RCUs should be set on the table to allow for 10 read per second:
+			- Assumption: Eventual consistent read mode (since it's the default)
+			- 10 reads per second = 10 RCU of a maximum 4 KB item
+			- Each read has a size of 7 KB = 2 RCU
+			- Total RCU for eventual consistent read = 20 RCUs / 2 = 10 RCUs
+		- [How to Calculate Read and Write Capacity](https://linuxacademy.com/guide/20310-how-to-calculate-read-and-write-capacity-for-dynamodb/)
 	- **Auto Scaling**:
 		- It's only possible with Provisioned Read/Write capacit mode
 		- It's active by default
@@ -4127,6 +4142,9 @@ S3 Request #/s Hard: 3500 PUTs/second.
 			- Amazon CloudWatch to monitor a table’s RC and WC metrics + alarms to tracks consumed capacity
 			- See diagram below
 		- ![Auto Scaling Architecture](https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2019/02/27/autoscaling_diagram_FINAL_022719_700x489.jpg)
+	
+
+
 - For more details
 	- [How It Works: Read/Write Capacity Mode](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html)	
 	- [Amazon DynamoDB Auto Scaling performance](https://aws.amazon.com/blogs/database/amazon-dynamodb-auto-scaling-performance-and-cost-optimization-at-any-scale/)
@@ -4140,7 +4158,7 @@ S3 Request #/s Hard: 3500 PUTs/second.
 	- They're done on the leader node
 	- Replications are made from the leader node to the other non leader nodes
 	- Data is written in all AZs within a second (< 1s)
-	- It will consume 1 WCU for every 1KB or less of data
+	- It consumes 1 WCU for every 1KB or less of data
 - Readings support 2 modes:
 	- Strongly consistent read:
 		- Data is read from the leader node
@@ -4157,32 +4175,6 @@ S3 Request #/s Hard: 3500 PUTs/second.
 		- We'll consume 10 RCU with strongly consistent read
 		- We'll consume 5 RCU with eventually consistent mode
 	- All costs and calculations are based on Strongly consistent mode
-- Read/Writting modes:
-	- On demand:
-	- Provisioned Throughput mode:
-		- A table is configured with read and write capacity units (RCU and WCU)
-		- Every operation on items consumes at least 1 RCU/WCU
-		- Partial RCU/WCU cannot be consumed
-		- WCU: 1 KB of data or less written to a table per second
-		- RCU: 4 KB of data or less read from a table per second in a stronly consistent way
-		- RCU: 8 KB of data or less read from a table per second in an eventual consistent way
-		- Atomic transactions requires x2 the RCU
-	- Auto-Scaling Provisioned:
-		- We don't have to explicitly specify the RCU and WCU
-		- We can enable auto-scaling
-		- We can define a minimum and maximum RCU and WCU and
-		- DynamoDB will automatically adjust the RCU and WCU allocated to a table based on those demands
-- Provisioned Throughput calculations:
-	- E.g. 1: A system needs to store 60 patient records of 1.5 every minute
-		- Assumption: 1 record written per second = 1 WCU of a maximum of 1 KB item (AWS provides a buffer to smooth this out)
-		- Each write has a size of 1.5 KB = 2 WCU
-		- Total WCU: 2
-	- E.g. 2: A weather application reads data from a Dynamo DB table, Each Item in the table is 7 KB in size. How many RCUs should be set on the table to allow for 10 read per second:
-		- Assumption: Eventual consistent read mode (since it's the default)
-		- 10 reads per second = 10 RCU of a maximum 4 KB item
-		- Each read has a size of 7 KB = 2 RCU
-		- Total RCU for eventual consistent read = 20 RCUs / 2 = 10 RCUs
-	- [How to Calculate Read and Write Capacity](https://linuxacademy.com/guide/20310-how-to-calculate-read-and-write-capacity-for-dynamodb/)
 
 </details>
 
@@ -6105,8 +6097,8 @@ S3 Request #/s Hard: 3500 PUTs/second.
 	- It splits queries into individual components
 	- It allocates a component to a particular slice of a node
 - Multiple compute nodes:
-		- They has slices of data
-		- They perform distributed queries on their sliced data
+	- They has slices of data
+	- They perform distributed queries on their sliced data
 
 </details>
 
