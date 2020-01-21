@@ -3930,7 +3930,7 @@ S3 Request #/s Hard: 3500 PUTs/second.
 	- It's wide-column store:
 		- It's Key Value database
 		- It's a 2 dimensional column store database
-- It supports Attribute concept:
+- It supports **Attribute** concept:
 	- It's like a column in other dbs
 	- It's a key (attribute name) and value
 	- It could be a **Partition Key** (**PK**) or a **Hash Key**
@@ -3938,14 +3938,14 @@ S3 Request #/s Hard: 3500 PUTs/second.
 	- It supports different types
 	- A type of a given attribute could be different across rows
 	- It could be Nested
-- It supports Item concept:
+- It supports **Item** concept:
 	- It's like a row in other dbs
 	- It's a collection of attributes
 	- It's inside a table that share the same key structure as every other item in the table
 	- It has its unique primary key: PK only or PK and SK
-	- It's a Json document
+	- It's a **Json** document
 	- It could have up to 400 KB in size
-- It supports Table concept:
+- It supports **Table** concept:
 	- It's a collection of items: 0 or more items
 	- Its name must be unique within its region and AWS account
 	- It doesn't enforce a rigid schema across all of its items
@@ -3955,6 +3955,19 @@ S3 Request #/s Hard: 3500 PUTs/second.
 	- Its ARN:
 		- Format: arn:${Partition}:dynamodb:${Region}:${Account}:table/${TableName}
 		- E.g., arn:aws:dynamodb:us-east-1:191449997525:table/myDynamoDBTable
+- It's split across **Partitions**:
+	- It starts with 1 partition 
+	- It grows depending on the table's size and capacity
+	- It detemines its table performance
+	- [For more details](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.Partitions.html)
+- **Read Capacity** and **Write Capacity**
+	- They allow to control performance at the table level 
+	- It's done by providing **Read Capacity Unit** (**RCU**) and **Write Capacity Unit** (**WCU**)
+	- They're related to a DynamoDB partitions performance:
+		- For a given PK value, a DynamoDB table can't exceed the maximum performance that's allocated to the partition (not the table)
+		- For 1 single PK value, we can only ever get the maximum performance that's allocated to the partition (not to the table)
+		- So when we're allocating performance for a DynamoDB table, we're actually doing is allocating it to its partitions (not to the table)
+		- This is why it's important to choose the right Primary Key
 - E.g. We need to store weather data that is sent by weather station every 30 mn
 	- We need a table: weather_data
 	- For each item, we need a Partition Key (a number) to identify weather station
@@ -3965,12 +3978,10 @@ S3 Request #/s Hard: 3500 PUTs/second.
 <details>
 <summary>Architecture</summary>
 
-- DynamoDB data is split across Partitions:
-	- A table starts with 1 partition and it grows depending on this table's size and its capacity (see scalability)
-- A Hashing function is used to associate a data's PS to a partition where data will be put to or got from
+- A Hashing function is used to associate a data's PK to a partition where data will be put to or got from
 - A partition contain 3 nodes:
-	- 1 Leader node:
-	- 2 additional nodes
+	- 1 **Leader node**:
+	- **2 additional nodes**
 - ![Architecture](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/images/HowItWorksPartitionKeySortKey.png)
 - ![Partitions](https://d1o2okarmduwny.cloudfront.net/wp-content/uploads/2014/07/Screen-Shot-2019-04-23-at-2.10.39-PM.png)
 
@@ -3986,12 +3997,12 @@ S3 Request #/s Hard: 3500 PUTs/second.
 - Put an item:
 	- It's writing an item
 	- It requires to specify an item's primary key: PK only or PK and SK
-	- It'sn't allowed to put a partial item: all attributes must be written at the same time
+	- It's NOT allowed to put a partial item: all attributes must be written at the same time
 	- It returns HTTP status code 200 when data it stored persistently (succesfuly)
 - Scan:
 	- It doesn't require any parameters
-	- It no parameter is added, it will then list/retrieve all item in the scaned table
-	- It allow additional filters on any attribute of the table
+	- If no parameter is added, it will then list/retrieve all item in the scaned table
+	- It allows additional filters on any attribute of the table
 	- When a filter isn't on a primary key,
 		- It read all items of a table;
 		- It excludes items that don't match the filter;
@@ -4011,53 +4022,6 @@ S3 Request #/s Hard: 3500 PUTs/second.
 	- It could be applied on any attribute (PK, SK or a simple attribute not key)
 	- It requires a value
 	- It requires a type of the attribute when It'sn't applied on a PK nor a SK
-
-</details>
-
-<details>
-<summary>Index</summary>
-
-- It provides an alternative representation of data in a table
-- It's useful for applications with varying query demands
-- Projected attributes:
-	- Indexes can have either Keys only, All table's attributes or some attributes
-	- It allows to reduce the amount of data read when items are read from the index
-	- It can help to improve performance but
-	- It can cause a huge performance penalty if non-projected attributes are read from it (they're fetched from its table)
-- **Local Secondary Index** (**LSI**):
-	- It must be created at the same time as creating a table
-	- It must be created on tables with composite primary key
-	- It uses the same PK but an alternative SK
-	- Query operations could be run on the table or its LSIs (filter: PS and index's SK)
-	- It's a part of the table:
-		- It shares its table's read/writting modes: privisioned or on-demand
-		- It shares the RCU and WCU values for the main table
-		- It allows performing strongly consistent and eventually consistent reads on the table
-	- The table’s SK is always projected into the index
-	- ![E.g.,](https://blog.h4.nz/media/DynamoDB/LSI.png)
-- **Global Secondary Index** (**GSI**):
-	- It can be created at any point after the table is created
-	- It can use different PK and SK
-	- It's separated from its table:
-		- It doesn't share the data with its table
-		- Its data is replicated asynchronously from its table => latency
-		- It doesnt' support Strong consistent read
-		- It has its own setting: RCU/WCU; Auto-scalling WC and RC
-
-</details>
-
-<details>
-<summary>Global Tables</summary>
-
-- It's possible to create a set of multi-master table
-	- It allows to have a table in different AWS regions
-	- It replicates data to all of the other replica tables
-	- Reads and Writes are possible from/to all replicas
-- It requires:
-	- To enable Streams,
-	- To start with an empty table
-	- To add a new region to the table
-- It employs a [last writer wins conflict resolution protocol](https://dzone.com/articles/conflict-resolution-using-last-write-wins-vs-crdts)
 
 </details>
 
@@ -4094,14 +4058,70 @@ S3 Request #/s Hard: 3500 PUTs/second.
 </details>
 
 <details>
+<summary>Global Tables</summary>
+
+- It's a set of multi-master table
+	- It allows to have a table in different AWS regions
+	- It replicates data to all of the other replica tables
+	- Reads and Writes are possible from/to all replicas
+- It employs [last writer wins conflict resolution protocol](https://dzone.com/articles/conflict-resolution-using-last-write-wins-vs-crdts)
+- It requires:
+	- To enable Streams,
+	- To start with an empty table
+	- To add a new region to the table
+
+</details>
+
+<details>
+<summary>Index</summary>
+
+- It provides an alternative representation of data in a table
+- It's useful for applications with varying query demands
+- **Projected attributes**:
+	- Indexes can have either Keys only, All table's attributes or some attributes
+	- It allows to reduce the amount of data read when items are read from the index
+	- It can help to improve performance but
+	- It can cause a huge performance penalty if non-projected attributes are read from it (they're fetched from its table)
+- **Local Secondary Index** (**LSI**):
+	- It must be created at the same time as creating a table
+	- It must be created on tables with composite primary key
+	- It uses the same PK but an alternative SK
+	- Query operations could be run on the table or its LSIs (filter: PS and index's SK)
+	- It's a part of the table:
+		- It shares its table's read/writting modes: privisioned or on-demand
+		- It shares the RCU and WCU values for the main table
+		- It allows performing strongly consistent and eventually consistent reads on the table
+	- The table’s SK is always projected into the index
+	- ![E.g.,](https://blog.h4.nz/media/DynamoDB/LSI.png)
+- **Global Secondary Index** (**GSI**):
+	- It can be created at any point after the table is created
+	- It can use different PK and SK
+	- It's separated from its table:
+		- It doesn't share the data with its table
+		- Its data is replicated asynchronously from its table => latency
+		- It doesnt' support Strong consistent read
+		- It has its own setting: RCU/WCU; Auto-scalling WC and RC
+
+</details>
+
+<details>
+<summary>Read/write capacity mode</summary>
+
+- It controls how a table capacity is managed and how we're charged from read/write throughputs
+- It supports 2 modes
+- **On-Demand**
+	- The request rate is only limited by the DynamoDB throughput default table limits
+- **Provisioned**
+- [For more details](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html)	
+
+</details>
+
+<details>
 <summary>Scalability</summary>
 
-- Static Capacity:
-	- For a given key value can't exceed the maximum performance that's allocated to the partition (not the table)
-	- For 1 single PK value, we can only ever get the maximum performance that's allocated to the partition (not to the table)
-	- So when we're allocating performance for a DynamoDB table, we're actually doing is allocating it to its partitions (not to the table)
-	- This is why it's important to choose the right Primary Key
+- 
 - **Auto Scaling**:
+	- It's only possible with Provisioned Read/Write capacit mode
 	- It's active by default
 	- It could be enabled on any table that doesn't have it active
 	- It requires to set: 
@@ -4112,8 +4132,8 @@ S3 Request #/s Hard: 3500 PUTs/second.
 		- a **Scaling Policy** in **AWS Auto Scaling**
 		- Amazon CloudWatch to monitor a table’s RC and WC metrics + alarms to tracks consumed capacity
 		- See diagram below
-	- [For more details](https://aws.amazon.com/blogs/database/amazon-dynamodb-auto-scaling-performance-and-cost-optimization-at-any-scale/)
 	- ![Auto Scaling Architecture](https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2019/02/27/autoscaling_diagram_FINAL_022719_700x489.jpg)
+	- [For more details](https://aws.amazon.com/blogs/database/amazon-dynamodb-auto-scaling-performance-and-cost-optimization-at-any-scale/)
 
 </details>
 
@@ -4280,7 +4300,10 @@ S3 Request #/s Hard: 3500 PUTs/second.
 	- When needing a lightweight, on-demand database product
 	- For storing session data thanks to its single millisecond latency
 	- It'sn't for relational data
-
+- On-Demande Read/Write Capacity mode:
+	- We create new tables with unknown workloads
+	- We have unpredictable application traffic
+	- We prefer the ease of paying for only what we use
 - Indexes:
 	- We have a different type of access pattern not supported by table's PS or PS and SK
 - Stream & Trigger:
@@ -4289,21 +4312,23 @@ S3 Request #/s Hard: 3500 PUTs/second.
 		- Stream containing changes + Trigger + Lamda function
 		- E.g. 1, Send approval or confirmation email when it's changed or a new account is created
 		- E.g. 2, Send a notification when something happen
+
 </details>
 
 <details>
 <summary>Limits</summary>
 
-- Item's max size: 400 KB; it includes:
+- Item's max size: 400 KB: 
+	- It includes:
 	- Attribute name binary length (UTF-8 length)
 	- Attribute value lengths (again binary length)
 	- E.g., an item with 2 attributes:
 		- 1st is "shirt-color" with value "R" and
 		- 2nd is "shirt-size" with value "M"
 		- Item Total Size is 23 bytes
-- Tables' hard max LSI #: 5
-- Tables' default max GSI #: 20 (could be increased by a support ticket)
-- Partitions max WCU: 1,000 WCU
+- Max LSI #: 5 (Hard)
+- Max GSI #: 20 (Default: could be increased by a support ticket)
+- Max WCU / Partitions: 1,000 WCU
 - [For more details](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html)
 
 </details>
