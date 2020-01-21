@@ -3933,8 +3933,8 @@ S3 Request #/s Hard: 3500 PUTs/second.
 - It supports Attribute concept:
 	- It's like a column in other dbs
 	- It's a key (attribute name) and value
-	- It could be a "Partition Key" (PK) or a "Hash Key"
-	- It could be a "Sort Key" (SK) or a "Range Key"
+	- It could be a **Partition Key** (**PK**) or a **Hash Key**
+	- It could be a **Sort Key** (**SK**) or a **Range Key**
 	- It supports different types
 	- A type of a given attribute could be different across rows
 	- It could be Nested
@@ -4024,7 +4024,7 @@ S3 Request #/s Hard: 3500 PUTs/second.
 	- It allows to reduce the amount of data read when items are read from the index
 	- It can help to improve performance but
 	- It can cause a huge performance penalty if non-projected attributes are read from it (they're fetched from its table)
-- Local Secondary Index (LSI):
+- **Local Secondary Index** (**LSI**):
 	- It must be created at the same time as creating a table
 	- It must be created on tables with composite primary key
 	- It uses the same PK but an alternative SK
@@ -4035,7 +4035,7 @@ S3 Request #/s Hard: 3500 PUTs/second.
 		- It allows performing strongly consistent and eventually consistent reads on the table
 	- The table’s SK is always projected into the index
 	- ![E.g.,](https://blog.h4.nz/media/DynamoDB/LSI.png)
-- Global Secondary Index (GSI):
+- **Global Secondary Index** (**GSI**):
 	- It can be created at any point after the table is created
 	- It can use different PK and SK
 	- It's separated from its table:
@@ -4043,9 +4043,6 @@ S3 Request #/s Hard: 3500 PUTs/second.
 		- Its data is replicated asynchronously from its table => latency
 		- It doesnt' support Strong consistent read
 		- It has its own setting: RCU/WCU; Auto-scalling WC and RC
-		- It has its own RCU and WCU values
-- Use cases:
-	- We have a different type of access pattern not supported by table's PS or PS and SK
 
 </details>
 
@@ -4056,20 +4053,18 @@ S3 Request #/s Hard: 3500 PUTs/second.
 	- It allows to have a table in different AWS regions
 	- It replicates data to all of the other replica tables
 	- Reads and Writes are possible from/to all replicas
-- It requires to enable "streams" (see streams topic below)
-- It requires the table to be empty
-- To create a global table:
-	- Enable Streams,
-	- Start with an empty table
-	- Add a region
+- It requires:
+	- To enable Streams,
+	- To start with an empty table
+	- To add a new region to the table
 - It employs a [last writer wins conflict resolution protocol](https://dzone.com/articles/conflict-resolution-using-last-write-wins-vs-crdts)
 
 </details>
 
 <details>
-<summary>Stream</summary>
+<summary>Stream & Trigger</summary>
 
-- Stream:
+- **Stream**:
 	- It provides an ordered list of changes that occur to items within a table
 	- It's a rolling 24-hour window of changes:
 		- Every time an item is added, updated or, deleted to a table which has streams enabled
@@ -4093,23 +4088,32 @@ S3 Request #/s Hard: 3500 PUTs/second.
 	- ARN:
 		- Format: arn:${Partition}:dynamodb:${Region}:${Account}:table/${TableName}/stream/${StreamLabel}
 		- E.g.: arn:aws:dynamodb:us-west-1:191449997525:table/myDynamoDBTable/stream/2015-05-11T21:21:33.291
-- Trigger:
+- **Trigger**:
 	- It's similar to triggers in relational database engines
-- Use cases:
-	- Stream is used by AWS for replications envolved in globa tables
-	- To implement an event driven pipeline:
-		- Stream containing changes + Trigger + Lamda function
-		- E.g. 1, Send approval or confirmation email when it's changed or a new account is created
-		- E.g. 2, Send a notification when something happen
 
 </details>
 
 <details>
 <summary>Scalability</summary>
 
-- For a given key value can't exceed the maximum performance that's allocated to the partition (not the table)
-- For 1 single PS value, we can only ever get the maximum performance that's allocated to the partition (not to the table)
-- So when we're allocating performance for a DynamoDB table, we're actually doing is allocating it to its partitions (not to the table)
+- Static Capacity:
+	- For a given key value can't exceed the maximum performance that's allocated to the partition (not the table)
+	- For 1 single PK value, we can only ever get the maximum performance that's allocated to the partition (not to the table)
+	- So when we're allocating performance for a DynamoDB table, we're actually doing is allocating it to its partitions (not to the table)
+	- This is why it's important to choose the right Primary Key
+- **Auto Scaling**:
+	- It's active by default
+	- It could be enabled on any table that doesn't have it active
+	- It requires to set: 
+		- min RC and WC
+		- max RC and WC 
+		- Target utilization percentage
+	- It uses: 
+		- a **Scaling Policy** in **AWS Auto Scaling**
+		- Amazon CloudWatch to monitor a table’s RC and WC metrics + alarms to tracks consumed capacity
+		- See diagram below
+	- [For more details](https://aws.amazon.com/blogs/database/amazon-dynamodb-auto-scaling-performance-and-cost-optimization-at-any-scale/)
+	- ![Auto Scaling Architecture](https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2019/02/27/autoscaling_diagram_FINAL_022719_700x489.jpg)
 
 </details>
 
@@ -4265,17 +4269,26 @@ S3 Request #/s Hard: 3500 PUTs/second.
 <details>
 <summary>Use cases</summary>
 
-- Unstructured data:
-	- Keys and values
-	- Keys and other attributes
-	- Json documents
-	- Complex data types
-- Serverless Applications that needs a web scale database, a serverless non relational database (not a fixed schema) + ID federation
-- When needing a web-scalable DBaaS product that provides integration with CloudWatch
-- When needing a lightweight, on-demand database product
-- For storing session data thanks to its single millisecond latency
-- It'sn't for relational data
+- DynamoDB:
+	- Unstructured data:
+		- Keys and values
+		- Keys and other attributes
+		- Json documents
+		- Complex data types
+	- Serverless Applications that needs a web scale database, a serverless non relational database (not a fixed schema) + ID federation
+	- When needing a web-scalable DBaaS product that provides integration with CloudWatch
+	- When needing a lightweight, on-demand database product
+	- For storing session data thanks to its single millisecond latency
+	- It'sn't for relational data
 
+- Indexes:
+	- We have a different type of access pattern not supported by table's PS or PS and SK
+- Stream & Trigger:
+	- Stream is used by AWS for replications envolved in globa tables
+	- To implement an event driven pipeline:
+		- Stream containing changes + Trigger + Lamda function
+		- E.g. 1, Send approval or confirmation email when it's changed or a new account is created
+		- E.g. 2, Send a notification when something happen
 </details>
 
 <details>
