@@ -3963,11 +3963,6 @@ S3 Request #/s Hard: 3500 PUTs/second.
 - **Read Capacity** and **Write Capacity**
 	- They allow to control performance at the table level 
 	- It's done by providing **Read Capacity Unit** (**RCU**) and **Write Capacity Unit** (**WCU**)
-	- They're related to a DynamoDB partitions performance:
-		- For a given PK value, a DynamoDB table can't exceed the maximum performance that's allocated to the partition (not the table)
-		- For 1 single PK value, we can only ever get the maximum performance that's allocated to the partition (not to the table)
-		- So when we're allocating performance for a DynamoDB table, we're actually doing is allocating it to its partitions (not to the table)
-		- This is why it's important to choose the right Primary Key
 - E.g. We need to store weather data that is sent by weather station every 30 mn
 	- We need a table: weather_data
 	- For each item, we need a Partition Key (a number) to identify weather station
@@ -4008,14 +4003,14 @@ S3 Request #/s Hard: 3500 PUTs/second.
 		- It excludes items that don't match the filter;
 		- It returns the remaining items
 		- It consumes the capacity of the entire table
-	- Pros: It's more flexible; It'sapplied on different PS
-	- Cons: It'sn't an efficient operation
+	- Pros: It's more flexible; It's applied on different PK
+	- Cons: It's NOT an efficient operation
 - Query:
 	- It allows to perform lookups on the table (like scan operation)
 	- It doesn't scan all items of a table
-	- It requires a filter on the PS or PS and SK
+	- It requires a filter on the PK or PK and SK
 	- It allows additional filters on any non key attribute
-	- It consumes the data corresponding to the filtered keys (PS or PS and SK)
+	- It consumes the data corresponding to the filtered keys (PK or PK and SK)
 	- Pros: It's an efficient operation
 	- Cons: It's always applied on 1 single PS
 - Filter:
@@ -4105,35 +4100,36 @@ S3 Request #/s Hard: 3500 PUTs/second.
 </details>
 
 <details>
-<summary>Read/write capacity mode</summary>
-
-- It controls how a table capacity is managed and how we're charged from read/write throughputs
-- It supports 2 modes
-- **On-Demand**
-	- The request rate is only limited by the DynamoDB throughput default table limits
-- **Provisioned**
-- [For more details](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html)	
-
-</details>
-
-<details>
 <summary>Scalability</summary>
 
-- 
-- **Auto Scaling**:
-	- It's only possible with Provisioned Read/Write capacit mode
-	- It's active by default
-	- It could be enabled on any table that doesn't have it active
-	- It requires to set: 
-		- min RC and WC
-		- max RC and WC 
-		- Target utilization percentage
-	- It uses: 
-		- a **Scaling Policy** in **AWS Auto Scaling**
-		- Amazon CloudWatch to monitor a table’s RC and WC metrics + alarms to tracks consumed capacity
-		- See diagram below
-	- ![Auto Scaling Architecture](https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2019/02/27/autoscaling_diagram_FINAL_022719_700x489.jpg)
-	- [For more details](https://aws.amazon.com/blogs/database/amazon-dynamodb-auto-scaling-performance-and-cost-optimization-at-any-scale/)
+- It supports 2 **Read/Write capacity modes**
+	- It controls how a table capacity is managed
+	- It controls how we're charged from read/write throughputs
+- **On-Demand** mode:
+	- The request rate is only limited by the DynamoDB throughput default table limits
+	- It automatically scales to handle performance demands and bills are per-request charge
+- **Provisioned** mode:
+	- It's configured with static read capacity units (RCU) and write capacity units (WCU)
+	- Every operation on ITEMS consumes at least 1 RCU or WCU  (no partial RCU/WCU)
+	- For a given PK value, a DynamoDB table can't exceed the maximum performance that's allocated to the partition (not the table)
+	- For 1 single PK value, we can only ever get the maximum performance that's allocated to the partition (not to the table)
+	- So when we're allocating performance for a DynamoDB table, we're actually doing is allocating it to its partitions (not to the table)
+	- **Auto Scaling**:
+		- It's only possible with Provisioned Read/Write capacit mode
+		- It's active by default
+		- It could be enabled on any table that doesn't have it active
+		- It requires to set: 
+			- min RC and WC
+			- max RC and WC 
+			- Target utilization percentage
+		- It uses: 
+			- a **Scaling Policy** in **AWS Auto Scaling**
+			- Amazon CloudWatch to monitor a table’s RC and WC metrics + alarms to tracks consumed capacity
+			- See diagram below
+		- ![Auto Scaling Architecture](https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2019/02/27/autoscaling_diagram_FINAL_022719_700x489.jpg)
+- For more details
+	- [How It Works: Read/Write Capacity Mode](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html)	
+	- [Amazon DynamoDB Auto Scaling performance](https://aws.amazon.com/blogs/database/amazon-dynamodb-auto-scaling-performance-and-cost-optimization-at-any-scale/)
 
 </details>
 
