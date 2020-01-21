@@ -134,18 +134,18 @@
 <details>
 <summary>Limits</summary>
 
-- IAM Users # / AWS account: 5,000 
-- IAM MFA # / AWS account: 5,000 (Same as above: Users # / account) 
-- IAM MFA # / User: 1 
+- IAM Users # / AWS account: 5,000
+- IAM MFA # / AWS account: 5,000 (Same as above: Users # / account)
+- IAM MFA # / User: 1
 - IAM Access keys # / User: 2 (regardless the status of the access keys: Active or Inactive)
 - IAM Groups # / User: 10
 - IAM Role credential expiration: 36 hours
-- IAM Managed policies # / User: 10 
-- IAM Managed policies # / Role: 10 
-- IAM Inline policies # / Identity: Unlimited 
+- IAM Managed policies # / User: 10
+- IAM Managed policies # / Role: 10
+- IAM Inline policies # / Identity: Unlimited
 - IAM Inline policies Total Size / User: 2,048 characters (white space aren't counted)
-- IAM Inline policies Total Size / Group: 5,120 characters 
-- IAM Inline policies Total Size / Role: 10,240 characters 
+- IAM Inline policies Total Size / Group: 5,120 characters
+- IAM Inline policies Total Size / Role: 10,240 characters
 
 </details>
 
@@ -160,13 +160,13 @@
 <details>
 <summary>Limits</summary>
 
-- Organization Max Account #: 2 (Default limit) 
-	- It could be increased: 
-	- Support > Support Center > Create a Case > Service Limit Increase >  
-	- Enter "Organization" in "Limit Type" field 
-	- Select "Number of Accounts" in "Limit" field 
-	- Enter a value in "New limit value" field 
-	- Enter a description in "Use case description" 
+- Organization Max Account #: 2 (Default limit)
+	- It could be increased:
+	- Support > Support Center > Create a Case > Service Limit Increase >
+	- Enter "Organization" in "Limit Type" field
+	- Select "Number of Accounts" in "Limit" field
+	- Enter a value in "New limit value" field
+	- Enter a description in "Use case description"
 
 </details>
 
@@ -345,7 +345,7 @@
 	- It's HDD based storage (Large IO size)
 	- Its performance dominant attribute: Throughput
 	- Max Throughput / volume: 500 MiB/s
-	- Max IOPS / volume: 500 
+	- Max IOPS / volume: 500
 	- Size: 500 GiB - 16 TiB
 	- It has a Low storage cost
 	- Use case patterns: It's used for frequently accessed, throughput-intensive workloads; it can't be a boot volume
@@ -353,7 +353,7 @@
 	- It's HDD based storage (Large IO size)
 	- Its performance dominant attribute: Throughput
 	- Max Throughput / volume: 250 MiB/s
-	- Max IOPS / volume: 250 
+	- Max IOPS / volume: 250
 	- Size of 500 GiB - 16 TiB
 	- It has the lowest storage cost
 	- Use case patterns: Infrequently accessed data, Cannot be a boot volume (See use case)
@@ -432,7 +432,7 @@
 	- If the source snapshot isn't encrypted, the target snapshot could be encrypted
 	- If the source snapshot is encrypted, the target snapshot will be encrypted
 - **Snapshot Lifecycle Policy**:
-	- It allows to automate snapshot creation 
+	- It allows to automate snapshot creation
 	- It's run periodically
 	- It requires to be attached to an IAM role
 	- [Automating the Amazon EBS Snapshot Lifecycle](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/snapshot-lifecycle.html)
@@ -854,7 +854,7 @@
 		- Frequently accessed,
 		- Throughput-intensive workloads
 		- Streaming workloads requiring consistent, fast throughput at a low price
-		- Big data, 
+		- Big data,
 		- Data warehouses
 		- Log processing
 		- It cannot be a boot volume
@@ -1108,9 +1108,9 @@
 <details>
 <summary>Configuration</summary>
 
-- Protocol: Rest API, WebSocket API.  
-- Define an API (container): 
-- Define **Resources** and **nested Resources** (URL paths): 
+- Protocol: Rest API, WebSocket API
+- Define an API (container):
+- Define **Resources** and **nested Resources** (URL paths):
 - For each Resource:
 	- Select supported HTTP methods
 	- Set security
@@ -1147,7 +1147,7 @@
 	- It requires to be enabled
 	- It requires to specify a TTL (time-to-live) period in seconds
 	- [Enable Amazon API Gateway Caching](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-caching.html#enable-api-gateway-caching)
-        
+
 </details>
 
 <details>
@@ -1171,7 +1171,7 @@
 	- The steady-state rate:
 		- The number of requests per second and API Gateway can handle
 		- It's set to 10,000 by default
-	- The **burst**: 
+	- The **burst**:
 		- It's the maximum bucket size across all APIs within an AWS account
 		- It's the number of concurrent request submissions that API Gateway can fulfill at any moment without returning 429 Too Many Requests error reponse
 		- By defaut it's set to 5,000
@@ -1179,12 +1179,12 @@
 	- E.g. 1, If a caller sends 10,000 req. in a 1 second period evenly (10 req/ms), API Gateway processes all req. without dropping any
 	- E.g. 2, If a caller sends 10,000 req. in the 1st ms, API Gateway serves 5,000 of those req. and throttles the rest in the 1-second period
 	- E.g. 3, If a caller sends 5,000 req. in the 1st ms and then evenly spreads another 5,000 req. through the remaining 999 ms (~5 req/ms), API Gateway processes all 10,000 req. in the 1-second period without returning 429 error error responses
-	- E.g. 4, If a caller sends 5,000 req. in the 1 ms and waits until the 101st ms to send another 5,000 requests, 
-		- API Gateway processes 6,000 req. and throttles the rest in the 1-second period 
-		- This is because at the rate of 10,000 rps, API Gateway has served 1,000 requests after the first 100 ms and thus emptied the bucket by the same amount.
-		- Of the next spike of 5,000 requests, 1,000 fill the bucket and are queued to be processed.
+	- E.g. 4, If a caller sends 5,000 req. in the 1 ms and waits until the 101st ms to send another 5,000 requests,
+		- API Gateway processes 6,000 req. and throttles the rest in the 1-second period
+		- This is because at the rate of 10,000 rps, API Gateway has served 1,000 requests after the first 100 ms and thus emptied the bucket by the same amount
+		- Of the next spike of 5,000 requests, 1,000 fill the bucket and are queued to be processed
 		- The other 4,000 exceed the bucket capacity and are discarded
-	- E.g. 5, If a caller sends 5,000 req. in the 1st ms, sends 1,000 requests at the 101st ms, and then evenly spreads another 4,000 req through the remaining 899 milliseconds, 
+	- E.g. 5, If a caller sends 5,000 req. in the 1st ms, sends 1,000 requests at the 101st ms, and then evenly spreads another 4,000 req through the remaining 899 milliseconds,
 		- API Gateway processes all 10,000 requests in the 1-second period without throttling
 	- [Token Bucket Burst](https://docs.aws.amazon.com/apigateway/latest/developerguide/images/tokenBucketBurst.png)
 	- [Throttle API Requests for Better Throughput](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-request-throttling.html)
@@ -1194,7 +1194,7 @@
 - Resource Policy:
 	- [How Amazon API Gateway Resource Policies Affect Authorization Workflow](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-authorization-flow.html)
 	- [AWS Condition Keys that can be used in API Gateway Resource Policies](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-resource-policies-aws-condition-keys.html)
-- It supports AWS Certificate Manager: free SSL/TLS certificates 
+- It supports AWS Certificate Manager: free SSL/TLS certificates
 - **CORS** (**Cross-Origin Resource Sharing**):
 	- It's a way to relax **same-origin policy**
 	- It allows different AWS components to talk to each other (They've different domain names: S3, CloudFront, API Gateway domain names)
@@ -1261,7 +1261,7 @@
 <summary>Foundation</summary>
 
 - Web-API and Rest
-- Web Socket protocol 
+- Web Socket protocol
 - [Same-Origin policy](https://en.wikipedia.org/wiki/Same-origin_policy)
 - CORS
 - SSL/TLS certificates
@@ -1966,7 +1966,7 @@
 <details>
 <summary>Limits</summary>
 
-- VPCs # / region: 
+- VPCs # / region:
 	- Default: 5
 	- Non default: 100
 	- More: Support ticket
@@ -1981,17 +1981,17 @@
 		- IPv6 support isn't available cross-region
 - Subnet max/min netmask: /16 ... /28
 - Subnets # / VPC: 200
-- NAT Gateway Bandwidth: 5 Gbps - 45 Gbps (For more, distribute the workload by splitting resources into multiple subnets, and creating a NAT gateway in each subnet) 
+- NAT Gateway Bandwidth: 5 Gbps - 45 Gbps (For more, distribute the workload by splitting resources into multiple subnets, and creating a NAT gateway in each subnet)
 - NAT Gateway # / AZ: 5
 - IPv4 CIDR blocks / VPC: 5
-- IPv6 CIDR blocks / VPC: 1 
+- IPv6 CIDR blocks / VPC: 1
 - IPv6:
 	- It'sn't currently supported across every AWS product
 	- It'sn't currently supported with every feature
 	- It'sn't currently supported by VPNs, customer gateways, and VPC endpoints
 - For more details
 	- [VPC Limits](https://docs.aws.amazon.com/vpc/latest/userguide/amazon-vpc-limits.html)
- 
+
 </details>
 
 <details>
@@ -2235,7 +2235,7 @@
 	- When resources are being added or removed from a configuration that doesn't use an ELB
 	- No performance or loading control (It'sn't a LB architecture)
 - It could be attached with a health check to a record: It can then omit the record as long as the associated EC2 instance is unhealthy
-- Its weight is a value: 
+- Its weight is a value:
 	- It'sn't a %
 	- If we add to address with the following weights: 20 and 30 => the corresponding % will be: 40% and 60%
 - E.g., we can set 10% of our traffic to go to US-EAST-1 and 90% to go to EU-WEST-1
@@ -2362,11 +2362,11 @@
 	- It can't be IP address-like
 	- It must be from 3 to 63 characters long
 - **URL**:
-	- **Virtual Hosted Style Access**: 
+	- **Virtual Hosted Style Access**:
 		- Format: https://bucket-name.s3.*Region.*amazonaws.com/key-name (the region is optional)
 		- E.g. 1, https://selfservedweb.s3.us-east-1.amazonaws.com/Web_Scalability_for_StartupEngineers.pdf
 		- E.g. 2, https://selfservedweb.s3.amazonaws.com/Web_Scalability_for_StartupEngineers.pdf
-	- **Path-Style Access**: 
+	- **Path-Style Access**:
 		- Format: http://s3.*Region.*amazonaws.com/bucket-name/key-name (the region is optional)
 		- It will be [deprecated](https://aws.amazon.com/blogs/aws/amazon-s3-path-deprecation-plan-the-rest-of-the-story/) from september 2020
 		- E.g. 1, https://s3.us-east-1.amazonaws.com/selfservedweb/Web_Scalability_for_StartupEngineers.pdf
@@ -2665,9 +2665,9 @@
 
 - CRR minimizes latency for global applications by creating Performance Replicas
 - Use CloudFront with S3 to distribute content with low latency and a high data transfer rate
-- Use ElastiCache with S3 for Frequently Accessed Content 
+- Use ElastiCache with S3 for Frequently Accessed Content
 - Use **S3 Transfer Acceleration** if you want fast data transport over long distances between a client and an S3 bucket
-- Horizontal Scaling and Request Parallelization for High Throughput 
+- Horizontal Scaling and Request Parallelization for High Throughput
 - For more details:
 	- [Performance Design Patterns for Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/dev/optimizing-performance-design-patterns.html)
 	- [Performance Guidelines for Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/dev/optimizing-performance-guidelines.html)
@@ -2794,7 +2794,7 @@
 	- It provides detailed records for the requests that are made to a bucket
 	- It's disabled by default
 	- It stores logging requests in a specific S3 bucket in the same AWS account or in a completely different AWS account
-	- It requires to allow 
+	- It requires to allow
 		- Principal: AWS root account (arn:aws:iam::000000000000:root)
 		- Action: "S3:PutObject"
 		- Resource: log buckets
@@ -2860,7 +2860,7 @@
 	- No underscores
 	- It must start with a lowercase letter or a number
 	- It can't be formatted as an IP address (1.1.1.1)
-- Bucket # / AWS Account: 
+- Bucket # / AWS Account:
 	- 100: Default limit
 	- 1,000: non default
 	- More: Support Ticket
@@ -2870,10 +2870,10 @@
 - PUT # / second: 3,500
 - Get # / second: 5,500
 - Parallel request, Prefix usage: No limit?
-- Presigned URL expiration: 7 days 
+- Presigned URL expiration: 7 days
 
 
-S3 Request #/s Hard: 3500 PUTs/second. 
+S3 Request #/s Hard: 3500 PUTs/second
 
 </details>
 
@@ -3116,7 +3116,7 @@ S3 Request #/s Hard: 3500 PUTs/second.
 		- It's either the **baseline throughput** or the **burst throughput**
 	- **Bursting Throughput mode**:
 		- It's the default
-		- It's Spiky: driving high levels of throughput for short periods of time, and 
+		- It's Spiky: driving high levels of throughput for short periods of time, and
 		- It's low levels of throughput the rest of the time
 		- Its **baseline throughput** is determined by the size of the file system that is stored in the standard storage class
 			- A file system can drive throughput continuously at its baseline rate
@@ -3134,7 +3134,7 @@ S3 Request #/s Hard: 3500 PUTs/second.
 			- A file system uses credits whenever it reads or writes data
 			- The baseline rate is 50 MiB/s per TiB of storage (equivalently, 50 KiB/s per GiB of storage)
 			- Earning 50 MiB/s per Tib of storage????
-		- E.g.
+		- E.g
 	- **Provisioned mode** (or the **Throughput mode**):
 		- It allows to provision the throughput independent of the amount of data stored
 	- For more details:
@@ -3194,9 +3194,9 @@ S3 Request #/s Hard: 3500 PUTs/second.
 	- If a General Purpose mode EFS volume hits 100% for extended periods of time, consider using Max I/O mode
 - CloudWatch's **BurstCreditBalance**:
 	- It help to determin which throughput mode to choose
-	- If we experience performance issues with an EFS volume in Bursting Throughput mode: 
-		- Check the BurstCreditBalance CloudWatch metric 
-		- If its value is either zero or steadily decreasing, Provisioned Throughput could be a solution 
+	- If we experience performance issues with an EFS volume in Bursting Throughput mode:
+		- Check the BurstCreditBalance CloudWatch metric
+		- If its value is either zero or steadily decreasing, Provisioned Throughput could be a solution
 
 </details>
 
@@ -3956,12 +3956,12 @@ S3 Request #/s Hard: 3500 PUTs/second.
 		- Format: arn:${Partition}:dynamodb:${Region}:${Account}:table/${TableName}
 		- E.g., arn:aws:dynamodb:us-east-1:191449997525:table/myDynamoDBTable
 - It's split across **Partitions**:
-	- It starts with 1 partition 
+	- It starts with 1 partition
 	- It grows depending on the table's size and capacity
 	- It detemines its table performance
 	- [For more details](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.Partitions.html)
 - **Read Capacity** and **Write Capacity**
-	- They allow to control performance at the table level 
+	- They allow to control performance at the table level
 	- It's done by providing **Read Capacity Unit** (**RCU**) and **Write Capacity Unit** (**WCU**)
 - E.g. We need to store weather data that is sent by weather station every 30 mn
 	- We need a table: weather_data
@@ -4133,11 +4133,11 @@ S3 Request #/s Hard: 3500 PUTs/second.
 		- It's only possible with Provisioned Read/Write capacit mode
 		- It's active by default
 		- It could be enabled on any table that doesn't have it active
-		- It requires to set: 
+		- It requires to set:
 			- min RC and WC
-			- max RC and WC 
+			- max RC and WC
 			- Target utilization percentage
-		- It uses: 
+		- It uses:
 			- a **Scaling Policy** in **AWS Auto Scaling**
 			- Amazon CloudWatch to monitor a table’s RC and WC metrics + alarms to tracks consumed capacity
 			- See diagram below
@@ -4306,7 +4306,7 @@ S3 Request #/s Hard: 3500 PUTs/second.
 <details>
 <summary>Limits</summary>
 
-- Item's max size: 400 KB: 
+- Item's max size: 400 KB:
 	- It includes:
 	- Attribute name binary length (UTF-8 length)
 	- Attribute value lengths (again binary length)
@@ -4789,13 +4789,13 @@ S3 Request #/s Hard: 3500 PUTs/second.
 - Auto Scaling group allows to automate the scaling in/out
 	- It modifies the default "Desired Capacity" entered when the Auto-Scaling Group is created
 	- It then create/remove instances based on the new "Desired Capacity"
-	- **Protect From Scale in** instance Protection: 
-		- Newly launched instances will be protected from scale in by default 
+	- **Protect From Scale in** instance Protection:
+		- Newly launched instances will be protected from scale in by default
 		- Auto Scaling will not select protected instances for termination during scale in
 - Scale in:
 	- It selects the AZ with the most instances with at least 1 instance isn't protected from scale in
-	- It selects the AZ with the instances that use the oldest launch configuration, if there is more than 1 AZ with this number of instances, it s  
-	- [Controlling Which Auto Scaling Instances Terminate During Scale In](https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-instance-termination.html) 
+	- It selects the AZ with the instances that use the oldest launch configuration, if there's more than 1 AZ with this number of instances...
+	- [Controlling Which Auto Scaling Instances Terminate During Scale In](https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-instance-termination.html)
 - Scheduled Action:
 	- It automates the scaling in/out based on day/time and recurrence
 	- Input: Start Day/Time; Recurrence (every week; every day; every 5 mn); Max, Min and Desired Capacity
@@ -5375,23 +5375,23 @@ S3 Request #/s Hard: 3500 PUTs/second.
 - Table Name:
 	- Length: 3 characters to 255 characters long
 	- Allowed characters: A-Z, a-z, 0-9, _ (underscore), - (hyphen, . (dot)
-- Attribute Name Length: 1 character to 64 KB long 
+- Attribute Name Length: 1 character to 64 KB long
 	- Exceptions: 1 to 255 characters long for:
-		- Secondary index partition key names 
-		- Secondary index sort key names 
+		- Secondary index partition key names
+		- Secondary index sort key names
 		- ... See details
-- Attribute Values: 
+- Attribute Values:
 	- String Max item size: 400 KB
 	- Binary max item size: 400 KB
-	- Number prcision: 38 digits (it can be positive, negative, or zero) 
-	- If precision is important, we should pass numbers to DynamoDB using strings that you convert from a number type 
+	- Number prcision: 38 digits (it can be positive, negative, or zero)
+	- If precision is important, we should pass numbers to DynamoDB using strings that you convert from a number type
 - [For more details](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html)
 </details>
 
 <details>
 <summary>Best practices</summary>
 </details>
- 
+
 ---
 
 ## Hybrid and Scaling - Data Migration - DB Migration Service (DMS)
@@ -5915,6 +5915,7 @@ S3 Request #/s Hard: 3500 PUTs/second.
 	- NumberOfEmptyReceives
 	- ApproximateNumberOfMessages
 	- ApproximateNumberOfMessagesNotVisible
+
 </details>
 
 <details>
@@ -5928,7 +5929,7 @@ S3 Request #/s Hard: 3500 PUTs/second.
 - **Asynchronous messaging** architecture:
 	- When a producer (caller) is producing work faster than its consumer can process it
 	- When a producer or consumer are intermittently connected to the network
-- ***Workers Pool Architecture***:
+- **Workers Pool Architecture**:
 	- It allows to decouple components of an application:
 		- They run independently from each other
 		- They scale independently from each other
@@ -5954,7 +5955,7 @@ S3 Request #/s Hard: 3500 PUTs/second.
 		- They work independently from each other
 		- They scale independently from each other
 		- They fail independently from each other
-- ***Fanout architecture***
+- **Fanout architecture**
  	- It allows to send a message to an SNS topic and fan it out to multiple queues for further processing
 	- E.g., an app. like YouTube:
 		- People are uploading raw media files to this app
@@ -5977,7 +5978,8 @@ S3 Request #/s Hard: 3500 PUTs/second.
 - SQS Extended Client Library size limit: Between 256 KB up to 2 GB
 - Message retention maximum: 14 days (1,209,600‬ s)
 - Message retention manimum: 1 mn (60‬ s)
-- Poll APP Max message #: 10
+- Max message # / Poll APP: 10
+- Max message # / batch: 10
 - FIFO Queue TPS (Throughput Per Second):
 	- 3,000 messages per second with batching
 	- ~300 messages per second without batching
@@ -6205,7 +6207,7 @@ S3 Request #/s Hard: 3500 PUTs/second.
 	- E.g. a large organization like Amazon.com:
 		- It might have hundreds or thousands of isolated databases around the organization
 		- It might be different engines, types of databases
-		- From amazon.com, Amazon Prime, Audio book purchases, 
+		- From amazon.com, Amazon Prime, Audio book purchases,
 		- RedShift might be the right solution to store all this data to perform some analytical style queries
 
 </details>
