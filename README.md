@@ -950,6 +950,28 @@
 	- It an IP address
 	- It inherits any of the networking configuration inside the VPC (custom DNS, custom routing)
 	- [For more details](https://docs.aws.amazon.com/lambda/latest/dg/configuration-vpc.html)
+- ARN:
+	- **Qualified ARN**
+		- The function ARN with the version suffix
+		- **arn:aws:lambda:aws-region:acct-id:function:my-function:$LATEST**
+		- **arn:aws:lambda:aws-region:acct-id:function:my-function:$Version$**
+		- E.g. 1, arn:aws:lambda:aws-region:acct-id:function:helloworld:$LATEST
+		- E.g. 2, arn:aws:lambda:aws-region:acct-id:function:helloworld:1
+	- **Unqualified ARN**
+		- The function ARN without the version suffix
+		- **arn:aws:lambda:aws-region:acct-id:function:my-function**
+		- It can't be used to create an alias
+		- E.g. , arn:aws:lambda:aws-region:acct-id:function:helloworld
+	- **Alias ARN**:
+		- It's like a pointer to a specific Lambda function version
+		- It's used to access a specific version of a function
+		- A Lambda function can have one or more aliases
+		- **arn:aws:lambda:aws-region:acct-id:function:my-function:my-alias**
+		- arn:aws:lambda:aws-region:acct-id:function:helloworld:PROD
+		- arn:aws:lambda:aws-region:acct-id:function:helloworld:DEV
+	- For more details:
+		- [AWS Lambda Function Versions](https://docs.aws.amazon.com/lambda/latest/dg/configuration-versions.html)
+		- [AWS Lambda Function Aliases](https://docs.aws.amazon.com/lambda/latest/dg/configuration-aliases.html)
 
 </details>
 
@@ -1028,6 +1050,10 @@
 	- It's the role that Lambda assumes to access AWS services
 	- It gets temporary security credentials via STS
 	- It's basic permission is to CloudWatch
+- Resource Policies:
+	- It allows to give give a service, resource, or account access to a Lambda function 
+	- It could be applied on a function or to one of its versions
+	- [For more details](https://docs.aws.amazon.com/lambda/latest/dg/configuration-versions.html)
 
 </details>
 
@@ -1060,6 +1086,16 @@
 
 <details>
 <summary>Use cases</summary>
+
+- Alias:
+	- To define multiple version
+		- PROD
+		- DEV-UNIT
+		- DEV-ACCP
+	- To avoid deployment overhead when a Lambda function versions changes:
+		- When an Event sources is mapping configuration is used with alias ARN, no change is required when the function version changes
+		- When a resource policy is created with an alias ARN, no change is required when the function version changes
+
 </details>
 
 <details>
