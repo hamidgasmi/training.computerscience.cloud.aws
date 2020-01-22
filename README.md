@@ -1018,7 +1018,9 @@
 
 - It scales automatically: 2 requests => 2 independent functions are triggered
 - When it's used with a VPC, we must make sure that our VPC has sufficient ENI capacity to support the scale requirements of our Lambda function:
-	- **Projected peak concurrent executions * (Memory in GB / 3 GB)**
+	- **ENI capacity = Projected peak concurrent executions * (Memory in GB / 3 GB)**
+	- **Peak Concurrent Execution = Peak Requests per Second** * **Average Function Duration (in seconds)**
+	- [Scaling Lambdas inside a VPC](https://winterwindsoftware.com/scaling-lambdas-inside-vpc/#actual-eni-capacity)
 	- [VPC Configuration](https://docs.aws.amazon.com/lambda/latest/dg/configuration-vpc.html)
 	- [Configuring a Lambda Function to Access Resources in a VPC](https://docs.aws.amazon.com/lambda/latest/dg/configuration-vpc.html#vpc-setup-guidelines)
 - **Reserved concurrency**:
@@ -1041,6 +1043,7 @@
 - It's HA
 - It runs in multiple AZs to ensure that it's available to process events in case of a service interruption in a single AZ
 - [For more details](https://docs.aws.amazon.com/lambda/latest/dg/security-resilience.html)
+
 </details>
 
 <details>
@@ -1057,7 +1060,9 @@
 - Resource Policies:
 	- It allows to give give a service, resource, or account access to a Lambda function 
 	- It could be applied on a function or to one of its versions
-	- [For more details](https://docs.aws.amazon.com/lambda/latest/dg/configuration-versions.html)
+	- It's updated either through the AWS CLI or the AWS DSK (it's NOT possible through AWS Console)
+	- [Using Resource-based Policies for AWS Lambda](https://docs.aws.amazon.com/lambda/latest/dg/access-control-resource-based.html)
+	- [Lambda Function Versions and Ressource Policies](https://docs.aws.amazon.com/lambda/latest/dg/configuration-versions.html)
 
 </details>
 
@@ -1091,6 +1096,12 @@
 <details>
 <summary>Use cases</summary>
 
+- Lambda:
+	- Robust Serverless Application Design with AWS **Lambda Dead Letter Queues** (**DLQ**)
+		- Failed events are sent to a specified SQS Queue
+		- SNS invokes Lambda function to process error notification
+		- ![Diagram](https://awscomputeblogimages.s3-us-west-2.amazonaws.com/deadletterqueues/deadletterqueues_1.jpeg)
+		- [For more details](https://aws.amazon.com/blogs/compute/robust-serverless-application-design-with-aws-lambda-dlq/)
 - Alias:
 	- To define multiple version
 		- PROD
@@ -1108,6 +1119,7 @@
 - Function timeout: 900 s (15 minutes)
 - Function memory allocation: 128 MB to 3,008 MB, in 64 MB increments
 - Max concurrent executions: 1,000 per Region shared by all functions in a Region (default limit: it can be increased)
+- Max /tmp directory storage size: 512 MB
 - [For more details](https://docs.aws.amazon.com/lambda/latest/dg/limits.html)
 
 </details>
@@ -1116,6 +1128,11 @@
 <summary>Best practices</summary>
 
 - If a Lambda function is configured to connect to a VPC, specify subnets in multiple AZs to ensure high availability
+- Manage RDS Connections from AWS Lambda Serverless Function:
+	- Ensure that the maximum number of connections configured for an RDS database is less than the Lambda function Peak Concurrent Execution
+	- [More details](https://www.jeremydaly.com/manage-rds-connections-aws-lambda/)
+- Scaling Lambdas inside a VPC:
+	- [For more details](https://winterwindsoftware.com/scaling-lambdas-inside-vpc/#actual-eni-capacity)
 
 </details>
 
