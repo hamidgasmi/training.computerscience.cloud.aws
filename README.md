@@ -945,6 +945,10 @@
 	- Internet API endpoints or Other Services
 	- Other Lambda functions (a Lambda Function can trigger other Lambda functions)
 - It could be allowed to access a VPC
+	- It allows access to private resources
+	- It's slightly slow to start
+	- It has an IP address
+	- It inherits any of the networking configuration inside the VPC (custom DNS, custom routing)
 - ARN:
 	- **Qualified ARN**
 		- The function ARN with the version suffix
@@ -1010,23 +1014,13 @@
 </details>
 
 <details>
-<summary>Lambda and VPC</summary>
-
-- It allows access to private resources
-- It's slightly slow to start
-- It has an IP address
-- It inherits any of the networking configuration inside the VPC (custom DNS, custom routing)
-- We must make sure that our VPC has sufficient ENI capacity to support the scale requirements of our Lambda function:
-	- **Projected peak concurrent executions * (Memory in GB / 3 GB)**
-- [For more details](https://docs.aws.amazon.com/lambda/latest/dg/configuration-vpc.html)
-- [Configuring a Lambda Function to Access Resources in a VPC](https://docs.aws.amazon.com/lambda/latest/dg/configuration-vpc.html#vpc-setup-guidelines)
-
-</details>
-
-<details>
 <summary>Scalability</summary>
 
 - It scales automatically: 2 requests => 2 independent functions are triggered
+- When it's used with a VPC, we must make sure that our VPC has sufficient ENI capacity to support the scale requirements of our Lambda function:
+	- **Projected peak concurrent executions * (Memory in GB / 3 GB)**
+	- [VPC Configuration](https://docs.aws.amazon.com/lambda/latest/dg/configuration-vpc.html)
+	- [Configuring a Lambda Function to Access Resources in a VPC](https://docs.aws.amazon.com/lambda/latest/dg/configuration-vpc.html#vpc-setup-guidelines)
 - **Reserved concurrency**:
 	- Concurrency is subject to a Regional limit that is shared by all functions in a Region (see limit section)
 	- When a function has reserved concurrency, no other function can use that concurrency
