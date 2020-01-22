@@ -15,3 +15,76 @@
     - https://d1.awsstatic.com/whitepapers/aws-storage-gateway-file-gateway-for-hybrid-architectures.pdf
 - https://www.gliffy.com/blog/aws-simple-icons-explained-the-compute-set
 - Listen to breakout sessions aws reinvent
+
+IAM Users # / AWS account: 5,000
+IAM MFA # / AWS account: 5,000 (Same as above: Users # / account)
+IAM MFA # / User: 1
+IAM Access keys # / User: 2 (regardless the status of the access keys: Active or Inactive)
+IAM Groups # / User: 10
+IAM Role credential expiration: 36 hours
+IAM Managed policies # / User: 10
+IAM Managed policies # / Role: 10
+IAM Inline policies # / Identity: Unlimited
+IAM Inline policies Total Size / User: 2,048 characters (white space aren't counted)
+IAM Inline policies Total Size / Group: 5,120 characters
+IAM Inline policies Total Size / Role: 10,240 characters
+
+EC2 ARN: arn:${Partition}:ec2:${Region}:${Account}:instance/${InstanceId} (arn:aws:ec2::191449997525:instance/1234j8r3kdj)
+EC2 Private DNS: ip-0-0-0-0.ec2.internal
+ec2-0-0-0-0.compute-1.amazonaws.com
+EC2 Instance Metadata: http://169.254.169.254/latest/meta-data/metadataName
+EC2 User Data: http://169.254.169.254/latest/user-data/userdataName
+EC2 Instance name: Type + Generation number + [a] + [d] + [n] + ".[Size or Metal]"
+EC2 EBS gp2: SSD + IOPS 
+EC2 EBS gp2 IOPS / Volume: 100 - 16,000 IOPS / volume
+EC2 EBS gp2 Scalability: + 3 IOPS / GiB
+EC2 EBS gp2 Max Bursts IOPS / volume: 3,000 (credit based)
+EC2 EBS gp2 Max Throughput / volume: 250 MiB/s
+EC2 EBS gp2 Size: 1 GiB - 16 TiB
+EC2 EBS io1: SSD + IOPS
+EC2 EBS io1 Max IOPS / volume: up to 64,000
+EC2 EBS io1 Max Throughput / volume: 1,000 MiB/s
+EC2 EBS io1 Size: 4 GiB- 16 TiB
+EC2 EBS st1: HDD + Throughput
+EC2 EBS st1 Max Throughput / volume: 500 MiB/s
+EC2 EBS st1 Max IOPS / volume: 500
+EC2 EBS st1 Size: 500 GiB - 16 TiB
+EC2 EBS sc1: HDD + Throughput
+EC2 EBS sc1 Max Throughput / volume: 250 MiB/s
+EC2 EBS sc1 Max IOPS / volume: 250
+EC2 EBS sc1 Size of 500 GiB - 16 TiB
+EC2 EBS max throughput / instance: 1,750 MiB/s
+EC2 EBS max IOPS / instance: 80,000 (instance store volume if more is needed)
+EC2 Max SG # / Instance (ENI): 5
+EC2 Max instance # / Spread Placement Group: 7 (SPG is located in a single AZ)
+EC2 Max Instance # / Partition Placement Group: 7 partitions per AZ
+
+Lambda Qualified ARN 1: arn:aws:lambda:aws-region:acct-id:function:my-function:$LATEST
+Lambda Qualified ARN 2: arn:aws:lambda:aws-region:acct-id:function:my-function:$Version$
+Lambda Unqualified ARN: arn:aws:lambda:aws-region:acct-id:function:my-function
+Lambda Alias ARN: arn:aws:lambda:aws-region:acct-id:function:my-function:my-alias
+Lambda ENI capacity = Projected peak concurrent executions * (Memory in GB / 3 GB)
+Lambda Peak Concurrent Execution = Peak Requests per Second * Average Function Duration (in seconds)
+Lambda timeout: 900 s (15 minutes)
+Lambda memory allocation: 128 MB to 3,008 MB, in 64 MB increments
+Lambda Max concurrent executions: 1,000 per Region shared by all functions in a Region (default limit: it can be increased)
+Lambda Max /tmp directory storage size: 512 MB
+
+API Gateway Default Steady-state rate: 1,000
+API Gateway Default Bust size: 5,000
+API Gateway CORS
+
+ECS container instance + Cluster + Task + Task Definition + Container Definition + Service + Registry
+
+VPC 5 Reserved IPs: Network IP address + Router IP address ("+1") + DNS IP address ("+2") + Future IP address ("+3") + Network Broadcast IP address ("Last")
+VPCs # / region: 5 (Default); 100 (Non default); More: Support ticket
+VPC max/min netmask: /16 ... /28
+VPC Peering: CIDR blocks can't overlap; Transitive Peering is NOT Possible; Cross-Region: SG can't be referenced from another region; IPv6 support isn't available cross-region
+Subnets # / VPC: 200
+NAT Gateway Bandwidth: 5 Gbps - 45 Gbps
+NAT Gateway # / AZ: 5
+IPv4 CIDR blocks / VPC: 5
+IPv6 CIDR blocks / VPC: 1
+
+VPC NAT Gateway: MAX Bandwith: 5 GB to 45 GB
+

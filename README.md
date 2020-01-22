@@ -12,6 +12,7 @@
 ## Table of Contents
 - [Infrastructure](#infrastructure)
 - [Security: Identity and Access Control (IAM)](#security-identity-and-Access-control-iam)
+- [Security: Security Token Service (STS)](#security-security-token-service-sts)
 - [AWS Organization](#aws-Organization)
 - [Compute - Elastic Cloud Computing (EC2)](#compute---elastic-cloud-computing-ec2)
 - [Serverless Compute - Lambda](#serverless-compute---lambda)
@@ -118,18 +119,142 @@
 <details>
 <summary>Description</summary>
 
-- in progress
+- It's a centralised control of an AWS account 
+- It's a **global** service
+- It controls access to AWS Services via **policies** that can be attached to **IAM Identities**
+
+
+
+- It's a shared Access to our AWS account. 
+- It has granular Permissions: 
+	- It allows to set permission at service level 
+- It allows **Multifactor Authentication** (**MFA**) 
+- It allows to set up our own **password rotation policy**
+- It supports **PCI DSS** Compliance (see Foundation, below)
+- [IAM FAQ](https://aws.amazon.com/iam/faqs/)
 
 </details>
 
 <details>
-<summary>Security Token Service (STS)</summary>
+<summary>User</summary>
 
-- For more details:
-	- [Assume Role](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html)
+- It's an IAM Identity
+- It's given long-term credentials
+- It's good for known identities
+- It has NO permission when it's created (Default Deny or Non-Explicit Deny)
+- It has **Permission Boundaries**: 
+	- It allows to define boundaries beyond which user permission should never go
+    - [For more details](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html)
+- It has an access type: 
+	- **Programmatic** access by key ID and a secrete access key
+		- It couble active or inactive
+		- It's viewable only once (view, download in a csv file)
+		- It's deleted, when it's lost. A new one is generated
+		 
+	- **Programmatic** access by SSH public keys to authenticate access to AWS CodeCommit repositories
+	- **AWS Management Console** access:, it uses email/password
+- It's possible to add from 1 to 10 users at once
+- ARN:
+	- Format: arn:partition:service:region:account:user/userName
+	- E.g. 1, arn:aws:iam::091943097519:user/hamid.gasmi (normal aws servers)
+	- E.g. 2, arn:aws-cn:iam::091943097519:user/hamid.gasmi (Beijin aws servers).
 
 </details>
 
+<details>
+<summary>Group</summary>
+
+- It's an IAM Identity
+- It's NOT a real identity
+	- because it can't be identified as a Principal in a permission policy  
+	- It's used for administrative functions: 
+	- It's a way to attach policies to multiple users at one time
+- ARN:
+	- Format: arn:partition:service:region:account:group/groupName 
+	- E.g., arn:aws:iam::091943097519:group/ITDevelopers 
+
+</details>
+
+<details>
+<summary>Role</summary>
+
+- It's an IAM Identity
+- It's given temporary access credentials when it's assumed (max: 36 hours)
+- It allows to delegate access with defined permissions to trusted entities without having to share long-term access keys 
+- It's not logged in; it's assumed  
+- It's **assumed** as follow:
+    - An identity makes an AssumeRole API call: it requests to assume a role 
+	- Then Security Token Service (STS) uses IAM Trust Policy to check if the identity is allowed to assume the role  
+	- The STS uses then IAM Permission Policy attached to the role to generates a temporary access keys for the identity 
+	- ![AssumeRole Diagram](https://d2908q01vomqb2.cloudfront.net/22d200f8670dbdb3e253a90eee5098477c95c23d/2016/09/24/BrianWagner_stsAssumeRole.png)
+    - [For more details](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html)
+- [Manage Multiple AWS Accounts with Role Switching](https://theithollow.com/2018/04/30/manage-multiple-aws-accounts-with-role-switching/)
+	
+
+</details>
+
+<details>
+<summary>Policy</summary>
+
+- It's attached to an IAM identity
+- It's evaluated as follow:
+	- All attached policies are merged
+	- Explicit Deny => Explicit Allow => Implicit Deny 
+- Identity vs. Resource Policies: 
+	- **Identity Policy**: it's attached to an IAM identity (role, user, group) 
+	- **Resource Policy**: it's attached to a resource. 
+- Inline vs. Managed Policies:
+	- **Inline Policy**:
+		- It's created inside an IAM identity (role, user, group) 
+		- It allows exceptions to be applied to identities 
+	- **Managed Policy**:  
+		- It's created independently from any IAM identity
+		- It's available on Policy screen of IAM console 
+		- It allows the same policy to be reused and to impact many identities
+		- It's low overhead but lack flexibility
+		- **Customer-Managed policy** is flexible but requires administration 
+- Policy **Json Document**: 
+	- Json version: 2012-10-17;  
+	- Statement: [{sid: "myStatementId", effect: "Allow"; "Action": "*"; "Resource":"*"} ... ] 
+	- Identity Based Policy: 
+- ARN:
+	- Format: arn:partition:service:region:account:policy/policyName
+	- E.g., arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess (this is a default aws policy: see account)
+
+</details>
+
+<details>
+<summary>Use cases</summary>
+
+- Roles:
+    - To delegate access to IAM users managed within your account
+    - To delegate access to IAM users under a different AWS account  
+    - To delegate access to an AWS service such as EC2 
+	- E.g. 1: create a role to allow for example an EC2 machine to talk to an S3 server 
+	- E.g. 2: for **Break Glass style** process: 
+		- We have a support team with low right access
+		- In case of a crash, we may need to grant them temporary extra rights to let them fix the issues
+	- E.g. 3, Merging with another company 
+		- Our current company has 2000 employees, and the bought company has also 2000 employees
+		- We want to quickly let the bought company employees to be able to access our AWS account while the merger is taking place
+		- Instead of starting the creation of 2000 new users in our company's AWS account (lot of work)
+		- We could create a new role and set the trust policy to the AWS account of the company that is merging with our
+		- So our admin overhead is only creating the role by adding the trust policy for this remote account
+	- E.g. 4, a company with multiple accounts:
+		- If a company has multiple AWS accounts. Let say 10
+		- Instead of creating for each employee, a user in each 10 AWS account,
+		- We could create them in a single account and create a role to let them connect to the other accounts
+	- E.g. 5, a company of more than 5000 employee and multiple accounts:
+		- If a company has more than 5,000 employees, it has also multiple accounts
+		- Roles could also help to let users of account A to have access to account B
+	- E.g. 6: Web Identity Federation
+		- Our company developed an application
+		- The application may have more than 5,000 users
+		- One of the users operations is writing to a database that is in a single account
+		- How could we let all these users writing on the database on their behalf?
+		- We can define a role by adding the trust policy for facebook users/twitter users, ... 
+
+</details>
 
 <details>
 <summary>Limits</summary>
@@ -151,6 +276,61 @@
 
 <details>
 <summary>Best practices</summary>
+
+- IAM Users and Groups should be given least privileges (only the required access to aws resources)
+    Don't create (or delete) access keys for root account. 
+    Always setup an MFA on our root account. 
+
+</details>
+
+<details>
+<summary>Foundation</summary>
+
+- **Principal** 
+    - It could be a person or application that can make an authenticated 
+    - It could be also an anonymous request to perform an action on a system 
+- **Authentication**: 
+    - It's the process of authenticating a principal against an identity 
+    - It could be via username/password or API keys 
+- **Identity**:  
+    - It's an object that requires authentication
+    - It's authorized to access a resource
+    - When the authentication succeeds, the principal is an **Authenticated identity** 
+- **Authorization**:
+    - It's the process of checking and allowing or denying access to a resource for an identity (Policies) 
+- **Payment Card Industry Data Security Standard** (**PCI DSS**):  
+	- It's a compliance
+	- It ensures that a company that is dealing with credit card information (accepts, processes, stores or transmits) maintains a secure environment 
+
+</details>
+
+---
+
+## Security: Security Token Service (STS)
+
+<details>
+<summary>Description</summary>
+
+- in progress
+    
+- Session tokens from regional STS endpoints are valid in all AWS Regions.  
+- If you use regional STS endpoints, no action is required. 
+
+</details>
+
+<details>
+<summary>Use cases</summary>
+</details>
+
+<details>
+<summary>Limits</summary>
+</details>
+
+<details>
+<summary>Best practices</summary>
+
+- To use regional STS endpoints to reduce latency
+
 </details>
 
 ---
@@ -1735,14 +1915,14 @@
 	- They're processed in number of order, "Rule #": Lowest first
 	- When a match is found, that action is taken and processing stops
 	- The "*" rule is an implicit deny: It's processed last
-- Its rules include Ephemeral Ports:
-	- When a client initiates communications with a server, it uses a well-known port # on that server: e.g., TCP/443
-	- The response is from that well-known port to an ephemeral port on the client
-	- The client decides the ephemeral port (e.g., TCP/22000): they're be thousands!
-	- Because NACL are stateless and ephemeral ports are thousands, to manage the overhead of NACL rules is very high
-	- A single Communication involves 4 individual sets of rules:
-	- We should think to "allow" traffic for every "ephemeral" ports on Client Inbound and Outbound rules and,
-	- We should think to "allow" traffic for every "ephemeral" ports on Destination Inbound and Outbound rules as well
+- **Ephemeral Ports**:
+	- When a client initiates communications with a server, it uses a well-known port #: e.g., TCP/443, ssh/22
+	- The response from the server is NOT always on the same port
+	- The client decides the ephemeral port (e.g., TCP/22000)
+	- This is why a NACL outbound rules need to include the ephemeral port range: 1024-65535:
+		- E.g, connection to a server with ssh
+		- NACL outbound rules should include: SSH (22)        TCP (6) 22           0.0.0.0/0 ALLOW 
+		- NACL outbound rules should include: Custom TCP Rule TCP (6) 1024 - 65535 0.0.0.0/0 ALLOW	
 - Location: It'sn't specific to any AZ
 - Type:
 	- Default NACL:
@@ -2002,7 +2182,10 @@
 <summary>Use cases</summary>
 
 - NACL:
-	- Because of its management overhead (4 sets of rules for each communication),
+	- Because NACL are stateless and ephemeral ports are thousands, to manage the overhead of NACL rules is very high:
+		- A single Communication involves 4 individual sets of rules
+		- We should think to "allow" traffic for every "ephemeral" ports on Client Inbound and Outbound rules and,
+		- We should think to "allow" traffic for every "ephemeral" ports on Destination Inbound and Outbound rules as well
 	- They tend not to be used all that much generally in production usage (Security Groups are preferred)
 	- They're used when we have an explicit deny that we would like to add (E.g., an IP @ we were attacked from)
 - NAT Instance:
