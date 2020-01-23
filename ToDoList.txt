@@ -76,6 +76,8 @@ API Gateway CORS
 
 ECS container instance + Cluster + Task + Task Definition + Container Definition + Service + Registry
 
+Default VPC CIDR: 172.31.0.0/16
+Defaut VPC Subnet CIDR: 172.31.0.0/20; 172.31.16.0/20; 172.31.32.0/20...
 VPC 5 Reserved IPs: Network IP address + Router IP address ("+1") + DNS IP address ("+2") + Future IP address ("+3") + Network Broadcast IP address ("Last")
 VPCs # / region: 5 (Default); 100 (Non default); More: Support ticket
 VPC max/min netmask: /16 ... /28

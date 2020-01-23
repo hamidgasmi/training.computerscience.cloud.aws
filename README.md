@@ -1042,6 +1042,10 @@
 		- Throughput-oriented storage for large volumes of data that is infrequently accessed
 		- Scenarios where the lowest storage cost is important
 		- It cannot be a boot volume
+- EC2 ENI:
+	- To use for applications that are Media Access Control (MAC) address dependent
+		- It's possible to create it with a fixed MAC address
+		- It ensures that the MAC address of the EC2 instance will not change even if the instance restarts or reboots
 - Princing models:
 	- On Demand:
 		- Application with short term, spiky, or unpredictable workloads that can't be interrupted
@@ -1871,7 +1875,7 @@
 </details>
 
 <details>
-<summary>Internet Gateway</summary>
+<summary>Internet Gateway (IGW)</summary>
 
 - It can route traffic for public IPs to and from the internet
 - It's created and attached to a VPC
@@ -1892,7 +1896,7 @@
 </details>
 
 <details>
-<summary>NACL - Network Access Control Lists</summary>
+<summary>Network Access Control Lists (NACL)</summary>
 
 - It's a security feature that operates at **Layer 4** of the OSI model (Transport Layer: TCP/UDP and below)
 - It impacts traffic crossing the boundary of a subnet
@@ -1933,7 +1937,7 @@
 </details>
 
 <details>
-<summary>SG - Security Group</summary>
+<summary>Security Group (SG)</summary>
 
 - It's a Software firewall that surrounds AWS products
 - It a **Layer 5** firewall (session layer) in OSI model
@@ -1986,7 +1990,7 @@
 </details>
 
 <details>
-<summary>Bastion Host - JumpBox</summary>
+<summary>Bastion Host (JumpBox)</summary>
 
 - It's a host (EC2 instance) that sits at the perimeter of a VPC
 - It's in a public Subnet
@@ -6284,10 +6288,6 @@ S3 Request #/s Hard: 3500 PUTs/second
 - It provides the ability for us to build our own custom applications
 - There're 3 Kinesis types: **Kinesis Stream**, **Kinesis Firehose** and, **Kinesis Analytics**
 
-</details>
-
-<details>
-<summary>Architecture</summary>
 </details>
 
 <details>
