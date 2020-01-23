@@ -88,3 +88,7 @@ IPv6 CIDR blocks / VPC: 1
 
 VPC NAT Gateway: MAX Bandwith: 5 GB to 45 GB
 
+
+
+ECS + VPN + VPC Secondary CIDR + VPC endpoint (Gateway + Interface)
+VPC Flow Log Vs. Cloud Trail Vs. S3 Logging

@@ -1901,13 +1901,13 @@
 <details>
 <summary>NACL - Network Access Control Lists</summary>
 
-- It's a security feature that operates at Layer 4 of the OSI model (Transport Layer: TCP/UDP and below)
+- It's a security feature that operates at **Layer 4** of the OSI model (Transport Layer: TCP/UDP and below)
 - It impacts traffic crossing the boundary of a subnet
 - It doesn't impact traffic local to a subnet: Communications between 2 instances inside a subnet aren't impacted
-- It acts FIRST before Security Groups: if an IP is denied, it won't reach security group
-- It's stateless
-- It includes Rules:
-	- There're 2 sets of rules: Inbound and Outbound rules
+- It acts **FIRST** before Security Groups: if an IP is denied, it won't reach security group
+- It's **stateless**
+- It includes **Rules**:
+	- There're 2 sets of rules: **Inbound** and **Outbound** rules
 	- They're explicitly allow or deny traffic based on: traffic Type (protocol), Ports (or range), Source (or Destination)
 	- Their Source (or Destination) could only be IP/CIDR
 	- Their Source (or Destination) can't be an AWS objects (NACL is Layer 4 feature)
@@ -1943,10 +1943,10 @@
 <summary>SG - Security Group</summary>
 
 - It's a Software firewall that surrounds AWS products
-- It a Layer 5 firewall (session layer) in OSI model
+- It a **Layer 5** firewall (session layer) in OSI model
 - It acts at the instance level, not the subnet level
 - It could be attached/detached from an EC2 instance at anytime
-- It's Stateful:
+- It's **Stateful**:
 	- The response to an allowed inbound (or outbound) request, will be allowed to flow out (or in), regardless of outbound (or inbound) rules
 	- If we send a request from our instance and It's allowed by the corresponding SG rule, its response is then allowed to flow in regardless of inbound rules
 	- [More details (see Tracking)](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#security-group-connection-tracking])
@@ -1961,7 +1961,7 @@
 	- It can auto-reference itself in an Inbound rules' Source:
 	- It allows traffic from itself
 	- All resources in the same SG are allowed to communicate to each other
-- Implicit Deny: Explicit Allow > Implicit Deny
+- **Implicit Deny: Explicit Allow > Implicit Deny**
 	- There is no explicit denies
 	- All rules are analyzed
 	- If a rule matches, the request is allowed
@@ -2049,6 +2049,7 @@
 	- It requires a Public Subnet and a Public Elastic IP
 	- It understands and allow session traffic (layer 5)
 	- It's scalable but isn't highly available by design (Redundant): if an AZ fails, all underlying NAT Gateway will fail
+	- It can NOT be associated with a Security Group
 	- Performance:
 		- Initially 5GB of bandwidth
 		- It can scale to 45GB
@@ -2065,10 +2066,10 @@
 	- Disadvantage:
 		- It's a single point of failure
 		- If the instance is terminated, the route status: blackhole
-	- For more details:
-		- [NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html)
-		- [NAT Gateway](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html#nat-gateway-working-with)
-		- [NAT Gateway vs. NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-comparison.html)
+- For more details:
+	- [NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html)
+	- [NAT Gateway](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html#nat-gateway-working-with)
+	- [NAT Gateway vs. NAT Instance](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-comparison.html)
 
 </details>
 
@@ -2106,7 +2107,7 @@
 	- It doesn't require any other resource: a NAT device, a VPN connection nor, an AWS Direct Connect connection instances
 - It's horizontally scaled (bandwidth)
 - There're 2 types of VPC endpoints:
-	- Gateway endpoint:
+	- **Gateway endpoint**:
 		- It's used for S3 buckets and DynamoDB
 		- It's similar to Internet Gateway
 		- Its related traffic goes through RT: (Destination, Target) = (AWS Service Prefix Lists, Gateway Endpoint ID)
@@ -2114,7 +2115,7 @@
 		- Therefore, Prefix Lists will override the use of the IG when they're in the same RT
 		- It can be restricted via policies: full access is selected by default
 		- It's HA (Highly available) across AZs in a region: 1 Gateway endpoint by VPC
-	- Interface endpoint:
+	- **Interface endpoint**:
 		- It's used for most other AWS services such as SNS, SQS
 		- It's an ENI with a private IP address
 		- It provides another unique endpoint for the selected service (different from the service public endpoint)
@@ -2222,14 +2223,25 @@
 		- IPv6 support isn't available cross-region
 - Subnet max/min netmask: /16 ... /28
 - Subnets # / VPC: 200
-- NAT Gateway Bandwidth: 5 Gbps - 45 Gbps (For more, distribute the workload by splitting resources into multiple subnets, and creating a NAT gateway in each subnet)
-- NAT Gateway # / AZ: 5
+- NAT Gateway 
+	- NAT Bandwidth: 5 Gbps - 45 Gbps (For more, distribute the workload by splitting resources into multiple subnets, and creating a NAT gateway in each subnet)
+	- NAT Gateway # / AZ: 5
+	- It can be associated with a SG
+	- It can NOT be used by resources outside of its VPC:
+		- We can't route traffic to a NAT gateway through a VPC peering connection, a Site-to-Site VPN connection, or AWS Direct Connect 
+		- A NAT gateway cannot be used by resources on the other side of these connections
+	- It can't be accessed by a ClassicLink connection associated with your VPC
 - IPv4 CIDR blocks / VPC: 5
 - IPv6 CIDR blocks / VPC: 1
 - IPv6:
 	- It'sn't currently supported across every AWS product
 	- It'sn't currently supported with every feature
 	- It'sn't currently supported by VPNs, customer gateways, and VPC endpoints
+- Gateway Endpoint:
+	- It's supported within the same Region only: we cannot create an endpoint between a VPC and a service in a different Region
+	- It can't be used to extend connections out of a VPC: 
+		- It can't be used by resources outside of the VPC
+		- E.g., resources on the other side of a VPN connection, VPC peering connection, Transit Gateway, DX connection, ClassicLink connection in our VPC cannot use the endpoint to communicate with resources in the endpoint service 
 - For more details
 	- [VPC Limits](https://docs.aws.amazon.com/vpc/latest/userguide/amazon-vpc-limits.html)
 
@@ -5131,7 +5143,7 @@ S3 Request #/s Hard: 3500 PUTs/second
 - Its tunnels operate over IPv4
 - It's a highly available solution
 - It can be configured to use either static or Border Gateway (BGW) routing
-- It
+
 </details>
 
 <details>
@@ -5140,11 +5152,9 @@ S3 Request #/s Hard: 3500 PUTs/second
 - A Customer Gateway (CGW)
 - Virtual Private Gateway (VGW) attached to a VPC
 - A Virtual Private Cloud (VPC)
-- [More details about the architecture](https://docs.aws.amazon.com/vpn/latest/s2svpn/site-site-architechtures.html)
-
 - VPN connection using 1 or 2 IPsec tunnels
-
-![VPN components](https://d2908q01vomqb2.cloudfront.net/da4b9237bacccdf19c0760cab7aec4a8359010b0/2017/01/27/Figure-1-AWS-Managed-VPN-1-1024x831.png)
+- ![VPN components](https://d2908q01vomqb2.cloudfront.net/da4b9237bacccdf19c0760cab7aec4a8359010b0/2017/01/27/Figure-1-AWS-Managed-VPN-1-1024x831.png)
+- [More details about the architecture](https://docs.aws.amazon.com/vpn/latest/s2svpn/site-site-architechtures.html)
 
 </details>
 
@@ -5207,6 +5217,7 @@ S3 Request #/s Hard: 3500 PUTs/second
 	- Use 2 VPN connections
 	- Use 2 CGWs
 	- Create 4 tunnels
+	- ![Diagram](https://docs.aws.amazon.com/vpn/latest/s2svpn/images/Multiple_Gateways_diagram.png)
 	- [For more details](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNConnections.html)
 
 </details>
