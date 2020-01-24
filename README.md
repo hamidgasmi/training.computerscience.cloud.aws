@@ -2279,6 +2279,10 @@
 	- We need 1 NAT Gateway by AZ
 	- We need a Single Route table for each AZ (each NAT Gateway)
 	- Each NAT Gateway should be then associates with all private subnets of the related AZ
+- Interface Endpoints:
+	- Enable Private DNS Name 
+		- It allows to avoid modifying application code
+		- The service public endpoint will be resolved to the endpoint ENI private IP @
 - Create conventions:
 	- Subnet Name: sn-[public/private]-[AZ]: sn-public-a; sn-private-a
 	- Peering Connection name: pc-[Requester VPC name]-[Accepter VPC name]. E.g., pc-VPC1-VPC2
@@ -4319,7 +4323,7 @@ S3 Request #/s Hard: 3500 PUTs/second
 - It employs [last writer wins conflict resolution protocol](https://dzone.com/articles/conflict-resolution-using-last-write-wins-vs-crdts)
 - It requires:
 	- To enable Streams,
-	- To start with an empty table
+	- *To start with an empty table*    (=> **NOT required** anymore since DynamoDB 2019.11.21 version)
 	- To add a new region to the table
 
 </details>
