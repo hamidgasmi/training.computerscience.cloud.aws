@@ -2904,9 +2904,10 @@
 	- Previous versions could be permanently deleted (physically)
 	- Clean up expired object delete markers (You cannot enable clean up expired object delete markers if you enable Expiration)
 	- Clean up incomplete multipart uploads
-- Possible transitions:
+- Supported transitions:
 	- See diagram below
-	- ![Diagram](https://camo.githubusercontent.com/a3cb5b98ed042cfab777cb417a35564a6666acfe/687474703a2f2f646f63732e6177732e616d617a6f6e2e636f6d2f416d617a6f6e53332f6c61746573742f6465762f696d616765732f537570706f727465645472616e736974696f6e73576174657266616c6c4d6f64656c2e706e67)
+	- ![Supported transitions](http://docs.aws.amazon.com/AmazonS3/latest/dev/images/SupportedTransitionsWaterfallModel.png)
+	
 </details>
 
 <details>
