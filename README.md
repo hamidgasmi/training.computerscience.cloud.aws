@@ -28,8 +28,8 @@
 - [Database - SQL - RDS Aurora Serverless](#database---sql---rds-aurora-serverless)
 - [Database - NoSQL - DynamoDB](#database---nosql---dynamodb)
 - [Database - In-Memory Caching](#database---in-memory-caching)
-- [Hybrid and Scaling - Elastic Load Balancing](#hybrid-and-scaling---elastic-load-balancing)
-- [Hybrid and Scaling - Auto scaling Groups](#hybrid-and-scaling---auto-scaling-groups)
+- [Hybrid and Scaling - Elastic Load Balancing (ELB)](#hybrid-and-scaling---elastic-load-balancing-elb)
+- [Hybrid and Scaling - Auto scaling Groups (ASG)](#hybrid-and-scaling---auto-scaling-groups-asg)
 - [Hybrid and Scaling - Virtual Private Networks (VPN)](#hybrid-and-scaling---virtual-private-networks-vpn)
 - [Hybrid and Scaling - Direct Connect (DX)](#hybrid-and-scaling---direct-connect-dx)
 - [Hybrid and Scaling - Snow*](#hybrid-and-scaling---snow)
@@ -502,9 +502,7 @@
 - It's automatically replicated within its AZ to protect from component failure
 - It supports a maximum throughput of 1,750 MiB/s per-instance
 - It supports a maximum IOPS: 80,000 per instance
-- HDD-backed volume:
-	- Large IO size
-	- Dominant Performance attribute: Throughput
+- ![EBS Volume Types](https://awscertifiedsolutionsarchitectassociatedocs.s3.amazonaws.com/EC2_EBS_VolumeTypes.png)
 - **General Purpose** (**gp2**):
 	- It's SSD based storage (Small IO size)
 	- Its performance dominant attribute: IOPS
@@ -1018,7 +1016,7 @@
 		- Rather than connecting to it, performing diagnostics, fixing it and hopefully getting it back into a working state,
 		- We could just stop it and launch a brand new one from its known working AMI and
 		- Optionally investigate offline the failed instance if necessary or terminate it
-	- Scaling and High-availability: see [Auto scaling Groups](#hybrid-and-scaling---auto-scaling-groups)
+	- Scaling and High-availability: see [ASG](#hybrid-and-scaling---auto-scaling-groups-asg)
 - EC2 storge:
 	- General Purpose (gp2) is the default for most workloads
 		- Recommended for most workloads
@@ -1596,7 +1594,7 @@
 - EC2 Mode by Auto Scaling Group
 	- There's not obvious metric to scale a cluster
 	- There's not integration to scale when the task placement fails because of insufficient capacity
-	- Auto-scaling group and ECS are not aware of each other: It makes task deployments very hard during cluster scale in or rolling updates via CloudFormation
+	- ECS and [ASG](#hybrid-and-scaling---auto-scaling-groups-asg) are not aware of each other: It makes task deployments very hard during cluster scale in or rolling updates via CloudFormation
 	- We have to scale down without killing running tasks which is an even more significant challenge for long lived tasks
 - Fargate mode: Scale out and in automatically:
 - [For more details](https://cloudonaut.io/ecs-vs-fargate-whats-the-difference/)
@@ -3516,42 +3514,21 @@ S3 Request #/s Hard: 3500 PUTs/second
 	- It can be used to provision a fully functional database without the admin overhead
 	- We can't log in to its OS
 	- Patching of the RDS OS and DB is Amazon's responsibility
-- It can perform at scale
 - It can be made publicly accessible
-- It can be configured for demanding availability and durability scenarios
-	- It can be deployed in a single AZ or Multi-AZ mode
 - It'sn't Serverless
 - It supports different database engines:
 	- MySQL:
 	- MariaDB:
 	- PostgreSQL:
 	- Oracle:
-	- Microsoft SQL Server:
-	- Amazon Aurora:
-		- It's AWS own relational database engine
-		- It could be created from MySQL db (good way to migrate to Aurora)
-		- It could be created from a PostgreSQL db (a good way to migrate to Aurora)
-		- Aurora Serverless is Serveless
-- It's deployed in EC2 instances, it supports:
-	- EC2 General Purpose Family (DB.M4, DB.M5)
-	- Memory Optimized family:
-		- DB.R4 and DB.R5
-		- DB.X1e and DB.X1 for Oracle
-	- Burstable (DB.T2 and DB.T3)
-- It uses a storage similar to EBS, it supports:
-	- General Purpose SSD (gp2):
-		- IOPS per GiB,
-		- burst to 3,000 IOPS (pool architecture like EBS)
-	- Provisioned IOPS SSD (io1):
-		- 1,000 to 80,000 IOPS (engine dependent)
-		- Size and IOPS can be configured independently
-	- Autoscalling feature (disabled by default)
+	- Microsoft SQL Server
+	- Aurora:
+		- See [Aurora Provisioned](#database---sql---rds-aurora-provisioned)
+		- See [Aurora Serverless](#database---sql---rds-aurora-serverless)
 - It has an endpoint, a CNAME:
 	- It points to the current primary instance
 	- We can connect into it with the CNAME + Port #
-- Every modification of the instance could be:
-	- run immediately
-	- or run at maintenance time that is created when the instance is created
+
 - It requires a minimum of 2 subnets in a Subnet Group
 - Troubleshooting:
 	- We want our application to check whether a request generated an error before we spend any time processing results
@@ -3561,6 +3538,37 @@ S3 Request #/s Hard: 3500 PUTs/second
 
 <details>
 <summary>Architecture</summary>
+</details>
+
+<details>
+<summary>Computing</summary>
+
+- It's deployed in EC2 instances
+- It supports:
+	- EC2 General Purpose Family (DB.M4, DB.M5)
+	- Memory Optimized family:
+		- DB.R4 and DB.R5
+		- DB.X1e and DB.X1 for Oracle
+	- Burstable (DB.T2 and DB.T3)
+- Instance could be modified:
+	- It could be applied immediately
+	- It could run run at maintenance time that is created when the instance is created
+
+</details>
+
+<details>
+<summary>Storage</summary>
+
+- It uses a storage similar to EBS, 
+- It supports:
+	- General Purpose SSD (gp2):
+		- IOPS per GiB,
+		- burst to 3,000 IOPS (pool architecture like EBS)
+	- Provisioned IOPS SSD (io1):
+		- 1,000 to 80,000 IOPS (engine dependent)
+		- Size and IOPS can be configured independently
+	- Autoscalling feature (disabled by default)
+	
 </details>
 
 <details>
@@ -3606,7 +3614,6 @@ S3 Request #/s Hard: 3500 PUTs/second
 	- The source primary instance is called the Master Instance
 	- The copy instance is called the Read-Replica Instance
 - It's achieved by using asynchronous replication from the Master Primary instance to the read replica instance
-- Reads from a Read-Replica are eventually consistent - normally seconds
 - It can be created in the same region or in a different region
 	- For different region, AWS handles the secure communications between those regions (Encryption in Transit)
 	- Without a need to any networking configurations
@@ -3630,6 +3637,8 @@ S3 Request #/s Hard: 3500 PUTs/second
 
 <details>
 <summary>Consistency</summary>
+
+- Reads from a Read-Replica are eventually consistent - normally seconds
 
 </details>
 
@@ -3794,6 +3803,8 @@ S3 Request #/s Hard: 3500 PUTs/second
 <details>
 <summary>Limits</summary>
 
+- Max Read-Replicas #: 5
+- It's not possible to have a single DNS name to address all of those read replicass
 - [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Limits.html)
 
 </details>
@@ -4671,7 +4682,7 @@ S3 Request #/s Hard: 3500 PUTs/second
 
 ---
 
-## Hybrid and Scaling - Elastic Load Balancing
+## Hybrid and Scaling - Elastic Load Balancing (ELB)
 
 <details>
 <summary>Description</summary>
@@ -4950,7 +4961,7 @@ S3 Request #/s Hard: 3500 PUTs/second
 
 ---
 
-## Hybrid and Scaling - Auto scaling Groups
+## Hybrid and Scaling - Auto scaling Groups (ASG)
 
 <details>
 <summary>Description</summary>
@@ -4961,13 +4972,12 @@ S3 Request #/s Hard: 3500 PUTs/second
 	- How they can scale: adding new instances (scaling out), removing instances (scaling in)
 	- Under which circumstances do we want these instances to scale out/in
 - It uses some Configuration values:
-	- Minimum Size: the minim number of instances to create (1 by default)
+	- Minimum Size: the min # of instances to create (1 by default)
 	- Desired Capacity:
-		- It's the # that the auto scaling group will attempt to aim for
-		- E.g.,
-			- If we have currently 1 EC2 instance and the desired capacity is 2, then
-			- the auto scaling group will attempt to create a new EC2 instance
-			- to bring the number of running instances to the desired capacity
+		- It's the # that the ASG will attempt to aim for
+		- E.g., If we have currently 1 EC2 instance and the desired capacity is 2:
+			- The ASG will attempt to create a new EC2 instance
+			- To bring the # of running instances to the desired capacity
 	- Maximum Capacity:
 		- The maximum # of EC2 instances the group will ever grow to
 		- Even when every instance is completely overloaded, it won't grow beyond the maximum capacity
@@ -4992,6 +5002,7 @@ S3 Request #/s Hard: 3500 PUTs/second
 	- When it's associates with an ELB, automatically
 		- The ELB associates itself with any instance inside the auto scalling group (scaling out)
 		- The ELB disassociates itself with any instance inside the auto scalling group (scaling in)
+- [FAQ](https://aws.amazon.com/ec2/autoscaling/faqs/)
 
 </details>
 
@@ -5034,17 +5045,34 @@ S3 Request #/s Hard: 3500 PUTs/second
 </details>
 
 <details>
+<summary>Lifecycle Hooks</summary>
+
+- It puts the ASG's instances into a wait state before termination
+- It allows to perform custom activities before instances are terminated
+- Default Wait Period: 1 hour
+- E.g., To retrieve critical operational data from stateful instances
+- [For more details](https://docs.aws.amazon.com/autoscaling/ec2/userguide/lifecycle-hooks.html)
+
+</details>
+
+<details>
 <summary>Scalability</summary>
 
 - Auto Scaling group allows to automate the scaling in/out
 	- It modifies the default "Desired Capacity" entered when the Auto-Scaling Group is created
 	- It then create/remove instances based on the new "Desired Capacity"
+- **Scale in**:
+	- **Default Termination Policy**:
+		- It's the process of removing instances during scale in
+		- It selects the AZ with the most instances with at least 1 instance isn't protected from scale in
+		- It selects the AZ with the instances that use the oldest launch configuration, if there's more than 1 AZ with this number of instances...
+	- **Custom Termination Policy**:
+		- It allows to replace the default termination policy
+		- It allows to add rules that aren't covered by the default Termination Policy
+		- E.g., To keep instances that have the current version of an application 
 	- **Protect From Scale in** instance Protection:
 		- Newly launched instances will be protected from scale in by default
 		- Auto Scaling will not select protected instances for termination during scale in
-- Scale in:
-	- It selects the AZ with the most instances with at least 1 instance isn't protected from scale in
-	- It selects the AZ with the instances that use the oldest launch configuration, if there's more than 1 AZ with this number of instances...
 	- [Controlling Which Auto Scaling Instances Terminate During Scale In](https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-instance-termination.html)
 - Scheduled Action:
 	- It automates the scaling in/out based on day/time and recurrence
@@ -5078,6 +5106,10 @@ S3 Request #/s Hard: 3500 PUTs/second
 
 <details>
 <summary>Consistency</summary>
+</details>
+
+<details>
+<summary>Resilience</summary>
 
 - It can be configured to use multiple AZs to improve HA (high availability)
 - It tries to even the instances # across it subnets (AZs)
@@ -6193,8 +6225,8 @@ S3 Request #/s Hard: 3500 PUTs/second
 	- S3 generates and sends a message to a SNS Topic:
 		- Once a video storage is completed, S3 generates an AWS SNS PUT notification
 		- This PUT notification is added to a SQS queue indicating that a video is ready to be processed
-	- At the backend, we have a fleet of EC2 instances + An Auto scaling Group:
-		- This workers pool is scalled out by the auto scaling group based on the number of messages in the queue
+	- At the backend, we have a fleet of EC2 instances + an [ASG](#hybrid-and-scaling---auto-scaling-groups-asg):
+		- This workers pool is scalled out by the ASG based on the number of messages in the queue
 		- The workers keep polling the queue above and process a message (video path to S3) as soon as it's received
 		- The workers put the result in S3
 	- This architecture means that the more video uploads we get (more customers), the more messages in the queue and the more instances inside this worker pool
