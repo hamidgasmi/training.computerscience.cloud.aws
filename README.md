@@ -48,6 +48,7 @@
 - [Logging and Monitoring - VPC Flow Logs](#logging-and-monitoring---vpc-flow-logs)
 - [Operations - CloudWatch Events](#operations---cloudwatch-events)
 - [Operations: Key Management Service (KMS)](#operations---key-management-service-kms)
+- [Deployment - CloudFormation](#deployment---cloudformation)
 - [Deployment: Elastic BeansTalk](#deployment---elastic-beanstalk)
 - [Deployment: OpsWorks](#deployment---opsworks)
 
@@ -3200,6 +3201,7 @@ S3 Request #/s Hard: 3500 PUTs/second
 	- Restrict Bucket Access:
 - Default Cache Behavior Settings:
 	- Viewer Protocol Policy:
+	- [Caching Content Based on Query String Parameters](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/QueryStringParameters.html)
 - Distribution Settings:
 	- Price Class:
 		- Only US, Canada, Europe;
@@ -3929,6 +3931,8 @@ S3 Request #/s Hard: 3500 PUTs/second
 	- It scales in 10 GB increments to 64TB
 	- It scales Compute ressources up to 32vCPUs and 244GB of memory
 	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Integrating.AutoScaling.html)
+- Reads Scaling:
+	- [Replication with Amazon Aurora](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Replication.html)
 
 </details>
 
@@ -5083,24 +5087,29 @@ S3 Request #/s Hard: 3500 PUTs/second
 		- "Schedule Action" will also let us to automatically scale in after this period
 - Scaling policy:
 	- It automates the scaling in/out based on measure that's monitored (E.g., CPU utilization)
-	- Simple scaling policy:
+	- **Simple scaling** policy:
 		- It allows us to define a rule based on an alarm that we create
 		- Inputs: Alarm; Action; Cooldown (Health Check Grace Period)
 		- E.g., if AVG CPU utilization of all the instances > 50% (Alarm) => Add n instance(s) (Action) and wait 300 s (Cooldowns)
 		- E.g., if AVG CPU utilization of all the instances < 40% => Remove n instance(s)
-	- Step scaling policy:
+	- **Step scaling** policy:
 		- It allows to scale in/out differently based on measure ranges (E.g., CPU utilization)
 		- Inputs: Alarm; Steps: measure range, Action; Cooldown (Health Check Grace Period)
 		- E.g.,:
 		- Step 1: if 20% < AVG CPU utilization of all the instances > 30% => Add 1 instance and wait 300s
 		- Step 2: if 30% < AVG CPU utilization of all the instances > 40% => Add 2 instance and wait 300s
 		- Step 3: if 40% < AVG CPU utilization of all the instances > 50% => Add 4 instance and wait 300s
-	- Target tracking scaling policy:
+	- **Scheduled scaling** policy:
+	- **Target tracking scaling** policy:
 		- It allows us to define a rule based on desired load
 		- Inputs: Metric type; Target value; Cooldowns
 		- E.g., We would like AVG CPU utilization of all instances (Metric type) of ~ 30% (Target value) and wait for 300 (cooldowns or warmup)
 		- If the AVG CPU utilization > 30%, it would create 1 or more instances to reach that desired load
 		- If the AVG CPU utilization < 30%, it would remove 1 or more instances to reach that desired load
+	- For more details:
+		- [Simple and Step Scaling Policies for Amazon EC2 Auto Scaling](https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-scaling-simple-step.html)
+		- [Scheduled Scaling for Amazon EC2 Auto Scaling](https://docs.aws.amazon.com/autoscaling/ec2/userguide/schedule_time.html)
+		- [Target Tracking Scaling Policies for Amazon EC2 Auto Scaling](https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-scaling-target-tracking.html)
 
 </details>
 
@@ -6417,6 +6426,16 @@ S3 Request #/s Hard: 3500 PUTs/second
 </details>
 
 <details>
+<summary>Enhanced VPC Routing</summary>
+
+- It forces all COPY and UNLOAD traffic between a Redshift cluster and its data repositories through the associated VPC
+- It allows to use VPC features, such as VPC security groups, network access control lists (ACLs), VPC endpoints, VPC endpoint policies, internet gateways, and DNS servers
+- It allows also to use VPC flow logs to monitor COPY and UNLOAD traffic 
+- [For more details](https://docs.aws.amazon.com/redshift/latest/mgmt/enhanced-vpc-routing.html)
+
+</details>
+
+<details>
 <summary>Scalability</summary>
 
 - Massively Parallel Processing (MPP):
@@ -6461,6 +6480,9 @@ S3 Request #/s Hard: 3500 PUTs/second
 	- It uses AES-256
 	- It takes care of key management
 	- It manages customer's own keys through KMS
+- For more details:
+	- [Amazon Redshift Database Encryption](https://docs.aws.amazon.com/redshift/latest/mgmt/working-with-db-encryption.html)
+	- [Encrypt Your Amazon Redshift Loads with Amazon S3 and AWS KMS](https://aws.amazon.com/blogs/big-data/encrypt-your-amazon-redshift-loads-with-amazon-s3-and-aws-kms/)
 
 </details>
 
@@ -7046,6 +7068,80 @@ S3 Request #/s Hard: 3500 PUTs/second
 
 - Encryption/Decryption without DEK Max data size: 4 KB
 
+</details>
+
+<details>
+<summary>Best practices</summary>
+</details>
+
+---
+
+## Deployment - CloudFormation
+
+<details>
+<summary>Description</summary>
+
+- It is an **Infrastructure as Code** (**IaC**) product
+- It allows to create, manage, and Template Stack Physical Resources infrastructure
+	- It uses using **Json** or **Yaml** files
+	- Its files serves as the single source of truth for a cloud environment
+- It's available at no additional charge, only AWS resources usage is charged
+- [For more details](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html)
+
+</details>
+
+<details>
+<summary>Architecture</summary>
+</details>
+
+<details>
+<summary>Template</summary>
+</details>
+
+<details>
+<summary>Stacks</summary>
+</details>
+
+<details>
+<summary>Physical Resources</summary>
+</details>
+
+<details>
+<summary>Drift Detection</summary>
+
+- It's used to detect changes made to AWS resources outside the CloudFormation Templates
+- It only checks property values that are explicitly set by stack templates or template parameters
+- It doesn't determine drift for property values that are set by default
+- [For more details](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift.html)
+
+</details>
+
+<details>
+<summary>Security</summary>
+</details>
+
+<details>
+<summary>Monitoring</summary>
+</details>
+
+<details>
+<summary>Pricing</summary>
+</details>
+
+<details>
+<summary>Use cases</summary>
+
+- Reduce the effort required to consistently building systems by building internal library of templates 
+- A consultancy business rolls out the same type of infrastructure day after day for different clients
+- Use it for temporary period because it is fully automated: 
+	- if a development team who want to roll out and test new versions of an application 
+	- CloudFormation Template will allow to deploy the infrastructure, install the code, teste it and then delete it afterwards 
+- Used for disaster recovery to decrease RTO 
+
+</details>
+
+<details>
+<summary>Limits</summary>
 </details>
 
 <details>
