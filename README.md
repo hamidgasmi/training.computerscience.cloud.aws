@@ -3530,11 +3530,7 @@ S3 Request #/s Hard: 3500 PUTs/second
 - It has an endpoint, a CNAME:
 	- It points to the current primary instance
 	- We can connect into it with the CNAME + Port #
-
 - It requires a minimum of 2 subnets in a Subnet Group
-- Troubleshooting:
-	- We want our application to check whether a request generated an error before we spend any time processing results
-	- The easiest way to find out if an error occurred is to look for an Error node in the response from the Amazon RDS API
 
 </details>
 
@@ -3766,6 +3762,17 @@ S3 Request #/s Hard: 3500 PUTs/second
 	- [For more details](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html)
 - Encryption in Transit:
 	- Data in transit is encrypted for asynchronous replication of read-replicas in different regions
+
+</details>
+
+<details>
+<summary>Monitoring</summary>
+
+- **Error Node**
+	- It's in the response from the RDS API
+	- It's for troubleshooting
+	- We want our application to check whether a request generated an error before we spend any time processing results
+	- The easiest way to find out if an error occurred is to look for an Error node in the response from the Amazon RDS API
 
 </details>
 
@@ -7385,6 +7392,44 @@ S3 Request #/s Hard: 3500 PUTs/second
 - They're deployed to layers from a source code repo or S3
 - Actual deployment happens using recipes on a layer
 - Other recipes are run when deployments happen, potientially to reconfigure other instances
+
+</details>
+
+---
+
+## AWS Services - Comparisons:
+
+<details>
+<summary>Database</summary>
+
+-  It's available in a LibreOffice sheet [here](https://github.com/hamidgasmi/training.computerscience.cloud.aws/certification_csa_docs/blob/master/aws-product-comparisons.ods)
+- ![AWS Database comparison](https://awscertifiedsolutionsarchitectassociatedocs.s3.amazonaws.com/aws-databases-comparison.png)
+
+</details>
+
+
+<details>
+<summary>Storage</summary>
+
+</details>
+
+<details>
+<summary>Compute</summary>
+
+</details>
+
+<details>
+<summary>Caching</summary>
+
+</details>
+
+<details>
+<summary>Analytics</summary>
+
+</details>
+
+<details>
+<summary>Monitoring/Auditing</summary>
 
 </details>
 

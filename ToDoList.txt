@@ -95,7 +95,6 @@ VPC NAT Gateway: MAX Bandwith: 5 GB to 45 GB
 ECS + VPN + VPC Secondary CIDR + VPC endpoint (Gateway + Interface)
 VPC Flow Log Vs. Cloud Trail Vs. S3 Logging
 
+Consistency: Eventual Consistency vs. Strong consistency vs. Read after write consistency vs. Immediate consistency
 
-S3 maintains an index of object key names in each region. They're stored across multiple 
-partition in the index. The key value determines which partition the object is stored in.
-Small objects were
+
