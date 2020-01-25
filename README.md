@@ -7403,7 +7403,7 @@ S3 Request #/s Hard: 3500 PUTs/second
 <details>
 <summary>Database</summary>
 
--  It's available in a LibreOffice sheet [here](https://github.com/hamidgasmi/training.computerscience.cloud.aws/certification_csa_docs/blob/master/aws-product-comparisons.ods)
+-  It's available in a LibreOffice sheet [here](https://github.com/hamidgasmi/training.computerscience.cloud.aws/blob/master/certification_csaa_docs/aws-product-comparisons.ods)
 - ![AWS Database comparison](https://awscertifiedsolutionsarchitectassociatedocs.s3.amazonaws.com/aws-databases-comparison.png)
 
 </details>
