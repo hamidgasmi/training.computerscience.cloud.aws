@@ -6,7 +6,7 @@
 		- It describes AWS services from the architect role perspective
 		- There's particularly a section for the following topics: Scalability, Consistency, Resilience, Disaster Recovery, Security which includes Encryption, Pricing, Use cases, Limits and, Best practices
 	- [AWS CLI commands](https://github.com/hamidgasmi/training.computerscience.cloud.aws/blob/master/aws_cli.sh): it's still a work in progress
-	- [Anki flashcards](https://github.com/hamidgasmi/training.computerscience.cloud.aws/blob/master/aws-csaa_ankiflashcard.apkg) exported file: **316** cards
+	- [Anki flashcards](https://github.com/hamidgasmi/training.computerscience.cloud.aws/blob/master/aws-csaa_ankiflashcard.apkg) exported file: **318** cards
 		- [Install Anki](https://apps.ankiweb.net/)
 
 ## Table of Contents
@@ -7408,6 +7408,30 @@ S3 Request #/s Hard: 3500 PUTs/second
 
 </details>
 
+<details>
+<summary>ASG Periods</summary>
+
+- Health Check Grace Period:
+	- The length of time that ASG waits before checking an instance health status
+	- It begins when an instance comes into service
+	- Its default value: 300 seconds
+	- It is disabled when its value is: 0 second
+- Warm up period:
+	- The length of time that it takes for a newly launched instance to warm up
+	- Its default value: 300 seconds
+	- Scaling out:
+		- Until its specified warm-up time has expired, an instance is not counted toward the aggregated metrics of the ASG
+		- Alarm breaches that fall in this period, result in a single scaling activity
+		- It ensures that the ASG doesn't add more instances than needed
+	- Scaling in:
+		- While scaling in, AWS considers instances that are terminating as part of the current capacity of the group 
+		- The ASG doesn't remove more instances from the ASG than necessary
+- Cooldown period:
+	- It's only available with Simple Scaling Policy
+	- After the ASG dynamically scales, it waits for the cooldown period to complete before resuming scaling activities
+	- Its default values: 300 seconds
+	
+</details>
 
 <details>
 <summary>Storage</summary>
