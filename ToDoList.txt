@@ -90,11 +90,22 @@ IPv6 CIDR blocks / VPC: 1
 
 VPC NAT Gateway: MAX Bandwith: 5 GB to 45 GB
 
-
-
 ECS + VPN + VPC Secondary CIDR + VPC endpoint (Gateway + Interface)
 VPC Flow Log Vs. Cloud Trail Vs. S3 Logging
 
 Consistency: Eventual Consistency vs. Strong consistency vs. Read after write consistency vs. Immediate consistency
+
+
+S3:
+S3 increased request rate: https://aws.amazon.com/about-aws/whats-new/2018/07/amazon-s3-announces-increased-request-rate-performance/
+
+S3 system metadata:
+x-amz-server-side-encryption
+x-amz-version-id
+content-length
+
+When an S3 object is loaded using S3 REST API, the optional user-defined metadata names must begin with x-amz-meta
+
+S3 Object level logging with CloudTrail: https://docs.aws.amazon.com/AmazonS3/latest/API/RESTOPTIONSobject.html
 
 
