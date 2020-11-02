@@ -280,8 +280,10 @@
 <summary>Best practices</summary>
 
 - IAM Users and Groups should be given least privileges (only the required access to aws resources)
-    Don't create (or delete) access keys for root account. 
-    Always setup an MFA on our root account. 
+    Don't create (or delete) access keys for root account.
+    Always setup an MFA on our root account.
+- Authentication by secret keys is not recommended:
+    - If aws is hacked (ec2 instance?), secret keys will be found in `~/.aws` folder.
 
 </details>
 
