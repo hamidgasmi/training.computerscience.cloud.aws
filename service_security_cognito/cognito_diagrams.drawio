@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-07-29T04:37:50.539Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36" version="14.9.1" etag="cmAz2y-SJ1vj2yHsVv8_" type="github" pages="4">
+<mxfile host="app.diagrams.net" modified="2021-07-29T04:38:16.921Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36" version="14.9.1" etag="C32EPxuLmLqDuJiK7rYV" type="github" pages="4">
   <diagram id="XrfpLXSdPFyLqEVaYIA8" name="1. Cognito">
     <mxGraphModel dx="1324" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -229,7 +229,7 @@
           <mxGeometry x="143.5" y="710" width="67.5" height="60" as="geometry" />
         </mxCell>
         <mxCell id="IGjTNpZbOQ4kLorwkxcK-3" value="" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.permissions_2;fillColor=#D2D3D3;gradientColor=none;strokeColor=#CCCCCC;" parent="K9s4CzVVZZi7IuLKyu7W-1" vertex="1">
-          <mxGeometry x="228.5" y="707" width="46.5" height="63" as="geometry" />
+          <mxGeometry x="290" y="287" width="30" height="30" as="geometry" />
         </mxCell>
         <mxCell id="IGjTNpZbOQ4kLorwkxcK-4" value="" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.role;fillColor=#759C3E;gradientColor=none;strokeColor=#CCCCCC;" parent="K9s4CzVVZZi7IuLKyu7W-1" vertex="1">
           <mxGeometry x="43.5" y="800" width="94.5" height="79.5" as="geometry" />
